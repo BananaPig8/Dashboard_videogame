@@ -208,8 +208,8 @@ export function AppShell({ children }: { children: ReactNode }) {
             >
               {(close) =>
                 quickCreate().map((a, n) => (
-                  <div key={a.id}>
-                    {n === quickCreate().length - 1 && <div className="menu-sep" />}
+                  <div key={a.id} role="none">
+                    {n === quickCreate().length - 1 && <div className="menu-sep" role="separator" />}
                     <button
                       type="button"
                       role="menuitem"

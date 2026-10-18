@@ -75,9 +75,9 @@ export function NotificationsMenu() {
               </button>
             )}
           </div>
-          <ul className="notif-list">
+          <ul className="notif-list" role="none">
             {seedUpdate && (
-              <li>
+              <li role="none">
                 <button
                   type="button"
                   className="notif-item unread"
@@ -93,12 +93,16 @@ export function NotificationsMenu() {
                 </button>
               </li>
             )}
-            {list.length === 0 && !seedUpdate && <li className="empty">{t('notifications.empty')}</li>}
+            {list.length === 0 && !seedUpdate && (
+              <li role="none" className="empty">
+                {t('notifications.empty')}
+              </li>
+            )}
             {list.map((n) => {
               const unreadItem = !read.has(n.id)
               const when = n.date ? fmt.relative(n.date, today) : ''
               return (
-                <li key={n.id}>
+                <li key={n.id} role="none">
                   <button
                     type="button"
                     role="menuitem"
