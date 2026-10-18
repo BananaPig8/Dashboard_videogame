@@ -28,6 +28,22 @@ Arriba, el selector de ámbito cambia entre **todo el estudio** y **un proyecto*
 pantallas se filtran y el ámbito va en la URL, así se pasa de lo general al detalle sin
 perder el sitio. La ficha de cada proyecto tiene las mismas secciones en pestañas.
 
+## Cómo se usa
+
+- **Tema oscuro** por defecto (también claro o el del sistema), con color de acento,
+  densidad y bloques del panel a tu gusto (Ajustes o «Personalizar» en el panel).
+- `Ctrl K` (o `/`) abre la **paleta**: ir a cualquier pantalla, proyecto, vista o tarea,
+  y crear cosas sin soltar el teclado. `[` contrae la barra lateral.
+- **Nuevo** (arriba a la derecha) crea tareas, decisiones, incidencias, eventos, builds,
+  feedback, recursos, listas de pasos o proyectos.
+- La **campana** avisa de lo vencido, lo que vence hoy, las ferias que se acercan y los
+  bloqueos importantes.
+- **Vistas guardadas**: filtra Tareas o Historial y pulsa «Guardar vista».
+- Zona horaria (`Europe/Madrid` por defecto), formato de fecha y de hora en Ajustes.
+
+Todo el sistema visual (colores de estado, tipografía, componentes, teclado, móvil) está
+en [`docs/DISENO.md`](docs/DISENO.md).
+
 ## Ponerlo en marcha
 
 ```bash
@@ -37,12 +53,19 @@ npm test           # pruebas (lógica, almacenamiento y datos iniciales contra g
 npm run build      # versión para publicar, en dist/
 ```
 
+Recorrido completo en un navegador (Playwright y Chromium, con la versión compilada servida):
+
+```bash
+npm run build && npx vite preview --port 4173 &
+PW_PATH=$(npm root -g)/playwright node e2e/recorrido.mjs http://localhost:4173 /tmp
+```
+
 Hace falta Node 22. Con cada cambio en `main`, el flujo **Pages** la publica en GitHub
 Pages (hay que activarlo una vez: *Settings → Pages → Source: GitHub Actions*).
 
 ## Los datos
 
-- Se guardan **en el navegador** (localStorage). En **Ajustes y datos** se exporta una
+- Se guardan **en el navegador** (localStorage). En **Ajustes** se exporta una
   copia en JSON, se importa en otro equipo o se vuelve a los datos iniciales.
 - Cada dato dice **de dónde sale** (commit, PR, release, README o anotado a mano) y
   **cuánto fiarse**: *Verificado*, *Deducido* o *Sin confirmar*. Nada de ventas,
@@ -62,6 +85,6 @@ y su historial con `npm run historial` (ver `docs/DATOS-INICIALES.md`).
 
 ## Cómo está hecho
 
-React 19 + TypeScript + Vite, sin servidor ni librerías de interfaz. La lógica (qué toca
-hoy, qué pide atención, la agenda, la evolución…) está en funciones puras probadas en
+React 19 + TypeScript + Vite, sin servidor ni librerías de interfaz (solo la fuente Inter,
+incluida). La lógica (qué toca hoy, qué pide atención, la agenda, la evolución…) está en funciones puras probadas en
 Node. Detalles en [`docs/ARQUITECTURA.md`](docs/ARQUITECTURA.md).

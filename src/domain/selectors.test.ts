@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { addDays, daysBetween, relativeDays, startOfWeek } from './dates'
+import { addDays, daysBetween, startOfWeek, zonedParts } from './dates'
 import {
+  notificationsFor,
   blockedItems,
   currentBuilds,
   decisions,
@@ -82,8 +83,14 @@ describe('fechas', () => {
     expect(addDays('2026-10-30', 3)).toBe('2026-11-02')
     expect(daysBetween('2026-10-14', TODAY)).toBe(4)
     expect(startOfWeek(TODAY)).toBe('2026-10-12') // el 18 es domingo
-    expect(relativeDays('2026-10-14', TODAY)).toBe('hace 4 días')
-    expect(relativeDays('2026-10-19', TODAY)).toBe('mañana')
+    expect(startOfWeek(TODAY, 0)).toBe('2026-10-18') // si la semana empieza en domingo
+  })
+
+  it('calcula «hoy» en la zona horaria del estudio, no en la del navegador', () => {
+    // 22:30 UTC del 17 de octubre: en Madrid (UTC+2) ya es día 18; en Nueva York, aún 17.
+    const instant = new Date(Date.UTC(2026, 9, 17, 22, 30))
+    expect(zonedParts(instant, 'Europe/Madrid')).toEqual({ date: '2026-10-18', time: '00:30' })
+    expect(zonedParts(instant, 'America/New_York')).toEqual({ date: '2026-10-17', time: '18:30' })
   })
 })
 
@@ -215,5 +222,21 @@ describe('validación', () => {
     const errors = validateStudioData(data)
     expect(errors).toContain('Elemento y: está hecho pero no tiene completedAt')
     expect(errors).toContain('Elemento z: tiene completedAt pero no está hecho')
+  })
+})
+
+describe('notificaciones', () => {
+  it('avisa de lo vencido, lo que vence hoy, ferias cercanas, bloqueos importantes y lo que no se actualizó', () => {
+    const kinds = notificationsFor(fixture(), TODAY).map((n) => `${n.kind}:${n.target.id}`)
+    expect(kinds).toContain('overdue:vencida')
+    expect(kinds).toContain('dueToday:hoy')
+    expect(kinds).toContain('blocked:bloqueada')
+    expect(kinds).toContain('eventSoon:e1')
+    expect(kinds).toContain('eventStale:e3')
+    expect(kinds).not.toContain('eventSoon:e4') // a meses vista
+  })
+  it('lo urgente va primero', () => {
+    const tones = notificationsFor(fixture(), TODAY).map((n) => n.tone)
+    expect(tones).toEqual([...tones].sort((a, b) => ['danger', 'warning', 'info'].indexOf(a) - ['danger', 'warning', 'info'].indexOf(b)))
   })
 })

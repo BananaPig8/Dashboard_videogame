@@ -21,5 +21,10 @@ de la idea a la publicación y el mantenimiento. No es una web corporativa ni un
   iniciales con el historial de git: si fallan, el dato está mal, no la prueba.
 - **Dependencias:** versiones exactas en `package.json`; `.npmrc` lleva
   `legacy-peer-deps=true` por las dependencias opcionales de vitest 4.
+- **Diseño:** colores y medidas solo con las variables de `src/styles.css`; los estados
+  usan los tonos de `domain/catalog.ts` y siempre llevan icono y texto (nunca solo color).
+  Confirmaciones con `useNotify().confirm`, nunca `window.confirm`. Textos nuevos de la
+  interfaz, en `src/i18n/es.ts`.
+- **Comprobación en el navegador:** `e2e/recorrido.mjs` (ver README).
 
-Documentación: `README.md`, `docs/ARQUITECTURA.md`, `docs/DATOS-INICIALES.md`.
+Documentación: `README.md`, `docs/ARQUITECTURA.md`, `docs/DISENO.md`, `docs/DATOS-INICIALES.md`.

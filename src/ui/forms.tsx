@@ -1,6 +1,6 @@
 // Formularios de edición, descritos como datos: cada tipo de elemento tiene su lista de
 // campos y un único componente los pinta. Añadir un campo es añadir una línea.
-import { useMemo, useState, type FormEvent } from 'react'
+import { useMemo, useRef, useState, type FormEvent } from 'react'
 import {
   BUILD_CHANNELS,
   BUILD_STATUSES,
@@ -22,6 +22,8 @@ import { todayISO } from '../domain/dates'
 import type { StudioData } from '../domain/types'
 import type { CollectionKey } from '../data/store'
 import { Field } from './components/Common'
+import { Icon } from './components/Icon'
+import { t, type MessageKey } from '../i18n'
 
 type Draft = Record<string, unknown>
 
@@ -175,6 +177,38 @@ export function normalizeDraft(spec: FieldSpec[], draft: Draft): Draft {
   return out
 }
 
+/** Pares de fechas que no pueden ir al revés: [inicio, fin, mensaje]. */
+const DATE_PAIRS: [string, string, MessageKey][] = [
+  ['date', 'endDate', 'errors.endBeforeStart'],
+  ['startedAt', 'completedAt', 'errors.doneBeforeStart'],
+]
+
+/** Problemas de un borrador, por campo (vacío si se puede guardar). */
+export function validateDraft(spec: FieldSpec[], draft: Draft): Record<string, string> {
+  const errors: Record<string, string> = {}
+  const visible = spec.filter((f) => !f.show || f.show(draft))
+  for (const f of visible) {
+    const v = draft[f.key]
+    const empty = v === undefined || v === null || (typeof v === 'string' && !v.trim()) || (Array.isArray(v) && !v.length)
+    if (f.required && empty) errors[f.key] = t('errors.required')
+    else if (f.type === 'url' && !empty) {
+      try {
+        const u = new URL(String(v).trim())
+        if (u.protocol !== 'https:' && u.protocol !== 'http:') errors[f.key] = t('errors.url')
+      } catch {
+        errors[f.key] = t('errors.url')
+      }
+    }
+  }
+  const keys = new Set(visible.map((f) => f.key))
+  for (const [a, b, msg] of DATE_PAIRS) {
+    const from = draft[a]
+    const to = draft[b]
+    if (keys.has(b) && typeof from === 'string' && typeof to === 'string' && from && to && to < from) errors[b] = t(msg)
+  }
+  return errors
+}
+
 export function EntityForm({
   spec,
   initial,
@@ -192,26 +226,54 @@ export function EntityForm({
     ...initial,
     ...Object.fromEntries(spec.filter((f) => f.type === 'tags').map((f) => [f.key, ((initial[f.key] as string[]) ?? []).join(', ')])),
   }))
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [tried, setTried] = useState(false)
+  const formRef = useRef<HTMLFormElement>(null)
   const set = (key: string, value: unknown) =>
     setDraft((d) => {
       const next = { ...d, [key]: value }
       // Al dar algo por hecho se apunta el día; al reabrirlo se quita.
       if (key === 'status' && value === 'done' && !d.completedAt) next.completedAt = todayISO()
       if (key === 'status' && value !== 'done' && value !== 'cancelled') delete next.completedAt
+      if (tried) setErrors(validateDraft(spec, next))
       return next
     })
   const visible = useMemo(() => spec.filter((f) => !f.show || f.show(draft)), [spec, draft])
 
   const submit = (e: FormEvent) => {
     e.preventDefault()
+    const found = validateDraft(spec, draft)
+    setErrors(found)
+    setTried(true)
+    if (Object.keys(found).length) {
+      // Lleva el foco al primer campo con problemas.
+      const first = spec.find((f) => found[f.key])
+      if (first) formRef.current?.querySelector<HTMLElement>(`[name="${first.key}"]`)?.focus()
+      return
+    }
     onSubmit(normalizeDraft(spec, draft))
   }
 
+  const errorCount = Object.keys(errors).length
+
   return (
-    <form id={formId} className="form-grid" onSubmit={submit}>
+    <form id={formId} ref={formRef} className="form-grid" onSubmit={submit} noValidate>
+      {errorCount > 0 && (
+        <div className="span-2 error-summary" role="alert">
+          <Icon name="alert" size={16} /> {t('errors.formSummary', { n: errorCount })}
+        </div>
+      )}
       {visible.map((f) => {
         const value = draft[f.key]
-        const common = { name: f.key, required: f.required }
+        const fieldId = `${formId}-${f.key}`
+        const error = errors[f.key]
+        const common = {
+          id: fieldId,
+          name: f.key,
+          required: f.required,
+          'aria-invalid': error ? true : undefined,
+          'aria-describedby': error ? `${fieldId}-error` : undefined,
+        }
         let control
         switch (f.type) {
           case 'textarea':
@@ -253,7 +315,7 @@ export function EntityForm({
             control = <input type="date" {...common} value={String(value ?? '')} onChange={(e) => set(f.key, e.target.value)} />
             break
           case 'color':
-            control = <input type="color" {...common} value={String(value ?? '#4f46e5')} onChange={(e) => set(f.key, e.target.value)} />
+            control = <input type="color" {...common} value={String(value ?? '#7c6cf0')} onChange={(e) => set(f.key, e.target.value)} />
             break
           case 'url':
             control = <input type="url" {...common} value={String(value ?? '')} onChange={(e) => set(f.key, e.target.value)} placeholder="https://…" />
@@ -268,7 +330,7 @@ export function EntityForm({
                 {control} {f.label}
               </label>
             ) : (
-              <Field label={f.label + (f.required ? ' *' : '')} hint={f.hint}>
+              <Field label={f.label + (f.required ? ' *' : '')} hint={f.hint} error={error} id={fieldId}>
                 {control}
               </Field>
             )}

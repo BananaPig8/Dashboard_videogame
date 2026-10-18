@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { formatDate } from '../../domain/dates'
+import { useFormat } from '../hooks'
 import { itemDate } from '../../domain/selectors'
 import type { StudioData, WorkItem } from '../../domain/types'
 import { useUI } from '../context'
@@ -23,6 +23,7 @@ export interface ItemListProps {
 
 export function ItemList({ items, data, showProject, empty, aside, detail, limit, hideStatus, year }: ItemListProps) {
   const { openItem } = useUI()
+  const fmt = useFormat()
   if (items.length === 0) return <Empty>{empty ?? 'Nada por aquí.'}</Empty>
   const shown = limit ? items.slice(0, limit) : items
   const areas = new Map(data.areas.map((a) => [a.id, a]))
@@ -52,8 +53,8 @@ export function ItemList({ items, data, showProject, empty, aside, detail, limit
                   {showProject && <ProjectChip project={projects.get(item.projectId)} />}
                   <AreaTag area={item.areaId ? areas.get(item.areaId) : undefined} />
                   <ConfidenceTag confidence={item.confidence} compact />
-                  {item.dueDate && <span className="meta-date">Límite: {formatDate(item.dueDate, year)}</span>}
-                  {!item.dueDate && date && <span className="meta-date">{formatDate(date, year)}</span>}
+                  {item.dueDate && <span className="meta-date">Límite: {fmt.date(item.dueDate, year)}</span>}
+                  {!item.dueDate && date && <span className="meta-date">{fmt.date(date, year)}</span>}
                 </div>
               </div>
               <div className="item-side">

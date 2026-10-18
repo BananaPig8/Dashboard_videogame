@@ -174,6 +174,16 @@ export class StudioStore {
     this.commit(mergeSeed(this.data, this.meta, this.seed()), { ...this.meta, seedVersion: this.seedVersion })
   }
 
+  /** Foto del estado (datos y qué se ha editado), para poder deshacer. */
+  snapshot(): Persisted {
+    return { data: this.data, meta: this.meta }
+  }
+
+  /** Vuelve a una foto tomada con snapshot(). */
+  restore(p: Persisted): void {
+    this.commit(p.data, p.meta)
+  }
+
   exportJSON(): string {
     return JSON.stringify(this.data, null, 2)
   }

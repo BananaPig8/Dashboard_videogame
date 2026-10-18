@@ -1,113 +1,109 @@
+// El armazón: barra lateral (contraíble en escritorio, panel en móvil), barra superior con
+// ámbito, búsqueda, notificaciones y acciones rápidas, y atajos de teclado.
 import { useEffect, useState, type ReactNode } from 'react'
-import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import { STAGES } from '../domain/catalog'
-import { formatLongDate, todayISO } from '../domain/dates'
 import { isOpen } from '../domain/selectors'
+import { t } from '../i18n'
 import { useStudioData } from '../data/store'
-import { Icon, type IconName } from './components/Icon'
+import { CommandPalette } from './CommandPalette'
+import { Icon } from './components/Icon'
+import { Popover } from './components/Popover'
 import { useScope, useUI } from './context'
+import { useFormat, useToday } from './hooks'
+import { navGroups, quickCreate, type NavPage } from './navigation'
+import { NotificationsMenu } from './Notifications'
+import { updatePreferences, usePreferences } from './prefs'
 
-interface NavEntry {
-  to: string
-  label: string
-  icon: IconName
-  /** Pestaña equivalente dentro de la ficha de un proyecto. */
-  tab?: string
-}
-
-const NAV: { title: string; entries: NavEntry[] }[] = [
-  {
-    title: 'Estudio',
-    entries: [
-      { to: '/', label: 'Panel', icon: 'home', tab: 'resumen' },
-      { to: '/hoy', label: 'Hoy', icon: 'sun' },
-      { to: '/agenda', label: 'Agenda', icon: 'calendar', tab: 'agenda' },
-    ],
-  },
-  {
-    title: 'Trabajo',
-    entries: [
-      { to: '/trabajo', label: 'Tareas y funcionalidades', icon: 'list', tab: 'trabajo' },
-      { to: '/decisiones', label: 'Decisiones', icon: 'scale', tab: 'decisiones' },
-      { to: '/feedback', label: 'Feedback', icon: 'message', tab: 'feedback' },
-    ],
-  },
-  {
-    title: 'Producción',
-    entries: [
-      { to: '/builds', label: 'Builds y versiones', icon: 'box', tab: 'builds' },
-      { to: '/publicacion', label: 'Publicar y actualizar', icon: 'rocket', tab: 'publicacion' },
-      { to: '/recursos', label: 'Documentos y recursos', icon: 'book', tab: 'recursos' },
-      { to: '/historial', label: 'Historial', icon: 'history', tab: 'historial' },
-    ],
-  },
-]
+const isTyping = (el: EventTarget | null) =>
+  el instanceof HTMLElement && (el.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName))
 
 export function AppShell({ children }: { children: ReactNode }) {
   const data = useStudioData()
+  const prefs = usePreferences()
   const { scope, project, setScope, href } = useScope()
   const { create } = useUI()
   const location = useLocation()
-  const navigate = useNavigate()
+  const today = useToday()
+  const fmt = useFormat()
   const [menuOpen, setMenuOpen] = useState(false)
-  const [query, setQuery] = useState('')
-  const today = todayISO()
+  const [palette, setPalette] = useState<{ open: boolean; query?: string }>({ open: false })
+  const collapsed = prefs.sidebarCollapsed
 
   useEffect(() => setMenuOpen(false), [location.pathname])
 
-  const inProject = location.pathname.startsWith('/proyectos/')
-  /** En la ficha de un proyecto, el menú lleva a sus pestañas; si no, a la vista del estudio. */
-  const target = (e: NavEntry) => (inProject && project && e.tab ? `/proyectos/${project.slug}/${e.tab}` : href(e.to))
-  const isActive = (e: NavEntry) => {
-    if (inProject && project) {
-      const tab = location.pathname.split('/')[3] ?? 'resumen'
-      return e.tab === tab
+  // Atajos: Ctrl/Cmd+K o «/» abren la paleta; «[» pliega la barra lateral.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        setPalette({ open: true })
+      } else if (!isTyping(e.target) && !e.metaKey && !e.ctrlKey && !e.altKey && !document.querySelector('dialog[open]')) {
+        if (e.key === '/') {
+          e.preventDefault()
+          setPalette({ open: true })
+        } else if (e.key === '[') {
+          updatePreferences((p) => ({ sidebarCollapsed: !p.sidebarCollapsed }))
+        }
+      }
     }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
+  const inProject = location.pathname.startsWith('/proyectos/')
+  const target = (e: NavPage) => (inProject && project && e.tab ? `/proyectos/${project.slug}/${e.tab}` : href(e.to))
+  const isActive = (e: NavPage) => {
+    if (inProject && project) return e.tab === (location.pathname.split('/')[3] ?? 'resumen')
     return e.to === '/' ? location.pathname === '/' : location.pathname.startsWith(e.to)
   }
-
-  const submitSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    const q = query.trim()
-    navigate(`/trabajo?${new URLSearchParams({ ...(scope ? { p: scope } : {}), q, estado: 'todos' }).toString()}`)
-  }
+  const currentPath = location.pathname + location.search
 
   return (
-    <div className={`app ${menuOpen ? 'menu-open' : ''}`}>
+    <div className={`app ${menuOpen ? 'menu-open' : ''}`} data-sidebar={collapsed ? 'collapsed' : 'expanded'}>
       <a className="skip-link" href="#contenido">
-        Saltar al contenido
+        {t('app.skipToContent')}
       </a>
-      <aside className="sidebar" aria-label="Navegación">
+      <aside className="sidebar" aria-label={t('nav.navigation')}>
         <div className="brand">
           <span className="brand-mark" aria-hidden="true">
             <Icon name="target" size={18} />
           </span>
-          <div>
-            <strong>Studio Hub</strong>
+          <div className="brand-text">
+            <strong>{t('app.name')}</strong>
             <span>{data.studio.name}</span>
           </div>
-          <button type="button" className="icon-btn only-mobile" onClick={() => setMenuOpen(false)} aria-label="Cerrar menú">
+          <button type="button" className="icon-btn only-mobile" onClick={() => setMenuOpen(false)} aria-label={t('nav.closeMenu')}>
             <Icon name="close" />
           </button>
         </div>
         <nav>
-          {NAV.map((group) => (
+          {navGroups().map((group) => (
             <div className="nav-group" key={group.title}>
-              <h2 className="nav-title">{group.title}</h2>
-              {group.entries.map((e) => (
-                <Link key={e.to} to={target(e)} className={isActive(e) ? 'nav-link active' : 'nav-link'} aria-current={isActive(e) ? 'page' : undefined}>
+              <h2 className="nav-title">
+                <span className="nav-title-text">{group.title}</span>
+              </h2>
+              {group.pages.map((e) => (
+                <Link
+                  key={e.to}
+                  to={target(e)}
+                  className={isActive(e) ? 'nav-link active' : 'nav-link'}
+                  aria-current={isActive(e) ? 'page' : undefined}
+                  title={collapsed ? e.label : undefined}
+                  aria-label={collapsed ? e.label : undefined}
+                >
                   <Icon name={e.icon} size={17} />
-                  {e.label}
+                  <span className="nav-label">{e.label}</span>
                 </Link>
               ))}
             </div>
           ))}
           <div className="nav-group">
             <h2 className="nav-title">
-              <NavLink to="/proyectos" className="nav-title-link">
-                Proyectos
+              <NavLink to="/proyectos" className="nav-title-link nav-title-text">
+                {t('nav.projects')}
               </NavLink>
-              <button type="button" className="icon-btn small" onClick={() => create('projects')} aria-label="Nuevo proyecto" title="Nuevo proyecto">
+              <button type="button" className="icon-btn small" onClick={() => create('projects')} aria-label={t('nav.newProject')} title={t('nav.newProject')}>
                 <Icon name="plus" size={14} />
               </button>
             </h2>
@@ -115,33 +111,77 @@ export function AppShell({ children }: { children: ReactNode }) {
               const open = data.items.filter((i) => i.projectId === p.id && isOpen(i)).length
               const active = project?.id === p.id && inProject
               return (
-                <Link key={p.id} to={`/proyectos/${p.slug}`} className={active ? 'nav-link active' : 'nav-link'} title={STAGES[p.stage].label}>
-                  <span className="dot" style={{ background: p.color }} />
-                  <span className="nav-project-name">{p.name}</span>
-                  <span className="nav-count">{open}</span>
+                <Link
+                  key={p.id}
+                  to={`/proyectos/${p.slug}`}
+                  className={active ? 'nav-link active' : 'nav-link'}
+                  aria-current={active ? 'page' : undefined}
+                  title={collapsed ? p.name : STAGES[p.stage].label}
+                  aria-label={collapsed ? p.name : undefined}
+                >
+                  <span className="dot" style={{ background: p.color }} aria-hidden="true" />
+                  <span className="nav-label">{p.name}</span>
+                  <span className="nav-count" title={t('nav.openCount', { n: open })}>
+                    {open}
+                  </span>
                 </Link>
               )
             })}
           </div>
+          {prefs.savedViews.length > 0 && (
+            <div className="nav-group">
+              <h2 className="nav-title">
+                <span className="nav-title-text">{t('nav.views')}</span>
+              </h2>
+              {prefs.savedViews.map((v) => (
+                <Link
+                  key={v.id}
+                  to={v.path}
+                  className={currentPath === v.path ? 'nav-link active' : 'nav-link'}
+                  title={collapsed ? v.name : undefined}
+                  aria-label={collapsed ? v.name : undefined}
+                >
+                  <Icon name="bookmark" size={16} />
+                  <span className="nav-label">{v.name}</span>
+                </Link>
+              ))}
+            </div>
+          )}
         </nav>
         <div className="sidebar-foot">
-          <NavLink to="/ajustes" className={({ isActive: a }) => (a ? 'nav-link active' : 'nav-link')}>
-            <Icon name="settings" size={17} /> Ajustes y datos
+          <NavLink
+            to="/ajustes"
+            className={({ isActive: a }) => (a ? 'nav-link active' : 'nav-link')}
+            title={collapsed ? t('nav.settings') : undefined}
+            aria-label={collapsed ? t('nav.settings') : undefined}
+          >
+            <Icon name="settings" size={17} /> <span className="nav-label">{t('nav.settings')}</span>
           </NavLink>
+          <button
+            type="button"
+            className="nav-link only-desktop"
+            style={{ border: 0, background: 'transparent', cursor: 'pointer', width: '100%' }}
+            onClick={() => updatePreferences((p) => ({ sidebarCollapsed: !p.sidebarCollapsed }))}
+            aria-label={collapsed ? t('nav.expand') : t('nav.collapse')}
+            title={`${collapsed ? t('nav.expand') : t('nav.collapse')} ( [ )`}
+          >
+            <Icon name={collapsed ? 'chevronRight' : 'chevronLeft'} size={17} />
+            <span className="nav-label">{t('actions.collapse')}</span>
+          </button>
         </div>
       </aside>
       <div className="sidebar-backdrop" onClick={() => setMenuOpen(false)} aria-hidden="true" />
 
       <div className="main">
         <header className="topbar">
-          <button type="button" className="icon-btn only-mobile" onClick={() => setMenuOpen(true)} aria-label="Abrir menú">
+          <button type="button" className="icon-btn only-mobile" onClick={() => setMenuOpen(true)} aria-label={t('nav.openMenu')}>
             <Icon name="menu" />
           </button>
-          <label className="scope-switch">
-            <span className="visually-hidden">Ámbito</span>
-            {project && <span className="dot" style={{ background: project.color }} />}
-            <select value={scope ?? ''} onChange={(e) => setScope(e.target.value || null)} aria-label="Ver todo el estudio o un proyecto">
-              <option value="">Todo el estudio</option>
+          <label className="scope-switch" title={t('topbar.scopeHint')}>
+            <span className="visually-hidden">{t('topbar.scope')}</span>
+            {project ? <span className="dot" style={{ background: project.color }} aria-hidden="true" /> : <Icon name="layout" size={15} />}
+            <select value={scope ?? ''} onChange={(e) => setScope(e.target.value || null)} aria-label={t('topbar.scopeHint')}>
+              <option value="">{t('topbar.wholeStudio')}</option>
               {data.projects.map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.name}
@@ -149,25 +189,49 @@ export function AppShell({ children }: { children: ReactNode }) {
               ))}
             </select>
           </label>
-          <form className="search" role="search" onSubmit={submitSearch}>
+          <button type="button" className="search-trigger" onClick={() => setPalette({ open: true })} aria-label={t('topbar.search')} aria-keyshortcuts="Control+K Meta+K /">
             <Icon name="search" size={16} />
-            <input
-              type="search"
-              placeholder="Buscar tareas, decisiones, commits…"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              aria-label="Buscar"
-            />
-          </form>
-          <span className="topbar-date">{formatLongDate(today)}</span>
-          <button type="button" className="btn btn-primary" onClick={() => create('items')}>
-            <Icon name="plus" size={16} /> <span className="hide-narrow">Nuevo</span>
+            <span>{t('topbar.search')}</span>
+            <kbd>Ctrl K</kbd>
           </button>
+          <span className="topbar-date">{fmt.longDate(today)}</span>
+          <div className="topbar-actions">
+            <NotificationsMenu />
+            <Popover
+              label={t('topbar.quickActions')}
+              trigger={(p) => (
+                <button type="button" className="btn btn-primary" onClick={p.toggle} aria-expanded={p['aria-expanded']} aria-haspopup="menu">
+                  <Icon name="plus" size={16} /> <span className="hide-narrow">{t('topbar.new')}</span>
+                  <Icon name="chevronDown" size={14} />
+                </button>
+              )}
+            >
+              {(close) =>
+                quickCreate().map((a, n) => (
+                  <div key={a.id}>
+                    {n === quickCreate().length - 1 && <div className="menu-sep" />}
+                    <button
+                      type="button"
+                      role="menuitem"
+                      className="menu-item"
+                      onClick={() => {
+                        close()
+                        create(a.collection, a.defaults)
+                      }}
+                    >
+                      <Icon name={a.icon} size={16} /> {a.label}
+                    </button>
+                  </div>
+                ))
+              }
+            </Popover>
+          </div>
         </header>
         <main id="contenido" className="content" tabIndex={-1}>
           {children}
         </main>
       </div>
+      <CommandPalette open={palette.open} initialQuery={palette.query} onClose={() => setPalette({ open: false })} />
     </div>
   )
 }

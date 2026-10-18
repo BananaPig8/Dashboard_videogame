@@ -1,5 +1,14 @@
-// Nombres en pantalla y tono (color) de cada valor del modelo. Una sola tabla por tipo:
-// así las pantallas no repiten textos y añadir un estado nuevo es tocar un sitio.
+// Cada valor del modelo con su nombre en pantalla y su tono. Los colores de estado son
+// los mismos en toda la aplicación:
+//   success (verde)  → hecho, publicado, al día
+//   warning (ámbar)  → por confirmar, vence pronto, pide atención
+//   danger  (rojo)   → bloqueado, vencido, crítico
+//   info    (azul)   → información y trabajo en curso
+//   special (violeta)→ en revisión, hitos
+//   neutral / muted  → el resto
+// Nunca van solos: las etiquetas llevan siempre su icono y su texto (ver Badges.tsx).
+// Los nombres salen del diccionario del idioma (src/i18n), no de aquí.
+import { tr } from '../i18n'
 import type {
   BuildChannel,
   BuildStatus,
@@ -17,47 +26,76 @@ import type {
   SourceType,
 } from './types'
 
-/** Tonos de las etiquetas; cada uno tiene su color en styles.css (.tone-…). */
-export type Tone = 'neutral' | 'info' | 'progress' | 'success' | 'warning' | 'danger' | 'muted' | 'accent'
+export type Tone = 'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'muted' | 'special'
 
-interface Entry {
-  label: string
+export interface Entry {
+  readonly label: string
   tone: Tone
 }
 
-export const STAGES: Record<ProjectStage, Entry & { order: number }> = {
-  idea: { label: 'Idea', tone: 'muted', order: 0 },
-  concept: { label: 'Concepto', tone: 'muted', order: 1 },
-  prototype: { label: 'Prototipo', tone: 'info', order: 2 },
-  preproduction: { label: 'Preproducción', tone: 'info', order: 3 },
-  production: { label: 'Producción', tone: 'progress', order: 4 },
-  polish: { label: 'Pulido', tone: 'accent', order: 5 },
-  release: { label: 'Lanzamiento', tone: 'warning', order: 6 },
-  live: { label: 'Publicado', tone: 'success', order: 7 },
-  paused: { label: 'En pausa', tone: 'neutral', order: 8 },
-  archived: { label: 'Archivado', tone: 'muted', order: 9 },
+/** Tabla con tono y nombre traducido (el nombre se lee al usarlo, en el idioma de ese momento). */
+function entries<K extends string, X extends { tone: Tone }>(ns: string, spec: Record<K, X>): Record<K, X & Entry> {
+  const out = {} as Record<K, X & Entry>
+  for (const key of Object.keys(spec) as K[]) {
+    const value = { ...spec[key] } as X & Entry
+    Object.defineProperty(value, 'label', { get: () => tr(`catalog.${ns}.${key}`), enumerable: true })
+    out[key] = value
+  }
+  return out
 }
 
-export const KINDS: Record<ItemKind, Entry & { plural: string }> = {
-  task: { label: 'Tarea', plural: 'Tareas', tone: 'neutral' },
-  feature: { label: 'Funcionalidad', plural: 'Funcionalidades', tone: 'info' },
-  milestone: { label: 'Hito', plural: 'Hitos', tone: 'accent' },
-  decision: { label: 'Decisión', plural: 'Decisiones', tone: 'warning' },
-  issue: { label: 'Incidencia', plural: 'Incidencias', tone: 'danger' },
+/** Tabla de solo nombres traducidos. */
+function names<K extends string>(ns: string, keys: readonly K[]): Record<K, string> {
+  const out = {} as Record<K, string>
+  for (const key of keys) Object.defineProperty(out, key, { get: () => tr(`catalog.${ns}.${key}`), enumerable: true })
+  return out
 }
 
-export const STATUSES: Record<ItemStatus, Entry & { open: boolean }> = {
-  idea: { label: 'Idea', tone: 'muted', open: true },
-  backlog: { label: 'Pendiente', tone: 'neutral', open: true },
-  planned: { label: 'Planificado', tone: 'info', open: true },
-  in_progress: { label: 'En curso', tone: 'progress', open: true },
-  review: { label: 'En revisión', tone: 'accent', open: true },
-  blocked: { label: 'Bloqueado', tone: 'danger', open: true },
-  paused: { label: 'En pausa', tone: 'neutral', open: true },
-  to_confirm: { label: 'Por confirmar', tone: 'warning', open: true },
-  done: { label: 'Hecho', tone: 'success', open: false },
-  cancelled: { label: 'Descartado', tone: 'muted', open: false },
-}
+export const STAGES = entries<ProjectStage, { tone: Tone; order: number }>('stage', {
+  idea: { tone: 'muted', order: 0 },
+  concept: { tone: 'muted', order: 1 },
+  prototype: { tone: 'info', order: 2 },
+  preproduction: { tone: 'info', order: 3 },
+  production: { tone: 'info', order: 4 },
+  polish: { tone: 'special', order: 5 },
+  release: { tone: 'warning', order: 6 },
+  live: { tone: 'success', order: 7 },
+  paused: { tone: 'neutral', order: 8 },
+  archived: { tone: 'muted', order: 9 },
+})
+
+const KIND_TONES = entries<ItemKind, { tone: Tone }>('kind', {
+  task: { tone: 'neutral' },
+  feature: { tone: 'info' },
+  milestone: { tone: 'special' },
+  decision: { tone: 'warning' },
+  issue: { tone: 'danger' },
+})
+const KIND_PLURALS = names<ItemKind>('kindPlural', ['task', 'feature', 'milestone', 'decision', 'issue'])
+
+export const KINDS = Object.fromEntries(
+  (Object.keys(KIND_TONES) as ItemKind[]).map((k) => {
+    const v = KIND_TONES[k]
+    const out = {} as Entry & { plural: string }
+    Object.defineProperty(out, 'label', { get: () => v.label, enumerable: true })
+    Object.defineProperty(out, 'plural', { get: () => KIND_PLURALS[k], enumerable: true })
+    out.tone = v.tone
+    return [k, out]
+  }),
+) as Record<ItemKind, Entry & { readonly plural: string }>
+
+export const STATUSES = entries<ItemStatus, { tone: Tone; open: boolean }>('status', {
+  idea: { tone: 'muted', open: true },
+  backlog: { tone: 'neutral', open: true },
+  planned: { tone: 'neutral', open: true },
+  in_progress: { tone: 'info', open: true },
+  review: { tone: 'special', open: true },
+  blocked: { tone: 'danger', open: true },
+  paused: { tone: 'muted', open: true },
+  to_confirm: { tone: 'warning', open: true },
+  done: { tone: 'success', open: false },
+  cancelled: { tone: 'muted', open: false },
+})
 
 /** Orden en el que se enseñan los estados (tablero y filtros). */
 export const STATUS_ORDER: ItemStatus[] = [
@@ -73,101 +111,84 @@ export const STATUS_ORDER: ItemStatus[] = [
   'cancelled',
 ]
 
-export const PRIORITIES: Record<Priority, Entry & { weight: number }> = {
-  critical: { label: 'Crítica', tone: 'danger', weight: 4 },
-  high: { label: 'Alta', tone: 'warning', weight: 3 },
-  medium: { label: 'Media', tone: 'neutral', weight: 2 },
-  low: { label: 'Baja', tone: 'muted', weight: 1 },
-}
+export const PRIORITIES = entries<Priority, { tone: Tone; weight: number }>('priority', {
+  critical: { tone: 'danger', weight: 4 },
+  high: { tone: 'warning', weight: 3 },
+  medium: { tone: 'neutral', weight: 2 },
+  low: { tone: 'muted', weight: 1 },
+})
 
-export const CONFIDENCES: Record<Confidence, Entry & { hint: string }> = {
-  verified: { label: 'Verificado', tone: 'success', hint: 'Sale tal cual de una fuente (commit, PR, release o README).' },
-  inferred: { label: 'Deducido', tone: 'info', hint: 'Se deduce de una fuente, pero no lo dice con esas palabras.' },
-  to_confirm: { label: 'Sin confirmar', tone: 'warning', hint: 'Ninguna fuente lo confirma: lo tiene que confirmar el estudio.' },
-}
+const CONFIDENCE_TONES = entries<Confidence, { tone: Tone }>('confidence', {
+  verified: { tone: 'success' },
+  inferred: { tone: 'info' },
+  to_confirm: { tone: 'warning' },
+})
+const CONFIDENCE_HINTS = names<Confidence>('confidenceHint', ['verified', 'inferred', 'to_confirm'])
 
-export const SOURCE_TYPES: Record<SourceType, string> = {
-  commit: 'Commit',
-  pr: 'Pull request',
-  release: 'Release',
-  readme: 'README',
-  doc: 'Documento',
-  manual: 'Anotado a mano',
-}
+export const CONFIDENCES = Object.fromEntries(
+  (Object.keys(CONFIDENCE_TONES) as Confidence[]).map((k) => {
+    const v = CONFIDENCE_TONES[k]
+    const out = {} as Entry & { hint: string }
+    Object.defineProperty(out, 'label', { get: () => v.label, enumerable: true })
+    Object.defineProperty(out, 'hint', { get: () => CONFIDENCE_HINTS[k], enumerable: true })
+    out.tone = v.tone
+    return [k, out]
+  }),
+) as Record<Confidence, Entry & { readonly hint: string }>
 
-export const BUILD_CHANNELS: Record<BuildChannel, Entry> = {
-  full: { label: 'Juego completo', tone: 'accent' },
-  demo: { label: 'Demo', tone: 'info' },
-  event: { label: 'Demo de evento', tone: 'warning' },
-  playtest: { label: 'Playtest', tone: 'neutral' },
-  beta: { label: 'Beta', tone: 'progress' },
-  internal: { label: 'Interna', tone: 'muted' },
-}
+export const SOURCE_TYPES = names<SourceType>('source', ['commit', 'pr', 'release', 'readme', 'doc', 'manual'])
 
-export const BUILD_STATUSES: Record<BuildStatus, Entry> = {
-  in_progress: { label: 'En preparación', tone: 'progress' },
-  ready: { label: 'Lista', tone: 'info' },
-  published: { label: 'Publicada', tone: 'success' },
-  superseded: { label: 'Sustituida', tone: 'muted' },
-  withdrawn: { label: 'Retirada', tone: 'danger' },
-  to_confirm: { label: 'Por confirmar', tone: 'warning' },
-}
+export const BUILD_CHANNELS = entries<BuildChannel, { tone: Tone }>('buildChannel', {
+  full: { tone: 'special' },
+  demo: { tone: 'info' },
+  event: { tone: 'warning' },
+  playtest: { tone: 'neutral' },
+  beta: { tone: 'info' },
+  internal: { tone: 'muted' },
+})
 
-export const EVENT_TYPES: Record<EventType, string> = {
-  fair: 'Feria',
-  festival: 'Festival',
-  showcase: 'Showcase',
-  presentation: 'Presentación',
-  deadline: 'Fecha límite',
-  release: 'Lanzamiento',
-  steam: 'Steam',
-  meeting: 'Reunión',
-  other: 'Otro',
-}
+export const BUILD_STATUSES = entries<BuildStatus, { tone: Tone }>('buildStatus', {
+  in_progress: { tone: 'info' },
+  ready: { tone: 'success' },
+  published: { tone: 'success' },
+  superseded: { tone: 'muted' },
+  withdrawn: { tone: 'danger' },
+  to_confirm: { tone: 'warning' },
+})
 
-export const EVENT_STATUSES: Record<EventStatus, Entry> = {
-  idea: { label: 'Idea', tone: 'muted' },
-  planned: { label: 'Previsto', tone: 'info' },
-  confirmed: { label: 'Confirmado', tone: 'success' },
-  done: { label: 'Celebrado', tone: 'neutral' },
-  cancelled: { label: 'Cancelado', tone: 'muted' },
-}
+export const EVENT_TYPES = names<EventType>('eventType', [
+  'fair',
+  'festival',
+  'showcase',
+  'presentation',
+  'deadline',
+  'release',
+  'steam',
+  'meeting',
+  'other',
+])
 
-export const FEEDBACK_ORIGINS: Record<FeedbackOrigin, string> = {
-  event: 'Evento o feria',
-  playtest: 'Prueba con jugadores',
-  community: 'Comunidad',
-  steam: 'Steam',
-  internal: 'Del estudio',
-  other: 'Otro',
-}
+export const EVENT_STATUSES = entries<EventStatus, { tone: Tone }>('eventStatus', {
+  idea: { tone: 'muted' },
+  planned: { tone: 'info' },
+  confirmed: { tone: 'success' },
+  done: { tone: 'neutral' },
+  cancelled: { tone: 'muted' },
+})
 
-export const FEEDBACK_STATUSES: Record<FeedbackStatus, Entry & { open: boolean }> = {
-  new: { label: 'Nuevo', tone: 'warning', open: true },
-  triaged: { label: 'Revisado', tone: 'info', open: true },
-  planned: { label: 'Planificado', tone: 'progress', open: true },
-  addressed: { label: 'Resuelto', tone: 'success', open: false },
-  wont_do: { label: 'No se hará', tone: 'muted', open: false },
-}
+export const FEEDBACK_ORIGINS = names<FeedbackOrigin>('feedbackOrigin', ['event', 'playtest', 'community', 'steam', 'internal', 'other'])
 
-export const RESOURCE_TYPES: Record<ResourceType, string> = {
-  repo: 'Repositorio',
-  doc: 'Documento',
-  link: 'Enlace',
-  design: 'Diseño',
-  asset: 'Recurso gráfico',
-  tool: 'Herramienta',
-  guide: 'Guía',
-}
+export const FEEDBACK_STATUSES = entries<FeedbackStatus, { tone: Tone; open: boolean }>('feedbackStatus', {
+  new: { tone: 'warning', open: true },
+  triaged: { tone: 'info', open: true },
+  planned: { tone: 'info', open: true },
+  addressed: { tone: 'success', open: false },
+  wont_do: { tone: 'muted', open: false },
+})
 
-export const CHECKLIST_TARGETS: Record<ChecklistTarget, string> = {
-  steam: 'Steam',
-  demo: 'Demo',
-  update: 'Actualización',
-  event: 'Evento',
-  release: 'Lanzamiento',
-  other: 'Otro',
-}
+export const RESOURCE_TYPES = names<ResourceType>('resourceType', ['repo', 'doc', 'link', 'design', 'asset', 'tool', 'guide'])
+
+export const CHECKLIST_TARGETS = names<ChecklistTarget>('checklistTarget', ['steam', 'demo', 'update', 'event', 'release', 'other'])
 
 export function label<K extends string>(table: Record<K, string | Entry>, key: K | undefined): string {
   if (key === undefined) return ''

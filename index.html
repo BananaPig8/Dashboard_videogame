@@ -1,14 +1,29 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Studio Hub: el panel de trabajo del estudio para llevar todos sus videojuegos." />
+    <meta name="color-scheme" content="dark light" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <title>Studio Hub</title>
+    <script>
+      // Tema antes de pintar, para que no parpadee (las preferencias completas las aplica la app).
+      try {
+        var p = JSON.parse(localStorage.getItem('studio-hub:preferencias') || '{}')
+        var t = p.theme === 'light' || p.theme === 'dark' ? p.theme : p.theme === 'system' && matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+        document.documentElement.dataset.theme = t
+        if (p.density === 'compact') document.documentElement.dataset.density = 'compact'
+      } catch (e) {}
+    </script>
+    <style>
+      html[data-theme='dark'] body { background: #0f1218; color: #e9edf3 }
+      html[data-theme='light'] body { background: #f4f5f8; color: #141821 }
+      .boot { display: grid; place-items: center; min-height: 100vh; font: 15px system-ui, sans-serif; opacity: 0.7 }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"><div class="boot" role="status">Cargando Studio Hub…</div></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

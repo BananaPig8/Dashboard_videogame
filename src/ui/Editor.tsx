@@ -1,13 +1,16 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CONFIDENCES, SOURCE_TYPES } from '../domain/catalog'
-import { formatDate, todayISO } from '../domain/dates'
+import { todayISO } from '../domain/dates'
+import { t } from '../i18n'
 import type { SourceRef, WorkItem } from '../domain/types'
 import { store, useStudioData, type CollectionKey } from '../data/store'
 import { ExternalLink, Modal } from './components/Common'
 import { Icon } from './components/Icon'
 import { newDefaults, saveDraft, useScope, type EditorRequest } from './context'
 import { EntityForm, SPECS } from './forms'
+import { useNotify, useUndoable } from './feedback'
+import { useFormat } from './hooks'
 import { sourceHref } from './util'
 
 const TITLES: Partial<Record<CollectionKey, [string, string]>> = {
@@ -24,6 +27,8 @@ export function EditorModal({ request, onClose }: { request: EditorRequest; onCl
   const data = useStudioData()
   const { scope } = useScope()
   const navigate = useNavigate()
+  const { toast, confirm } = useNotify()
+  const undoable = useUndoable()
   const spec = SPECS[request.collection] ?? []
   const existing = request.id ? (data[request.collection] as { id: string }[]).find((x) => x.id === request.id) : undefined
   const initial = useMemo(
@@ -49,17 +54,27 @@ export function EditorModal({ request, onClose }: { request: EditorRequest; onCl
     const withSources = 'sources' in initial ? { ...draft, sources } : draft
     const id = saveDraft(request.collection, withSources, data)
     onClose()
+    toast(existing ? t('feedbackMsg.saved') : t('feedbackMsg.created'))
     if (request.collection === 'projects' && !existing) navigate(`/proyectos/${id}`)
   }
 
-  const remove = () => {
+  const remove = async () => {
     if (!existing) return
-    const what = request.collection === 'projects' ? 'este proyecto y todo lo suyo' : 'este elemento'
-    if (window.confirm(`¿Borrar ${what}? No se puede deshacer (salvo importando una copia).`)) {
-      store.remove(request.collection, existing.id)
-      onClose()
-      if (request.collection === 'projects') navigate('/')
-    }
+    const name = String((existing as Record<string, unknown>).title ?? (existing as Record<string, unknown>).name ?? '')
+    const isProject = request.collection === 'projects'
+    const ok = await confirm({
+      title: isProject ? `¿Borrar el proyecto «${name}»?` : `¿Borrar «${name}»?`,
+      message: isProject
+        ? 'Se borra con todo lo suyo: tareas, builds, agenda, feedback, listas e historial. Podrás deshacerlo justo después.'
+        : 'Podrás deshacerlo justo después.',
+      confirmLabel: t('actions.delete'),
+      danger: true,
+    })
+    if (!ok) return
+    onClose()
+    // Primero se sale de la ficha del proyecto (a la lista); luego se borra (con «Deshacer»).
+    if (isProject) navigate('/proyectos')
+    undoable(t('feedbackMsg.deleted'), () => store.remove(request.collection, existing.id))
   }
 
   return (
@@ -73,15 +88,15 @@ export function EditorModal({ request, onClose }: { request: EditorRequest; onCl
         <>
           {existing && (
             <button type="button" className="btn btn-danger-ghost" onClick={remove}>
-              <Icon name="trash" size={16} /> Borrar
+              <Icon name="trash" size={16} /> {t('actions.delete')}
             </button>
           )}
           <span className="spacer" />
           <button type="button" className="btn" onClick={onClose}>
-            Cancelar
+            {t('actions.cancel')}
           </button>
           <button type="submit" form={formId} className="btn btn-primary">
-            Guardar
+            {t('actions.save')}
           </button>
         </>
       }
@@ -111,6 +126,7 @@ function SourcesEditor({
   onChange: (s: SourceRef[]) => void
   projectRepo?: Parameters<typeof sourceHref>[1]
 }) {
+  const fmt = useFormat()
   const [adding, setAdding] = useState(false)
   const [draft, setDraft] = useState<SourceRef>({ type: 'manual', ref: '', date: todayISO() })
   return (
@@ -124,7 +140,7 @@ function SourcesEditor({
             <li key={`${s.type}-${s.ref}-${k}`}>
               <span className="source-type">{SOURCE_TYPES[s.type]}</span>
               {href ? <ExternalLink href={href}>{s.ref}</ExternalLink> : <span>{s.ref}</span>}
-              {s.date && <span className="muted">{formatDate(s.date)}</span>}
+              {s.date && <span className="muted">{fmt.date(s.date)}</span>}
               {s.note && <span className="muted">· {s.note}</span>}
               <button type="button" className="icon-btn small" aria-label="Quitar fuente" onClick={() => onChange(sources.filter((_, i) => i !== k))}>
                 <Icon name="close" size={14} />

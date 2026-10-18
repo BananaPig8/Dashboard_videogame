@@ -1,27 +1,23 @@
 import { useState } from 'react'
-import { formatLongDate, parseISODate, todayISO } from '../../domain/dates'
-import { blockedItems, byPriority, isActionable, itemsOf, todayItems, type TodayReason } from '../../domain/selectors'
+import { yearOf } from '../../domain/dates'
+import { useFormat, useToday } from '../hooks'
+import { useUndoable } from '../feedback'
+import { blockedItems, byPriority, isActionable, itemsOf, todayItems } from '../../domain/selectors'
+import { ReasonPill } from './Overview'
 import { store, useStudioData } from '../../data/store'
-import { Pill } from '../components/Badges'
 import { Card, PageHeader } from '../components/Common'
 import { Icon } from '../components/Icon'
 import { ItemList } from '../components/ItemList'
 import { newDefaults, saveDraft, useScope } from '../context'
 import { plural } from '../util'
 
-const REASON: Record<TodayReason, { label: string; tone: 'danger' | 'warning' | 'info' | 'progress' | 'accent' }> = {
-  overdue: { label: 'Vencida', tone: 'danger' },
-  due: { label: 'Vence hoy', tone: 'warning' },
-  focus: { label: 'Para hoy', tone: 'info' },
-  in_progress: { label: 'En curso', tone: 'progress' },
-  review: { label: 'En revisión', tone: 'accent' },
-}
-
 export function TodayPage() {
   const data = useStudioData()
   const { scope, project } = useScope()
-  const today = todayISO()
-  const year = parseISODate(today).getFullYear()
+  const today = useToday()
+  const year = yearOf(today)
+  const fmt = useFormat()
+  const undoable = useUndoable()
   const [title, setTitle] = useState('')
   const entries = todayItems(data, today, scope)
   const reasons = new Map(entries.map((e) => [e.item.id, e.reason]))
@@ -41,7 +37,7 @@ export function TodayPage() {
 
   return (
     <div className="page">
-      <PageHeader title="Hoy" subtitle={`${formatLongDate(today)}${project ? ` · ${project.name}` : ''} · ${plural(entries.length, 'cosa', 'cosas')} en la lista`} />
+      <PageHeader title="Hoy" subtitle={`${fmt.longDate(today)}${project ? ` · ${project.name}` : ''} · ${plural(entries.length, 'cosa', 'cosas')} en la lista`} />
       <div className="grid grid-2-1">
         <Card title="La lista de hoy" icon="sun" subtitle="Vencido, lo que vence hoy, lo marcado y lo que está en marcha">
           <form className="quick-add" onSubmit={quickAdd}>
@@ -64,10 +60,9 @@ export function TodayPage() {
             hideStatus
             empty="Nada para hoy todavía: elige algo de la columna de la derecha."
             aside={(item) => {
-              const r = REASON[reasons.get(item.id)!]
               return (
                 <>
-                  <Pill tone={r.tone}>{r.label}</Pill>
+                  <ReasonPill reason={reasons.get(item.id)!} />
                   {item.focusDate === today && (
                     <button type="button" className="icon-btn small" title="Quitar de hoy" aria-label={`Quitar «${item.title}» de hoy`} onClick={() => store.patch('items', item.id, { focusDate: undefined })}>
                       <Icon name="close" size={14} />
@@ -78,7 +73,7 @@ export function TodayPage() {
                     className="icon-btn small"
                     title="Marcar como hecho"
                     aria-label={`Marcar «${item.title}» como hecho`}
-                    onClick={() => store.patch('items', item.id, { status: 'done', completedAt: today, focusDate: undefined })}
+                    onClick={() => undoable('Marcado como hecho.', () => store.patch('items', item.id, { status: 'done', completedAt: today, focusDate: undefined }))}
                   >
                     <Icon name="check" size={14} />
                   </button>

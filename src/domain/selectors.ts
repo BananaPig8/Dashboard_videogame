@@ -1,7 +1,7 @@
 // Las preguntas del panel, como funciones puras sobre los datos. Ninguna conoce a un
 // proyecto concreto: reciben los datos, la fecha de hoy y, si acaso, el proyecto.
 import { FEEDBACK_STATUSES, PRIORITIES, STATUSES } from './catalog'
-import { addDays, daysBetween, startOfWeek } from './dates'
+import { addDays, daysBetween, startOfWeek, type WeekStart } from './dates'
 import type {
   Activity,
   Build,
@@ -194,15 +194,15 @@ export interface Bucket {
 }
 
 /**
- * Evolución por semanas (lunes a domingo) hasta la semana de hoy: commits y elementos
+ * Evolución por semanas (de lunes, o de domingo) hasta la semana de hoy: commits y elementos
  * terminados. Empieza en la primera semana con actividad o `weeks` semanas atrás.
  */
-export function weeklyEvolution(data: StudioData, today: ISODate, weeks: number, scope: Scope = null): Bucket[] {
-  const end = startOfWeek(today)
+export function weeklyEvolution(data: StudioData, today: ISODate, weeks: number, scope: Scope = null, weekStart: WeekStart = 1): Bucket[] {
+  const end = startOfWeek(today, weekStart)
   const buckets: Bucket[] = []
   for (let k = weeks - 1; k >= 0; k--) buckets.push({ start: addDays(end, -7 * k), commits: 0, completed: 0 })
   const index = (d: ISODate) => {
-    const n = daysBetween(buckets[0].start, startOfWeek(d)) / 7
+    const n = daysBetween(buckets[0].start, startOfWeek(d, weekStart)) / 7
     return n >= 0 && n < buckets.length ? n : -1
   }
   for (const a of activityOf(data, scope)) {
@@ -389,4 +389,49 @@ export function matchesQuery(item: WorkItem, query: string): boolean {
   if (!q) return true
   const hay = normalize([item.title, item.description, item.decisionOutcome, item.blockedReason, ...item.tags, ...item.sources.map((s) => s.ref)].join(' '))
   return q.split(/\s+/).every((w) => hay.includes(w))
+}
+
+// ——— Notificaciones ————————————————————————————————————————————————————————
+
+export type NotificationKind = 'overdue' | 'dueToday' | 'eventSoon' | 'eventStale' | 'blocked' | 'newFeedback'
+
+export interface StudioNotification {
+  /** Estable mientras la situación no cambie: si vuelve a vencer otra fecha, es otra notificación. */
+  id: string
+  kind: NotificationKind
+  tone: 'danger' | 'warning' | 'info'
+  title: string
+  date?: ISODate
+  projectId?: ID
+  target: { collection: 'items' | 'events' | 'feedback'; id: ID }
+}
+
+/**
+ * Lo que merece un aviso hoy: lo vencido, lo que vence hoy, eventos de los próximos 14
+ * días, eventos pasados sin actualizar, bloqueos importantes y feedback sin revisar.
+ */
+export function notificationsFor(data: StudioData, today: ISODate): StudioNotification[] {
+  const out: StudioNotification[] = []
+  for (const i of data.items) {
+    if (!isOpen(i)) continue
+    if (i.dueDate && i.dueDate < today)
+      out.push({ id: `overdue:${i.id}:${i.dueDate}`, kind: 'overdue', tone: 'danger', title: i.title, date: i.dueDate, projectId: i.projectId, target: { collection: 'items', id: i.id } })
+    else if (i.dueDate === today)
+      out.push({ id: `due:${i.id}:${today}`, kind: 'dueToday', tone: 'warning', title: i.title, date: today, projectId: i.projectId, target: { collection: 'items', id: i.id } })
+    if (i.status === 'blocked' && PRIORITIES[i.priority].weight >= 3)
+      out.push({ id: `blocked:${i.id}`, kind: 'blocked', tone: 'danger', title: i.title, projectId: i.projectId, target: { collection: 'items', id: i.id } })
+  }
+  for (const e of data.events) {
+    if (!e.date || e.status === 'cancelled' || e.status === 'done') continue
+    const days = daysBetween(today, e.date)
+    if (days >= 0 && days <= 14)
+      out.push({ id: `event:${e.id}:${e.date}`, kind: 'eventSoon', tone: days <= 3 ? 'warning' : 'info', title: e.title, date: e.date, projectId: e.projectId, target: { collection: 'events', id: e.id } })
+    else if ((e.endDate ?? e.date) < today && (e.status === 'planned' || e.status === 'confirmed'))
+      out.push({ id: `stale:${e.id}:${e.date}`, kind: 'eventStale', tone: 'warning', title: e.title, date: e.date, projectId: e.projectId, target: { collection: 'events', id: e.id } })
+  }
+  for (const f of data.feedback)
+    if (f.status === 'new')
+      out.push({ id: `feedback:${f.id}`, kind: 'newFeedback', tone: 'info', title: f.title, date: f.receivedAt, projectId: f.projectId, target: { collection: 'feedback', id: f.id } })
+  const rank = { danger: 0, warning: 1, info: 2 }
+  return out.sort((a, b) => rank[a.tone] - rank[b.tone] || (a.date ?? '9999').localeCompare(b.date ?? '9999'))
 }

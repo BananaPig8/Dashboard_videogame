@@ -3,7 +3,8 @@
 // de herramienta ni perder el sitio.
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { STAGES } from '../../domain/catalog'
-import { formatDate, parseISODate, todayISO } from '../../domain/dates'
+import { yearOf } from '../../domain/dates'
+import { useFormat, useToday } from '../hooks'
 import { itemsOf, projectSummaries, projectSummary } from '../../domain/selectors'
 import { useStudioData } from '../../data/store'
 import { HealthPill, StagePill } from '../components/Badges'
@@ -11,14 +12,14 @@ import { Card, ExternalLink, PageHeader } from '../components/Common'
 import { Icon } from '../components/Icon'
 import { useUI } from '../context'
 import { HistoryPage } from './History'
-import { OverviewSections, ProjectCard } from './Overview'
+import { ProjectCard, WidgetArea } from './Overview'
 import { AgendaPage, BuildsPage, DecisionsPage, FeedbackPage, PublishPage, ResourcesPage } from './Production'
 import { WorkPage } from './Work'
 
 export function ProjectsPage() {
   const data = useStudioData()
   const { create } = useUI()
-  const today = todayISO()
+  const today = useToday()
   const summaries = projectSummaries(data, today).sort(
     (a, b) => STAGES[a.project.stage].order - STAGES[b.project.stage].order || a.project.name.localeCompare(b.project.name),
   )
@@ -70,11 +71,12 @@ export function ProjectPage() {
   const { slug, tab = 'resumen' } = useParams()
   const data = useStudioData()
   const { edit } = useUI()
+  const today = useToday()
+  const fmt = useFormat()
+  const year = yearOf(today)
   const project = data.projects.find((p) => p.slug === slug)
   if (!project) return <Navigate to="/proyectos" replace />
   if (!TABS.some((t) => t.id === tab)) return <Navigate to={`/proyectos/${project.slug}`} replace />
-  const today = todayISO()
-  const year = parseISODate(today).getFullYear()
   const summary = projectSummary(data, project, today)
   const items = itemsOf(data, project.id)
   const counts: Partial<Record<TabId, number>> = {
@@ -109,7 +111,7 @@ export function ProjectPage() {
             )}
             {project.genre && <span className="meta-date">{project.genre}</span>}
             {project.platforms.length > 0 && <span className="meta-date">{project.platforms.join(' · ')}</span>}
-            {project.startedAt && <span className="meta-date">Desde el {formatDate(project.startedAt, year)}</span>}
+            {project.startedAt && <span className="meta-date">Desde el {fmt.date(project.startedAt, year)}</span>}
           </div>
           {project.nextGoal && (
             <p className="next-goal">
@@ -157,7 +159,7 @@ export function ProjectPage() {
           <Card title="De qué va" icon="book">
             <p>{project.description}</p>
           </Card>
-          <OverviewSections data={data} scope={project.id} today={today} year={year} showProjects={false} />
+          <WidgetArea data={data} scope={project.id} today={today} year={year} fmt={fmt} />
         </>
       )}
       {tab === 'trabajo' && <WorkPage embedded />}

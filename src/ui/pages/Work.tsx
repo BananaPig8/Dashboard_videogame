@@ -2,7 +2,8 @@
 // en tablero, con filtros que viven en la URL para poder volver atrás sin perderlos.
 import { useSearchParams } from 'react-router-dom'
 import { CONFIDENCES, KINDS, PRIORITIES, STATUSES, STATUS_ORDER } from '../../domain/catalog'
-import { parseISODate, todayISO } from '../../domain/dates'
+import { todayISO, yearOf } from '../../domain/dates'
+import { useToday } from '../hooks'
 import { isOpen, itemDate, itemsOf, matchesQuery, byPriority } from '../../domain/selectors'
 import type { ItemStatus, StudioData, WorkItem } from '../../domain/types'
 import { store, useStudioData } from '../../data/store'
@@ -12,6 +13,7 @@ import { Icon } from '../components/Icon'
 import { ItemList } from '../components/ItemList'
 import { useScope, useUI } from '../context'
 import { plural } from '../util'
+import { SaveViewButton } from '../components/SaveView'
 
 const COLUMNS: { id: string; label: string; statuses: ItemStatus[] }[] = [
   { id: 'ideas', label: 'Ideas y por confirmar', statuses: ['idea', 'to_confirm'] },
@@ -49,7 +51,7 @@ export function WorkPage({ embedded }: { embedded?: boolean }) {
   const { scope } = useScope()
   const { create } = useUI()
   const [params, setParams] = useSearchParams()
-  const year = parseISODate(todayISO()).getFullYear()
+  const year = yearOf(useToday())
   const view = params.get('vista') === 'tablero' ? 'tablero' : 'lista'
   const set = (key: string, value: string) => {
     const next = new URLSearchParams(params)
@@ -69,9 +71,12 @@ export function WorkPage({ embedded }: { embedded?: boolean }) {
           title="Tareas y funcionalidades"
           subtitle="Tareas, funcionalidades, hitos, decisiones e incidencias"
           actions={
-            <button type="button" className="btn btn-primary" onClick={() => create('items')}>
-              <Icon name="plus" size={16} /> Nuevo elemento
-            </button>
+            <>
+              <SaveViewButton suggestedName="Mi vista de trabajo" />
+              <button type="button" className="btn btn-primary" onClick={() => create('items')}>
+                <Icon name="plus" size={16} /> Nuevo elemento
+              </button>
+            </>
           }
         />
       )}

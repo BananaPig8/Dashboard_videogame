@@ -11,7 +11,7 @@ import {
   RESOURCE_TYPES,
   STATUSES,
 } from '../../domain/catalog'
-import { formatDate, parseISODate, relativeDays, todayISO } from '../../domain/dates'
+import { yearOf } from '../../domain/dates'
 import {
   checklistsOf,
   decisions,
@@ -40,12 +40,15 @@ import { Icon } from '../components/Icon'
 import { ItemList } from '../components/ItemList'
 import { useScope, useUI } from '../context'
 import { sourceHref } from '../util'
+import { useFormat, useToday } from '../hooks'
+import { useNotify } from '../feedback'
 
 interface PageProps {
   embedded?: boolean
 }
 
-const year = () => parseISODate(todayISO()).getFullYear()
+/** Año de hoy, para no repetirlo en las fechas de este año. */
+const useYear = () => yearOf(useToday())
 const ofScope = <T extends { projectId?: string }>(list: T[], scope: Scope, includeStudio = true) =>
   list.filter((x) => scope === null || x.projectId === scope || (includeStudio && !x.projectId))
 
@@ -61,13 +64,13 @@ function Header({ embedded, title, subtitle, onNew, newLabel }: { embedded?: boo
 
 // ——— Agenda ———————————————————————————————————————————————————————————————
 
-const MONTHS = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
-
 export function AgendaPage({ embedded }: PageProps) {
   const data = useStudioData()
   const { scope } = useScope()
   const { create, edit, openItem } = useUI()
-  const today = todayISO()
+  const today = useToday()
+  const fmt = useFormat()
+  const year = yearOf(today)
   const events = ofScope(data.events, scope)
   const dues = data.items.filter((i) => (scope === null || i.projectId === scope) && i.dueDate && STATUSES[i.status].open)
   type Row = { date: string; event?: StudioEvent; dueId?: string; title: string; kind: string; status?: StudioEvent['status']; project?: Project; confirmed: boolean }
@@ -92,8 +95,8 @@ export function AgendaPage({ embedded }: PageProps) {
   const RowView = ({ r }: { r: Row }) => (
     <li className="agenda-row">
       <div className="agenda-date">
-        <strong>{formatDate(r.date, year())}</strong>
-        <span className="muted small">{r.confirmed ? relativeDays(r.date, today) : 'sin confirmar'}</span>
+        <strong>{fmt.date(r.date, year)}</strong>
+        <span className="muted small">{r.confirmed ? fmt.relative(r.date, today) : 'sin confirmar'}</span>
       </div>
       <div className="agenda-main">
         <button type="button" className="item-title" onClick={() => (r.event ? edit({ collection: 'events', id: r.event.id }) : openItem(r.dueId!))}>
@@ -121,9 +124,7 @@ export function AgendaPage({ embedded }: PageProps) {
           ) : (
             [...byMonth.entries()].map(([month, list]) => (
               <div key={month} className="month-group">
-                <h3 className="subhead">
-                  {MONTHS[Number(month.slice(5, 7)) - 1]} {month.slice(0, 4)}
-                </h3>
+                <h3 className="subhead">{fmt.monthYear(month)}</h3>
                 <ul className="agenda-list">
                   {list.map((r) => (
                     <RowView key={`${r.event?.id ?? r.dueId}`} r={r} />
@@ -173,6 +174,8 @@ export function BuildsPage({ embedded }: PageProps) {
   const data = useStudioData()
   const { scope } = useScope()
   const { create, edit } = useUI()
+  const fmt = useFormat()
+  const year = useYear()
   const builds = ofScope(data.builds, scope, false).sort((a, b) => (b.date ?? '').localeCompare(a.date ?? '') || a.name.localeCompare(b.name))
   const projects = data.projects.filter((p) => scope === null || p.id === scope)
   return (
@@ -200,22 +203,22 @@ export function BuildsPage({ embedded }: PageProps) {
                   <tbody>
                     {list.map((b: Build) => (
                       <tr key={b.id}>
-                        <td>
+                        <td data-label="Build">
                           <button type="button" className="item-title" onClick={() => edit({ collection: 'builds', id: b.id })}>
                             {b.name}
                           </button>{' '}
                           <span className="version-tag">v{b.version}</span>
                           {b.notes && <p className="item-detail">{b.notes}</p>}
                         </td>
-                        <td>
+                        <td data-label="Canal">
                           <BuildChannelPill channel={b.channel} />
                         </td>
-                        <td>
+                        <td data-label="Estado">
                           <BuildStatusPill status={b.status} />
                         </td>
-                        <td className="nowrap">{b.date ? formatDate(b.date, year()) : '—'}</td>
-                        <td>{b.platforms.join(', ') || '—'}</td>
-                        <td>{b.url ? <ExternalLink href={b.url}>{b.distribution ?? 'Abrir'}</ExternalLink> : (b.distribution ?? '—')}</td>
+                        <td className="nowrap" data-label="Fecha">{b.date ? fmt.date(b.date, year) : '—'}</td>
+                        <td data-label="Plataformas">{b.platforms.join(', ') || '—'}</td>
+                        <td data-label="Dónde">{b.url ? <ExternalLink href={b.url}>{b.distribution ?? 'Abrir'}</ExternalLink> : (b.distribution ?? '—')}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -234,6 +237,7 @@ export function BuildsPage({ embedded }: PageProps) {
 
 function ChecklistCard({ checklist, data, showProject }: { checklist: Checklist; data: StudioData; showProject: boolean }) {
   const { edit } = useUI()
+  const { confirm } = useNotify()
   const [label, setLabel] = useState('')
   const project = data.projects.find((p) => p.id === checklist.projectId)
   const done = checklist.items.filter((i) => i.done).length
@@ -251,7 +255,10 @@ function ChecklistCard({ checklist, data, showProject }: { checklist: Checklist;
               type="button"
               className="btn btn-small btn-ghost"
               title="Desmarca todos los pasos para la siguiente versión"
-              onClick={() => window.confirm('¿Desmarcar todos los pasos para empezar una versión nueva?') && save(checklist.items.map((i) => ({ ...i, done: false })))}
+              onClick={async () => {
+                if (await confirm({ title: '¿Empezar una versión nueva?', message: 'Se desmarcan todos los pasos de esta lista.', confirmLabel: 'Desmarcar todo' }))
+                  save(checklist.items.map((i) => ({ ...i, done: false })))
+              }}
             >
               Empezar de nuevo
             </button>
@@ -264,7 +271,7 @@ function ChecklistCard({ checklist, data, showProject }: { checklist: Checklist;
     >
       {showProject && <ProjectChip project={project} />}
       {checklist.description && <p className="muted">{checklist.description}</p>}
-      <Progress ratio={checklist.items.length ? done / checklist.items.length : 0} label={checklist.title} tone={done === checklist.items.length ? 'success' : 'progress'} />
+      <Progress ratio={checklist.items.length ? done / checklist.items.length : 0} label={checklist.title} tone={done === checklist.items.length ? 'success' : 'info'} />
       <ul className="checklist">
         {checklist.items.map((it) => (
           <li key={it.id} className={it.done ? 'done' : undefined}>
@@ -293,7 +300,10 @@ function ChecklistCard({ checklist, data, showProject }: { checklist: Checklist;
               type="button"
               className="icon-btn small"
               aria-label={`Quitar el paso «${it.label}»`}
-              onClick={() => window.confirm(`¿Quitar el paso «${it.label}»?`) && save(checklist.items.filter((x) => x.id !== it.id))}
+              onClick={async () => {
+                if (await confirm({ title: `¿Quitar el paso «${it.label}»?`, confirmLabel: 'Quitar', danger: true }))
+                  save(checklist.items.filter((x) => x.id !== it.id))
+              }}
             >
               <Icon name="close" size={14} />
             </button>
@@ -320,6 +330,7 @@ function ChecklistCard({ checklist, data, showProject }: { checklist: Checklist;
 
 export function PublishPage({ embedded }: PageProps) {
   const data = useStudioData()
+  const year = useYear()
   const { scope } = useScope()
   const { create } = useUI()
   const lists = checklistsOf(data, scope)
@@ -338,7 +349,7 @@ export function PublishPage({ embedded }: PageProps) {
         )}
       </div>
       <Card title="Pendiente para publicar, demos y ferias" icon="flag" subtitle="Elementos abiertos de Steam, lanzamientos, demos y eventos">
-        <ItemList items={pending} data={data} showProject={scope === null} detail="blocked" year={year()} empty="Nada pendiente." />
+        <ItemList items={pending} data={data} showProject={scope === null} detail="blocked" year={year} empty="Nada pendiente." />
       </Card>
     </div>
   )
@@ -348,6 +359,8 @@ export function PublishPage({ embedded }: PageProps) {
 
 export function FeedbackPage({ embedded }: PageProps) {
   const data = useStudioData()
+  const year = useYear()
+  const fmt = useFormat()
   const { scope } = useScope()
   const { create, edit, openItem } = useUI()
   const open = feedbackToPrioritize(data, scope)
@@ -368,7 +381,7 @@ export function FeedbackPage({ embedded }: PageProps) {
             {f.detail && <p className="item-detail">{f.detail}</p>}
             <div className="item-meta">
               <span className="meta-date">{FEEDBACK_ORIGINS[f.origin]}{f.originDetail ? ` · ${f.originDetail}` : ''}</span>
-              {f.receivedAt && <span className="meta-date">{formatDate(f.receivedAt, year())}</span>}
+              {f.receivedAt && <span className="meta-date">{fmt.date(f.receivedAt, year)}</span>}
               {scope === null && <ProjectChip project={projects.get(f.projectId)} />}
               <ConfidenceTag confidence={f.confidence} compact />
             </div>
@@ -425,6 +438,8 @@ export function FeedbackPage({ embedded }: PageProps) {
 
 export function DecisionsPage({ embedded }: PageProps) {
   const data = useStudioData()
+  const year = useYear()
+  const fmt = useFormat()
   const { scope } = useScope()
   const { create, openItem } = useUI()
   const { open, taken } = decisions(data, scope)
@@ -447,7 +462,7 @@ export function DecisionsPage({ embedded }: PageProps) {
             <ol className="timeline">
               {taken.map((d) => (
                 <li key={d.id}>
-                  <span className="timeline-date">{formatDate(itemDate(d), year())}</span>
+                  <span className="timeline-date">{fmt.date(itemDate(d), year)}</span>
                   <div>
                     <button type="button" className="item-title" onClick={() => openItem(d.id)}>
                       {d.title}
@@ -465,10 +480,10 @@ export function DecisionsPage({ embedded }: PageProps) {
         </Card>
         <div className="stack">
           <Card title="Por decidir" icon="question">
-            <ItemList items={open} data={data} showProject={scope === null} detail="decision" year={year()} empty="Nada pendiente de decidir." />
+            <ItemList items={open} data={data} showProject={scope === null} detail="decision" year={year} empty="Nada pendiente de decidir." />
           </Card>
           <Card title="Aparcado por una decisión" icon="pause" subtitle="Hecho o empezado y apagado a propósito">
-            <ItemList items={parked} data={data} showProject={scope === null} detail="blocked" year={year()} empty="Nada aparcado." />
+            <ItemList items={parked} data={data} showProject={scope === null} detail="blocked" year={year} empty="Nada aparcado." />
           </Card>
         </div>
       </div>

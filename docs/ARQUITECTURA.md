@@ -32,14 +32,21 @@ src/
 │   ├── storage.ts     # StorageAdapter: hoy localStorage; mañana un servidor
 │   ├── store.ts       # Estado inmutable + useSyncExternalStore + fusión de datos iniciales
 │   └── seed/          # Datos iniciales: áreas y una carpeta por proyecto
+├── i18n/              # Idioma: diccionario tipado (es.ts), t() y formato de fechas (Intl)
 └── ui/
-    ├── AppShell.tsx   # Barra lateral, selector de ámbito, buscador
+    ├── AppShell.tsx   # Barra lateral (contraíble), ámbito, búsqueda, avisos, «Nuevo», atajos
+    ├── CommandPalette.tsx  # Paleta de órdenes (Ctrl/Cmd + K)
+    ├── Notifications.tsx   # La campana: avisos calculados de los datos
+    ├── prefs.ts       # Preferencias de este navegador: tema, acento, densidad, panel,
+    │                  # vistas guardadas, idioma, zona horaria y formatos
+    ├── feedback.tsx   # Avisos con «Deshacer», confirmaciones, pantalla de error, esqueleto
+    ├── hooks.ts       # useToday (zona horaria) y useFormat (formato elegido)
     ├── context.tsx    # Ámbito (useScope) y editor (useUI)
-    ├── forms.tsx      # Formularios descritos como datos (SPECS)
-    ├── Editor.tsx     # Ventana lateral de edición, con las fuentes de cada dato
-    ├── components/    # Etiquetas, tarjetas, listas, gráficas, iconos
-    └── pages/         # Panel, Hoy, Trabajo, Agenda, Builds, Publicación, Feedback,
-                       # Decisiones, Recursos, Historial, Proyectos, Ajustes
+    ├── forms.tsx      # Formularios descritos como datos (SPECS), con validación
+    ├── Editor.tsx     # Panel lateral de edición, con las fuentes de cada dato
+    ├── components/    # Etiquetas, tarjetas, listas, gráficas, iconos, menús
+    └── pages/         # Panel (widgets), Hoy, Trabajo, Agenda, Builds, Publicación,
+                       # Feedback, Decisiones, Recursos, Historial, Proyectos, Ajustes
 ```
 
 - **`domain/`** no importa nada de React ni del navegador. Las pantallas no calculan:
@@ -48,7 +55,14 @@ src/
   se guarda con el `StorageAdapter` y avisa a las pantallas. Las pestañas abiertas se
   sincronizan entre sí (evento `storage`).
 - **`ui/forms.tsx`** describe los campos de cada tipo de elemento como datos; un solo
-  componente (`EntityForm`) los pinta. Añadir un campo es añadir una línea.
+  componente (`EntityForm`) los pinta y los valida. Añadir un campo es añadir una línea.
+- **Preferencias aparte de los datos** (`ui/prefs.ts`): lo que es de cada persona (tema,
+  panel, vistas, zona horaria…) no viaja con los datos del estudio.
+- **«Hoy» en la zona horaria del estudio** (`domain/dates.ts`, `Europe/Madrid` por
+  defecto), no en la del navegador; las fechas del modelo son de calendario y se escriben
+  con `i18n/format.ts`.
+- El diseño (colores de estado, tipografía, componentes, teclado, móvil) está en
+  [`DISENO.md`](DISENO.md).
 
 ## Datos iniciales y cambios del estudio
 

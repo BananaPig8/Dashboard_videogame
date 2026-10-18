@@ -1,7 +1,7 @@
 // Gráficas en SVG, sin librerías. Colores de la paleta categórica validada
 // (azul = commits, naranja = terminados), con su versión para el tema oscuro en styles.css.
 import { useState } from 'react'
-import { formatDate } from '../../domain/dates'
+import { useFormat } from '../hooks'
 import type { Bucket } from '../../domain/selectors'
 
 /** Minigráfica de barras: actividad por día. Una sola serie, sin leyenda. */
@@ -35,6 +35,8 @@ function topRoundedBar(x: number, y: number, w: number, h: number, r = 3): strin
 
 /** Evolución semanal: commits y elementos terminados, barras agrupadas en un solo eje. */
 export function WeeklyChart({ buckets, year }: { buckets: Bucket[]; year: number }) {
+  const fmt = useFormat()
+  const formatDate = fmt.date
   const [hover, setHover] = useState<number | null>(null)
   const W = 640
   const H = 200
