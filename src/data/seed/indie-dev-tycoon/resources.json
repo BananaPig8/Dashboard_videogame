@@ -401,7 +401,7 @@
     "title": "Talo",
     "type": "tool",
     "url": "https://trytalo.com",
-    "description": "Servicio de código abierto del ranking mundial (tablas demo, feria_valladolid y Jueguito).",
+    "description": "Servicio de código abierto del ranking mundial. El juego usa las tablas demo, feria_valladolid y Jueguito; que estén creadas en Talo está por confirmar.",
     "tags": [
       "talo",
       "ranking"
@@ -413,7 +413,7 @@
     "title": "TaskView",
     "type": "tool",
     "url": "https://github.com/Gimanh/taskview-community",
-    "description": "Tablero de tareas conectado a Claude Code con el servidor MCP taskview-mcp.",
+    "description": "Tablero de tareas. El servidor MCP taskview-mcp está configurado en .mcp.json; falta confirmar TASKVIEW_TOKEN y si las tareas se llevan allí.",
     "tags": [
       "taskview",
       "tareas"

@@ -858,7 +858,7 @@
     "status": "done",
     "priority": "medium",
     "areaId": "art-audio",
-    "completedAt": "2026-09-27",
+    "completedAt": "2026-09-28",
     "tags": [
       "web",
       "arte",
@@ -868,7 +868,7 @@
       {
         "type": "commit",
         "ref": "ad26410",
-        "date": "2026-09-27"
+        "date": "2026-09-28"
       },
       {
         "type": "pr",
@@ -889,7 +889,7 @@
     "status": "done",
     "priority": "medium",
     "areaId": "ui-ux",
-    "completedAt": "2026-09-27",
+    "completedAt": "2026-09-28",
     "tags": [
       "web",
       "ux"
@@ -898,7 +898,7 @@
       {
         "type": "commit",
         "ref": "ad26410",
-        "date": "2026-09-27"
+        "date": "2026-09-28"
       },
       {
         "type": "pr",
@@ -919,7 +919,7 @@
     "status": "done",
     "priority": "medium",
     "areaId": "gameplay",
-    "completedAt": "2026-09-27",
+    "completedAt": "2026-09-28",
     "tags": [
       "web"
     ],
@@ -927,7 +927,7 @@
       {
         "type": "commit",
         "ref": "438b9fe",
-        "date": "2026-09-27"
+        "date": "2026-09-28"
       },
       {
         "type": "pr",
@@ -948,7 +948,7 @@
     "status": "done",
     "priority": "medium",
     "areaId": "gameplay",
-    "completedAt": "2026-09-27",
+    "completedAt": "2026-09-28",
     "tags": [
       "web"
     ],
@@ -956,7 +956,7 @@
       {
         "type": "commit",
         "ref": "438b9fe",
-        "date": "2026-09-27"
+        "date": "2026-09-28"
       },
       {
         "type": "pr",
@@ -977,7 +977,7 @@
     "status": "done",
     "priority": "medium",
     "areaId": "gameplay",
-    "completedAt": "2026-09-27",
+    "completedAt": "2026-09-28",
     "tags": [
       "web",
       "consolas"
@@ -986,7 +986,7 @@
       {
         "type": "commit",
         "ref": "438b9fe",
-        "date": "2026-09-27"
+        "date": "2026-09-28"
       },
       {
         "type": "pr",
@@ -1007,7 +1007,7 @@
     "status": "done",
     "priority": "medium",
     "areaId": "gameplay",
-    "completedAt": "2026-09-27",
+    "completedAt": "2026-09-28",
     "tags": [
       "web",
       "premios"
@@ -1016,7 +1016,7 @@
       {
         "type": "commit",
         "ref": "438b9fe",
-        "date": "2026-09-27"
+        "date": "2026-09-28"
       },
       {
         "type": "pr",
@@ -1037,7 +1037,7 @@
     "status": "done",
     "priority": "medium",
     "areaId": "ui-ux",
-    "completedAt": "2026-09-27",
+    "completedAt": "2026-09-28",
     "tags": [
       "web",
       "ux",
@@ -1047,7 +1047,7 @@
       {
         "type": "commit",
         "ref": "438b9fe",
-        "date": "2026-09-27"
+        "date": "2026-09-28"
       },
       {
         "type": "pr",
@@ -1085,6 +1085,13 @@
         "ref": "3703f04",
         "date": "2026-09-28",
         "note": "Las burbujas salen al juntar cada punto"
+      },
+      {
+        "type": "pr",
+        "ref": "#1",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/1",
+        "date": "2026-10-04",
+        "note": "Llegó a main con la PR #1 (fusionada el 2026-10-04)"
       },
       {
         "type": "readme",
@@ -1395,7 +1402,7 @@
     "projectId": "indie-dev-tycoon",
     "kind": "milestone",
     "title": "Cambio de nombre a Indie Dev Tycoon",
-    "description": "El juego nace como Garaje Tycoon (27-09), pasa a Indie Tycoon (28-09, 05:01) y se queda en Indie Dev Tycoon (28-09, 05:45), el nombre que lleva hoy el repositorio.",
+    "description": "El juego nace como Garaje Tycoon (27-09), pasa a Indie Tycoon (28-09, 07:01) y se queda en Indie Dev Tycoon (28-09, 07:45), el nombre que lleva hoy el repositorio.",
     "status": "done",
     "priority": "high",
     "areaId": "marketing",
@@ -1891,7 +1898,7 @@
     "projectId": "indie-dev-tycoon",
     "kind": "milestone",
     "title": "Primer port a Godot: motor, oficina, interfaz y audio",
-    "description": "En un día la versión de Godot tiene el motor verificado contra la web, el dibujo de la oficina, la interfaz con el tutorial, el audio y la exportación a tres sistemas, y a las 14:51 recibe también lo nuevo de la web. El port completo y a la par con la web llega con la PR #1.",
+    "description": "En un día la versión de Godot tiene el motor verificado contra la web, el dibujo de la oficina, la interfaz con el tutorial, el audio y la exportación a tres sistemas, y a las 16:51 recibe también lo nuevo de la web. El port completo y a la par con la web llega con la PR #1.",
     "status": "done",
     "priority": "high",
     "areaId": "tech",
@@ -2068,6 +2075,7 @@
     "status": "done",
     "priority": "medium",
     "areaId": "art-audio",
+    "startedAt": "2026-09-27",
     "completedAt": "2026-09-28",
     "decisionOutcome": "Fuera el edificio en corte, el estilo realista y el pixel art clásico (js/scene-real.js y js/scene-startup.js borrados; el juego pasa de 987 KB a 843 KB). Ajustes se queda con música, efectos y pantalla completa.",
     "tags": [
@@ -2870,12 +2878,12 @@
     "projectId": "indie-dev-tycoon",
     "kind": "decision",
     "title": "No enseñar lo que aún no se puede escoger",
-    "description": "El marketing por canales enseñaba tachado, con su año, lo que aún no existía o ya había cerrado; ocho minutos después se quitó. El mismo día dejan de anunciarse las licencias futuras y lo que falta por investigar deja de salir.",
+    "description": "El marketing por canales enseñaba tachado, con su año, lo que aún no existía o ya había cerrado; ocho minutos después se quitó. El mismo día dejan de anunciarse las licencias futuras y, ya el 30-09, lo que falta por investigar deja de salir.",
     "status": "done",
     "priority": "medium",
     "areaId": "ui-ux",
     "startedAt": "2026-09-29",
-    "completedAt": "2026-09-29",
+    "completedAt": "2026-09-30",
     "decisionOutcome": "Lo que el jugador no puede escoger no se enseña, ni tachado: canales y opciones de marketing, actividades de feria, licencias futuras, y traducción, doblaje, anticopia, actualizaciones/DLC y modos hasta investigarlos.",
     "tags": [
       "web",
@@ -2905,7 +2913,7 @@
       {
         "type": "commit",
         "ref": "b02e796",
-        "date": "2026-09-29",
+        "date": "2026-09-30",
         "note": "«Nada de eso se enseña hasta tenerlo» (web y Godot)"
       },
       {
@@ -4541,7 +4549,7 @@
     "createdAt": "2026-09-28",
     "startedAt": "2026-09-28",
     "completedAt": "2026-09-29",
-    "decisionOutcome": "El flujo «Godot» corre en cada push y pull request (y a mano), para que Godot juegue exactamente igual que la web.",
+    "decisionOutcome": "El flujo «Godot» corre en cada push y pull request (y a mano), para que Godot juegue exactamente igual que la web. Desde el 13-10, solo en las PR (a0c0c23); en ellas, la rápida, y la completa a mano o con la etiqueta «comprobación completa» (d46b1c3).",
     "tags": [
       "ci",
       "godot"
@@ -4571,6 +4579,20 @@
         "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/1",
         "date": "2026-10-04",
         "note": "Llegó a main con la PR #1 (74 commits)"
+      },
+      {
+        "type": "pr",
+        "ref": "#37",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/37",
+        "date": "2026-10-13",
+        "note": "a0c0c23: la comprobación de Godot, solo en las PR"
+      },
+      {
+        "type": "pr",
+        "ref": "#39",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/39",
+        "date": "2026-10-13",
+        "note": "d46b1c3: la rápida en cada PR y la completa a mano o con la etiqueta"
       }
     ],
     "confidence": "verified"
@@ -4585,7 +4607,7 @@
     "priority": "high",
     "areaId": "tech",
     "createdAt": "2026-09-28",
-    "startedAt": "2026-09-29",
+    "startedAt": "2026-09-28",
     "completedAt": "2026-09-29",
     "tags": [
       "godot",
@@ -4594,6 +4616,12 @@
       "hito"
     ],
     "sources": [
+      {
+        "type": "commit",
+        "ref": "36fcc46",
+        "date": "2026-09-28",
+        "note": "Lo nuevo, solo en la web; el flujo «Godot» pasa a lanzarse a mano hasta que Godot se ponga al día"
+      },
       {
         "type": "commit",
         "ref": "0495ba4",
@@ -4627,11 +4655,11 @@
     "projectId": "indie-dev-tycoon",
     "kind": "feature",
     "title": "Logo nuevo de la portada en pixel art",
-    "description": "Logo en pixel art generado con tools/make_logo.js (img/logo.png y godot/assets/logo.png): el estudio con el mando, tú de espaldas jugando, la gráfica que sube, «Indie Dev» / «Tycoon» y el mundo con su órbita. Al día siguiente se quita y vuelve el logo de antes.",
+    "description": "Logo en pixel art generado con tools/make_logo.js (img/logo.png y godot/assets/logo.png): el estudio con el mando, tú de espaldas jugando, la gráfica que sube, «Indie Dev» / «Tycoon» y el mundo con su órbita. Esa misma mañana se quita y vuelve el logo de antes.",
     "status": "done",
     "priority": "medium",
     "areaId": "marketing",
-    "completedAt": "2026-09-29",
+    "completedAt": "2026-09-30",
     "tags": [
       "logo",
       "arte",
@@ -4643,7 +4671,13 @@
       {
         "type": "commit",
         "ref": "36bfaea",
-        "date": "2026-09-29"
+        "date": "2026-09-30"
+      },
+      {
+        "type": "commit",
+        "ref": "7c1b079",
+        "date": "2026-09-30",
+        "note": "«Vuelve el logo de antes (también de icono)»"
       },
       {
         "type": "pr",
@@ -4664,7 +4698,7 @@
     "status": "done",
     "priority": "medium",
     "areaId": "release",
-    "completedAt": "2026-09-29",
+    "completedAt": "2026-09-30",
     "tags": [
       "version",
       "web",
@@ -4675,7 +4709,7 @@
       {
         "type": "commit",
         "ref": "36bfaea",
-        "date": "2026-09-29"
+        "date": "2026-09-30"
       },
       {
         "type": "pr",
@@ -4696,7 +4730,7 @@
     "status": "done",
     "priority": "medium",
     "areaId": "release",
-    "completedAt": "2026-09-29",
+    "completedAt": "2026-09-30",
     "decisionOutcome": "Web, Godot y escritorio llevan el mismo número de versión, empezando en 0.0.5.",
     "tags": [
       "version",
@@ -4707,7 +4741,7 @@
       {
         "type": "commit",
         "ref": "36bfaea",
-        "date": "2026-09-29",
+        "date": "2026-09-30",
         "note": "Diff de desktop/package.json (0.5.0 → 0.0.5), godot/project.godot y export_presets.cfg (0.6.0 → 0.0.5)"
       },
       {
@@ -4729,7 +4763,7 @@
     "status": "done",
     "priority": "medium",
     "areaId": "marketing",
-    "completedAt": "2026-09-29",
+    "completedAt": "2026-09-30",
     "tags": [
       "discord",
       "web"
@@ -4738,7 +4772,7 @@
       {
         "type": "commit",
         "ref": "36bfaea",
-        "date": "2026-09-29"
+        "date": "2026-09-30"
       },
       {
         "type": "pr",
@@ -4759,7 +4793,7 @@
     "status": "done",
     "priority": "medium",
     "areaId": "polish",
-    "completedAt": "2026-09-29",
+    "completedAt": "2026-09-30",
     "decisionOutcome": "Ningún emoji en pantalla. Donde iban solos (salón de la fama, archivo, cultura, críticas) se ponen iconos pixel.",
     "tags": [
       "web",
@@ -4770,7 +4804,7 @@
       {
         "type": "commit",
         "ref": "36bfaea",
-        "date": "2026-09-29"
+        "date": "2026-09-30"
       },
       {
         "type": "pr",
@@ -4789,9 +4823,9 @@
     "title": "Esc abre el menú y planta nueva en la oficina",
     "description": "Durante la partida, sin ninguna ventana abierta, Esc abre el menú. La planta de la oficina se redibuja con maceta, tierra y hojas con luz.",
     "status": "done",
-    "priority": "low",
+    "priority": "medium",
     "areaId": "ui-ux",
-    "completedAt": "2026-09-29",
+    "completedAt": "2026-09-30",
     "tags": [
       "web",
       "godot",
@@ -4801,7 +4835,7 @@
       {
         "type": "commit",
         "ref": "36bfaea",
-        "date": "2026-09-29"
+        "date": "2026-09-30"
       },
       {
         "type": "pr",
@@ -4820,9 +4854,9 @@
     "title": "Mesas ocupadas sin decimales y títulos centrados",
     "description": "«Mesas ocupadas» enseñaba decimales y ahora sale en números enteros. «Proyecto» y los títulos de los paneles se centran, y en la reputación sale «(tu país)» alineado con el nombre.",
     "status": "done",
-    "priority": "low",
+    "priority": "medium",
     "areaId": "ui-ux",
-    "completedAt": "2026-09-29",
+    "completedAt": "2026-09-30",
     "tags": [
       "web",
       "godot",
@@ -4832,7 +4866,7 @@
       {
         "type": "commit",
         "ref": "36bfaea",
-        "date": "2026-09-29"
+        "date": "2026-09-30"
       },
       {
         "type": "pr",
@@ -4853,7 +4887,7 @@
     "status": "done",
     "priority": "medium",
     "areaId": "gameplay",
-    "completedAt": "2026-09-29",
+    "completedAt": "2026-09-30",
     "tags": [
       "web",
       "godot",
@@ -4863,7 +4897,7 @@
       {
         "type": "commit",
         "ref": "b02e796",
-        "date": "2026-09-29"
+        "date": "2026-09-30"
       },
       {
         "type": "pr",
@@ -5622,7 +5656,7 @@
     "priority": "medium",
     "areaId": "release",
     "completedAt": "2026-09-30",
-    "decisionOutcome": "La comprobación de Godot sigue en cada push; exportar Windows y Linux (Windows firmado) solo a mano (Actions → Godot → Run workflow). La versión de PC (Electron) también solo a mano, Windows y Linux. Fuera la versión de Mac, tools/firmar_mac.sh, su perfil de exportación y npm run dist:mac.",
+    "decisionOutcome": "La comprobación de Godot sigue en cada push; exportar Windows y Linux (Windows firmado) solo a mano (Actions → Godot → Run workflow). La versión de PC (Electron) también solo a mano, Windows y Linux. Fuera la versión de Mac, tools/firmar_mac.sh, su perfil de exportación y npm run dist:mac. El 06-10 vuelve Mac (app universal firmada ad hoc) y el flujo «Descargas» compila solo en cada push a main (51c8135, PR #20); Electron sigue solo a mano.",
     "tags": [
       "ci",
       "godot",
@@ -5641,6 +5675,13 @@
         "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/1",
         "date": "2026-10-04",
         "note": "Llegó a main con la PR #1"
+      },
+      {
+        "type": "pr",
+        "ref": "#20",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/20",
+        "date": "2026-10-06",
+        "note": "51c8135: presets macOS (app universal, firmada ad hoc) y flujo «Descargas» en cada push a main"
       }
     ],
     "confidence": "verified"
@@ -5854,7 +5895,7 @@
     "priority": "medium",
     "areaId": "polish",
     "startedAt": "2026-09-30",
-    "completedAt": "2026-09-30",
+    "completedAt": "2026-10-01",
     "tags": [
       "godot",
       "textos"
@@ -5873,7 +5914,7 @@
       {
         "type": "commit",
         "ref": "b937dad",
-        "date": "2026-09-30"
+        "date": "2026-10-01"
       },
       {
         "type": "pr",
@@ -6134,7 +6175,7 @@
     "status": "done",
     "priority": "high",
     "areaId": "tech",
-    "completedAt": "2026-09-30",
+    "completedAt": "2026-10-01",
     "tags": [
       "godot",
       "memoria"
@@ -6143,7 +6184,7 @@
       {
         "type": "commit",
         "ref": "b937dad",
-        "date": "2026-09-30"
+        "date": "2026-10-01"
       },
       {
         "type": "pr",
@@ -6164,7 +6205,7 @@
     "status": "done",
     "priority": "high",
     "areaId": "tech",
-    "completedAt": "2026-09-30",
+    "completedAt": "2026-10-01",
     "tags": [
       "godot",
       "memoria"
@@ -6173,7 +6214,7 @@
       {
         "type": "commit",
         "ref": "12065a5",
-        "date": "2026-09-30"
+        "date": "2026-10-01"
       },
       {
         "type": "pr",
@@ -6194,8 +6235,8 @@
     "status": "done",
     "priority": "medium",
     "areaId": "ui-ux",
-    "startedAt": "2026-09-30",
-    "completedAt": "2026-09-30",
+    "startedAt": "2026-10-01",
+    "completedAt": "2026-10-01",
     "tags": [
       "godot",
       "graficas"
@@ -6204,12 +6245,12 @@
       {
         "type": "commit",
         "ref": "b937dad",
-        "date": "2026-09-30"
+        "date": "2026-10-01"
       },
       {
         "type": "commit",
         "ref": "12065a5",
-        "date": "2026-09-30"
+        "date": "2026-10-01"
       },
       {
         "type": "pr",
@@ -6231,7 +6272,7 @@
     "priority": "medium",
     "areaId": "polish",
     "startedAt": "2026-09-30",
-    "completedAt": "2026-09-30",
+    "completedAt": "2026-10-01",
     "tags": [
       "web",
       "godot",
@@ -6246,7 +6287,7 @@
       {
         "type": "commit",
         "ref": "b937dad",
-        "date": "2026-09-30"
+        "date": "2026-10-01"
       },
       {
         "type": "pr",
@@ -6267,8 +6308,8 @@
     "status": "done",
     "priority": "medium",
     "areaId": "tech",
-    "startedAt": "2026-09-30",
-    "completedAt": "2026-09-30",
+    "startedAt": "2026-10-01",
+    "completedAt": "2026-10-01",
     "tags": [
       "godot",
       "pruebas",
@@ -6278,12 +6319,12 @@
       {
         "type": "commit",
         "ref": "b937dad",
-        "date": "2026-09-30"
+        "date": "2026-10-01"
       },
       {
         "type": "commit",
         "ref": "12065a5",
-        "date": "2026-09-30"
+        "date": "2026-10-01"
       },
       {
         "type": "pr",
@@ -7292,7 +7333,7 @@
     "status": "done",
     "priority": "medium",
     "areaId": "ui-ux",
-    "completedAt": "2026-10-04",
+    "completedAt": "2026-10-05",
     "tags": [
       "godot",
       "ajustes"
@@ -7301,7 +7342,7 @@
       {
         "type": "commit",
         "ref": "91e4f52",
-        "date": "2026-10-04"
+        "date": "2026-10-05"
       },
       {
         "type": "pr",
@@ -7321,7 +7362,7 @@
     "status": "done",
     "priority": "medium",
     "areaId": "gameplay",
-    "completedAt": "2026-10-04",
+    "completedAt": "2026-10-05",
     "tags": [
       "web",
       "godot",
@@ -7331,7 +7372,7 @@
       {
         "type": "commit",
         "ref": "91e4f52",
-        "date": "2026-10-04"
+        "date": "2026-10-05"
       },
       {
         "type": "pr",
@@ -7351,7 +7392,7 @@
     "status": "done",
     "priority": "medium",
     "areaId": "gameplay",
-    "completedAt": "2026-10-04",
+    "completedAt": "2026-10-05",
     "tags": [
       "web",
       "godot",
@@ -7362,7 +7403,7 @@
       {
         "type": "commit",
         "ref": "91e4f52",
-        "date": "2026-10-04"
+        "date": "2026-10-05"
       },
       {
         "type": "pr",
@@ -7382,7 +7423,7 @@
     "status": "done",
     "priority": "medium",
     "areaId": "tech",
-    "completedAt": "2026-10-04",
+    "completedAt": "2026-10-05",
     "tags": [
       "godot",
       "error"
@@ -7391,7 +7432,7 @@
       {
         "type": "commit",
         "ref": "b4eee6f",
-        "date": "2026-10-04"
+        "date": "2026-10-05"
       },
       {
         "type": "pr",
@@ -9056,12 +9097,12 @@
     "id": "idt-taskview-mcp",
     "projectId": "indie-dev-tycoon",
     "kind": "task",
-    "title": "TaskView conectado a Claude Code con taskview-mcp",
+    "title": "TaskView configurado en Claude Code con taskview-mcp",
     "description": ".mcp.json con el servidor «taskview» (npx taskview-mcp), activado en .claude/settings.json para que no pida aprobación. Lee TASKVIEW_TOKEN y, si se pone, TASKVIEW_URL (por defecto TaskView Cloud); el token nunca va en el repositorio y el README explica cómo crearlo.",
     "status": "done",
-    "priority": "low",
+    "priority": "medium",
     "areaId": "tech",
-    "completedAt": "2026-10-06",
+    "completedAt": "2026-10-07",
     "tags": [
       "taskview",
       "mcp",
@@ -9072,14 +9113,14 @@
       {
         "type": "commit",
         "ref": "71cb389",
-        "date": "2026-10-06"
+        "date": "2026-10-07"
       },
       {
         "type": "pr",
         "ref": "#25",
         "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/25",
         "date": "2026-10-11",
-        "note": "Abierta el 2026-10-06, fusionada el 2026-10-11"
+        "note": "Abierta el 2026-10-07, fusionada el 2026-10-11"
       },
       {
         "type": "readme",
@@ -9424,7 +9465,7 @@
     "priority": "medium",
     "areaId": "ranking-integrity",
     "completedAt": "2026-10-11",
-    "decisionOutcome": "Ranking mundial en Talo. La partida solo se sube si el jugador pulsa el botón, y la ventana avisa de lo que se envía (nombre del estudio, del personaje y puntuación); nunca se sube nada del ordenador. Solo se sube si mejora la mejor ya subida con ese estudio y ese nombre. El 12-10 cambia: la partida se sube sola al acabar (PR #34).",
+    "decisionOutcome": "Ranking mundial en Talo. La partida solo se sube si el jugador pulsa el botón, y la ventana avisa de lo que se envía (nombre del estudio, del personaje y puntuación); nunca se sube nada del ordenador. Solo se sube si mejora la mejor ya subida con ese estudio y ese nombre. El 13-10 cambia: la partida se sube sola al acabar (PR #34).",
     "tags": [
       "godot",
       "ranking",
@@ -9475,6 +9516,12 @@
         "ref": "8deecc0",
         "date": "2026-10-11",
         "note": "Apartado «Trampas» añadido al README"
+      },
+      {
+        "type": "pr",
+        "ref": "#28",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/28",
+        "date": "2026-10-11"
       },
       {
         "type": "readme",
@@ -9917,7 +9964,7 @@
     "priority": "high",
     "areaId": "ranking-integrity",
     "startedAt": "2026-10-12",
-    "completedAt": "2026-10-12",
+    "completedAt": "2026-10-13",
     "tags": [
       "ranking",
       "talo",
@@ -9939,7 +9986,7 @@
       {
         "type": "commit",
         "ref": "d2a53c3",
-        "date": "2026-10-12"
+        "date": "2026-10-13"
       },
       {
         "type": "pr",
@@ -9994,7 +10041,7 @@
     "status": "done",
     "priority": "high",
     "areaId": "polish",
-    "completedAt": "2026-10-12",
+    "completedAt": "2026-10-13",
     "tags": [
       "letra",
       "ux",
@@ -10006,7 +10053,7 @@
       {
         "type": "commit",
         "ref": "d2a53c3",
-        "date": "2026-10-12"
+        "date": "2026-10-13"
       },
       {
         "type": "pr",
@@ -10026,7 +10073,7 @@
     "status": "done",
     "priority": "medium",
     "areaId": "balance",
-    "completedAt": "2026-10-12",
+    "completedAt": "2026-10-13",
     "tags": [
       "equilibrio",
       "motor",
@@ -10038,7 +10085,7 @@
       {
         "type": "commit",
         "ref": "d2a53c3",
-        "date": "2026-10-12"
+        "date": "2026-10-13"
       },
       {
         "type": "pr",
@@ -10058,7 +10105,7 @@
     "status": "done",
     "priority": "medium",
     "areaId": "onboarding",
-    "completedAt": "2026-10-12",
+    "completedAt": "2026-10-13",
     "tags": [
       "tutorial",
       "godot",
@@ -10068,7 +10115,7 @@
       {
         "type": "commit",
         "ref": "d2a53c3",
-        "date": "2026-10-12"
+        "date": "2026-10-13"
       },
       {
         "type": "pr",
@@ -10088,7 +10135,7 @@
     "status": "done",
     "priority": "medium",
     "areaId": "ranking-integrity",
-    "completedAt": "2026-10-12",
+    "completedAt": "2026-10-13",
     "tags": [
       "ranking",
       "talo",
@@ -10098,7 +10145,7 @@
       {
         "type": "commit",
         "ref": "d2a53c3",
-        "date": "2026-10-12"
+        "date": "2026-10-13"
       },
       {
         "type": "pr",
@@ -10122,7 +10169,7 @@
     "status": "done",
     "priority": "high",
     "areaId": "ranking-integrity",
-    "completedAt": "2026-10-12",
+    "completedAt": "2026-10-13",
     "tags": [
       "ranking",
       "talo",
@@ -10133,7 +10180,7 @@
       {
         "type": "commit",
         "ref": "d2a53c3",
-        "date": "2026-10-12"
+        "date": "2026-10-13"
       },
       {
         "type": "pr",
@@ -10157,7 +10204,7 @@
     "status": "done",
     "priority": "high",
     "areaId": "events",
-    "completedAt": "2026-10-12",
+    "completedAt": "2026-10-13",
     "tags": [
       "feria",
       "qr",
@@ -10168,7 +10215,7 @@
       {
         "type": "commit",
         "ref": "bec8f65",
-        "date": "2026-10-12"
+        "date": "2026-10-13"
       },
       {
         "type": "pr",
@@ -10192,7 +10239,7 @@
     "status": "done",
     "priority": "high",
     "areaId": "events",
-    "completedAt": "2026-10-12",
+    "completedAt": "2026-10-13",
     "tags": [
       "feria",
       "stand",
@@ -10203,7 +10250,7 @@
       {
         "type": "commit",
         "ref": "bec8f65",
-        "date": "2026-10-12"
+        "date": "2026-10-13"
       },
       {
         "type": "pr",
@@ -10227,7 +10274,7 @@
     "status": "done",
     "priority": "high",
     "areaId": "ranking-integrity",
-    "completedAt": "2026-10-12",
+    "completedAt": "2026-10-13",
     "tags": [
       "ranking",
       "palabrotas",
@@ -10238,7 +10285,7 @@
       {
         "type": "commit",
         "ref": "bec8f65",
-        "date": "2026-10-12"
+        "date": "2026-10-13"
       },
       {
         "type": "pr",
@@ -10258,7 +10305,7 @@
     "projectId": "indie-dev-tycoon",
     "kind": "feature",
     "title": "Roll-up del stand de 85×200 cm",
-    "description": "Formato «rollup» en keyart.gd con el logo, las tres oficinas, «¡Juega la demo aquí!» y las tarjetas de Discord (con su QR) y de Steam; tools/qr.py genera los QR. El 13 se recoloca: el cuarto y la oficina arriba y la sede debajo, sin montarse.",
+    "description": "Formato «rollup» en keyart.gd con el logo, las tres oficinas, «¡Juega la demo aquí!» y las tarjetas de Discord (con su QR) y de Steam (hueco «Próximamente en Steam» hasta tener la página); tools/qr.py genera los QR. El 13 se recoloca: el cuarto y la oficina arriba y la sede debajo, sin montarse.",
     "status": "done",
     "priority": "high",
     "areaId": "events",
@@ -10585,12 +10632,11 @@
     "kind": "decision",
     "title": "Qué demo va a Steam: la 1.3 V2, ahora Demo 1.4",
     "description": "El 12-10 quedan publicadas la 1.3 y la 1.3 V2 porque aún no está decidido cuál irá a Steam; main y su README siguen así. El 14-10 se decide en la rama claude/lucid-lamport-fl6em4, todavía sin PR ni fusionar.",
-    "status": "done",
+    "status": "review",
     "priority": "high",
     "areaId": "demo",
     "startedAt": "2026-10-12",
-    "completedAt": "2026-10-14",
-    "decisionOutcome": "Irá a Steam la que fue la 1.3 V2, con las barras de las fases de antes. Pasa a ser la Demo 1.4, la única demo, y se quita la descarga aparte de la V2.",
+    "decisionOutcome": "En la rama (d8eca50), sin fusionar: irá a Steam la que fue la 1.3 V2, ahora Demo 1.4, y se quita la descarga aparte de la V2. En main sigue sin decidir.",
     "tags": [
       "demo",
       "steam",
@@ -10681,10 +10727,10 @@
     "kind": "decision",
     "title": "Traducir los textos al enseñarlos, sin tocar el motor",
     "description": "Para los idiomas, todo se sigue escribiendo en castellano y Godot traduce cada texto al ponerlo en pantalla. Decidido en la rama, sin PR ni fusionar.",
-    "status": "done",
+    "status": "review",
     "priority": "medium",
     "areaId": "localization",
-    "completedAt": "2026-10-14",
+    "startedAt": "2026-10-14",
     "decisionOutcome": "Un Traductor (Translation) en godot/scripts/idiomas.gd traduce al enseñar; el motor sigue en castellano, juega igual que la web y las partidas guardadas también se ven traducidas.",
     "tags": [
       "idiomas",
@@ -10708,22 +10754,23 @@
     "kind": "decision",
     "title": "Idiomas, de momento solo en la demo",
     "description": "Idiomas.enabled() solo se enciende en la demo y en la Demo Valladolid. Decidido en la rama sin fusionar.",
-    "status": "done",
+    "status": "review",
     "priority": "medium",
     "areaId": "localization",
-    "completedAt": "2026-10-14",
+    "startedAt": "2026-10-14",
     "decisionOutcome": "Solo la demo (y la Demo Valladolid) se traduce; el juego completo sigue en castellano de momento.",
     "tags": [
       "idiomas",
       "demo",
-      "godot"
+      "godot",
+      "rama"
     ],
     "sources": [
       {
         "type": "commit",
         "ref": "b5aa4f2",
         "date": "2026-10-14",
-        "note": "«De momento, solo en la demo»"
+        "note": "«De momento, solo en la demo»; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
       }
     ],
     "confidence": "verified"
@@ -10732,8 +10779,8 @@
     "id": "idt-pr-demo-1-4-idiomas",
     "projectId": "indie-dev-tycoon",
     "kind": "task",
-    "title": "Abrir PR y fusionar la Demo 1.4 y la base de Idiomas",
-    "description": "La rama claude/lucid-lamport-fl6em4 tiene dos commits del 14-10 sin PR: la Demo 1.4 y la base de Idiomas. Hasta fusionarlos, main y la release siguen con la demo 1.3 y la 1.3 V2. Mientras GitHub Actions no arranque, la PR no pasará las comprobaciones ni se compilarán las descargas.",
+    "title": "Abrir PR y fusionar la Demo 1.4 y los idiomas",
+    "description": "La rama claude/lucid-lamport-fl6em4 tiene cuatro commits sin PR: la Demo 1.4 y la base de Idiomas (14-10) y 816 frases de la demo traducidas (18-10); hasta fusionarlos, main y la release siguen con la demo 1.3 y la 1.3 V2. Como toca sim.gd, la PR necesita la etiqueta «comprobación completa». Mientras GitHub Actions no arranque, no pasará las comprobaciones ni se compilarán las descargas.",
     "status": "review",
     "priority": "high",
     "areaId": "release",
@@ -10759,15 +10806,32 @@
         "note": "Idiomas (base); en la rama, sin fusionar"
       },
       {
+        "type": "commit",
+        "ref": "3665de9",
+        "date": "2026-10-18",
+        "note": "Traducciones; en la rama, sin fusionar"
+      },
+      {
+        "type": "commit",
+        "ref": "33a3632",
+        "date": "2026-10-18",
+        "note": "Traducciones; toca godot/scripts/sim.gd; en la rama, sin fusionar"
+      },
+      {
         "type": "doc",
         "ref": "GitHub: pull requests del repositorio",
-        "note": "39 PR, todas fusionadas; ninguna abierta a 2026-10-18"
+        "note": "39 PR, todas fusionadas; ninguna abierta a 2026-10-19"
       },
       {
         "type": "release",
         "ref": "descargas",
         "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/releases/tag/descargas",
         "note": "«Descargas (juego v0.0.8 · demo v1.3)»"
+      },
+      {
+        "type": "doc",
+        "ref": "CLAUDE.md del juego",
+        "note": "«a una PR que toque el motor ponle la etiqueta «comprobación completa»»"
       }
     ],
     "confidence": "verified"
@@ -10776,12 +10840,12 @@
     "id": "idt-actions-sin-arrancar",
     "projectId": "indie-dev-tycoon",
     "kind": "issue",
-    "title": "GitHub Actions no arranca desde el 13-10",
-    "description": "Desde el 13-10 a las 08:44 ningún flujo (CI, Godot, Descargas) llega a empezar: GitHub dice que han fallado pagos recientes de la cuenta o que hay que subir el límite de gasto. Las PR #36 a #39 se fusionaron sin comprobaciones y la release «descargas» sigue con lo compilado de la PR #35 (sin el icono nuevo).",
+    "title": "GitHub Actions dejó de arrancar el 13-10",
+    "description": "Desde el 13-10 a las 08:44 ningún flujo (CI, Godot, Descargas) llega a empezar: GitHub dice que han fallado pagos recientes de la cuenta o que hay que subir el límite de gasto. Las PR #36 a #39 se fusionaron sin comprobaciones y la release «descargas» sigue con lo compilado de la PR #35 (sin el icono nuevo). No ha habido ejecuciones desde el 13-10 a las 11:07 (hora local): falta comprobar si sigue.",
     "status": "blocked",
     "priority": "critical",
     "areaId": "release",
-    "blockedReason": "Hay que revisar la facturación de la cuenta de GitHub o su límite de gasto (Settings → Billing & plans).",
+    "blockedReason": "Revisar la facturación de la cuenta de GitHub o su límite de gasto (Settings → Billing & plans) y lanzar un flujo a mano para ver si ya arranca.",
     "tags": [
       "ci",
       "github",
@@ -10793,7 +10857,7 @@
         "ref": "GitHub Actions: ejecuciones del 13-10 (run 38374073131)",
         "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/actions/runs/38374073131",
         "date": "2026-10-13",
-        "note": "«The job was not started because recent account payments have failed or your spending limit needs to be increased». Igual en todas las ejecuciones desde el 13-10 08:44; consultado el 2026-10-18"
+        "note": "«The job was not started because recent account payments have failed or your spending limit needs to be increased». Igual en todas las ejecuciones del 13-10, de las 08:44 a las 11:07 (hora local); ninguna después (consultado el 2026-10-19)"
       },
       {
         "type": "release",
@@ -11337,7 +11401,7 @@
       {
         "type": "commit",
         "ref": "bec8f65",
-        "date": "2026-10-12",
+        "date": "2026-10-13",
         "note": "El QR de Steam sale cuando STEAM_URL sea la página"
       },
       {
@@ -11453,15 +11517,17 @@
     "id": "idt-idiomas-traducciones",
     "projectId": "indie-dev-tycoon",
     "kind": "task",
-    "title": "Traducir las 1.284 frases de la demo",
-    "description": "La rama trae el traductor, el selector y la lista de frases (godot/idiomas/demo.json), pero ningún archivo de traducción: todo sale en castellano. Faltan castellano de Latinoamérica, inglés, francés, alemán, chino, japonés y coreano.",
-    "status": "backlog",
+    "title": "Traducir las frases de la demo (816 hechas en la rama)",
+    "description": "En la rama, sin PR: 816 de las 1.144 frases de la demo traducidas al inglés, francés, alemán, chino, japonés y coreano (godot/idiomas/<idioma>.json); el castellano de Latinoamérica lleva las 22 frases que cambian. nombres.txt guarda lo que no se traduce. Quedan 328 frases por traducir en cada idioma.",
+    "status": "in_progress",
     "priority": "medium",
     "areaId": "localization",
+    "startedAt": "2026-10-14",
     "tags": [
       "idiomas",
       "demo",
-      "godot"
+      "godot",
+      "rama"
     ],
     "sources": [
       {
@@ -11471,9 +11537,53 @@
         "note": "1.284 frases en godot/idiomas/demo.json"
       },
       {
+        "type": "commit",
+        "ref": "3665de9",
+        "date": "2026-10-18",
+        "note": "Primeras 546 frases en 6 idiomas y castellano de Latinoamérica; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+      },
+      {
+        "type": "commit",
+        "ref": "33a3632",
+        "date": "2026-10-18",
+        "note": "816 frases y plurales que se pueden traducir; toca godot/scripts/sim.gd; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+      },
+      {
         "type": "doc",
-        "ref": "godot/idiomas/ (rama claude/lucid-lamport-fl6em4)",
-        "note": "Comprobado el 2026-10-18: solo demo.json, sin <idioma>.json"
+        "ref": "godot/idiomas/ (rama claude/lucid-lamport-fl6em4, 33a3632)",
+        "note": "Contado como tools/idiomas.py estado el 2026-10-19: 816 de 1.144 en en, fr, de, zh_CN, ja y ko (sin los nombres de nombres.txt); es_419 con 22 frases"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-idiomas-plurales-y-titulos",
+    "projectId": "indie-dev-tycoon",
+    "kind": "feature",
+    "title": "Plurales enteros y títulos de juegos sin traducir a trozos",
+    "description": "Los plurales hechos pegando una «s» pasan a frases enteras; en castellano se ven igual. El traductor no traduce a trozos los títulos de los juegos ni usa plantillas muy cortas si no sabe traducir sus huecos. Está en la rama, sin PR ni fusionar.",
+    "status": "review",
+    "priority": "medium",
+    "areaId": "localization",
+    "startedAt": "2026-10-18",
+    "tags": [
+      "idiomas",
+      "godot",
+      "demo",
+      "rama"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "3665de9",
+        "date": "2026-10-18",
+        "note": "«El traductor no usa las plantillas con muy poco texto fijo … si sus huecos no se saben traducir»; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+      },
+      {
+        "type": "commit",
+        "ref": "33a3632",
+        "date": "2026-10-18",
+        "note": "«Los plurales hechos pegando una «s» … pasan a frases enteras»; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
       }
     ],
     "confidence": "verified"
@@ -11579,7 +11689,7 @@
     "status": "to_confirm",
     "priority": "low",
     "areaId": "tech",
-    "createdAt": "2026-10-06",
+    "createdAt": "2026-10-07",
     "tags": [
       "taskview",
       "mcp",
@@ -11589,7 +11699,7 @@
       {
         "type": "commit",
         "ref": "71cb389",
-        "date": "2026-10-06"
+        "date": "2026-10-07"
       },
       {
         "type": "readme",

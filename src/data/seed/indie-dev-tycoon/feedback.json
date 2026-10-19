@@ -174,7 +174,7 @@
     "title": "Las estrellas de lo que se sabe no se veían",
     "detail": "En «Nuevo juego», la ★ y la ✕ de cómo va un género en cada plataforma salían como un hueco.",
     "origin": "event",
-    "originDetail": "Feria de Valladolid («Lo de la feria»)",
+    "originDetail": "Feria en Valladolid («Lo de la feria», d2a53c3); no consta si lo vieron visitantes o si salió al preparar el stand",
     "status": "addressed",
     "impact": "high",
     "linkedItemIds": [
@@ -184,7 +184,7 @@
       {
         "type": "commit",
         "ref": "d2a53c3",
-        "date": "2026-10-12",
+        "date": "2026-10-13",
         "note": "«Lo de la feria»"
       },
       {
@@ -202,7 +202,7 @@
     "title": "En relajado se podía sacar siempre el mismo juego",
     "detail": "En relajado no había cansancio de tema.",
     "origin": "event",
-    "originDetail": "Feria de Valladolid («Lo de la feria»)",
+    "originDetail": "Feria en Valladolid («Lo de la feria», d2a53c3); no consta si lo vieron visitantes o si salió al preparar el stand",
     "status": "addressed",
     "impact": "medium",
     "linkedItemIds": [
@@ -212,7 +212,7 @@
       {
         "type": "commit",
         "ref": "d2a53c3",
-        "date": "2026-10-12",
+        "date": "2026-10-13",
         "note": "«Lo de la feria»"
       },
       {
@@ -230,7 +230,7 @@
     "title": "El tutorial del informe no salía si te saltabas el principal",
     "detail": "Quien se saltaba el tutorial principal o empezaba sin él no veía el del primer informe.",
     "origin": "event",
-    "originDetail": "Feria de Valladolid («Lo de la feria»)",
+    "originDetail": "Feria en Valladolid («Lo de la feria», d2a53c3); no consta si lo vieron visitantes o si salió al preparar el stand",
     "status": "addressed",
     "impact": "medium",
     "linkedItemIds": [
@@ -240,7 +240,7 @@
       {
         "type": "commit",
         "ref": "d2a53c3",
-        "date": "2026-10-12",
+        "date": "2026-10-13",
         "note": "«Lo de la feria»"
       },
       {
@@ -258,7 +258,7 @@
     "title": "Ranking por dificultad y que la partida se suba sola",
     "detail": "Tabla por dificultad, el personaje en cada partida, subida sin pulsar nada y, en el stand, todas las partidas.",
     "origin": "event",
-    "originDetail": "Feria de Valladolid («Lo de la feria»)",
+    "originDetail": "Feria en Valladolid («Lo de la feria», d2a53c3); no consta si lo vieron visitantes o si salió al preparar el stand",
     "status": "addressed",
     "impact": "medium",
     "linkedItemIds": [
@@ -270,7 +270,7 @@
       {
         "type": "commit",
         "ref": "d2a53c3",
-        "date": "2026-10-12",
+        "date": "2026-10-13",
         "note": "«Lo de la feria»"
       },
       {

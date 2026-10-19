@@ -184,13 +184,18 @@
       {
         "id": "idt-steam-ck-demo",
         "label": "Elegir la demo para Steam",
-        "done": true,
-        "note": "La 1.3 V2, ahora Demo 1.4; decidido en la rama sin fusionar.",
+        "done": false,
+        "note": "Elegida la 1.3 V2 (Demo 1.4) en la rama sin fusionar; en main sigue sin decidir.",
         "sources": [
           {
             "type": "commit",
             "ref": "d8eca50",
             "date": "2026-10-14"
+          },
+          {
+            "type": "readme",
+            "ref": "La demo",
+            "note": "En main: «Aún no está decidido si a Steam irá la 1.3 o la 1.3 V2»"
           }
         ]
       },
@@ -252,7 +257,7 @@
           {
             "type": "commit",
             "ref": "bec8f65",
-            "date": "2026-10-12"
+            "date": "2026-10-13"
           }
         ]
       },
@@ -499,7 +504,7 @@
           {
             "type": "commit",
             "ref": "bec8f65",
-            "date": "2026-10-12"
+            "date": "2026-10-13"
           },
           {
             "type": "pr",
@@ -522,7 +527,7 @@
           {
             "type": "commit",
             "ref": "bec8f65",
-            "date": "2026-10-12"
+            "date": "2026-10-13"
           }
         ]
       },
@@ -540,7 +545,7 @@
           {
             "type": "commit",
             "ref": "d2a53c3",
-            "date": "2026-10-12"
+            "date": "2026-10-13"
           },
           {
             "type": "pr",
@@ -557,7 +562,7 @@
           {
             "type": "commit",
             "ref": "bec8f65",
-            "date": "2026-10-12"
+            "date": "2026-10-13"
           }
         ]
       },
@@ -593,7 +598,7 @@
           {
             "type": "commit",
             "ref": "bec8f65",
-            "date": "2026-10-12"
+            "date": "2026-10-13"
           }
         ]
       },

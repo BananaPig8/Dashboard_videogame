@@ -5,16 +5,18 @@
 //   node scripts/importar-historial-git.mjs \
 //     --repo ../Indie-Dev-Tycoon --proyecto indie-dev-tycoon \
 //     --url https://github.com/BananaPig8/Indie-Dev-Tycoon \
-//     --rama origin/main [--rama origin/otra-rama] \
+//     --rama origin/main [--rama origin/otra-rama] [--zona Europe/Madrid] \
 //     --salida src/data/seed/indie-dev-tycoon/activity.json
 //
 // La primera rama es la principal; los commits que solo están en las demás salen con
-// una nota («en la rama …, sin fusionar»). Las fechas van en la hora local de cada commit.
+// una nota («en la rama …, sin fusionar»). Las fechas van en la hora local del estudio
+// (--zona, por defecto Europe/Madrid), no en la zona que guarda cada commit: los commits
+// hechos desde la nube van en UTC y las fusiones de GitHub, en la hora del navegador.
 import { execFileSync } from 'node:child_process'
 import { writeFileSync } from 'node:fs'
 
 function args(argv) {
-  const out = { rama: [] }
+  const out = { rama: [], zona: 'Europe/Madrid' }
   for (let k = 2; k < argv.length; k += 2) {
     const key = argv[k].replace(/^--/, '')
     const value = argv[k + 1]
@@ -30,11 +32,11 @@ function args(argv) {
 const SEP = '\u001f'
 const END = '\u001e'
 
-function gitLog(repo, revs) {
+function gitLog(repo, revs, zona) {
   const raw = execFileSync(
     'git',
-    ['-C', repo, 'log', ...revs, '--date=format:%Y-%m-%dT%H:%M', `--format=%H${SEP}%P${SEP}%ad${SEP}%s${SEP}%b${END}`],
-    { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 },
+    ['-C', repo, 'log', ...revs, '--date=format-local:%Y-%m-%dT%H:%M', `--format=%H${SEP}%P${SEP}%ad${SEP}%s${SEP}%b${END}`],
+    { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, env: { ...process.env, TZ: zona } },
   )
   return raw
     .split(END)
@@ -48,8 +50,8 @@ function gitLog(repo, revs) {
 
 const opt = args(process.argv)
 const [main, ...others] = opt.rama
-const inMain = new Set(gitLog(opt.repo, [main]).map((c) => c.hash))
-const commits = gitLog(opt.repo, opt.rama)
+const inMain = new Set(gitLog(opt.repo, [main], opt.zona).map((c) => c.hash))
+const commits = gitLog(opt.repo, opt.rama, opt.zona)
 const repoUrl = opt.url?.replace(/\/$/, '')
 
 const activity = commits.map((c) => {

@@ -2,7 +2,7 @@
   {
     "id": "indie-dev-tycoon-c-35b2c6c",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-27T11:15",
+    "at": "2026-09-27T13:15",
     "type": "commit",
     "title": "Garaje Tycoon: juego de gestión de un estudio de videojuegos",
     "ref": "35b2c6c",
@@ -11,7 +11,7 @@
   {
     "id": "indie-dev-tycoon-c-1644a59",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-27T11:32",
+    "at": "2026-09-27T13:32",
     "type": "commit",
     "title": "Garaje Tycoon: motores propios, energía y crunch, GameCon, mercado y logros",
     "ref": "1644a59",
@@ -20,7 +20,7 @@
   {
     "id": "indie-dev-tycoon-c-35979bf",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-27T11:45",
+    "at": "2026-09-27T13:45",
     "type": "commit",
     "title": "Garaje Tycoon: webs al estilo Startup Panic y estudios rivales",
     "ref": "35979bf",
@@ -29,7 +29,7 @@
   {
     "id": "indie-dev-tycoon-c-69d8dc0",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-27T12:09",
+    "at": "2026-09-27T14:09",
     "type": "commit",
     "title": "Garaje Tycoon: ramas de webs, servicio con costes reales, gráficos nuevos y versión de PC",
     "ref": "69d8dc0",
@@ -38,7 +38,7 @@
   {
     "id": "indie-dev-tycoon-c-050afcb",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-27T12:53",
+    "at": "2026-09-27T14:53",
     "type": "commit",
     "title": "Garaje Tycoon: luz y día/noche, oficina viva, portadas y música por épocas",
     "ref": "050afcb",
@@ -47,7 +47,7 @@
   {
     "id": "indie-dev-tycoon-c-752af23",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-27T12:56",
+    "at": "2026-09-27T14:56",
     "type": "commit",
     "title": "Repositorio propio del juego: rutas en la raíz y flujos de GitHub Actions",
     "ref": "752af23",
@@ -56,7 +56,7 @@
   {
     "id": "indie-dev-tycoon-c-a4ca879",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-27T16:01",
+    "at": "2026-09-27T18:01",
     "type": "commit",
     "title": "Estilo realista: la oficina en perspectiva, con muebles 3D y personas",
     "ref": "a4ca879",
@@ -65,7 +65,7 @@
   {
     "id": "indie-dev-tycoon-c-6f949dc",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-27T16:29",
+    "at": "2026-09-27T18:29",
     "type": "commit",
     "title": "Estilo Startup Panic: edificio en corte, interfaz clara, salas, inversores y hackeos",
     "ref": "6f949dc",
@@ -74,7 +74,7 @@
   {
     "id": "indie-dev-tycoon-c-b883dda",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-27T17:04",
+    "at": "2026-09-27T19:04",
     "type": "commit",
     "title": "Estilo Startup Panic en pixel art: la oficina como maqueta isométrica y su pantalla",
     "ref": "b883dda",
@@ -83,7 +83,7 @@
   {
     "id": "indie-dev-tycoon-c-ad26410",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-27T22:20",
+    "at": "2026-09-28T00:20",
     "type": "commit",
     "title": "Personajes que caminan y ventanas al estilo Startup Panic",
     "ref": "ad26410",
@@ -92,7 +92,7 @@
   {
     "id": "indie-dev-tycoon-c-438b9fe",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-27T22:43",
+    "at": "2026-09-28T00:43",
     "type": "commit",
     "title": "Tienda de objetos, hackeos a la empresa, secretos, premios del mes y ventanas pixel",
     "ref": "438b9fe",
@@ -101,7 +101,7 @@
   {
     "id": "indie-dev-tycoon-c-b455fd8",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-28T04:33",
+    "at": "2026-09-28T06:33",
     "type": "commit",
     "title": "Consola propia, distribuidoras, dificultad y tres ranuras de guardado",
     "ref": "b455fd8",
@@ -110,7 +110,7 @@
   {
     "id": "indie-dev-tycoon-c-0953550",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-28T05:01",
+    "at": "2026-09-28T07:01",
     "type": "commit",
     "title": "Indie Tycoon: se empieza en tu cuarto y hay tutorial",
     "ref": "0953550",
@@ -119,7 +119,7 @@
   {
     "id": "indie-dev-tycoon-c-9268a5f",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-28T05:45",
+    "at": "2026-09-28T07:45",
     "type": "commit",
     "title": "El juego pasa a llamarse Indie Dev Tycoon",
     "ref": "9268a5f",
@@ -128,7 +128,7 @@
   {
     "id": "indie-dev-tycoon-c-7f89fed",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-28T06:33",
+    "at": "2026-09-28T08:33",
     "type": "commit",
     "title": "Godot: el motor del juego portado a GDScript y verificado contra la web",
     "ref": "7f89fed",
@@ -137,7 +137,7 @@
   {
     "id": "indie-dev-tycoon-c-4dfe402",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-28T09:21",
+    "at": "2026-09-28T11:21",
     "type": "commit",
     "title": "Godot: primera versión del dibujo de la oficina isométrica",
     "ref": "4dfe402",
@@ -146,7 +146,7 @@
   {
     "id": "indie-dev-tycoon-c-5e97b09",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-28T09:21",
+    "at": "2026-09-28T11:21",
     "type": "commit",
     "title": "El mundo, sentarse de verdad, tutorial que no tapa y el 10 más alcanzable",
     "ref": "5e97b09",
@@ -155,7 +155,7 @@
   {
     "id": "indie-dev-tycoon-c-f1b134b",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-28T10:13",
+    "at": "2026-09-28T12:13",
     "type": "commit",
     "title": "Godot: la interfaz entera, las ventanas y el tutorial",
     "ref": "f1b134b",
@@ -164,7 +164,7 @@
   {
     "id": "indie-dev-tycoon-c-f82d5da",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-28T10:48",
+    "at": "2026-09-28T12:48",
     "type": "commit",
     "title": "Godot: música y efectos, exportación a Windows, Linux y Mac, y más pruebas",
     "ref": "f82d5da",
@@ -173,7 +173,7 @@
   {
     "id": "indie-dev-tycoon-c-b32d474",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-28T14:51",
+    "at": "2026-09-28T16:51",
     "type": "commit",
     "title": "Marketing por medios, licencias oficiales, ferias, gala anual y ventas por mes y año",
     "ref": "b32d474",
@@ -182,7 +182,7 @@
   {
     "id": "indie-dev-tycoon-c-2d96793",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-28T15:10",
+    "at": "2026-09-28T17:10",
     "type": "commit",
     "title": "Web: menú principal nuevo, más colorido, con Cargar partida y Ajustes",
     "ref": "2d96793",
@@ -191,7 +191,7 @@
   {
     "id": "indie-dev-tycoon-c-0fc1635",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-28T15:16",
+    "at": "2026-09-28T17:16",
     "type": "commit",
     "title": "Web: un solo estilo gráfico, la maqueta isométrica en pixel art",
     "ref": "0fc1635",
@@ -200,7 +200,7 @@
   {
     "id": "indie-dev-tycoon-c-36fcc46",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-28T15:32",
+    "at": "2026-09-28T17:32",
     "type": "commit",
     "title": "Web: menús sin bajar, tu personaje, nota de las webs y premios de tu tienda",
     "ref": "36fcc46",
@@ -209,7 +209,7 @@
   {
     "id": "indie-dev-tycoon-c-05febe7",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-28T19:31",
+    "at": "2026-09-28T21:31",
     "type": "commit",
     "title": "Web: ferias por país con actividades, mascotas, más temas y gestos nuevos",
     "ref": "05febe7",
@@ -218,7 +218,7 @@
   {
     "id": "indie-dev-tycoon-c-49f5544",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-28T20:19",
+    "at": "2026-09-28T22:19",
     "type": "commit",
     "title": "Web: personas con más vida (ojos, respirar, gestos) y cascos, barba o bigote",
     "ref": "49f5544",
@@ -227,7 +227,7 @@
   {
     "id": "indie-dev-tycoon-c-2806522",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-28T20:54",
+    "at": "2026-09-28T22:54",
     "type": "commit",
     "title": "Equilibrio: normal y difícil más duros, y ningún estudio nuevo saca un 10",
     "ref": "2806522",
@@ -236,7 +236,7 @@
   {
     "id": "indie-dev-tycoon-c-3703f04",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-28T21:00",
+    "at": "2026-09-28T23:00",
     "type": "commit",
     "title": "Equilibrio: puntos como en Game Dev Tycoon, rivales fuertes al principio y competencia",
     "ref": "3703f04",
@@ -245,7 +245,7 @@
   {
     "id": "indie-dev-tycoon-c-206b289",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-28T21:19",
+    "at": "2026-09-28T23:19",
     "type": "commit",
     "title": "Web: estudios rivales vivos que evolucionan contigo",
     "ref": "206b289",
@@ -254,7 +254,7 @@
   {
     "id": "indie-dev-tycoon-c-755950b",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-29T00:09",
+    "at": "2026-09-29T02:09",
     "type": "commit",
     "title": "Web: informes e investigación con tiempo, selector de meses en pixel art, solo ranuras",
     "ref": "755950b",
@@ -263,7 +263,7 @@
   {
     "id": "indie-dev-tycoon-c-0b33d9d",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-29T04:45",
+    "at": "2026-09-29T06:45",
     "type": "commit",
     "title": "Web: marketing por nueve canales, cada época con los suyos",
     "ref": "0b33d9d",
@@ -272,7 +272,7 @@
   {
     "id": "indie-dev-tycoon-c-3f0b7d4",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-29T04:53",
+    "at": "2026-09-29T06:53",
     "type": "commit",
     "title": "Web: marketing por descubrir y sin opciones que no se pueden escoger",
     "ref": "3f0b7d4",
@@ -281,7 +281,7 @@
   {
     "id": "indie-dev-tycoon-c-d4ffad3",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-29T05:12",
+    "at": "2026-09-29T07:12",
     "type": "commit",
     "title": "Web: empleados con personalidad, relaciones, aniversarios y presentaciones en ferias",
     "ref": "d4ffad3",
@@ -290,7 +290,7 @@
   {
     "id": "indie-dev-tycoon-c-5cad201",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-29T05:36",
+    "at": "2026-09-29T07:36",
     "type": "commit",
     "title": "Web: publicar a tu manera, mapa del mundo, piratería, contratos, identidad y prensa",
     "ref": "5cad201",
@@ -299,7 +299,7 @@
   {
     "id": "indie-dev-tycoon-c-743238d",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-29T05:37",
+    "at": "2026-09-29T07:37",
     "type": "commit",
     "title": "Web: habilidades del equipo en números del 1 al 100 (sin estrellas)",
     "ref": "743238d",
@@ -308,7 +308,7 @@
   {
     "id": "indie-dev-tycoon-c-96cf44d",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-29T05:47",
+    "at": "2026-09-29T07:47",
     "type": "commit",
     "title": "Web: demos por épocas y listas de deseos desde 2008",
     "ref": "96cf44d",
@@ -317,7 +317,7 @@
   {
     "id": "indie-dev-tycoon-c-4e9f553",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-29T05:54",
+    "at": "2026-09-29T07:54",
     "type": "commit",
     "title": "Web: actualizaciones 1.1-2.0 y DLC con la reacción de los jugadores",
     "ref": "4e9f553",
@@ -326,7 +326,7 @@
   {
     "id": "indie-dev-tycoon-c-14ca95a",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-29T10:22",
+    "at": "2026-09-29T12:22",
     "type": "commit",
     "title": "Web: online, skins, esports, memoria del estudio, sagas, cultura y más",
     "ref": "14ca95a",
@@ -335,7 +335,7 @@
   {
     "id": "indie-dev-tycoon-c-d5f73f9",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-29T10:34",
+    "at": "2026-09-29T12:34",
     "type": "commit",
     "title": "Web: el mundo avanza solo hasta 2050, modelos de negocio y ajustes pedidos",
     "ref": "d5f73f9",
@@ -344,7 +344,7 @@
   {
     "id": "indie-dev-tycoon-c-7774e74",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-29T10:59",
+    "at": "2026-09-29T12:59",
     "type": "commit",
     "title": "Web: ventanas, avisos y paneles con más estilo y animaciones",
     "ref": "7774e74",
@@ -353,7 +353,7 @@
   {
     "id": "indie-dev-tycoon-c-afcb5a6",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-29T11:28",
+    "at": "2026-09-29T13:28",
     "type": "commit",
     "title": "Web: testeo con jugadores, pruebas A/B, contratos, remoto e ideas robadas",
     "ref": "afcb5a6",
@@ -362,7 +362,7 @@
   {
     "id": "indie-dev-tycoon-c-1d1bf7e",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-29T11:50",
+    "at": "2026-09-29T13:50",
     "type": "commit",
     "title": "Web: modos de juego, tendencias, producción física, comunidad, redes, merch y adaptaciones",
     "ref": "1d1bf7e",
@@ -371,7 +371,7 @@
   {
     "id": "indie-dev-tycoon-c-c0b90bd",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-29T11:54",
+    "at": "2026-09-29T13:54",
     "type": "commit",
     "title": "Web: el tema también cambia lo que importa en cada fase",
     "ref": "c0b90bd",
@@ -380,7 +380,7 @@
   {
     "id": "indie-dev-tycoon-c-3c19f20",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-29T12:04",
+    "at": "2026-09-29T14:04",
     "type": "commit",
     "title": "Web: el público también cambia lo que importa en cada fase",
     "ref": "3c19f20",
@@ -389,7 +389,7 @@
   {
     "id": "indie-dev-tycoon-c-0495ba4",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-29T13:11",
+    "at": "2026-09-29T15:11",
     "type": "commit",
     "title": "Godot: el motor al día con la web (partidas v19), verificado con los bots",
     "ref": "0495ba4",
@@ -398,7 +398,7 @@
   {
     "id": "indie-dev-tycoon-c-85df39d",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-29T18:41",
+    "at": "2026-09-29T20:41",
     "type": "commit",
     "title": "Firma de los ejecutables de Windows y Mac con el certificado del estudio",
     "ref": "85df39d",
@@ -407,7 +407,7 @@
   {
     "id": "indie-dev-tycoon-c-57554d5",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-29T18:45",
+    "at": "2026-09-29T20:45",
     "type": "commit",
     "title": "Godot: publicar, fichas, webs, online, comunidad, equipo, empresa y mundo al día con la web",
     "ref": "57554d5",
@@ -416,7 +416,7 @@
   {
     "id": "indie-dev-tycoon-c-a6e6d7d",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-29T19:25",
+    "at": "2026-09-29T21:25",
     "type": "commit",
     "title": "Godot al día con la web: ferias animadas, portada con tu personaje, gente con gestos y mascotas",
     "ref": "a6e6d7d",
@@ -425,7 +425,7 @@
   {
     "id": "indie-dev-tycoon-c-36bfaea",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-29T23:33",
+    "at": "2026-09-30T01:33",
     "type": "commit",
     "title": "Logo nuevo en pixel art, versión 0.0.5 con Discord y sin emojis en pantalla",
     "ref": "36bfaea",
@@ -434,7 +434,7 @@
   {
     "id": "indie-dev-tycoon-c-b02e796",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-29T23:47",
+    "at": "2026-09-30T01:47",
     "type": "commit",
     "title": "Traducción, doblaje, protección anticopia, actualizaciones/DLC y cada modo de juego se investigan",
     "ref": "b02e796",
@@ -443,7 +443,7 @@
   {
     "id": "indie-dev-tycoon-c-e25d7c0",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-30T00:13",
+    "at": "2026-09-30T02:13",
     "type": "commit",
     "title": "Web v21: comunidad con servidor, encuestas y betas; rebajas, packs y ediciones; spin-offs, reboots y cameos; jams, becas, secretos, preservar y tu historia",
     "ref": "e25d7c0",
@@ -452,7 +452,7 @@
   {
     "id": "indie-dev-tycoon-c-4bfea0c",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-30T04:34",
+    "at": "2026-09-30T06:34",
     "type": "commit",
     "title": "Godot v21 con la misma partida que la web: servidor, encuestas, betas, rebajas, packs, ediciones, spin-offs, jams, becas, secretos, clásicos y tu historia",
     "ref": "4bfea0c",
@@ -461,7 +461,7 @@
   {
     "id": "indie-dev-tycoon-c-293d72a",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-30T05:22",
+    "at": "2026-09-30T07:22",
     "type": "commit",
     "title": "Las descargas de GitHub Actions se borran a los 7 días y un flujo limpia las antiguas",
     "ref": "293d72a",
@@ -470,7 +470,7 @@
   {
     "id": "indie-dev-tycoon-c-41860bd",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-30T05:53",
+    "at": "2026-09-30T07:53",
     "type": "commit",
     "title": "Becas desactivadas por ahora (código comentado) y la encuesta cumplida guarda su juego",
     "ref": "41860bd",
@@ -479,7 +479,7 @@
   {
     "id": "indie-dev-tycoon-c-7c1b079",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-30T06:32",
+    "at": "2026-09-30T08:32",
     "type": "commit",
     "title": "Vuelve el logo de antes (también de icono), sin partidas antiguas y código limpio",
     "ref": "7c1b079",
@@ -488,7 +488,7 @@
   {
     "id": "indie-dev-tycoon-c-e28819c",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-30T08:54",
+    "at": "2026-09-30T10:54",
     "type": "commit",
     "title": "Menú: «Guardar y salir» también en el navegador, en dos columnas como en Godot",
     "ref": "e28819c",
@@ -497,7 +497,7 @@
   {
     "id": "indie-dev-tycoon-c-0676e5c",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-30T09:01",
+    "at": "2026-09-30T11:01",
     "type": "commit",
     "title": "Ejecutables solo a mano y sin Mac, para gastar menos minutos de Actions",
     "ref": "0676e5c",
@@ -506,7 +506,7 @@
   {
     "id": "indie-dev-tycoon-c-77d2f42",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-30T09:13",
+    "at": "2026-09-30T11:13",
     "type": "commit",
     "title": "Portada: «Salir» abajo a la derecha",
     "ref": "77d2f42",
@@ -515,7 +515,7 @@
   {
     "id": "indie-dev-tycoon-c-f551537",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-30T09:22",
+    "at": "2026-09-30T11:22",
     "type": "commit",
     "title": "El .exe de Windows enseña el icono del juego",
     "ref": "f551537",
@@ -524,7 +524,7 @@
   {
     "id": "indie-dev-tycoon-c-78e24bc",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-30T10:29",
+    "at": "2026-09-30T12:29",
     "type": "commit",
     "title": "CSS sin las condiciones de los estilos antiguos e icono legible en tamaño pequeño",
     "ref": "78e24bc",
@@ -533,7 +533,7 @@
   {
     "id": "indie-dev-tycoon-c-c51edcb",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-30T10:29",
+    "at": "2026-09-30T12:29",
     "type": "commit",
     "title": "Final de partida más ajustado y guardado a prueba de cortes",
     "ref": "c51edcb",
@@ -542,7 +542,7 @@
   {
     "id": "indie-dev-tycoon-c-2082e45",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-30T10:32",
+    "at": "2026-09-30T12:32",
     "type": "commit",
     "title": "Versión de PC (Electron): el mismo icono que el .exe de Godot",
     "ref": "2082e45",
@@ -551,7 +551,7 @@
   {
     "id": "indie-dev-tycoon-c-5dc1bb9",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-30T14:53",
+    "at": "2026-09-30T16:53",
     "type": "commit",
     "title": "Webs: sustos con decisiones y la web dibujada en pixel art",
     "ref": "5dc1bb9",
@@ -560,7 +560,7 @@
   {
     "id": "indie-dev-tycoon-c-81b8c3d",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-30T15:11",
+    "at": "2026-09-30T17:11",
     "type": "commit",
     "title": "Webs: decidir cómo se hace cada función, betas con usuarios y arreglar o retirar las flojas",
     "ref": "81b8c3d",
@@ -569,7 +569,7 @@
   {
     "id": "indie-dev-tycoon-c-af2857a",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-30T18:52",
+    "at": "2026-09-30T20:52",
     "type": "commit",
     "title": "Godot como la web: mismo tamaño, ventanas iguales, secretos investigables y tráiler",
     "ref": "af2857a",
@@ -578,7 +578,7 @@
   {
     "id": "indie-dev-tycoon-c-5c817ff",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-30T19:26",
+    "at": "2026-09-30T21:26",
     "type": "commit",
     "title": "Tráiler: se ve cómo crece el estudio (cuarto, oficina, oficina grande y sede)",
     "ref": "5c817ff",
@@ -587,7 +587,7 @@
   {
     "id": "indie-dev-tycoon-c-12b4bc0",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-30T20:11",
+    "at": "2026-09-30T22:11",
     "type": "commit",
     "title": "Avisos abajo, noticias importantes en ventana, resumen del año sin spoilers y tienda como la web",
     "ref": "12b4bc0",
@@ -596,7 +596,7 @@
   {
     "id": "indie-dev-tycoon-c-0a8d9ae",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-30T20:25",
+    "at": "2026-09-30T22:25",
     "type": "commit",
     "title": "Key art: imagen promocional horizontal, vertical 9:16 y 2:3 hecha con el juego",
     "ref": "0a8d9ae",
@@ -605,7 +605,7 @@
   {
     "id": "indie-dev-tycoon-c-b937dad",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-30T22:35",
+    "at": "2026-10-01T00:35",
     "type": "commit",
     "title": "Arreglos: fuga de memoria en las ventanas, gráfica con valores negativos y textos",
     "ref": "b937dad",
@@ -614,7 +614,7 @@
   {
     "id": "indie-dev-tycoon-c-12065a5",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-09-30T23:04",
+    "at": "2026-10-01T01:04",
     "type": "commit",
     "title": "Más fugas de memoria cerradas y barra rayada sin errores de dibujo",
     "ref": "12065a5",
@@ -623,7 +623,7 @@
   {
     "id": "indie-dev-tycoon-c-a197c61",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-01T04:41",
+    "at": "2026-10-01T06:41",
     "type": "commit",
     "title": "Jubilación: cada persona tiene su edad y entre los 64 y los 67 pide jubilarse",
     "ref": "a197c61",
@@ -632,7 +632,7 @@
   {
     "id": "indie-dev-tycoon-c-c049e1f",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-01T07:15",
+    "at": "2026-10-01T09:15",
     "type": "commit",
     "title": "Jubilación comentada hasta el rediseño de empleados (antes de la 1.0)",
     "ref": "c049e1f",
@@ -641,7 +641,7 @@
   {
     "id": "indie-dev-tycoon-c-3a4216c",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-01T07:35",
+    "at": "2026-10-01T09:35",
     "type": "commit",
     "title": "Imágenes para la página de Steam: cápsulas, biblioteca y capturas hechas con el juego",
     "ref": "3a4216c",
@@ -650,7 +650,7 @@
   {
     "id": "indie-dev-tycoon-c-cb7588e",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-04T12:17",
+    "at": "2026-10-04T14:17",
     "type": "commit",
     "title": "Tráiler nuevo: una speedrun del cuarto a la sede en 50 segundos",
     "ref": "cb7588e",
@@ -659,7 +659,7 @@
   {
     "id": "indie-dev-tycoon-c-992035b",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-04T12:32",
+    "at": "2026-10-04T14:32",
     "type": "commit",
     "title": "Tráiler: sin el cronómetro de speedrun y sin zoom",
     "ref": "992035b",
@@ -668,7 +668,7 @@
   {
     "id": "indie-dev-tycoon-c-54a47ea",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-04T13:15",
+    "at": "2026-10-04T15:15",
     "type": "commit",
     "title": "Tutorial del motor al salir la primera mejora para investigar",
     "ref": "54a47ea",
@@ -677,7 +677,7 @@
   {
     "id": "indie-dev-tycoon-c-c0fb504",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-04T13:44",
+    "at": "2026-10-04T15:44",
     "type": "commit",
     "title": "Contratos negociados y trabajo remoto comentados hasta más adelante",
     "ref": "c0fb504",
@@ -686,7 +686,7 @@
   {
     "id": "indie-dev-tycoon-c-9174fa5",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-04T14:12",
+    "at": "2026-10-04T16:12",
     "type": "commit",
     "title": "El tutorial del motor, guiado como el de hacer juegos",
     "ref": "9174fa5",
@@ -695,7 +695,7 @@
   {
     "id": "indie-dev-tycoon-c-c423415",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-04T14:20",
+    "at": "2026-10-04T16:20",
     "type": "commit",
     "title": "Tutorial guiado del primer informe y textos del precio más claros",
     "ref": "c423415",
@@ -704,7 +704,7 @@
   {
     "id": "indie-dev-tycoon-c-ab5526f",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-04T15:02",
+    "at": "2026-10-04T17:02",
     "type": "commit",
     "title": "Puntos de investigación solo trabajando, mapa como en la web y «En marcha»",
     "ref": "ab5526f",
@@ -713,56 +713,11 @@
   {
     "id": "indie-dev-tycoon-c-3bdc1f9",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-04T16:58",
+    "at": "2026-10-04T18:58",
     "type": "commit",
     "title": "Sin adaptar juegos a otras consolas; fabricar más copias se investiga",
     "ref": "3bdc1f9",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/3bdc1f9ec4a58e31d8de7d599f3a9338eac031f8"
-  },
-  {
-    "id": "indie-dev-tycoon-c-27cb2fe",
-    "projectId": "indie-dev-tycoon",
-    "at": "2026-10-04T18:15",
-    "type": "commit",
-    "title": "Claude Code Game Studios (CCGS 1.1.2) instalado y adaptado al juego",
-    "ref": "27cb2fe",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/27cb2fe5905ca3cf40dac7f752e2d74605e4effd"
-  },
-  {
-    "id": "indie-dev-tycoon-c-a020ab5",
-    "projectId": "indie-dev-tycoon",
-    "at": "2026-10-04T18:55",
-    "type": "commit",
-    "title": "El informe tarda dos semanas y se ve; en las tiendas, solo lo ya vendido",
-    "ref": "a020ab5",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/a020ab5f66b8800ce25184def17445818e99ec25"
-  },
-  {
-    "id": "indie-dev-tycoon-c-5edd365",
-    "projectId": "indie-dev-tycoon",
-    "at": "2026-10-04T19:26",
-    "type": "commit",
-    "title": "Edición coleccionista: se investiga y eliges la tirada y el precio",
-    "ref": "5edd365",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/5edd36503c1c1ef5ea5c1bc226f6bd45fd6bcadb"
-  },
-  {
-    "id": "indie-dev-tycoon-c-bf67670",
-    "projectId": "indie-dev-tycoon",
-    "at": "2026-10-04T19:26",
-    "type": "commit",
-    "title": "Préstamos del banco: pedirlos y devolverlos con su comisión al cabo del plazo",
-    "ref": "bf67670",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/bf67670aed7c4fd22599bc5597e87536b38e8545"
-  },
-  {
-    "id": "indie-dev-tycoon-c-590ac45",
-    "projectId": "indie-dev-tycoon",
-    "at": "2026-10-04T19:54",
-    "type": "commit",
-    "title": "El dado del azar, un dado de verdad: cuadrado y con cinco puntos",
-    "ref": "590ac45",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/590ac4519778f3ed038f32b4cdead2c14925bde0"
   },
   {
     "id": "indie-dev-tycoon-pr-1",
@@ -774,6 +729,15 @@
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/1"
   },
   {
+    "id": "indie-dev-tycoon-c-27cb2fe",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-04T20:15",
+    "type": "commit",
+    "title": "Claude Code Game Studios (CCGS 1.1.2) instalado y adaptado al juego",
+    "ref": "27cb2fe",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/27cb2fe5905ca3cf40dac7f752e2d74605e4effd"
+  },
+  {
     "id": "indie-dev-tycoon-pr-2",
     "projectId": "indie-dev-tycoon",
     "at": "2026-10-04T20:31",
@@ -781,6 +745,15 @@
     "title": "PR #2 fusionada: Claude Code Game Studios (CCGS 1.1.2) instalado y adaptado al juego",
     "ref": "#2",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/2"
+  },
+  {
+    "id": "indie-dev-tycoon-c-a020ab5",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-04T20:55",
+    "type": "commit",
+    "title": "El informe tarda dos semanas y se ve; en las tiendas, solo lo ya vendido",
+    "ref": "a020ab5",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/a020ab5f66b8800ce25184def17445818e99ec25"
   },
   {
     "id": "indie-dev-tycoon-pr-3",
@@ -792,6 +765,24 @@
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/3"
   },
   {
+    "id": "indie-dev-tycoon-c-5edd365",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-04T21:26",
+    "type": "commit",
+    "title": "Edición coleccionista: se investiga y eliges la tirada y el precio",
+    "ref": "5edd365",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/5edd36503c1c1ef5ea5c1bc226f6bd45fd6bcadb"
+  },
+  {
+    "id": "indie-dev-tycoon-c-bf67670",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-04T21:26",
+    "type": "commit",
+    "title": "Préstamos del banco: pedirlos y devolverlos con su comisión al cabo del plazo",
+    "ref": "bf67670",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/bf67670aed7c4fd22599bc5597e87536b38e8545"
+  },
+  {
     "id": "indie-dev-tycoon-pr-4",
     "projectId": "indie-dev-tycoon",
     "at": "2026-10-04T21:43",
@@ -801,22 +792,13 @@
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/4"
   },
   {
-    "id": "indie-dev-tycoon-c-dadff55",
+    "id": "indie-dev-tycoon-c-590ac45",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-04T21:45",
+    "at": "2026-10-04T21:54",
     "type": "commit",
-    "title": "Pulsar fuera de una ventana ya no la cierra (ni se salta el informe)",
-    "ref": "dadff55",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/dadff55aaa5ae40c3437eaad50af2a1b0ded9061"
-  },
-  {
-    "id": "indie-dev-tycoon-c-91e4f52",
-    "projectId": "indie-dev-tycoon",
-    "at": "2026-10-04T22:07",
-    "type": "commit",
-    "title": "Ajustes que se recuerdan, temas distintos en cada partida y DLC aparte",
-    "ref": "91e4f52",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/91e4f52eb356bd3f09ff8a7eacec58bcdd7f7403"
+    "title": "El dado del azar, un dado de verdad: cuadrado y con cinco puntos",
+    "ref": "590ac45",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/590ac4519778f3ed038f32b4cdead2c14925bde0"
   },
   {
     "id": "indie-dev-tycoon-pr-5",
@@ -828,13 +810,22 @@
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/5"
   },
   {
-    "id": "indie-dev-tycoon-c-b4eee6f",
+    "id": "indie-dev-tycoon-c-dadff55",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-04T22:52",
+    "at": "2026-10-04T23:45",
     "type": "commit",
-    "title": "Ventana de una web: no se redibuja si ya está cerrada",
-    "ref": "b4eee6f",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/b4eee6fadd7788c7fb239ef18821ca758f497535"
+    "title": "Pulsar fuera de una ventana ya no la cierra (ni se salta el informe)",
+    "ref": "dadff55",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/dadff55aaa5ae40c3437eaad50af2a1b0ded9061"
+  },
+  {
+    "id": "indie-dev-tycoon-c-91e4f52",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-05T00:07",
+    "type": "commit",
+    "title": "Ajustes que se recuerdan, temas distintos en cada partida y DLC aparte",
+    "ref": "91e4f52",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/91e4f52eb356bd3f09ff8a7eacec58bcdd7f7403"
   },
   {
     "id": "indie-dev-tycoon-pr-6",
@@ -844,6 +835,15 @@
     "title": "PR #6 fusionada: Pulsar fuera de una ventana ya no la cierra (ni se salta el informe)",
     "ref": "#6",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/6"
+  },
+  {
+    "id": "indie-dev-tycoon-c-b4eee6f",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-05T00:52",
+    "type": "commit",
+    "title": "Ventana de una web: no se redibuja si ya está cerrada",
+    "ref": "b4eee6f",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/b4eee6fadd7788c7fb239ef18821ca758f497535"
   },
   {
     "id": "indie-dev-tycoon-pr-7",
@@ -857,7 +857,7 @@
   {
     "id": "indie-dev-tycoon-c-c4e37a0",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-05T04:25",
+    "at": "2026-10-05T06:25",
     "type": "commit",
     "title": "Mascotas nuevas guardadas, apagadas hasta que se decida activarlas",
     "ref": "c4e37a0",
@@ -866,38 +866,11 @@
   {
     "id": "indie-dev-tycoon-c-d8a4607",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-05T04:36",
+    "at": "2026-10-05T06:36",
     "type": "commit",
     "title": "Secuelas, remakes y spin-offs con su botón, fuera de «Nuevo juego»",
     "ref": "d8a4607",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/d8a46070f0a113815a63622efd3e95fb8513ecd3"
-  },
-  {
-    "id": "indie-dev-tycoon-c-0fc524f",
-    "projectId": "indie-dev-tycoon",
-    "at": "2026-10-05T06:39",
-    "type": "commit",
-    "title": "«Buscar encargo» abajo, con secuelas, remakes y spin-offs",
-    "ref": "0fc524f",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/0fc524fcc7f4310ee252519e1d25ee4c14e42d58"
-  },
-  {
-    "id": "indie-dev-tycoon-c-34373f7",
-    "projectId": "indie-dev-tycoon",
-    "at": "2026-10-05T06:50",
-    "type": "commit",
-    "title": "Cada botón de «Otros proyectos» desaparece el mismo día que se queda vacío",
-    "ref": "34373f7",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/34373f76c40aa38ba76e736188fd3449d0ecd8c1"
-  },
-  {
-    "id": "indie-dev-tycoon-c-d3ad195",
-    "projectId": "indie-dev-tycoon",
-    "at": "2026-10-05T06:50",
-    "type": "commit",
-    "title": "Que se vea la demo, la expansión y lo demás en marcha, con su porcentaje",
-    "ref": "d3ad195",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/d3ad195ea84e901dd89aed6135a6886afcf185c5"
   },
   {
     "id": "indie-dev-tycoon-pr-8",
@@ -909,22 +882,31 @@
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/8"
   },
   {
-    "id": "indie-dev-tycoon-c-6a9dbb4",
+    "id": "indie-dev-tycoon-c-0fc524f",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-05T07:30",
+    "at": "2026-10-05T08:39",
     "type": "commit",
-    "title": "Los rivales también hacen lo mismo que tú y el premio de género pide competencia",
-    "ref": "6a9dbb4",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/6a9dbb43535640fc227bf6fd865a59cebe0f1d8f"
+    "title": "«Buscar encargo» abajo, con secuelas, remakes y spin-offs",
+    "ref": "0fc524f",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/0fc524fcc7f4310ee252519e1d25ee4c14e42d58"
   },
   {
-    "id": "indie-dev-tycoon-c-8641796",
+    "id": "indie-dev-tycoon-c-34373f7",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-05T07:36",
+    "at": "2026-10-05T08:50",
     "type": "commit",
-    "title": "Recomprar tu empresa: un 5 %, un 10 % o todo lo que les queda a los inversores",
-    "ref": "8641796",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/864179611eaa3ddf563e78a224afb518db80b811"
+    "title": "Cada botón de «Otros proyectos» desaparece el mismo día que se queda vacío",
+    "ref": "34373f7",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/34373f76c40aa38ba76e736188fd3449d0ecd8c1"
+  },
+  {
+    "id": "indie-dev-tycoon-c-d3ad195",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-05T08:50",
+    "type": "commit",
+    "title": "Que se vea la demo, la expansión y lo demás en marcha, con su porcentaje",
+    "ref": "d3ad195",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/d3ad195ea84e901dd89aed6135a6886afcf185c5"
   },
   {
     "id": "indie-dev-tycoon-pr-9",
@@ -936,31 +918,22 @@
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/9"
   },
   {
-    "id": "indie-dev-tycoon-c-bfd0e8e",
+    "id": "indie-dev-tycoon-c-6a9dbb4",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-05T09:39",
+    "at": "2026-10-05T09:30",
     "type": "commit",
-    "title": "Balance mensual en grande con libro de cuentas, y la X de cerrar centrada",
-    "ref": "bfd0e8e",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/bfd0e8e47443eef323c03493f488120ca614c6dd"
+    "title": "Los rivales también hacen lo mismo que tú y el premio de género pide competencia",
+    "ref": "6a9dbb4",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/6a9dbb43535640fc227bf6fd865a59cebe0f1d8f"
   },
   {
-    "id": "indie-dev-tycoon-c-850e3e1",
+    "id": "indie-dev-tycoon-c-8641796",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-05T10:06",
+    "at": "2026-10-05T09:36",
     "type": "commit",
-    "title": "Edición coleccionista limitada y numerada, con tiradas como las de verdad",
-    "ref": "850e3e1",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/850e3e1f5d2f50247318570b8d353ff3124223f8"
-  },
-  {
-    "id": "indie-dev-tycoon-c-2b0d9e4",
-    "projectId": "indie-dev-tycoon",
-    "at": "2026-10-05T10:39",
-    "type": "commit",
-    "title": "Ritmo de partida: temas que cansan, temas y mejoras que se ganan trabajando y reloj más lento",
-    "ref": "2b0d9e4",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/2b0d9e4b47ce453272e58a7fce9e9bfe5568f8ab"
+    "title": "Recomprar tu empresa: un 5 %, un 10 % o todo lo que les queda a los inversores",
+    "ref": "8641796",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/864179611eaa3ddf563e78a224afb518db80b811"
   },
   {
     "id": "indie-dev-tycoon-pr-10",
@@ -972,6 +945,15 @@
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/10"
   },
   {
+    "id": "indie-dev-tycoon-c-bfd0e8e",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-05T11:39",
+    "type": "commit",
+    "title": "Balance mensual en grande con libro de cuentas, y la X de cerrar centrada",
+    "ref": "bfd0e8e",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/bfd0e8e47443eef323c03493f488120ca614c6dd"
+  },
+  {
     "id": "indie-dev-tycoon-pr-11",
     "projectId": "indie-dev-tycoon",
     "at": "2026-10-05T11:59",
@@ -979,6 +961,15 @@
     "title": "PR #11 fusionada: Recomprar tu empresa, balance mensual en grande con libro de cuentas y X de cerrar centrada",
     "ref": "#11",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/11"
+  },
+  {
+    "id": "indie-dev-tycoon-c-850e3e1",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-05T12:06",
+    "type": "commit",
+    "title": "Edición coleccionista limitada y numerada, con tiradas como las de verdad",
+    "ref": "850e3e1",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/850e3e1f5d2f50247318570b8d353ff3124223f8"
   },
   {
     "id": "indie-dev-tycoon-pr-12",
@@ -990,22 +981,13 @@
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/12"
   },
   {
-    "id": "indie-dev-tycoon-c-77e4ae9",
+    "id": "indie-dev-tycoon-c-2b0d9e4",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-05T14:20",
+    "at": "2026-10-05T12:39",
     "type": "commit",
-    "title": "Encargos: cuatro al año, pagan poco y pueden salir mal; tutoriales del balance y del parche",
-    "ref": "77e4ae9",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/77e4ae96fe4d74519dcf415090bfc6a075d3e1a1"
-  },
-  {
-    "id": "indie-dev-tycoon-c-caef31a",
-    "projectId": "indie-dev-tycoon",
-    "at": "2026-10-05T14:27",
-    "type": "commit",
-    "title": "Planta de la oficina sin la sombra negra: un solo contorno, como el resto de muebles",
-    "ref": "caef31a",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/caef31affa67191df1eec99161591c01b8bd7b31"
+    "title": "Ritmo de partida: temas que cansan, temas y mejoras que se ganan trabajando y reloj más lento",
+    "ref": "2b0d9e4",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/2b0d9e4b47ce453272e58a7fce9e9bfe5568f8ab"
   },
   {
     "id": "indie-dev-tycoon-pr-13",
@@ -1017,13 +999,22 @@
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/13"
   },
   {
-    "id": "indie-dev-tycoon-c-7d5c595",
+    "id": "indie-dev-tycoon-c-77e4ae9",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-05T16:16",
+    "at": "2026-10-05T16:20",
     "type": "commit",
-    "title": "Que el juego no abrume al empezar: las cosas van apareciendo cuando sirven",
-    "ref": "7d5c595",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/7d5c59513ae7414a2a35550866782ab850e40410"
+    "title": "Encargos: cuatro al año, pagan poco y pueden salir mal; tutoriales del balance y del parche",
+    "ref": "77e4ae9",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/77e4ae96fe4d74519dcf415090bfc6a075d3e1a1"
+  },
+  {
+    "id": "indie-dev-tycoon-c-caef31a",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-05T16:27",
+    "type": "commit",
+    "title": "Planta de la oficina sin la sombra negra: un solo contorno, como el resto de muebles",
+    "ref": "caef31a",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/caef31affa67191df1eec99161591c01b8bd7b31"
   },
   {
     "id": "indie-dev-tycoon-pr-14",
@@ -1044,6 +1035,15 @@
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/15"
   },
   {
+    "id": "indie-dev-tycoon-c-7d5c595",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-05T18:16",
+    "type": "commit",
+    "title": "Que el juego no abrume al empezar: las cosas van apareciendo cuando sirven",
+    "ref": "7d5c595",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/7d5c59513ae7414a2a35550866782ab850e40410"
+  },
+  {
     "id": "indie-dev-tycoon-pr-16",
     "projectId": "indie-dev-tycoon",
     "at": "2026-10-05T18:31",
@@ -1055,20 +1055,11 @@
   {
     "id": "indie-dev-tycoon-c-aba34ef",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-05T19:01",
+    "at": "2026-10-05T21:01",
     "type": "commit",
     "title": "Letra pixel más legible: Pixelify Sans en títulos y botones, con el 2, el 5 y el € redibujados",
     "ref": "aba34ef",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/aba34ef4d0b4f5095d80fe68c885b740aa2a7539"
-  },
-  {
-    "id": "indie-dev-tycoon-c-bfc993c",
-    "projectId": "indie-dev-tycoon",
-    "at": "2026-10-05T19:43",
-    "type": "commit",
-    "title": "Demo del juego: siete años o hasta la primera oficina, con su despedida",
-    "ref": "bfc993c",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/bfc993c52fcd082bb55c3cf89678f65bdbd9cc30"
   },
   {
     "id": "indie-dev-tycoon-pr-17",
@@ -1078,6 +1069,15 @@
     "title": "PR #17 fusionada: Letra pixel más legible: Pixelify Sans en títulos y botones, con el 2, el 5 y el € redibujados",
     "ref": "#17",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/17"
+  },
+  {
+    "id": "indie-dev-tycoon-c-bfc993c",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-05T21:43",
+    "type": "commit",
+    "title": "Demo del juego: siete años o hasta la primera oficina, con su despedida",
+    "ref": "bfc993c",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/bfc993c52fcd082bb55c3cf89678f65bdbd9cc30"
   },
   {
     "id": "indie-dev-tycoon-pr-18",
@@ -1091,7 +1091,7 @@
   {
     "id": "indie-dev-tycoon-c-157aa87",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-06T08:58",
+    "at": "2026-10-06T10:58",
     "type": "commit",
     "title": "Nueva partida: explicar qué da «Se te da mejor…»",
     "ref": "157aa87",
@@ -1100,20 +1100,11 @@
   {
     "id": "indie-dev-tycoon-c-484a518",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-06T09:09",
+    "at": "2026-10-06T11:09",
     "type": "commit",
     "title": "Icono de Steam nuevo, la demo en la 1.1 y el juego completo en la 0.0.6",
     "ref": "484a518",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/484a518a9c6b35ccce9cab173134dc2109d9d7d5"
-  },
-  {
-    "id": "indie-dev-tycoon-c-51c8135",
-    "projectId": "indie-dev-tycoon",
-    "at": "2026-10-06T09:56",
-    "type": "commit",
-    "title": "Descargas para Windows, Linux y Mac (juego completo y demo) con enlaces en el README",
-    "ref": "51c8135",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/51c8135994409ba6a660da370f6c066eeef02b88"
   },
   {
     "id": "indie-dev-tycoon-pr-19",
@@ -1123,6 +1114,15 @@
     "title": "PR #19 fusionada: «Se te da mejor…» explicado, icono de Steam nuevo, la demo en la 1.1 y el juego en la 0.0.6",
     "ref": "#19",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/19"
+  },
+  {
+    "id": "indie-dev-tycoon-c-51c8135",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-06T11:56",
+    "type": "commit",
+    "title": "Descargas para Windows, Linux y Mac (juego completo y demo) con enlaces en el README",
+    "ref": "51c8135",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/51c8135994409ba6a660da370f6c066eeef02b88"
   },
   {
     "id": "indie-dev-tycoon-pr-20",
@@ -1136,38 +1136,11 @@
   {
     "id": "indie-dev-tycoon-c-efab252",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-06T14:21",
+    "at": "2026-10-06T16:21",
     "type": "commit",
     "title": "Tutorial guiado de las áreas de cada fase y fuera el texto del reparto de puntos",
     "ref": "efab252",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/efab2526d323f8bf233b852bd79f349e594cd38a"
-  },
-  {
-    "id": "indie-dev-tycoon-c-40d2688",
-    "projectId": "indie-dev-tycoon",
-    "at": "2026-10-06T15:06",
-    "type": "commit",
-    "title": "Mascota en la demo desde el primer juego con su logro, y las novedades como tutorial guiado",
-    "ref": "40d2688",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/40d268888654b491f73bc6b61ad9528b1039283f"
-  },
-  {
-    "id": "indie-dev-tycoon-c-85bad40",
-    "projectId": "indie-dev-tycoon",
-    "at": "2026-10-06T15:23",
-    "type": "commit",
-    "title": "La demo en la 1.2 y el juego completo en la 0.0.7",
-    "ref": "85bad40",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/85bad400db52e776075d76e9d1d5327a8bcc64ab"
-  },
-  {
-    "id": "indie-dev-tycoon-c-d7a01b4",
-    "projectId": "indie-dev-tycoon",
-    "at": "2026-10-06T15:49",
-    "type": "commit",
-    "title": "Las áreas de cada fase se explican sin decir qué puntos dan",
-    "ref": "d7a01b4",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/d7a01b416265c207eb27964f716513790e1458b9"
   },
   {
     "id": "indie-dev-tycoon-pr-21",
@@ -1179,13 +1152,22 @@
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/21"
   },
   {
-    "id": "indie-dev-tycoon-c-6646a61",
+    "id": "indie-dev-tycoon-c-40d2688",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-06T16:38",
+    "at": "2026-10-06T17:06",
     "type": "commit",
-    "title": "Tutoriales: el del motor espera a que acabe la investigación y el del informe, a que vuelvas de vacaciones",
-    "ref": "6646a61",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/6646a613391883f694363c0392d23420d9ee5151"
+    "title": "Mascota en la demo desde el primer juego con su logro, y las novedades como tutorial guiado",
+    "ref": "40d2688",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/40d268888654b491f73bc6b61ad9528b1039283f"
+  },
+  {
+    "id": "indie-dev-tycoon-c-85bad40",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-06T17:23",
+    "type": "commit",
+    "title": "La demo en la 1.2 y el juego completo en la 0.0.7",
+    "ref": "85bad40",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/85bad400db52e776075d76e9d1d5327a8bcc64ab"
   },
   {
     "id": "indie-dev-tycoon-pr-22",
@@ -1197,6 +1179,15 @@
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/22"
   },
   {
+    "id": "indie-dev-tycoon-c-d7a01b4",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-06T17:49",
+    "type": "commit",
+    "title": "Las áreas de cada fase se explican sin decir qué puntos dan",
+    "ref": "d7a01b4",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/d7a01b416265c207eb27964f716513790e1458b9"
+  },
+  {
     "id": "indie-dev-tycoon-pr-23",
     "projectId": "indie-dev-tycoon",
     "at": "2026-10-06T18:02",
@@ -1204,6 +1195,15 @@
     "title": "PR #23 fusionada: Las áreas de cada fase se explican sin decir qué puntos dan",
     "ref": "#23",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/23"
+  },
+  {
+    "id": "indie-dev-tycoon-c-6646a61",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-06T18:38",
+    "type": "commit",
+    "title": "Tutoriales: el del motor espera a que acabe la investigación y el del informe, a que vuelvas de vacaciones",
+    "ref": "6646a61",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/6646a613391883f694363c0392d23420d9ee5151"
   },
   {
     "id": "indie-dev-tycoon-pr-24",
@@ -1217,38 +1217,11 @@
   {
     "id": "indie-dev-tycoon-c-71cb389",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-06T22:41",
+    "at": "2026-10-07T00:41",
     "type": "commit",
     "title": "TaskView conectado a Claude Code (servidor MCP taskview-mcp)",
     "ref": "71cb389",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/71cb389675061297a074fc22278e68523426ead4"
-  },
-  {
-    "id": "indie-dev-tycoon-c-00ed965",
-    "projectId": "indie-dev-tycoon",
-    "at": "2026-10-11T11:57",
-    "type": "commit",
-    "title": "Discord: el enlace nuevo de invitación (discord.gg/x37cnneKQu)",
-    "ref": "00ed965",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/00ed9657ac23997388258de807c35043e45de2b4"
-  },
-  {
-    "id": "indie-dev-tycoon-c-4dc1ffa",
-    "projectId": "indie-dev-tycoon",
-    "at": "2026-10-11T13:11",
-    "type": "commit",
-    "title": "Tutorial principal corto (15 pasos) y zoom en la oficina",
-    "ref": "4dc1ffa",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/4dc1ffa61b873363cba51ff9faa7a7a39204ff69"
-  },
-  {
-    "id": "indie-dev-tycoon-c-8deecc0",
-    "projectId": "indie-dev-tycoon",
-    "at": "2026-10-11T13:35",
-    "type": "commit",
-    "title": "Ranking de la demo: puntuación, las mejores de cada ordenador y ranking mundial (Talo)",
-    "ref": "8deecc0",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/8deecc0f96bb2ec402d789603587e013246b2e75"
   },
   {
     "id": "indie-dev-tycoon-pr-25",
@@ -1260,6 +1233,15 @@
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/25"
   },
   {
+    "id": "indie-dev-tycoon-c-00ed965",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-11T13:57",
+    "type": "commit",
+    "title": "Discord: el enlace nuevo de invitación (discord.gg/x37cnneKQu)",
+    "ref": "00ed965",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/00ed9657ac23997388258de807c35043e45de2b4"
+  },
+  {
     "id": "indie-dev-tycoon-pr-26",
     "projectId": "indie-dev-tycoon",
     "at": "2026-10-11T14:14",
@@ -1269,13 +1251,13 @@
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/26"
   },
   {
-    "id": "indie-dev-tycoon-c-3b06314",
+    "id": "indie-dev-tycoon-c-4dc1ffa",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-11T14:37",
+    "at": "2026-10-11T15:11",
     "type": "commit",
-    "title": "Demo sin cortes a mitad de un juego, modas en «Nuevo juego» y sin modos de juego en la demo",
-    "ref": "3b06314",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/3b063148642c464e1a6eb526e55398a9a1dd845d"
+    "title": "Tutorial principal corto (15 pasos) y zoom en la oficina",
+    "ref": "4dc1ffa",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/4dc1ffa61b873363cba51ff9faa7a7a39204ff69"
   },
   {
     "id": "indie-dev-tycoon-pr-27",
@@ -1287,6 +1269,15 @@
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/27"
   },
   {
+    "id": "indie-dev-tycoon-c-8deecc0",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-11T15:35",
+    "type": "commit",
+    "title": "Ranking de la demo: puntuación, las mejores de cada ordenador y ranking mundial (Talo)",
+    "ref": "8deecc0",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/8deecc0f96bb2ec402d789603587e013246b2e75"
+  },
+  {
     "id": "indie-dev-tycoon-pr-28",
     "projectId": "indie-dev-tycoon",
     "at": "2026-10-11T15:51",
@@ -1296,13 +1287,13 @@
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/28"
   },
   {
-    "id": "indie-dev-tycoon-c-cce70bb",
+    "id": "indie-dev-tycoon-c-3b06314",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-11T15:58",
+    "at": "2026-10-11T16:37",
     "type": "commit",
-    "title": "Ayuda «?» en las ventanas clave y reparto de las fases que suma 100 %",
-    "ref": "cce70bb",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/cce70bbd8472fb1f26afef2a6894a7b5337965bb"
+    "title": "Demo sin cortes a mitad de un juego, modas en «Nuevo juego» y sin modos de juego en la demo",
+    "ref": "3b06314",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/3b063148642c464e1a6eb526e55398a9a1dd845d"
   },
   {
     "id": "indie-dev-tycoon-pr-29",
@@ -1314,13 +1305,13 @@
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/29"
   },
   {
-    "id": "indie-dev-tycoon-c-ba1f4c4",
+    "id": "indie-dev-tycoon-c-cce70bb",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-11T17:54",
+    "at": "2026-10-11T17:58",
     "type": "commit",
-    "title": "Zoom que empieza alejado sin teletransportar la mascota, ×1 en normal y ranking en el juego completo",
-    "ref": "ba1f4c4",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/ba1f4c4a445afd527ce8510bcd405aba5d44e150"
+    "title": "Ayuda «?» en las ventanas clave y reparto de las fases que suma 100 %",
+    "ref": "cce70bb",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/cce70bbd8472fb1f26afef2a6894a7b5337965bb"
   },
   {
     "id": "indie-dev-tycoon-pr-30",
@@ -1330,6 +1321,15 @@
     "title": "PR #30 fusionada: Ayuda «?» en las ventanas clave y reparto de las fases que suma 100 %",
     "ref": "#30",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/30"
+  },
+  {
+    "id": "indie-dev-tycoon-c-ba1f4c4",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-11T19:54",
+    "type": "commit",
+    "title": "Zoom que empieza alejado sin teletransportar la mascota, ×1 en normal y ranking en el juego completo",
+    "ref": "ba1f4c4",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/ba1f4c4a445afd527ce8510bcd405aba5d44e150"
   },
   {
     "id": "indie-dev-tycoon-pr-31",
@@ -1343,7 +1343,7 @@
   {
     "id": "indie-dev-tycoon-c-d172df3",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-12T00:12",
+    "at": "2026-10-12T02:12",
     "type": "commit",
     "title": "Demo «1.3 V2» con las barras de antes, logo con los botones del mando alineados y roll-up del stand",
     "ref": "d172df3",
@@ -1361,7 +1361,7 @@
   {
     "id": "indie-dev-tycoon-c-d04d37b",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-12T12:11",
+    "at": "2026-10-12T14:11",
     "type": "commit",
     "title": "Demo Valladolid 1.0 (la de la feria): barras de antes, seis juegos, seis encargos y su ranking feria_valladolid",
     "ref": "d04d37b",
@@ -1370,7 +1370,7 @@
   {
     "id": "indie-dev-tycoon-c-64c40d3",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-12T12:17",
+    "at": "2026-10-12T14:17",
     "type": "commit",
     "title": "Demo Valladolid: descripción del .exe más corta para que quepa el arreglo del icono",
     "ref": "64c40d3",
@@ -1388,20 +1388,11 @@
   {
     "id": "indie-dev-tycoon-c-d2a53c3",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-12T22:20",
+    "at": "2026-10-13T00:20",
     "type": "commit",
     "title": "Lo de la feria: estrellas que se ven, cansancio en relajado, tutorial del informe para todos y ranking por dificultad que se sube solo",
     "ref": "d2a53c3",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/d2a53c3d5fd5fe0b407fbed209985809de5942ce"
-  },
-  {
-    "id": "indie-dev-tycoon-c-bec8f65",
-    "projectId": "indie-dev-tycoon",
-    "at": "2026-10-12T22:56",
-    "type": "commit",
-    "title": "Demo Valladolid para el stand: QR de Discord en la despedida, modo stand y filtro de palabrotas en el ranking",
-    "ref": "bec8f65",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/bec8f65a8974041a6dfa199280cbcec85586f432"
   },
   {
     "id": "indie-dev-tycoon-pr-34",
@@ -1411,6 +1402,15 @@
     "title": "PR #34 fusionada: Lo de la feria: estrellas que se ven, cansancio en relajado, tutorial del informe para todos y ranking por dificultad que se sube solo",
     "ref": "#34",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/34"
+  },
+  {
+    "id": "indie-dev-tycoon-c-bec8f65",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-13T00:56",
+    "type": "commit",
+    "title": "Demo Valladolid para el stand: QR de Discord en la despedida, modo stand y filtro de palabrotas en el ranking",
+    "ref": "bec8f65",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/bec8f65a8974041a6dfa199280cbcec85586f432"
   },
   {
     "id": "indie-dev-tycoon-pr-35",
@@ -1424,38 +1424,11 @@
   {
     "id": "indie-dev-tycoon-c-15ab565",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-13T06:43",
+    "at": "2026-10-13T08:43",
     "type": "commit",
     "title": "Plantas nuevas y variadas en la oficina, y el hero de Steam sin salas superpuestas",
     "ref": "15ab565",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/15ab5659997d7bb02ed0dc2c893fa4d94759dc7b"
-  },
-  {
-    "id": "indie-dev-tycoon-c-a0c0c23",
-    "projectId": "indie-dev-tycoon",
-    "at": "2026-10-13T07:06",
-    "type": "commit",
-    "title": "Plantas nuevas apagadas hasta nuevo aviso, imágenes de Steam y roll-up sin salas encima y sin flechas, y menos minutos de Actions",
-    "ref": "a0c0c23",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/a0c0c23a0a40bd3468900dd193f786f20a471f40"
-  },
-  {
-    "id": "indie-dev-tycoon-c-1dee4da",
-    "projectId": "indie-dev-tycoon",
-    "at": "2026-10-13T07:18",
-    "type": "commit",
-    "title": "Icono del juego mejorado: marco en pixel art, cielo con rayos y letras de pegatina",
-    "ref": "1dee4da",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/1dee4da8e577512f36aa5af093899fe06138f799"
-  },
-  {
-    "id": "indie-dev-tycoon-c-80b25d9",
-    "projectId": "indie-dev-tycoon",
-    "at": "2026-10-13T07:47",
-    "type": "commit",
-    "title": "El repositorio se llama ahora Indie-Dev-Tycoon: enlaces al día",
-    "ref": "80b25d9",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/80b25d910c07df61cb9158d06c28567a5ca57c04"
   },
   {
     "id": "indie-dev-tycoon-pr-36",
@@ -1467,13 +1440,22 @@
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/36"
   },
   {
-    "id": "indie-dev-tycoon-c-d46b1c3",
+    "id": "indie-dev-tycoon-c-a0c0c23",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-13T09:07",
+    "at": "2026-10-13T09:06",
     "type": "commit",
-    "title": "Comprobación de Godot rápida en cada PR (9 min) y la completa (40 min) solo a mano",
-    "ref": "d46b1c3",
-    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/d46b1c36f1fec5bc5f3c64ff861bf57f7a3c4ce8"
+    "title": "Plantas nuevas apagadas hasta nuevo aviso, imágenes de Steam y roll-up sin salas encima y sin flechas, y menos minutos de Actions",
+    "ref": "a0c0c23",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/a0c0c23a0a40bd3468900dd193f786f20a471f40"
+  },
+  {
+    "id": "indie-dev-tycoon-c-1dee4da",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-13T09:18",
+    "type": "commit",
+    "title": "Icono del juego mejorado: marco en pixel art, cielo con rayos y letras de pegatina",
+    "ref": "1dee4da",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/1dee4da8e577512f36aa5af093899fe06138f799"
   },
   {
     "id": "indie-dev-tycoon-pr-37",
@@ -1485,6 +1467,15 @@
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/37"
   },
   {
+    "id": "indie-dev-tycoon-c-80b25d9",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-13T09:47",
+    "type": "commit",
+    "title": "El repositorio se llama ahora Indie-Dev-Tycoon: enlaces al día",
+    "ref": "80b25d9",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/80b25d910c07df61cb9158d06c28567a5ca57c04"
+  },
+  {
     "id": "indie-dev-tycoon-pr-38",
     "projectId": "indie-dev-tycoon",
     "at": "2026-10-13T10:01",
@@ -1492,6 +1483,15 @@
     "title": "PR #38 fusionada: El repositorio se llama ahora Indie-Dev-Tycoon: enlaces al día",
     "ref": "#38",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/38"
+  },
+  {
+    "id": "indie-dev-tycoon-c-d46b1c3",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-13T11:07",
+    "type": "commit",
+    "title": "Comprobación de Godot rápida en cada PR (9 min) y la completa (40 min) solo a mano",
+    "ref": "d46b1c3",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/d46b1c36f1fec5bc5f3c64ff861bf57f7a3c4ce8"
   },
   {
     "id": "indie-dev-tycoon-pr-39",
@@ -1505,7 +1505,7 @@
   {
     "id": "indie-dev-tycoon-c-d8eca50",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-14T14:28",
+    "at": "2026-10-14T16:28",
     "type": "commit",
     "title": "Demo 1.4: la demo juega como la 1.3 V2 y se quita la descarga aparte",
     "ref": "d8eca50",
@@ -1515,11 +1515,31 @@
   {
     "id": "indie-dev-tycoon-c-b5aa4f2",
     "projectId": "indie-dev-tycoon",
-    "at": "2026-10-14T14:48",
+    "at": "2026-10-14T16:48",
     "type": "commit",
     "title": "Idiomas (base): traducir al enseñar, selector de idioma y letras de chino, japonés y coreano",
     "ref": "b5aa4f2",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/b5aa4f23ce7ab0f34db7a4272e0555c953fd901e",
+    "note": "En la rama claude/lucid-lamport-fl6em4, sin fusionar en main."
+  },
+  {
+    "id": "indie-dev-tycoon-c-3665de9",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-18T13:09",
+    "type": "commit",
+    "title": "Idiomas: primeras 546 frases de la demo en 6 idiomas (y castellano de Latinoamérica)",
+    "ref": "3665de9",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/3665de9a0422fbc159db6f8534910fd55ef2a240",
+    "note": "En la rama claude/lucid-lamport-fl6em4, sin fusionar en main."
+  },
+  {
+    "id": "indie-dev-tycoon-c-33a3632",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-18T13:21",
+    "type": "commit",
+    "title": "Idiomas: 816 frases de la demo traducidas y plurales que se pueden traducir",
+    "ref": "33a3632",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/33a3632b2114cd6143bbc8c0dd41d5633729268b",
     "note": "En la rama claude/lucid-lamport-fl6em4, sin fusionar en main."
   }
 ]

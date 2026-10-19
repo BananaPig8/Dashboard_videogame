@@ -24,7 +24,7 @@ import idtItems from './indie-dev-tycoon/items.json'
 import idtResources from './indie-dev-tycoon/resources.json'
 
 /** Súbelo cada vez que cambien los datos iniciales: el panel ofrecerá traer lo nuevo. */
-export const SEED_VERSION = '2026-10-18.1'
+export const SEED_VERSION = '2026-10-19.1'
 
 interface SeedProject {
   project: Project

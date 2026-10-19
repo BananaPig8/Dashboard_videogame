@@ -2,7 +2,7 @@
   {
     "id": "idt-feria-valladolid",
     "projectId": "indie-dev-tycoon",
-    "title": "Feria de Valladolid (stand con la Demo Valladolid)",
+    "title": "Feria en Valladolid con la Demo Valladolid (nombre por confirmar)",
     "type": "fair",
     "status": "planned",
     "dateConfirmed": false,
@@ -24,7 +24,7 @@
       {
         "type": "commit",
         "ref": "bec8f65",
-        "date": "2026-10-12",
+        "date": "2026-10-13",
         "note": "Modo stand"
       },
       {

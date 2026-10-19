@@ -29,11 +29,14 @@ fecha de los datos (`SEED_VERSION` en `src/data/seed/index.ts`).
    - *Sin confirmar*: no hay fuente; lo tiene que confirmar el estudio. Las líneas de
      trabajo del brief sin trabajo en el repositorio (inventario y objetos de Steam, DLC
      reales del juego…) están así, como «idea» o «por confirmar».
-4. **Fechas locales** del commit (`AAAA-MM-DD`). Lo terminado lleva la fecha de su último
-   commit; lo empezado, la del primero.
-5. **Lo que solo está en una rama sin fusionar no está hecho** (está «en revisión»). Así
-   están la Demo 1.4 y la base de Idiomas del 14 de octubre, en
-   `claude/lucid-lamport-fl6em4` sin PR.
+4. **Fechas en la hora del estudio** (Madrid, `AAAA-MM-DD`), no en la zona que guarda cada
+   commit: los commits del juego van en UTC y las fusiones de GitHub en +02:00, así que un
+   commit hecho después de medianoche cuenta para el día siguiente. Lo terminado lleva la
+   fecha de su último commit; lo empezado, la del primero.
+5. **Lo que solo está en una rama sin fusionar no está hecho** (está «en revisión» o «en
+   marcha», también las decisiones). Así están la Demo 1.4 y la base de Idiomas del 14 de
+   octubre y las traducciones de la demo del 18 de octubre, en `claude/lucid-lamport-fl6em4`
+   sin PR.
 
 `src/data/seed.test.ts` comprueba las reglas 2, 4 y 5 contra el historial de git (cada
 commit citado existe y tiene esa fecha; cada commit del juego acaba en algún elemento) y
@@ -53,12 +56,14 @@ inventado, cobertura y estado actual) cuyos hallazgos se corrigieron.
 
 ```bash
 # en el repositorio del juego, con las ramas al día
-git -C ../Indie-Dev-Tycoon fetch --depth=5000 origin main
+git -C ../Indie-Dev-Tycoon fetch --depth=5000 origin main claude/lucid-lamport-fl6em4
 npm run historial -- --repo ../Indie-Dev-Tycoon --proyecto indie-dev-tycoon \
   --url https://github.com/BananaPig8/Indie-Dev-Tycoon \
   --rama origin/main --rama origin/claude/lucid-lamport-fl6em4 \
   --salida src/data/seed/indie-dev-tycoon/activity.json
 ```
+
+Las horas salen en la hora de Madrid (`--zona Europe/Madrid`, la de por defecto).
 
 Después: añadir a `items.json` lo nuevo (con su fuente), subir `SEED_VERSION` y pasar
 `npm test`. En el panel saldrá «Hay datos iniciales nuevos»; al traerlos se respeta lo que
