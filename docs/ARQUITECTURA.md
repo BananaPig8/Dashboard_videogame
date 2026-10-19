@@ -1,9 +1,10 @@
 # Arquitectura de Studio Hub
 
 Studio Hub es una aplicación web de una sola página (React + TypeScript + Vite) que
-funciona entera en el navegador. No tiene servidor: los datos viven en el navegador y se
-pueden exportar e importar en JSON. Está pensada para crecer (servidor, integraciones,
-varios usuarios) sin rehacer lo que ya hay.
+funciona entera en el navegador. No tiene servidor propio: los datos viven en el navegador
+(versión normal) o en la base de datos de su página privada de claude.ai (versión
+`build:claude`), y se pueden exportar e importar en JSON. Está pensada para crecer
+(servidor, integraciones, varios usuarios) sin rehacer lo que ya hay.
 
 ## Principio: el estudio, no un juego
 
@@ -29,7 +30,9 @@ src/
 │   ├── selectors.ts   # Las preguntas del panel como funciones puras
 │   └── validate.ts    # Comprueba unos datos antes de usarlos (importar, cargar, pruebas)
 ├── data/
-│   ├── storage.ts     # StorageAdapter: hoy localStorage; mañana un servidor
+│   ├── storage.ts     # StorageAdapter: localStorage (versión normal)
+│   ├── remote.ts      # StorageAdapter de la base de datos de la página de claude.ai
+│   ├── runtime.ts     # Dónde se ejecuta y las capacidades de la página (db, descargas…)
 │   ├── store.ts       # Estado inmutable + useSyncExternalStore + fusión de datos iniciales
 │   └── seed/          # Datos iniciales: áreas y una carpeta por proyecto
 ├── i18n/              # Idioma: diccionario tipado (es.ts), t() y formato de fechas (Intl)
@@ -90,6 +93,42 @@ y `confidence`:
 
 No hay integraciones activas con Steam, Talo, Discord ni ningún otro servicio: lo que
 dependa de ellos sale «Por confirmar» hasta que el estudio lo confirme.
+
+## La página privada en claude.ai
+
+`npm run build:claude` compila con `--mode artifact`: `runtime.ts` sabe que está en
+claude.ai (`EN_CLAUDE`), `vite.config.ts` cambia `seed/index.ts` por `seed/vacio.ts` (la
+build no lleva datos: todo sale de la base) y `scripts/empaquetar-claude.mjs` deja la
+página en `dist-claude/studio-hub.html` (sin `<html>`, `<head>` ni `<body>`, que los pone
+claude.ai) y la lista de ficheros que la acompañan en `dist-claude/ficheros.json`.
+
+Se publica con las capacidades `db` (reglas: `{ path: "", read: "view", write: "admin" }`,
+es decir, la ve quien tenga acceso y solo la cambian la dueña o los Editores), `user`
+(para saber si quien mira puede escribir) y `downloads` (exportar copias).
+
+### Cómo se guardan los datos en la base
+
+`remote.ts` (`RemoteAdapter`) escucha la base en vivo y escribe solo lo que cambia:
+
+| Documento | Qué lleva |
+|---|---|
+| `estudio/datos` | `{ studio, schemaVersion }` |
+| `<colección>/<id>` | Un elemento de `areas`, `projects`, `items`, `builds`, `events`, `feedback`, `resources` o `checklists`, tal cual, más `_orden` (su posición en la lista) |
+| `activity/<proyecto>~<AAAA-MM>` | `{ entries: [...] }`: el historial de un proyecto en un mes (para no gastar un documento por commit) |
+
+Los ids que la base no admite (solo letras, números y `_ - . ~ : @ +`) se codifican con
+`docIdFor()`. Quien escriba en la base desde fuera (Claude, con su herramienta de datos)
+sigue esta misma forma y las reglas de `validate.ts`: si lo que llega no es válido, la
+página se queda con lo último bueno y lo enseña en un aviso.
+
+- **Solo lectura:** si la plataforma dice que quien mira no puede escribir
+  (`can("data.write")`), o la base rechaza una escritura, la página esconde los controles
+  de crear y editar y lo avisa arriba; el editor se abre para consultar.
+- **Mientras conecta** no se enseña un panel vacío que engañe: un esqueleto. Sin base
+  (abierta fuera de claude.ai o sin sesión), lo explica.
+- **Eco:** lo que la página acaba de guardar vuelve de la base; `reconcile()` conserva los
+  objetos que no cambian, así no repinta ni rompe «Deshacer».
+- Pruebas: `src/data/remote.test.ts`, con una base simulada.
 
 ## Cómo crecerá
 

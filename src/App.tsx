@@ -1,7 +1,7 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, type ReactNode } from 'react'
 import { HashRouter, Link, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { t } from './i18n'
-import { store, useStoreMeta } from './data/store'
+import { store, useStoreMeta, useStoreStatus } from './data/store'
 import { SEED_VERSION } from './data/seed'
 import { AppShell } from './ui/AppShell'
 import { UIProvider } from './ui/context'
@@ -41,13 +41,74 @@ function SeedBanner() {
 }
 
 function LoadErrors() {
-  if (!store.loadErrors.length) return null
+  const status = useStoreStatus()
+  if (!status.loadErrors.length) return null
+  if (status.remote)
+    return (
+      <div className="banner banner-danger" role="alert">
+        <Icon name="alert" size={16} />
+        <div>
+          <strong>{t('remote.invalidTitle')}</strong> {t('remote.invalidBody')}
+          <ul className="small">
+            {status.loadErrors.slice(0, 5).map((e) => (
+              <li key={e}>{e}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    )
   return (
     <div className="banner banner-danger" role="alert">
       <Icon name="alert" size={16} />
       <span>Los datos guardados en este navegador no eran válidos y se ha arrancado con los iniciales. Si tenías una copia exportada, impórtala en Ajustes.</span>
     </div>
   )
+}
+
+/** En la página de claude.ai: el estado de la base de datos y los permisos. */
+function RemoteStatusBanners() {
+  const status = useStoreStatus()
+  if (!status.remote || status.state !== 'ready') return null
+  return (
+    <>
+      {!status.canWrite && (
+        <div className="banner" role="status">
+          <Icon name="eye" size={16} />
+          <span>{t('remote.readOnly')}</span>
+        </div>
+      )}
+      {status.saveError && (
+        <div className="banner banner-danger" role="alert">
+          <Icon name="alert" size={16} />
+          <span>{status.saveError}</span>
+        </div>
+      )}
+    </>
+  )
+}
+
+/** Hasta que llegan los datos de la base no se enseña nada que pueda engañar (un panel vacío). */
+function RemoteGate({ children }: { children: ReactNode }) {
+  const status = useStoreStatus()
+  if (status.state === 'connecting')
+    return (
+      <div aria-busy="true">
+        <p className="muted small connecting" role="status">
+          {t('remote.connecting')}
+        </p>
+        <PageSkeleton />
+      </div>
+    )
+  if (status.state === 'unavailable')
+    return (
+      <div className="error-box" role="alert">
+        <h1>
+          <Icon name="alert" size={20} /> {t('remote.unavailableTitle')}
+        </h1>
+        <p className="muted">{t('remote.unavailableBody')}</p>
+      </div>
+    )
+  return children
 }
 
 function Screens() {
@@ -85,7 +146,10 @@ export function App() {
           <AppShell>
             <LoadErrors />
             <SeedBanner />
-            <Screens />
+            <RemoteStatusBanners />
+            <RemoteGate>
+              <Screens />
+            </RemoteGate>
           </AppShell>
         </UIProvider>
       </FeedbackProvider>

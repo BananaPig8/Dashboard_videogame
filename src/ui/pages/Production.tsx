@@ -23,7 +23,7 @@ import {
   type Scope,
 } from '../../domain/selectors'
 import type { Build, Checklist, FeedbackStatus, Project, StudioData, StudioEvent } from '../../domain/types'
-import { newId, store, useStudioData } from '../../data/store'
+import { newId, store, useCanEdit, useStudioData } from '../../data/store'
 import {
   BuildChannelPill,
   BuildStatusPill,
@@ -53,12 +53,13 @@ const ofScope = <T extends { projectId?: string }>(list: T[], scope: Scope, incl
   list.filter((x) => scope === null || x.projectId === scope || (includeStudio && !x.projectId))
 
 function Header({ embedded, title, subtitle, onNew, newLabel }: { embedded?: boolean; title: string; subtitle: string; onNew: () => void; newLabel: string }) {
-  const action = (
+  const canEdit = useCanEdit()
+  const action = canEdit ? (
     <button type="button" className="btn btn-primary" onClick={onNew}>
       <Icon name="plus" size={16} /> {newLabel}
     </button>
-  )
-  if (embedded) return <div className="embedded-actions">{action}</div>
+  ) : undefined
+  if (embedded) return action ? <div className="embedded-actions">{action}</div> : null
   return <PageHeader title={title} subtitle={subtitle} actions={action} />
 }
 
@@ -238,6 +239,7 @@ export function BuildsPage({ embedded }: PageProps) {
 function ChecklistCard({ checklist, data, showProject }: { checklist: Checklist; data: StudioData; showProject: boolean }) {
   const { edit } = useUI()
   const { confirm } = useNotify()
+  const canEdit = useCanEdit()
   const [label, setLabel] = useState('')
   const project = data.projects.find((p) => p.id === checklist.projectId)
   const done = checklist.items.filter((i) => i.done).length
@@ -250,7 +252,7 @@ function ChecklistCard({ checklist, data, showProject }: { checklist: Checklist;
       subtitle={`${CHECKLIST_TARGETS[checklist.target]} · ${done}/${checklist.items.length}`}
       action={
         <>
-          {done > 0 && checklist.target === 'update' && (
+          {canEdit && done > 0 && checklist.target === 'update' && (
             <button
               type="button"
               className="btn btn-small btn-ghost"
@@ -263,9 +265,11 @@ function ChecklistCard({ checklist, data, showProject }: { checklist: Checklist;
               Empezar de nuevo
             </button>
           )}
-          <button type="button" className="icon-btn" aria-label="Editar lista" onClick={() => edit({ collection: 'checklists', id: checklist.id })}>
-            <Icon name="edit" size={16} />
-          </button>
+          {canEdit && (
+            <button type="button" className="icon-btn" aria-label="Editar lista" onClick={() => edit({ collection: 'checklists', id: checklist.id })}>
+              <Icon name="edit" size={16} />
+            </button>
+          )}
         </>
       }
     >
@@ -276,7 +280,7 @@ function ChecklistCard({ checklist, data, showProject }: { checklist: Checklist;
         {checklist.items.map((it) => (
           <li key={it.id} className={it.done ? 'done' : undefined}>
             <label>
-              <input type="checkbox" checked={it.done} onChange={() => save(checklist.items.map((x) => (x.id === it.id ? { ...x, done: !x.done } : x)))} />
+              <input type="checkbox" checked={it.done} disabled={!canEdit} onChange={() => save(checklist.items.map((x) => (x.id === it.id ? { ...x, done: !x.done } : x)))} />
               <span>{it.label}</span>
             </label>
             {(it.note || it.sources?.length) && (
@@ -296,34 +300,38 @@ function ChecklistCard({ checklist, data, showProject }: { checklist: Checklist;
                 })}
               </div>
             )}
-            <button
-              type="button"
-              className="icon-btn small"
-              aria-label={`Quitar el paso «${it.label}»`}
-              onClick={async () => {
-                if (await confirm({ title: `¿Quitar el paso «${it.label}»?`, confirmLabel: 'Quitar', danger: true }))
-                  save(checklist.items.filter((x) => x.id !== it.id))
-              }}
-            >
-              <Icon name="close" size={14} />
-            </button>
+            {canEdit && (
+              <button
+                type="button"
+                className="icon-btn small"
+                aria-label={`Quitar el paso «${it.label}»`}
+                onClick={async () => {
+                  if (await confirm({ title: `¿Quitar el paso «${it.label}»?`, confirmLabel: 'Quitar', danger: true }))
+                    save(checklist.items.filter((x) => x.id !== it.id))
+                }}
+              >
+                <Icon name="close" size={14} />
+              </button>
+            )}
           </li>
         ))}
       </ul>
-      <form
-        className="quick-add"
-        onSubmit={(e) => {
-          e.preventDefault()
-          if (!label.trim()) return
-          save([...checklist.items, { id: newId('paso'), label: label.trim(), done: false }])
-          setLabel('')
-        }}
-      >
-        <input value={label} onChange={(e) => setLabel(e.target.value)} placeholder="Añadir un paso…" aria-label="Nuevo paso" />
-        <button type="submit" className="btn btn-small" disabled={!label.trim()}>
-          Añadir
-        </button>
-      </form>
+      {canEdit && (
+        <form
+          className="quick-add"
+          onSubmit={(e) => {
+            e.preventDefault()
+            if (!label.trim()) return
+            save([...checklist.items, { id: newId('paso'), label: label.trim(), done: false }])
+            setLabel('')
+          }}
+        >
+          <input value={label} onChange={(e) => setLabel(e.target.value)} placeholder="Añadir un paso…" aria-label="Nuevo paso" />
+          <button type="submit" className="btn btn-small" disabled={!label.trim()}>
+            Añadir
+          </button>
+        </form>
+      )}
     </Card>
   )
 }
@@ -358,6 +366,7 @@ export function PublishPage({ embedded }: PageProps) {
 // ——— Feedback ——————————————————————————————————————————————————————————————
 
 export function FeedbackPage({ embedded }: PageProps) {
+  const canEdit = useCanEdit()
   const data = useStudioData()
   const year = useYear()
   const fmt = useFormat()
@@ -403,6 +412,7 @@ export function FeedbackPage({ embedded }: PageProps) {
             <PriorityTag priority={f.impact} hideMedium />
             <select
               value={f.status}
+              disabled={!canEdit}
               aria-label={`Estado de «${f.title}»`}
               onChange={(e) => store.patch('feedback', f.id, { status: e.target.value as FeedbackStatus })}
             >

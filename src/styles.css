@@ -622,6 +622,29 @@ kbd {
   color: var(--danger);
 }
 
+.banner ul {
+  margin: var(--space-1) 0 0;
+  padding-left: var(--space-5);
+}
+
+/* Mientras llegan los datos de la base de la página (claude.ai). */
+.connecting {
+  max-width: 1440px;
+  margin: 0 auto var(--space-3);
+}
+
+/* Editor en solo lectura: el fieldset agrupa sin cambiar el aspecto. */
+.readonly-fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.readonly-fieldset:disabled :is(.btn, .icon-btn) {
+  display: none;
+}
+
 /* ——— Rejillas, tarjetas y widgets ———————————————————————————————————————— */
 
 .grid {

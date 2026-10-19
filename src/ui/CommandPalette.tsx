@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { STATUSES } from '../domain/catalog'
 import { matchesQuery, normalize } from '../domain/selectors'
 import { t } from '../i18n'
-import { useStudioData, type CollectionKey } from '../data/store'
+import { useCanEdit, useStudioData, type CollectionKey } from '../data/store'
 import { Modal } from './components/Common'
 import { Icon, type IconName } from './components/Icon'
 import { useScope, useUI } from './context'
@@ -23,6 +23,7 @@ interface Command {
 
 export function CommandPalette({ open, initialQuery, onClose }: { open: boolean; initialQuery?: string; onClose: () => void }) {
   const data = useStudioData()
+  const canEdit = useCanEdit()
   const prefs = usePreferences()
   const navigate = useNavigate()
   const { create, openItem } = useUI()
@@ -43,7 +44,7 @@ export function CommandPalette({ open, initialQuery, onClose }: { open: boolean;
     const match = (text: string) => !q || q.split(/\s+/).every((w) => normalize(text).includes(w))
     const go = (path: string) => () => navigate(path)
     const out: Command[] = []
-    for (const a of quickCreate()) {
+    for (const a of canEdit ? quickCreate() : []) {
       const label = `${t('topbar.new')}: ${a.label}`
       if (match(label)) out.push({ id: `new-${a.id}`, group: t('palette.actions'), label, icon: 'plus', run: () => create(a.collection as CollectionKey, a.defaults) })
     }
@@ -73,7 +74,7 @@ export function CommandPalette({ open, initialQuery, onClose }: { open: boolean;
       })
     }
     return out
-  }, [query, data, prefs.savedViews, scope, navigate, create, href, openItem])
+  }, [query, data, prefs.savedViews, scope, navigate, create, href, openItem, canEdit])
 
   useEffect(() => setActive(0), [query])
   useEffect(() => {

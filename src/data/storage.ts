@@ -17,12 +17,25 @@ export interface Persisted {
   meta: StoreMeta
 }
 
+/** Estado de un almacén remoto (la base de datos de la página en claude.ai). */
+export interface RemoteStatus {
+  /** connecting: aún no han llegado los datos; unavailable: no hay base de datos. */
+  state: 'connecting' | 'ready' | 'unavailable'
+  /** false si quien mira solo puede leer. */
+  canWrite: boolean
+  /** El último cambio que no se pudo guardar, si lo hay. */
+  saveError?: string
+}
+
 export interface StorageAdapter {
   load(): Persisted | null
-  save(p: Persisted): void
+  /** Guarda el estado nuevo; `prev` es el anterior, para guardar solo lo que cambió. */
+  save(p: Persisted, prev: Persisted): void
   clear(): void
   /** Avisa cuando los datos cambian fuera (otra pestaña). Devuelve cómo dejar de escuchar. */
   watch?(onChange: () => void): () => void
+  /** Solo los almacenes remotos: conexión y permisos. */
+  status?(): RemoteStatus
 }
 
 export const STORAGE_KEY = 'studio-hub:v1'

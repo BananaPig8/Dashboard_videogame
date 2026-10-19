@@ -4,7 +4,7 @@ import { useFormat, useToday } from '../hooks'
 import { useUndoable } from '../feedback'
 import { blockedItems, byPriority, isActionable, itemsOf, todayItems } from '../../domain/selectors'
 import { ReasonPill } from './Overview'
-import { store, useStudioData } from '../../data/store'
+import { store, useCanEdit, useStudioData } from '../../data/store'
 import { Card, PageHeader } from '../components/Common'
 import { Icon } from '../components/Icon'
 import { ItemList } from '../components/ItemList'
@@ -13,6 +13,7 @@ import { plural } from '../util'
 
 export function TodayPage() {
   const data = useStudioData()
+  const canEdit = useCanEdit()
   const { scope, project } = useScope()
   const today = useToday()
   const year = yearOf(today)
@@ -63,20 +64,22 @@ export function TodayPage() {
               return (
                 <>
                   <ReasonPill reason={reasons.get(item.id)!} />
-                  {item.focusDate === today && (
+                  {canEdit && item.focusDate === today && (
                     <button type="button" className="icon-btn small" title="Quitar de hoy" aria-label={`Quitar «${item.title}» de hoy`} onClick={() => store.patch('items', item.id, { focusDate: undefined })}>
                       <Icon name="close" size={14} />
                     </button>
                   )}
-                  <button
-                    type="button"
-                    className="icon-btn small"
-                    title="Marcar como hecho"
-                    aria-label={`Marcar «${item.title}» como hecho`}
-                    onClick={() => undoable('Marcado como hecho.', () => store.patch('items', item.id, { status: 'done', completedAt: today, focusDate: undefined }))}
-                  >
-                    <Icon name="check" size={14} />
-                  </button>
+                  {canEdit && (
+                    <button
+                      type="button"
+                      className="icon-btn small"
+                      title="Marcar como hecho"
+                      aria-label={`Marcar «${item.title}» como hecho`}
+                      onClick={() => undoable('Marcado como hecho.', () => store.patch('items', item.id, { status: 'done', completedAt: today, focusDate: undefined }))}
+                    >
+                      <Icon name="check" size={14} />
+                    </button>
+                  )}
                 </>
               )
             }}
@@ -90,11 +93,13 @@ export function TodayPage() {
             year={year}
             limit={25}
             empty="No hay nada abierto."
-            aside={(item) => (
-              <button type="button" className="btn btn-small btn-ghost" onClick={() => store.patch('items', item.id, { focusDate: today })}>
-                <Icon name="plus" size={14} /> Hoy
-              </button>
-            )}
+            aside={(item) =>
+              canEdit && (
+                <button type="button" className="btn btn-small btn-ghost" onClick={() => store.patch('items', item.id, { focusDate: today })}>
+                  <Icon name="plus" size={14} /> Hoy
+                </button>
+              )
+            }
           />
         </Card>
       </div>

@@ -6,7 +6,7 @@ import { todayISO, yearOf } from '../../domain/dates'
 import { useToday } from '../hooks'
 import { isOpen, itemDate, itemsOf, matchesQuery, byPriority } from '../../domain/selectors'
 import type { ItemStatus, StudioData, WorkItem } from '../../domain/types'
-import { store, useStudioData } from '../../data/store'
+import { store, useCanEdit, useStudioData } from '../../data/store'
 import { AreaTag, KindIcon, PriorityTag, ProjectChip } from '../components/Badges'
 import { Card, PageHeader } from '../components/Common'
 import { Icon } from '../components/Icon'
@@ -50,6 +50,7 @@ export function WorkPage({ embedded }: { embedded?: boolean }) {
   const data = useStudioData()
   const { scope } = useScope()
   const { create } = useUI()
+  const canEdit = useCanEdit()
   const [params, setParams] = useSearchParams()
   const year = yearOf(useToday())
   const view = params.get('vista') === 'tablero' ? 'tablero' : 'lista'
@@ -73,9 +74,11 @@ export function WorkPage({ embedded }: { embedded?: boolean }) {
           actions={
             <>
               <SaveViewButton suggestedName="Mi vista de trabajo" />
-              <button type="button" className="btn btn-primary" onClick={() => create('items')}>
-                <Icon name="plus" size={16} /> Nuevo elemento
-              </button>
+              {canEdit && (
+                <button type="button" className="btn btn-primary" onClick={() => create('items')}>
+                  <Icon name="plus" size={16} /> Nuevo elemento
+                </button>
+              )}
             </>
           }
         />
@@ -153,6 +156,7 @@ export function WorkPage({ embedded }: { embedded?: boolean }) {
 }
 
 function Board({ items, data, showProject }: { items: WorkItem[]; data: StudioData; showProject: boolean }) {
+  const canEdit = useCanEdit()
   const { openItem } = useUI()
   const areas = new Map(data.areas.map((a) => [a.id, a]))
   const projects = new Map(data.projects.map((p) => [p.id, p]))
@@ -182,6 +186,7 @@ function Board({ items, data, showProject }: { items: WorkItem[]; data: StudioDa
                 </div>
                 <select
                   className="board-status"
+                  disabled={!canEdit}
                   value={i.status}
                   aria-label={`Estado de «${i.title}»`}
                   onChange={(e) => {

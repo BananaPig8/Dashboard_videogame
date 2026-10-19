@@ -6,7 +6,7 @@ import { STAGES } from '../../domain/catalog'
 import { yearOf } from '../../domain/dates'
 import { useFormat, useToday } from '../hooks'
 import { itemsOf, projectSummaries, projectSummary } from '../../domain/selectors'
-import { useStudioData } from '../../data/store'
+import { useCanEdit, useStudioData } from '../../data/store'
 import { HealthPill, StagePill } from '../components/Badges'
 import { Card, ExternalLink, PageHeader } from '../components/Common'
 import { Icon } from '../components/Icon'
@@ -19,6 +19,7 @@ import { WorkPage } from './Work'
 export function ProjectsPage() {
   const data = useStudioData()
   const { create } = useUI()
+  const canEdit = useCanEdit()
   const today = useToday()
   const summaries = projectSummaries(data, today).sort(
     (a, b) => STAGES[a.project.stage].order - STAGES[b.project.stage].order || a.project.name.localeCompare(b.project.name),
@@ -29,9 +30,11 @@ export function ProjectsPage() {
         title="Proyectos"
         subtitle="Todos los videojuegos del estudio, de la idea a la publicación"
         actions={
-          <button type="button" className="btn btn-primary" onClick={() => create('projects')}>
-            <Icon name="plus" size={16} /> Nuevo proyecto
-          </button>
+          canEdit && (
+            <button type="button" className="btn btn-primary" onClick={() => create('projects')}>
+              <Icon name="plus" size={16} /> Nuevo proyecto
+            </button>
+          )
         }
       />
       <div className="project-grid">

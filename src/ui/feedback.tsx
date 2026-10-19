@@ -6,6 +6,7 @@ import { t } from '../i18n'
 import { store } from '../data/store'
 import { todayISO } from '../domain/dates'
 import { Modal } from './components/Common'
+import { saveFile } from './files'
 import { Icon, type IconName } from './components/Icon'
 
 type ToastTone = 'success' | 'danger' | 'info' | 'warning'
@@ -173,15 +174,7 @@ export class ErrorBoundary extends Component<{ children: ReactNode; resetKey?: s
   render() {
     const { error } = this.state
     if (!error) return this.props.children
-    const backup = () => {
-      const blob = new Blob([store.exportJSON()], { type: 'application/json' })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `studio-hub-copia-${todayISO()}.json`
-      a.click()
-      URL.revokeObjectURL(url)
-    }
+    const backup = () => void saveFile(`studio-hub-copia-${todayISO()}.json`, store.exportJSON())
     return (
       <div className="error-box" role="alert">
         <h1>

@@ -4,7 +4,7 @@ import { CONFIDENCES, SOURCE_TYPES } from '../domain/catalog'
 import { todayISO } from '../domain/dates'
 import { t } from '../i18n'
 import type { SourceRef, WorkItem } from '../domain/types'
-import { store, useStudioData, type CollectionKey } from '../data/store'
+import { store, useCanEdit, useStudioData, type CollectionKey } from '../data/store'
 import { ExternalLink, Modal } from './components/Common'
 import { Icon } from './components/Icon'
 import { newDefaults, saveDraft, useScope, type EditorRequest } from './context'
@@ -29,6 +29,7 @@ export function EditorModal({ request, onClose }: { request: EditorRequest; onCl
   const navigate = useNavigate()
   const { toast, confirm } = useNotify()
   const undoable = useUndoable()
+  const canEdit = useCanEdit()
   const spec = SPECS[request.collection] ?? []
   const existing = request.id ? (data[request.collection] as { id: string }[]).find((x) => x.id === request.id) : undefined
   const initial = useMemo(
@@ -85,25 +86,37 @@ export function EditorModal({ request, onClose }: { request: EditorRequest; onCl
       title={existing ? `${editTitle}: ${String((existing as Record<string, unknown>).title ?? (existing as Record<string, unknown>).name ?? '')}` : title}
       onClose={onClose}
       footer={
-        <>
-          {existing && (
-            <button type="button" className="btn btn-danger-ghost" onClick={remove}>
-              <Icon name="trash" size={16} /> {t('actions.delete')}
+        !canEdit ? (
+          <>
+            <span className="muted small">{t('feedbackMsg.readOnly')}</span>
+            <span className="spacer" />
+            <button type="button" className="btn" onClick={onClose}>
+              {t('actions.close')}
             </button>
-          )}
-          <span className="spacer" />
-          <button type="button" className="btn" onClick={onClose}>
-            {t('actions.cancel')}
-          </button>
-          <button type="submit" form={formId} className="btn btn-primary">
-            {t('actions.save')}
-          </button>
-        </>
+          </>
+        ) : (
+          <>
+            {existing && (
+              <button type="button" className="btn btn-danger-ghost" onClick={remove}>
+                <Icon name="trash" size={16} /> {t('actions.delete')}
+              </button>
+            )}
+            <span className="spacer" />
+            <button type="button" className="btn" onClick={onClose}>
+              {t('actions.cancel')}
+            </button>
+            <button type="submit" form={formId} className="btn btn-primary">
+              {t('actions.save')}
+            </button>
+          </>
+        )
       }
     >
       {request.collection === 'items' && existing && <ItemFacts item={existing as WorkItem} />}
-      <EntityForm spec={spec} initial={initial} data={data} onSubmit={submit} formId={formId} />
-      {'sources' in initial && <SourcesEditor sources={sources} onChange={setSources} projectRepo={project} />}
+      <fieldset className="readonly-fieldset" disabled={!canEdit}>
+        <EntityForm spec={spec} initial={initial} data={data} onSubmit={submit} formId={formId} />
+        {'sources' in initial && <SourcesEditor sources={sources} onChange={setSources} projectRepo={project} />}
+      </fieldset>
     </Modal>
   )
 }

@@ -5,7 +5,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom'
 import { STAGES } from '../domain/catalog'
 import { isOpen } from '../domain/selectors'
 import { t } from '../i18n'
-import { useStudioData } from '../data/store'
+import { useCanEdit, useStudioData } from '../data/store'
 import { CommandPalette } from './CommandPalette'
 import { Icon } from './components/Icon'
 import { Popover } from './components/Popover'
@@ -20,6 +20,7 @@ const isTyping = (el: EventTarget | null) =>
 
 export function AppShell({ children }: { children: ReactNode }) {
   const data = useStudioData()
+  const canEdit = useCanEdit()
   const prefs = usePreferences()
   const { scope, project, setScope, href } = useScope()
   const { create } = useUI()
@@ -103,9 +104,11 @@ export function AppShell({ children }: { children: ReactNode }) {
               <NavLink to="/proyectos" className="nav-title-link nav-title-text">
                 {t('nav.projects')}
               </NavLink>
-              <button type="button" className="icon-btn small" onClick={() => create('projects')} aria-label={t('nav.newProject')} title={t('nav.newProject')}>
-                <Icon name="plus" size={14} />
-              </button>
+              {canEdit && (
+                <button type="button" className="icon-btn small" onClick={() => create('projects')} aria-label={t('nav.newProject')} title={t('nav.newProject')}>
+                  <Icon name="plus" size={14} />
+                </button>
+              )}
             </h2>
             {data.projects.map((p) => {
               const open = data.items.filter((i) => i.projectId === p.id && isOpen(i)).length
@@ -197,34 +200,36 @@ export function AppShell({ children }: { children: ReactNode }) {
           <span className="topbar-date">{fmt.longDate(today)}</span>
           <div className="topbar-actions">
             <NotificationsMenu />
-            <Popover
-              label={t('topbar.quickActions')}
-              trigger={(p) => (
-                <button type="button" className="btn btn-primary" onClick={p.toggle} aria-expanded={p['aria-expanded']} aria-haspopup="menu">
-                  <Icon name="plus" size={16} /> <span className="hide-narrow">{t('topbar.new')}</span>
-                  <Icon name="chevronDown" size={14} />
-                </button>
-              )}
-            >
-              {(close) =>
-                quickCreate().map((a, n) => (
-                  <div key={a.id} role="none">
-                    {n === quickCreate().length - 1 && <div className="menu-sep" role="separator" />}
-                    <button
-                      type="button"
-                      role="menuitem"
-                      className="menu-item"
-                      onClick={() => {
-                        close()
-                        create(a.collection, a.defaults)
-                      }}
-                    >
-                      <Icon name={a.icon} size={16} /> {a.label}
-                    </button>
-                  </div>
-                ))
-              }
-            </Popover>
+            {canEdit && (
+              <Popover
+                label={t('topbar.quickActions')}
+                trigger={(p) => (
+                  <button type="button" className="btn btn-primary" onClick={p.toggle} aria-expanded={p['aria-expanded']} aria-haspopup="menu">
+                    <Icon name="plus" size={16} /> <span className="hide-narrow">{t('topbar.new')}</span>
+                    <Icon name="chevronDown" size={14} />
+                  </button>
+                )}
+              >
+                {(close) =>
+                  quickCreate().map((a, n) => (
+                    <div key={a.id} role="none">
+                      {n === quickCreate().length - 1 && <div className="menu-sep" role="separator" />}
+                      <button
+                        type="button"
+                        role="menuitem"
+                        className="menu-item"
+                        onClick={() => {
+                          close()
+                          create(a.collection, a.defaults)
+                        }}
+                      >
+                        <Icon name={a.icon} size={16} /> {a.label}
+                      </button>
+                    </div>
+                  ))
+                }
+              </Popover>
+            )}
           </div>
         </header>
         <main id="contenido" className="content" tabIndex={-1}>

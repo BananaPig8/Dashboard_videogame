@@ -7,6 +7,8 @@ import type { Scope } from '../domain/selectors'
 import type { ID, Project, StudioData } from '../domain/types'
 import { newId, store, useStudioData, type CollectionKey } from '../data/store'
 import { EditorModal } from './Editor'
+import { useNotify } from './feedback'
+import { t } from '../i18n'
 
 // ——— Ámbito ———————————————————————————————————————————————————————————————
 
@@ -145,13 +147,16 @@ export function saveDraft(collection: CollectionKey, draft: Record<string, unkno
 
 export function UIProvider({ children }: { children: ReactNode }) {
   const [request, setRequest] = useState<EditorRequest | null>(null)
+  const { toast } = useNotify()
   const value = useMemo<UIState>(
     () => ({
       edit: setRequest,
       openItem: (id) => setRequest({ collection: 'items', id }),
-      create: (collection, defaults) => setRequest({ collection, defaults }),
+      // Quien solo puede ver no crea nada (abrir y consultar sí).
+      create: (collection, defaults) =>
+        store.canWrite() ? setRequest({ collection, defaults }) : toast({ message: t('feedbackMsg.readOnly'), tone: 'info' }),
     }),
-    [],
+    [toast],
   )
   return (
     <UIContext.Provider value={value}>

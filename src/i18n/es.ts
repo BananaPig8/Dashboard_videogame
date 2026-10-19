@@ -99,7 +99,19 @@ export const es = {
     cannotUndo: 'No se puede deshacer: ha habido otros cambios después.',
     viewSaved: 'Vista guardada en la barra lateral.',
     exported: 'Copia exportada.',
+    exportUnavailable: 'Aquí no se puede guardar el fichero.',
     imported: 'Datos importados.',
+    readOnly: 'Solo puedes ver estos datos.',
+  },
+  remote: {
+    connecting: 'Conectando con la base de datos del estudio…',
+    unavailableTitle: 'No se puede abrir la base de datos del estudio',
+    unavailableBody:
+      'Los datos de Studio Hub están en la base de datos de esta página de claude.ai. Ábrela desde claude.ai con la sesión iniciada; si te la han compartido, pide que te inviten con tu correo.',
+    readOnly: 'Solo lectura: puedes ver todo, pero no cambiarlo. Para editar, pide permiso de edición a quien te compartió la página.',
+    invalidTitle: 'Hay datos en la base que no se pueden mostrar',
+    invalidBody: 'Se enseña lo último que estaba bien. Lo que falla:',
+    dataCardSubtitle: 'Se guardan en la base de datos de esta página de claude.ai, compartida con Claude y con quien la invites',
   },
   errors: {
     title: 'Algo ha fallado en esta pantalla',

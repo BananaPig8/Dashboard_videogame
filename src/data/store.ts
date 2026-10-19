@@ -4,6 +4,8 @@ import { useSyncExternalStore } from 'react'
 import { nowISODateTime } from '../domain/dates'
 import type { ID, StudioData, Studio } from '../domain/types'
 import { validateStudioData } from '../domain/validate'
+import { reconcile, RemoteAdapter } from './remote'
+import { capability, EN_CLAUDE } from './runtime'
 import { createSeedData, SEED_VERSION } from './seed'
 import { LocalStorageAdapter, type Persisted, type StorageAdapter, type StoreMeta } from './storage'
 
@@ -47,12 +49,30 @@ export function mergeSeed(current: StudioData, meta: StoreMeta, seed: StudioData
 
 type Listener = () => void
 
+const NO_ERRORS: string[] = []
+
+/** Dónde y cómo se están guardando los datos. */
+export interface StoreStatus {
+  /** true en la página de claude.ai (base de datos compartida). */
+  remote: boolean
+  /** local: en este navegador; connecting / ready / unavailable: la base de la página. */
+  state: 'local' | 'connecting' | 'ready' | 'unavailable'
+  /** false si quien mira solo puede leer. */
+  canWrite: boolean
+  /** El último cambio que no se pudo guardar. */
+  saveError?: string
+  /** Problemas de los datos guardados (si los hay, no se han cargado). */
+  loadErrors: string[]
+}
+
 export class StudioStore {
   private data: StudioData
   private meta: StoreMeta
   private listeners = new Set<Listener>()
+  private status: StoreStatus
+  private readonly remote: boolean
   /** Problemas encontrados al cargar lo guardado (si los hay, se arrancó con los datos iniciales). */
-  loadErrors: string[] = []
+  loadErrors: string[] = NO_ERRORS
 
   constructor(
     private readonly adapter: StorageAdapter,
@@ -65,18 +85,46 @@ export class StudioStore {
       this.data = saved.data
       this.meta = { ...saved.meta, edited: saved.meta.edited ?? [], deleted: saved.meta.deleted ?? [] }
     } else {
-      this.loadErrors = errors
+      this.loadErrors = errors.length ? errors : NO_ERRORS
       this.data = seed()
       this.meta = { seedVersion: seedVersion, edited: [], deleted: [] }
     }
+    this.remote = Boolean(adapter.status)
+    this.status = this.readStatus()
     adapter.watch?.(() => {
       const fresh = adapter.load()
-      if (fresh && validateStudioData(fresh.data).length === 0) {
-        this.data = fresh.data
-        this.meta = fresh.meta
-        this.emit()
+      if (fresh) {
+        const problems = validateStudioData(fresh.data)
+        if (problems.length === 0) {
+          this.data = this.remote ? reconcile(this.data, fresh.data) : fresh.data
+          // En la base compartida, «qué se editó» no viaja: es cosa de los datos iniciales locales.
+          if (!this.remote) this.meta = fresh.meta
+          this.loadErrors = NO_ERRORS
+        } else if (this.remote) {
+          this.loadErrors = problems
+        }
       }
+      this.status = this.readStatus()
+      this.emit()
     })
+  }
+
+  private readStatus(): StoreStatus {
+    const r = this.adapter.status?.()
+    const next: StoreStatus = r
+      ? { remote: true, state: r.state, canWrite: r.canWrite, saveError: r.saveError, loadErrors: this.loadErrors }
+      : { remote: false, state: 'local', canWrite: true, loadErrors: this.loadErrors }
+    const cur = this.status
+    // El mismo objeto si nada cambió (useSyncExternalStore).
+    if (
+      cur &&
+      cur.state === next.state &&
+      cur.canWrite === next.canWrite &&
+      cur.saveError === next.saveError &&
+      cur.loadErrors === next.loadErrors
+    )
+      return cur
+    return next
   }
 
   // ——— lectura ———
@@ -85,6 +133,13 @@ export class StudioStore {
 
   getMeta = (): StoreMeta => this.meta
 
+  getStatus = (): StoreStatus => this.status
+
+  /** ¿Se pueden cambiar los datos ahora? (en la página compartida: conectada y con permiso). */
+  canWrite(): boolean {
+    return this.status.canWrite && (this.status.state === 'local' || this.status.state === 'ready')
+  }
+
   subscribe = (fn: Listener): (() => void) => {
     this.listeners.add(fn)
     return () => this.listeners.delete(fn)
@@ -92,15 +147,18 @@ export class StudioStore {
 
   /** ¿Hay datos iniciales más nuevos que los que se cargaron? */
   hasSeedUpdate(): boolean {
-    return this.meta.seedVersion !== this.seedVersion
+    return !this.remote && this.meta.seedVersion !== this.seedVersion
   }
 
   // ——— escritura ———
 
   private commit(data: StudioData, meta: StoreMeta = this.meta) {
+    // Quien solo puede ver no cambia nada (las pantallas ya esconden los controles).
+    if (!this.canWrite()) return
+    const prev: Persisted = { data: this.data, meta: this.meta }
     this.data = data
     this.meta = { ...meta, savedAt: nowISODateTime() }
-    this.adapter.save({ data: this.data, meta: this.meta } satisfies Persisted)
+    this.adapter.save({ data: this.data, meta: this.meta } satisfies Persisted, prev)
     this.emit()
   }
 
@@ -189,7 +247,14 @@ export class StudioStore {
   }
 }
 
-export const store = new StudioStore(new LocalStorageAdapter())
+function createStore(): StudioStore {
+  if (!EN_CLAUDE) return new StudioStore(new LocalStorageAdapter())
+  // En claude.ai: los datos están en la base de la página (la build no lleva datos iniciales).
+  const meta: StoreMeta = { seedVersion: SEED_VERSION, edited: [], deleted: [] }
+  return new StudioStore(new RemoteAdapter(capability('db'), capability('user'), createSeedData, meta))
+}
+
+export const store = createStore()
 
 /** Los datos del estudio, siempre al día. */
 export function useStudioData(): StudioData {
@@ -198,4 +263,15 @@ export function useStudioData(): StudioData {
 
 export function useStoreMeta(): StoreMeta {
   return useSyncExternalStore(store.subscribe, store.getMeta)
+}
+
+/** Dónde se guardan los datos y si se pueden cambiar. */
+export function useStoreStatus(): StoreStatus {
+  return useSyncExternalStore(store.subscribe, store.getStatus)
+}
+
+/** ¿Puede quien mira cambiar los datos? */
+export function useCanEdit(): boolean {
+  const s = useStoreStatus()
+  return s.canWrite && (s.state === 'local' || s.state === 'ready')
 }

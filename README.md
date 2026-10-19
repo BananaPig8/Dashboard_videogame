@@ -63,10 +63,31 @@ PW_PATH=$(npm root -g)/playwright node e2e/recorrido.mjs http://localhost:4173 /
 Hace falta Node 22. Con cada cambio en `main`, el flujo **Pages** la publica en GitHub
 Pages (hay que activarlo una vez: *Settings → Pages → Source: GitHub Actions*).
 
+## La página privada en claude.ai
+
+Studio Hub también vive como **página privada de claude.ai**, con los datos en la base de
+datos de la propia página. Esa base la comparten el estudio y Claude: lo que cambias en la
+página lo ve Claude, y lo que Claude anota (por ejemplo, el trabajo nuevo de un juego)
+aparece en la página al momento.
+
+```bash
+npm run build:claude   # dist-claude/studio-hub.html y dist-claude/ficheros.json
+```
+
+Esa build no lleva datos iniciales (todo sale de la base) y guarda con el almacén remoto
+(`src/data/remote.ts`). Cómo se guardan los datos en la base, en
+[`docs/ARQUITECTURA.md`](docs/ARQUITECTURA.md#la-página-privada-en-claudeai).
+
+**Compartirla:** es privada; solo la ve quien la publica. Desde **Compartir** en
+claude.ai se invita a otras personas por correo: entran con su cuenta de Claude. Quien
+entra como **Editor** puede cambiar los datos; el resto la ve en **solo lectura** (la
+página esconde lo que no puede hacer y lo avisa arriba).
+
 ## Los datos
 
-- Se guardan **en el navegador** (localStorage). En **Ajustes** se exporta una
-  copia en JSON, se importa en otro equipo o se vuelve a los datos iniciales.
+- En la versión normal se guardan **en el navegador** (localStorage); en la página de
+  claude.ai, en su base de datos compartida. En **Ajustes** se exporta una copia en
+  JSON o se importa otra.
 - Cada dato dice **de dónde sale** (commit, PR, release, README o anotado a mano) y
   **cuánto fiarse**: *Verificado*, *Deducido* o *Sin confirmar*. Nada de ventas,
   jugadores, fechas de ferias ni estados de Steam se da por bueno sin fuente.

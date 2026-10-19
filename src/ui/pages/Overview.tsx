@@ -32,7 +32,7 @@ import {
 import type { StudioData, StudioEvent } from '../../domain/types'
 import { t, tr } from '../../i18n'
 import type { Formatter } from '../../i18n/format'
-import { useStudioData } from '../../data/store'
+import { useCanEdit, useStudioData } from '../../data/store'
 import { BuildChannelPill, BuildStatusPill, EventStatusPill, FeedbackStatusPill, HealthPill, Pill, ProjectChip, StagePill } from '../components/Badges'
 import { Card, Empty, ExternalLink, Modal, PageHeader, Progress, Stat } from '../components/Common'
 import { Sparkline, WeeklyChart } from '../components/Charts'
@@ -393,6 +393,8 @@ export function ProjectCard({ summary, data, today }: { summary: ProjectSummary;
 
 function NewProjectAction() {
   const { create } = useUI()
+  const canEdit = useCanEdit()
+  if (!canEdit) return null
   return (
     <button type="button" className="btn btn-small btn-link" onClick={() => create('projects')}>
       <Icon name="plus" size={14} /> Nuevo proyecto
@@ -402,6 +404,7 @@ function NewProjectAction() {
 
 function ProjectsBody({ data, today }: WidgetProps) {
   const { create } = useUI()
+  const canEdit = useCanEdit()
   const summaries = projectSummaries(data, today).sort(
     (a, b) => STAGES[a.project.stage].order - STAGES[b.project.stage].order || a.project.name.localeCompare(b.project.name),
   )
@@ -410,11 +413,13 @@ function ProjectsBody({ data, today }: WidgetProps) {
       {summaries.map((s) => (
         <ProjectCard key={s.project.id} summary={s} data={data} today={today} />
       ))}
-      <button type="button" className="project-card project-card-new" onClick={() => create('projects')}>
-        <Icon name="plus" size={20} />
-        <span>Añadir un videojuego</span>
-        <span className="muted small">De la idea a la publicación, con el mismo panel.</span>
-      </button>
+      {canEdit && (
+        <button type="button" className="project-card project-card-new" onClick={() => create('projects')}>
+          <Icon name="plus" size={20} />
+          <span>Añadir un videojuego</span>
+          <span className="muted small">De la idea a la publicación, con el mismo panel.</span>
+        </button>
+      )}
     </div>
   )
 }
@@ -470,13 +475,14 @@ export function EventLine({ event, data, today, year }: { event: StudioEvent; da
 
 function AgendaBody({ data, scope, today, year, fmt }: WidgetProps) {
   const { openItem, create } = useUI()
+  const canEdit = useCanEdit()
   const next = upcoming(data, today, 60, scope)
   const undated = undatedEvents(data, scope).filter((e) => !e.date)
   const stale = staleEvents(data, today, scope)
   return (
     <>
       {next.length === 0 ? (
-        <Empty icon="calendar" action={{ label: 'Añadir fecha', onClick: () => create('events') }}>
+        <Empty icon="calendar" action={canEdit ? { label: 'Añadir fecha', onClick: () => create('events') } : undefined}>
           No hay fechas en los próximos 60 días.
         </Empty>
       ) : (
@@ -529,10 +535,11 @@ function AgendaBody({ data, scope, today, year, fmt }: WidgetProps) {
 
 function BuildsBody({ data, scope, year, fmt }: WidgetProps) {
   const { create } = useUI()
+  const canEdit = useCanEdit()
   const builds = currentBuilds(data, scope)
   if (builds.length === 0)
     return (
-      <Empty icon="box" action={{ label: 'Registrar build', onClick: () => create('builds') }}>
+      <Empty icon="box" action={canEdit ? { label: 'Registrar build', onClick: () => create('builds') } : undefined}>
         No hay builds registradas.
       </Empty>
     )
@@ -566,10 +573,11 @@ function BuildsBody({ data, scope, year, fmt }: WidgetProps) {
 function PublishBody({ data, scope }: WidgetProps) {
   const { href } = useScope()
   const { create } = useUI()
+  const canEdit = useCanEdit()
   const lists = checklistsOf(data, scope)
   if (lists.length === 0)
     return (
-      <Empty icon="rocket" action={{ label: 'Crear lista', onClick: () => create('checklists') }}>
+      <Empty icon="rocket" action={canEdit ? { label: 'Crear lista', onClick: () => create('checklists') } : undefined}>
         Sin listas de publicación.
       </Empty>
     )
@@ -612,13 +620,14 @@ function LaunchBody({ data, scope, year }: WidgetProps) {
 
 function FeedbackBody({ data, scope, year, fmt }: WidgetProps) {
   const { edit, create } = useUI()
+  const canEdit = useCanEdit()
   const open = feedbackToPrioritize(data, scope)
   const all = data.feedback.filter((f) => !scope || f.projectId === scope)
   const addressed = all.filter((f) => f.status === 'addressed').length
   return (
     <>
       {open.length === 0 ? (
-        <Empty icon="message" action={{ label: 'Registrar feedback', onClick: () => create('feedback') }}>
+        <Empty icon="message" action={canEdit ? { label: 'Registrar feedback', onClick: () => create('feedback') } : undefined}>
           {all.length ? `Todo el feedback registrado está atendido (${addressed} resueltos).` : 'Aún no hay feedback registrado.'}
         </Empty>
       ) : (
@@ -701,10 +710,11 @@ function RecentBody({ data, scope, year }: WidgetProps) {
 
 function ResourcesBody({ data, scope }: WidgetProps) {
   const { create } = useUI()
+  const canEdit = useCanEdit()
   const resources = data.resources.filter((r) => !scope || !r.projectId || r.projectId === scope).slice(0, 8)
   if (resources.length === 0)
     return (
-      <Empty icon="book" action={{ label: 'Añadir recurso', onClick: () => create('resources') }}>
+      <Empty icon="book" action={canEdit ? { label: 'Añadir recurso', onClick: () => create('resources') } : undefined}>
         Sin recursos.
       </Empty>
     )

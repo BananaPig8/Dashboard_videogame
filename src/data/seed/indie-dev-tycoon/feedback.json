@@ -1,1 +1,285 @@
-[]
+[
+  {
+    "id": "idt-fb-ajustes-pedidos-0929",
+    "projectId": "indie-dev-tycoon",
+    "title": "Ajustes pedidos para la versión web",
+    "detail": "El título de d5f73f9 habla de «ajustes pedidos» sin decir quién los pidió ni cuáles son exactamente. Por la lista del commit serían: estudio en España con ferias de todo el mundo, tutorial de publicar, licencias sin anunciar las futuras, avisos y sucesos que no se cierran al pulsar fuera, noticias en pantalla, premios por género, investigar con una persona, freno de puntos, informes cuando quieras, demos investigables, sprites de recuerdos y nota de las funciones web.",
+    "origin": "internal",
+    "originDetail": "Pedido al desarrollo; el commit no dice quién lo pidió",
+    "status": "addressed",
+    "impact": "medium",
+    "linkedItemIds": [
+      "idt-decision-estudio-en-espana",
+      "idt-web-reputacion-paises-ferias",
+      "idt-web-tutorial-ventana-publicar",
+      "idt-web-licencias-y-premios-por-genero",
+      "idt-decision-no-ensenar-lo-que-no-se-puede-escoger",
+      "idt-ventanas-no-se-cierran-al-pulsar-fuera",
+      "idt-web-investigar-con-persona",
+      "idt-web-informes-cuando-quieras-demos-investigables",
+      "idt-web-nota-funciones-web-recuerdos"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "d5f73f9",
+        "date": "2026-09-29"
+      },
+      {
+        "type": "commit",
+        "ref": "14ca95a",
+        "date": "2026-09-29"
+      }
+    ],
+    "confidence": "inferred"
+  },
+  {
+    "id": "idt-fb-beta-informacion-de-golpe",
+    "projectId": "indie-dev-tycoon",
+    "title": "Un beta tester: sale toda la información de golpe",
+    "detail": "Un beta tester avisó de que al empezar sale toda la información de golpe. Se resolvió haciendo que las cosas aparezcan cuando sirven, como en Game Dev Tycoon.",
+    "origin": "playtest",
+    "originDetail": "Beta tester",
+    "status": "addressed",
+    "impact": "high",
+    "linkedItemIds": [
+      "idt-progresion-cosas-aparecen"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "7d5c595",
+        "date": "2026-10-05"
+      },
+      {
+        "type": "pr",
+        "ref": "#16",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/16",
+        "date": "2026-10-05"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-fb-beta-letra-pixel-apretada",
+    "projectId": "indie-dev-tycoon",
+    "title": "Tres beta testers: la letra pixel se lee apretada",
+    "detail": "Tres beta testers decían que la letra pixel (Tiny5, de cinco píxeles de alto) se leía muy apretada y que chocaban las dos tipografías.",
+    "origin": "playtest",
+    "originDetail": "Tres beta testers",
+    "status": "addressed",
+    "impact": "high",
+    "linkedItemIds": [
+      "idt-letra-pixelify-sans"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "aba34ef",
+        "date": "2026-10-05"
+      },
+      {
+        "type": "pr",
+        "ref": "#17",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/17",
+        "date": "2026-10-05"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-fb-minlok-demo-sin-cortes",
+    "projectId": "indie-dev-tycoon",
+    "title": "Que la demo no se corte a mitad de un juego",
+    "detail": "Minlok (Hexistence) lo pidió tras probar la demo. Ahora, si hay un juego en desarrollo al llegar al final, la demo espera a que se publique y se lean sus críticas.",
+    "origin": "playtest",
+    "originDetail": "Minlok (Hexistence), tras probar la demo",
+    "status": "addressed",
+    "impact": "high",
+    "linkedItemIds": [
+      "idt-demo-no-se-corta-a-mitad"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "3b06314",
+        "date": "2026-10-11"
+      },
+      {
+        "type": "pr",
+        "ref": "#29",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/29",
+        "date": "2026-10-11"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-fb-minlok-modas-nuevo-juego",
+    "projectId": "indie-dev-tycoon",
+    "title": "Ver qué se lleva sin leer las noticias",
+    "detail": "Minlok (Hexistence) lo pidió tras probar la demo. «Nuevo juego» marca cada género con su moda y resume las tendencias.",
+    "origin": "playtest",
+    "originDetail": "Minlok (Hexistence), tras probar la demo",
+    "status": "addressed",
+    "impact": "medium",
+    "linkedItemIds": [
+      "idt-modas-en-nuevo-juego"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "3b06314",
+        "date": "2026-10-11"
+      },
+      {
+        "type": "pr",
+        "ref": "#29",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/29",
+        "date": "2026-10-11"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-fb-minlok-demo-sin-modos",
+    "projectId": "indie-dev-tycoon",
+    "title": "Quitar los modos de juego de la demo",
+    "detail": "Minlok (Hexistence) lo pidió tras probar la demo. Los modos de juego desaparecen de la demo y siguen en el juego completo.",
+    "origin": "playtest",
+    "originDetail": "Minlok (Hexistence), tras probar la demo",
+    "status": "addressed",
+    "impact": "medium",
+    "linkedItemIds": [
+      "idt-decision-demo-sin-modos-de-juego"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "3b06314",
+        "date": "2026-10-11"
+      },
+      {
+        "type": "pr",
+        "ref": "#29",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/29",
+        "date": "2026-10-11"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-fb-feria-estrellas-no-se-ven",
+    "projectId": "indie-dev-tycoon",
+    "title": "Las estrellas de lo que se sabe no se veían",
+    "detail": "En «Nuevo juego», la ★ y la ✕ de cómo va un género en cada plataforma salían como un hueco.",
+    "origin": "event",
+    "originDetail": "Feria de Valladolid («Lo de la feria»)",
+    "status": "addressed",
+    "impact": "high",
+    "linkedItemIds": [
+      "idt-estrellas-plataforma-no-se-veian"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "d2a53c3",
+        "date": "2026-10-12",
+        "note": "«Lo de la feria»"
+      },
+      {
+        "type": "pr",
+        "ref": "#34",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/34",
+        "date": "2026-10-13"
+      }
+    ],
+    "confidence": "inferred"
+  },
+  {
+    "id": "idt-fb-feria-relajado-mismo-juego",
+    "projectId": "indie-dev-tycoon",
+    "title": "En relajado se podía sacar siempre el mismo juego",
+    "detail": "En relajado no había cansancio de tema.",
+    "origin": "event",
+    "originDetail": "Feria de Valladolid («Lo de la feria»)",
+    "status": "addressed",
+    "impact": "medium",
+    "linkedItemIds": [
+      "idt-cansancio-tema-relajado"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "d2a53c3",
+        "date": "2026-10-12",
+        "note": "«Lo de la feria»"
+      },
+      {
+        "type": "pr",
+        "ref": "#34",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/34",
+        "date": "2026-10-13"
+      }
+    ],
+    "confidence": "inferred"
+  },
+  {
+    "id": "idt-fb-feria-tutorial-informe",
+    "projectId": "indie-dev-tycoon",
+    "title": "El tutorial del informe no salía si te saltabas el principal",
+    "detail": "Quien se saltaba el tutorial principal o empezaba sin él no veía el del primer informe.",
+    "origin": "event",
+    "originDetail": "Feria de Valladolid («Lo de la feria»)",
+    "status": "addressed",
+    "impact": "medium",
+    "linkedItemIds": [
+      "idt-tutorial-informe-para-todos"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "d2a53c3",
+        "date": "2026-10-12",
+        "note": "«Lo de la feria»"
+      },
+      {
+        "type": "pr",
+        "ref": "#34",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/34",
+        "date": "2026-10-13"
+      }
+    ],
+    "confidence": "inferred"
+  },
+  {
+    "id": "idt-fb-feria-ranking",
+    "projectId": "indie-dev-tycoon",
+    "title": "Ranking por dificultad y que la partida se suba sola",
+    "detail": "Tabla por dificultad, el personaje en cada partida, subida sin pulsar nada y, en el stand, todas las partidas.",
+    "origin": "event",
+    "originDetail": "Feria de Valladolid («Lo de la feria»)",
+    "status": "addressed",
+    "impact": "medium",
+    "linkedItemIds": [
+      "idt-ranking-por-dificultad",
+      "idt-ranking-subida-automatica",
+      "idt-ranking-feria-valladolid"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "d2a53c3",
+        "date": "2026-10-12",
+        "note": "«Lo de la feria»"
+      },
+      {
+        "type": "pr",
+        "ref": "#34",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/34",
+        "date": "2026-10-13"
+      }
+    ],
+    "confidence": "inferred"
+  }
+]

@@ -8,11 +8,12 @@ import { DEFAULT_TIME_ZONE, nowISODateTime, todayISO } from '../../domain/dates'
 import { LOCALES, t } from '../../i18n'
 import { makeFormatter, type DateFormat } from '../../i18n/format'
 import { SEED_VERSION } from '../../data/seed'
-import { store, useStoreMeta, useStudioData } from '../../data/store'
+import { store, useCanEdit, useStoreMeta, useStoreStatus, useStudioData } from '../../data/store'
 import { AreaTag, Pill } from '../components/Badges'
 import { Button, Card, Field, FieldGroup, PageHeader } from '../components/Common'
 import { Icon } from '../components/Icon'
 import { useNotify } from '../feedback'
+import { saveFile } from '../files'
 import { useFormat } from '../hooks'
 import { ACCENTS, resolvedTheme, resolveAccent, updatePreferences, usePreferences, type Density, type ThemePref, type WidgetId } from '../prefs'
 import { WidgetOrderList } from './Overview'
@@ -32,6 +33,8 @@ function timeZones(): string[] {
 export function SettingsPage() {
   const data = useStudioData()
   const meta = useStoreMeta()
+  const status = useStoreStatus()
+  const canEdit = useCanEdit()
   const prefs = usePreferences()
   const fmt = useFormat()
   const { toast, confirm } = useNotify()
@@ -44,15 +47,10 @@ export function SettingsPage() {
   const theme = resolvedTheme(prefs.theme)
   const sample = '2026-10-18'
 
-  const download = () => {
-    const blob = new Blob([store.exportJSON()], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `studio-hub-${todayISO()}.json`
-    a.click()
-    URL.revokeObjectURL(url)
-    toast(t('feedbackMsg.exported'))
+  const download = async () => {
+    const result = await saveFile(`studio-hub-${todayISO()}.json`, store.exportJSON())
+    if (result === 'saved') toast(t('feedbackMsg.exported'))
+    else if (result === 'unavailable') toast({ message: t('feedbackMsg.exportUnavailable'), tone: 'danger' })
   }
 
   const importFile = async (file: File) => {
@@ -256,25 +254,31 @@ export function SettingsPage() {
             >
               <div className="span-2">
                 <Field label="Nombre del estudio">
-                  <input value={name} onChange={(e) => setName(e.target.value)} />
+                  <input value={name} onChange={(e) => setName(e.target.value)} disabled={!canEdit} />
                 </Field>
               </div>
               <div className="span-2">
                 <Field label="Lema o descripción corta">
-                  <input value={tagline} onChange={(e) => setTagline(e.target.value)} />
+                  <input value={tagline} onChange={(e) => setTagline(e.target.value)} disabled={!canEdit} />
                 </Field>
               </div>
-              <div>
-                <button type="submit" className="btn btn-primary">
-                  {t('actions.save')}
-                </button>
-              </div>
+              {canEdit && (
+                <div>
+                  <button type="submit" className="btn btn-primary">
+                    {t('actions.save')}
+                  </button>
+                </div>
+              )}
             </form>
           </Card>
         </div>
       </div>
 
-      <Card title="Datos" icon="box" subtitle="Se guardan en este navegador; exporta una copia para tenerla a salvo o llevarla a otro equipo">
+      <Card
+        title="Datos"
+        icon="box"
+        subtitle={status.remote ? t('remote.dataCardSubtitle') : 'Se guardan en este navegador; exporta una copia para tenerla a salvo o llevarla a otro equipo'}
+      >
         <dl className="data-counts">
           {counts.map(([l, n]) => (
             <div key={l}>
@@ -283,24 +287,28 @@ export function SettingsPage() {
             </div>
           ))}
         </dl>
-        <p className="muted small">
-          Datos iniciales: versión {meta.seedVersion}
-          {meta.savedAt ? ` · último guardado: ${fmt.dateTime(meta.savedAt)}` : ' · aún sin cambios guardados'} · {meta.edited.length} elementos editados a mano.
-        </p>
+        {!status.remote && (
+          <p className="muted small">
+            Datos iniciales: versión {meta.seedVersion}
+            {meta.savedAt ? ` · último guardado: ${fmt.dateTime(meta.savedAt)}` : ' · aún sin cambios guardados'} · {meta.edited.length} elementos editados a mano.
+          </p>
+        )}
         <div className="button-row">
           <button type="button" className="btn" onClick={download}>
             <Icon name="download" size={16} /> Exportar copia (JSON)
           </button>
-          <Button
-            className="btn"
-            loading={importing}
-            onClick={async () => {
-              if (await confirm({ title: '¿Importar una copia?', message: 'Sustituye todos los datos actuales por los del fichero.', confirmLabel: 'Elegir fichero' }))
-                fileRef.current?.click()
-            }}
-          >
-            <Icon name="upload" size={16} /> Importar copia
-          </Button>
+          {canEdit && (
+            <Button
+              className="btn"
+              loading={importing}
+              onClick={async () => {
+                if (await confirm({ title: '¿Importar una copia?', message: 'Sustituye todos los datos actuales por los del fichero.', confirmLabel: 'Elegir fichero' }))
+                  fileRef.current?.click()
+              }}
+            >
+              <Icon name="upload" size={16} /> Importar copia
+            </Button>
+          )}
           <input
             ref={fileRef}
             type="file"
@@ -312,7 +320,7 @@ export function SettingsPage() {
               e.target.value = ''
             }}
           />
-          {meta.seedVersion !== SEED_VERSION && (
+          {!status.remote && meta.seedVersion !== SEED_VERSION && (
             <button
               type="button"
               className="btn btn-primary"
@@ -324,25 +332,27 @@ export function SettingsPage() {
               Traer los datos iniciales nuevos ({SEED_VERSION})
             </button>
           )}
-          <button
-            type="button"
-            className="btn btn-danger-ghost"
-            onClick={async () => {
-              if (
-                await confirm({
-                  title: '¿Volver a los datos iniciales?',
-                  message: 'Se pierden los cambios hechos en este navegador. Exporta antes una copia si la quieres.',
-                  confirmLabel: 'Volver a los iniciales',
-                  danger: true,
-                })
-              ) {
-                store.resetToSeed()
-                toast('Datos iniciales restaurados.')
-              }
-            }}
-          >
-            Volver a los datos iniciales
-          </button>
+          {!status.remote && (
+            <button
+              type="button"
+              className="btn btn-danger-ghost"
+              onClick={async () => {
+                if (
+                  await confirm({
+                    title: '¿Volver a los datos iniciales?',
+                    message: 'Se pierden los cambios hechos en este navegador. Exporta antes una copia si la quieres.',
+                    confirmLabel: 'Volver a los iniciales',
+                    danger: true,
+                  })
+                ) {
+                  store.resetToSeed()
+                  toast('Datos iniciales restaurados.')
+                }
+              }}
+            >
+              Volver a los datos iniciales
+            </button>
+          )}
         </div>
         {importErrors.length > 0 && (
           <div className="notice notice-danger" role="alert">
