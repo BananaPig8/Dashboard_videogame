@@ -19,8 +19,8 @@ function sinDatosIniciales(): Plugin {
   }
 }
 
-// base relativa: la misma build vale en GitHub Pages (/Dashboard_videogame/), en local y en
-// la página de claude.ai (VITE_DESTINO=artifact, ver docs/ARQUITECTURA.md).
+// base relativa: la misma build vale en Cloudflare Pages, en cualquier subcarpeta, en local y
+// en la página de claude.ai (VITE_DESTINO=artifact, ver docs/ARQUITECTURA.md).
 export default defineConfig(({ mode }) => {
   const enClaude = process.env.VITE_DESTINO === 'artifact' || mode === 'artifact'
   return {

@@ -60,12 +60,48 @@ npm run build && npx vite preview --port 4173 &
 PW_PATH=$(npm root -g)/playwright node e2e/recorrido.mjs http://localhost:4173 /tmp
 ```
 
-Hace falta Node 22. Con cada cambio en `main`, el flujo **Pages** la publica en GitHub
-Pages (hay que activarlo una vez: *Settings → Pages → Source: GitHub Actions*).
+Hace falta Node 22 (`.node-version`).
 
-## La página privada en claude.ai
+## La web privada (Cloudflare Pages + Cloudflare Access)
 
-Studio Hub también vive como **página privada de claude.ai**, con los datos en la base de
+Studio Hub se publica como web normal de navegador en **Cloudflare Pages**, detrás de
+**Cloudflare Access**: para entrar hay que escribir un correo autorizado y el código que
+llega a ese correo. Cada cambio en `main` se publica solo. Se configura una vez:
+
+1. **Proyecto de Pages.** En el panel de Cloudflare: *Workers & Pages → Create
+   application → Pages → Connect to Git*, autoriza GitHub y elige este repositorio.
+   - *Production branch*: `main`
+   - *Framework preset*: ninguno (o Vite)
+   - *Build command*: `npm run build`
+   - *Build output directory*: `dist`
+
+   *Save and Deploy*. La web queda en `https://<proyecto>.pages.dev`.
+2. **Proteger la web y las vistas previas.** En el proyecto: *Settings → General →
+   Enable access policy* (la primera vez, Cloudflare pide un nombre de equipo para Zero
+   Trust y elegir plan: el gratuito vale para hasta 50 personas). Eso protege las vistas previas de las ramas, pero **no** la
+   dirección principal. Para protegerla también: en la política creada, *Manage*; en
+   *Access → Applications*, el proyecto → *Configure*; en *Public hostname*, borra el `*`
+   del campo *Subdomain* y guarda (si da error, cambia el nombre de la aplicación).
+   Vuelve a *Settings → General* y marca otra vez *Enable access policy*: deben quedar
+   dos aplicaciones de Access, una para `<proyecto>.pages.dev` y otra para las vistas
+   previas.
+3. **Quién entra.** En *Zero Trust → Access → Applications*, en cada una de las dos
+   aplicaciones, edita la política: *Include → Emails* con tu correo y los de quien
+   quieras invitar. El acceso por código de un solo uso al correo viene activado.
+4. **Comprobar.** Abre `https://<proyecto>.pages.dev` en una ventana privada: tiene que
+   pedir el correo antes de enseñar nada.
+
+Lo que se apunta en la web se guarda **en el navegador** de cada persona (localStorage):
+no pasa solo a otros dispositivos ni lo ven los demás. Para llevarlo a otro sitio,
+*Ajustes → Exportación e importación*. El código y los datos iniciales siguen en el
+repositorio de GitHub, que es público.
+
+`public/_headers` pide a los buscadores que no la indexen y cierra lo que la web no usa
+(cámara, micrófono, ubicación, incrustarla en otra página).
+
+## Otra forma: la página de claude.ai (opcional)
+
+Studio Hub también puede vivir como **página privada de claude.ai**, con los datos en la base de
 datos de la propia página. Esa base la comparten el estudio y Claude: lo que cambias en la
 página lo ve Claude, y lo que Claude anota (por ejemplo, el trabajo nuevo de un juego)
 aparece en la página al momento.

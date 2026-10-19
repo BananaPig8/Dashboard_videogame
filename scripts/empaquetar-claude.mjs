@@ -28,7 +28,8 @@ const recorrer = (dir) => {
     if (statSync(ruta).isDirectory()) recorrer(ruta)
     else {
       const publicada = relative(dist, ruta).split('\\').join('/')
-      if (![`index.html`, PAGINA, LISTA].includes(publicada)) ficheros[publicada] = ruta
+      // _headers es de Cloudflare Pages: en claude.ai no se publica.
+      if (![`index.html`, PAGINA, LISTA, '_headers'].includes(publicada)) ficheros[publicada] = ruta
     }
   }
 }
