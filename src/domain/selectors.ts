@@ -93,23 +93,6 @@ export function overdueItems(data: StudioData, today: ISODate, scope: Scope = nu
 
 // ——— Agenda —————————————————————————————————————————————————————————————
 
-export type AgendaEntry =
-  | { kind: 'event'; date: ISODate; event: StudioEvent }
-  | { kind: 'due'; date: ISODate; item: WorkItem }
-
-/** Eventos y fechas límite desde hoy hasta dentro de `days` días, por fecha. */
-export function upcoming(data: StudioData, today: ISODate, days: number, scope: Scope = null): AgendaEntry[] {
-  const until = addDays(today, days)
-  const events: AgendaEntry[] = data.events
-    .filter(inScope(scope))
-    .filter((e) => e.date && e.status !== 'cancelled' && e.status !== 'done' && (e.endDate ?? e.date) >= today && e.date <= until)
-    .map((event) => ({ kind: 'event', date: event.date!, event }))
-  const dues: AgendaEntry[] = itemsOf(data, scope)
-    .filter((i) => isOpen(i) && i.dueDate && i.dueDate >= today && i.dueDate <= until)
-    .map((item) => ({ kind: 'due', date: item.dueDate!, item }))
-  return [...events, ...dues].sort((a, b) => a.date.localeCompare(b.date))
-}
-
 /** Eventos previstos que aún no tienen fecha confirmada. */
 export function undatedEvents(data: StudioData, scope: Scope = null): StudioEvent[] {
   return data.events

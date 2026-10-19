@@ -12,7 +12,6 @@ import {
   todayItems,
   toConfirmItems,
   undatedEvents,
-  upcoming,
   weeklyEvolution,
 } from './selectors'
 import type { StudioData, WorkItem } from './types'
@@ -129,10 +128,6 @@ describe('bloqueos y confirmaciones', () => {
 })
 
 describe('agenda', () => {
-  it('trae eventos y fechas límite de los próximos días, por fecha', () => {
-    const next = upcoming(fixture(), TODAY, 60)
-    expect(next.map((e) => (e.kind === 'event' ? e.event.id : e.item.id))).toEqual(['hoy', 'e1'])
-  })
   it('detecta lo que no tiene fecha y lo que ya pasó sin actualizar', () => {
     expect(undatedEvents(fixture()).map((e) => e.id)).toEqual(['e2'])
     expect(staleEvents(fixture(), TODAY).map((e) => e.id)).toEqual(['e3'])

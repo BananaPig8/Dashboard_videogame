@@ -1,0 +1,106 @@
+/* Panel: el modo foco (?ver=) y lo que añade a los bloques de siempre (avisos, fechas por
+ * mes, actividad del código y el estado de un proyecto). Solo variables de styles.css. */
+
+.panel-focus {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+/* Avisos (los de la campana) dentro de «Necesita atención». */
+.panel-alerts,
+.panel-activity {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.panel-alert,
+.panel-activity-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--row-y) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.panel-alert:last-child,
+.panel-activity-row:last-child {
+  border-bottom: 0;
+}
+
+.panel-alert-icon {
+  display: inline-flex;
+  flex: none;
+  padding-top: 2px;
+}
+
+.panel-tone-danger {
+  color: var(--danger);
+}
+
+.panel-tone-warning {
+  color: var(--warning);
+}
+
+.panel-tone-info {
+  color: var(--info);
+}
+
+.panel-alert-main,
+.panel-activity-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-wrap: anywhere;
+}
+
+.panel-activity-row > .icon {
+  flex: none;
+  margin-top: 4px;
+  color: var(--text-3);
+}
+
+/* Próximas fechas en el modo foco: por meses. */
+.panel-month + .panel-month {
+  margin-top: var(--space-2);
+}
+
+.panel-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+/* Estado de un proyecto (?ver=proyectos dentro de un proyecto): su tarjeta y el porqué. */
+.panel-project-state {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--gap);
+  align-items: start;
+}
+
+.panel-project-why {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+@media (max-width: 960px) {
+  .panel-project-state {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  /* En móvil, la fecha va encima de lo que pasa ese día (no le quita ancho al título). */
+  .panel-focus .agenda-row,
+  .widget-grid .agenda-row {
+    flex-wrap: wrap;
+    row-gap: 2px;
+  }
+}

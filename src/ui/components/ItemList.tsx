@@ -1,10 +1,13 @@
 import type { ReactNode } from 'react'
 import { useFormat } from '../hooks'
-import { itemDate } from '../../domain/selectors'
-import type { StudioData, WorkItem } from '../../domain/types'
+import { isOpen, itemDate, taskAssignee } from '../../domain/selectors'
+import type { ISODate, StudioData, WorkItem } from '../../domain/types'
+import { t } from '../../i18n'
 import { useUI } from '../context'
-import { AreaTag, ConfidenceTag, KindIcon, PriorityTag, ProjectChip, StatusPill } from './Badges'
+import { AreaTag, ConfidenceTag, KindIcon, Pill, PriorityTag, ProjectChip, StatusPill } from './Badges'
 import { Empty } from './Common'
+import { Icon } from './Icon'
+import { TagLinks } from './TagFilter'
 
 export interface ItemListProps {
   items: WorkItem[]
@@ -19,9 +22,46 @@ export interface ItemListProps {
   limit?: number
   hideStatus?: boolean
   year?: number
+  /** Enseñar quién lleva cada elemento («Sin asignar» si nadie). */
+  showAssignee?: boolean
+  /** Enseñar las etiquetas (enlazan a su página). */
+  showTags?: boolean
+  /** Con la fecha de hoy, las fechas límite vencidas o de hoy se marcan (icono y texto). */
+  today?: ISODate
 }
 
-export function ItemList({ items, data, showProject, empty, aside, detail, limit, hideStatus, year }: ItemListProps) {
+/** Quién lleva un elemento; sin nadie, «Sin asignar» (nunca se inventa). */
+export function AssigneeTag({ item, data }: { item: WorkItem; data: StudioData }) {
+  const member = taskAssignee(data, item)
+  const name = member ? (member.active ? member.name : t('secciones.tareas.assignee.gone', { name: member.name })) : t('secciones.tareas.assignee.nobody')
+  return (
+    <span className={member ? 'meta-date assignee-tag' : 'meta-date assignee-tag nobody'} title={member ? t('secciones.tareas.assignee.label', { name: member.name }) : undefined}>
+      <Icon name="user" size={12} /> {name}
+    </span>
+  )
+}
+
+/** La fecha límite: vencida (rojo) o de hoy (ámbar) con icono y texto; si no, tal cual. */
+export function DueTag({ item, today, year }: { item: WorkItem; today?: ISODate; year?: number }) {
+  const fmt = useFormat()
+  if (!item.dueDate) return null
+  const date = fmt.date(item.dueDate, year)
+  if (today && isOpen(item) && item.dueDate < today)
+    return (
+      <Pill tone="danger" icon="clock">
+        {t('secciones.tareas.due.overdue', { date })}
+      </Pill>
+    )
+  if (today && isOpen(item) && item.dueDate === today)
+    return (
+      <Pill tone="warning" icon="clock">
+        {t('secciones.tareas.due.today')}
+      </Pill>
+    )
+  return <span className="meta-date">{t('secciones.tareas.due.date', { date })}</span>
+}
+
+export function ItemList({ items, data, showProject, empty, aside, detail, limit, hideStatus, year, showAssignee, showTags, today }: ItemListProps) {
   const { openItem } = useUI()
   const fmt = useFormat()
   if (items.length === 0) return <Empty>{empty ?? 'Nada por aquí.'}</Empty>
@@ -52,9 +92,11 @@ export function ItemList({ items, data, showProject, empty, aside, detail, limit
                 <div className="item-meta">
                   {showProject && <ProjectChip project={projects.get(item.projectId)} />}
                   <AreaTag area={item.areaId ? areas.get(item.areaId) : undefined} />
+                  {showAssignee && <AssigneeTag item={item} data={data} />}
                   <ConfidenceTag confidence={item.confidence} compact />
-                  {item.dueDate && <span className="meta-date">Límite: {fmt.date(item.dueDate, year)}</span>}
+                  {item.dueDate && <DueTag item={item} today={today} year={year} />}
                   {!item.dueDate && date && <span className="meta-date">{fmt.date(date, year)}</span>}
+                  {showTags && <TagLinks tags={item.tags} />}
                 </div>
               </div>
               <div className="item-side">

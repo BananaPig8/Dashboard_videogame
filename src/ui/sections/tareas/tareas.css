@@ -1,0 +1,184 @@
+/* Sección «Tareas»: lista, tablero, calendario y plan de hoy. Solo variables de styles.css. */
+
+.tareas-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  min-width: 0;
+}
+
+/* Conmutador de vista (enlaces) y recuento. */
+.tareas-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+}
+
+.tareas-views ul {
+  display: inline-flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--surface-2);
+}
+
+.tareas-views li + li {
+  border-left: 1px solid var(--border-strong);
+}
+
+.tareas-views a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  font-size: 0.84rem;
+  color: var(--text-2);
+  text-decoration: none;
+  transition:
+    background var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+
+.tareas-views a:hover {
+  color: var(--text);
+}
+
+.tareas-views a.active {
+  background: var(--accent-soft);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.tareas-views a:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+
+.tareas-count {
+  margin: 0;
+}
+
+/* Filtros: en el escritorio, todos a la vista; en el móvil, detrás de «Filtros». */
+.tareas-filters-more {
+  display: contents;
+}
+
+.tareas-filters-toggle {
+  display: none;
+}
+
+.tareas-note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-3);
+  color: var(--text-2);
+  font-size: 0.86rem;
+}
+
+.tareas-note .icon {
+  flex: none;
+  margin-top: var(--space-1);
+}
+
+.tareas-note-danger .icon {
+  color: var(--danger);
+}
+
+.tareas-me {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  margin: 0;
+}
+
+/* Quién lo lleva: «Sin asignar» en gris, sin parecer un dato. */
+.assignee-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.assignee-tag.nobody {
+  font-style: italic;
+}
+
+/* Tablero: tantas columnas como estados elegidos; en el móvil, se desliza de una en una. */
+.tareas-board {
+  grid-template-columns: repeat(var(--tareas-cols, 6), minmax(230px, 1fr));
+  align-items: start;
+}
+
+.tareas-board .board-col {
+  min-width: 0;
+}
+
+.tareas-card .item-meta {
+  min-width: 0;
+}
+
+.tareas-card .item-meta > * {
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.tareas-card .area-tag,
+.tareas-card .project-chip {
+  white-space: normal;
+}
+
+.tareas-card .tag-links {
+  font-size: 0.76rem;
+}
+
+.tareas-toggle[aria-pressed='true'] {
+  background: var(--accent-soft);
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+@media (max-width: 640px) {
+  .tareas-filters-toggle {
+    display: inline-flex;
+    flex: 0 0 auto;
+  }
+
+  .tareas-filters .filters input[type='search'] {
+    flex: 1 1 0;
+    flex-basis: 0;
+  }
+
+  .tareas-filters-more {
+    display: none;
+  }
+
+  .tareas-filters.open .tareas-filters-more {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    flex-basis: 100%;
+  }
+
+  .tareas-filters.open .tareas-filters-more > * {
+    flex: 1 1 140px;
+  }
+
+  .tareas-board {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 82%;
+    scroll-snap-type: x mandatory;
+  }
+
+  .tareas-board .board-col {
+    scroll-snap-align: start;
+  }
+}

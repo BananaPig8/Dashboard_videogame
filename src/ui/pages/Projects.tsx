@@ -19,7 +19,7 @@ import { Popover } from '../components/Popover'
 import { usePreferences } from '../prefs'
 import { t } from '../../i18n'
 import { SECTION_PAGES } from '../sections/registry'
-import { ProjectCard } from './Overview'
+import { ProjectCard } from '../sections/proyectos/ProjectCard'
 
 export function ProjectsPage() {
   const data = useStudioData()
