@@ -1,7 +1,10 @@
 // El estado de Studio Hub: un único objeto StudioData inmutable. Cada cambio crea uno
 // nuevo, se guarda y avisa a las pantallas (useSyncExternalStore).
 import { useSyncExternalStore } from 'react'
+import { COLLECTIONS, type CollectionKey } from '../domain/collections'
 import { nowISODateTime } from '../domain/dates'
+import { normalizeData } from '../domain/migrate'
+import { removeWithReferences } from '../domain/references'
 import type { ID, StudioData, Studio } from '../domain/types'
 import { validateStudioData } from '../domain/validate'
 import { reconcile, RemoteAdapter } from './remote'
@@ -9,13 +12,9 @@ import { capability, EN_CLAUDE } from './runtime'
 import { createSeedData, SEED_VERSION } from './seed'
 import { LocalStorageAdapter, type Persisted, type StorageAdapter, type StoreMeta } from './storage'
 
-export type CollectionKey = 'areas' | 'projects' | 'items' | 'builds' | 'events' | 'feedback' | 'resources' | 'checklists' | 'activity'
+// Las colecciones salen del registro (domain/collections.ts).
+export { COLLECTIONS, type CollectionKey }
 export type EntityOf<K extends CollectionKey> = StudioData[K][number]
-
-export const COLLECTIONS: CollectionKey[] = ['areas', 'projects', 'items', 'builds', 'events', 'feedback', 'resources', 'checklists', 'activity']
-
-/** Colecciones que cuelgan de un proyecto (se borran con él). */
-const PROJECT_OWNED: CollectionKey[] = ['items', 'builds', 'events', 'feedback', 'resources', 'checklists', 'activity']
 
 const key = (k: CollectionKey, id: ID) => `${k}:${id}`
 
@@ -43,13 +42,26 @@ export function mergeSeed(current: StudioData, meta: StoreMeta, seed: StudioData
     }
     ;(next as unknown as Record<CollectionKey, unknown>)[k] = list
   }
-  if (!edited.has('studio')) next.studio = { ...seed.studio, name: current.studio.name, tagline: current.studio.tagline }
+  // Lo que el estudio haya puesto (moneda, nombres de estados…) nunca lo pisa la semilla.
+  if (!edited.has('studio')) next.studio = { ...seed.studio, ...current.studio }
   return next
 }
 
 type Listener = () => void
 
 const NO_ERRORS: string[] = []
+
+/**
+ * Carga unos datos guardados: los normaliza (domain/migrate.ts) y los valida. Si son de
+ * una versión más nueva de Studio Hub, no se usan ni se pisan.
+ */
+function prepare(raw: unknown): { data: StudioData | null; errors: string[]; newer: boolean } {
+  const n = normalizeData(raw)
+  if (n.newer) return { data: null, errors: [], newer: true }
+  if (!n.data) return { data: null, errors: ['No es un objeto JSON.'], newer: false }
+  const errors = validateStudioData(n.data)
+  return { data: errors.length ? null : n.data, errors, newer: false }
+}
 
 /** Dónde y cómo se están guardando los datos. */
 export interface StoreStatus {
@@ -63,6 +75,8 @@ export interface StoreStatus {
   saveError?: string
   /** Problemas de los datos guardados (si los hay, no se han cargado). */
   loadErrors: string[]
+  /** Los datos guardados son de una versión más nueva de Studio Hub: solo lectura hasta recargar. */
+  newer?: boolean
 }
 
 export class StudioStore {
@@ -71,6 +85,10 @@ export class StudioStore {
   private listeners = new Set<Listener>()
   private status: StoreStatus
   private readonly remote: boolean
+  /** Lo guardado es de una versión más nueva: no se toca (solo lectura). */
+  private newer = false
+  /** El navegador no dejó guardar el último cambio (sin espacio, modo privado…). */
+  private localSaveError?: string
   /** Problemas encontrados al cargar lo guardado (si los hay, se arrancó con los datos iniciales). */
   loadErrors: string[] = NO_ERRORS
 
@@ -80,12 +98,13 @@ export class StudioStore {
     private readonly seedVersion = SEED_VERSION,
   ) {
     const saved = adapter.load()
-    const errors = saved ? validateStudioData(saved.data) : []
-    if (saved && errors.length === 0) {
-      this.data = saved.data
+    const loaded = saved ? prepare(saved.data) : null
+    if (saved && loaded?.data) {
+      this.data = loaded.data
       this.meta = { ...saved.meta, edited: saved.meta.edited ?? [], deleted: saved.meta.deleted ?? [] }
     } else {
-      this.loadErrors = errors.length ? errors : NO_ERRORS
+      this.newer = loaded?.newer ?? false
+      this.loadErrors = loaded?.errors.length ? loaded.errors : NO_ERRORS
       this.data = seed()
       this.meta = { seedVersion: seedVersion, edited: [], deleted: [] }
     }
@@ -94,14 +113,16 @@ export class StudioStore {
     adapter.watch?.(() => {
       const fresh = adapter.load()
       if (fresh) {
-        const problems = validateStudioData(fresh.data)
-        if (problems.length === 0) {
-          this.data = this.remote ? reconcile(this.data, fresh.data) : fresh.data
+        const next = prepare(fresh.data)
+        if (next.newer) {
+          this.newer = true
+        } else if (next.data) {
+          this.data = this.remote ? reconcile(this.data, next.data) : next.data
           // En la base compartida, «qué se editó» no viaja: es cosa de los datos iniciales locales.
           if (!this.remote) this.meta = fresh.meta
           this.loadErrors = NO_ERRORS
         } else if (this.remote) {
-          this.loadErrors = problems
+          this.loadErrors = next.errors
         }
       }
       this.status = this.readStatus()
@@ -112,8 +133,8 @@ export class StudioStore {
   private readStatus(): StoreStatus {
     const r = this.adapter.status?.()
     const next: StoreStatus = r
-      ? { remote: true, state: r.state, canWrite: r.canWrite, saveError: r.saveError, loadErrors: this.loadErrors }
-      : { remote: false, state: 'local', canWrite: true, loadErrors: this.loadErrors }
+      ? { remote: true, state: r.state, canWrite: r.canWrite && !this.newer, saveError: r.saveError, loadErrors: this.loadErrors, newer: this.newer }
+      : { remote: false, state: 'local', canWrite: !this.newer, saveError: this.localSaveError, loadErrors: this.loadErrors, newer: this.newer }
     const cur = this.status
     // El mismo objeto si nada cambió (useSyncExternalStore).
     if (
@@ -121,7 +142,8 @@ export class StudioStore {
       cur.state === next.state &&
       cur.canWrite === next.canWrite &&
       cur.saveError === next.saveError &&
-      cur.loadErrors === next.loadErrors
+      cur.loadErrors === next.loadErrors &&
+      cur.newer === next.newer
     )
       return cur
     return next
@@ -158,7 +180,11 @@ export class StudioStore {
     const prev: Persisted = { data: this.data, meta: this.meta }
     this.data = data
     this.meta = { ...meta, savedAt: nowISODateTime() }
-    this.adapter.save({ data: this.data, meta: this.meta } satisfies Persisted, prev)
+    const ok = this.adapter.save({ data: this.data, meta: this.meta } satisfies Persisted, prev)
+    if (!this.remote) {
+      this.localSaveError = ok === false ? 'Este navegador no ha dejado guardar el último cambio (¿sin espacio o en modo privado?). Exporta una copia.' : undefined
+      this.status = this.readStatus()
+    }
     this.emit()
   }
 
@@ -186,28 +212,18 @@ export class StudioStore {
     if (current) this.upsert(k, { ...current, ...changes })
   }
 
-  /** Borra un elemento; si es un proyecto, también todo lo suyo. */
-  remove(k: CollectionKey, id: ID): void {
+  /**
+   * Borra un elemento y aplica las reglas de sus referencias (domain/references.ts): lo de
+   * un proyecto se va con él y lo que apuntaba aquí se queda sin esa referencia. Si algo
+   * lo impide (una persona con trabajo asignado), no borra nada y devuelve false.
+   */
+  remove(k: CollectionKey, id: ID): boolean {
+    const r = removeWithReferences(this.data, k, id)
+    if (!r.deleted.length) return false
     const deleted = new Set(this.meta.deleted)
-    deleted.add(key(k, id))
-    let data: StudioData = { ...this.data, [k]: (this.data[k] as { id: ID }[]).filter((x) => x.id !== id) }
-    if (k === 'projects') {
-      for (const c of PROJECT_OWNED) {
-        const list = data[c] as { id: ID; projectId?: ID }[]
-        for (const x of list) if (x.projectId === id) deleted.add(key(c, x.id))
-        data = { ...data, [c]: list.filter((x) => x.projectId !== id) }
-      }
-    }
-    if (k === 'items') {
-      // Que el feedback no apunte a un elemento que ya no existe.
-      data = {
-        ...data,
-        feedback: data.feedback.map((f) =>
-          f.linkedItemIds.includes(id) ? { ...f, linkedItemIds: f.linkedItemIds.filter((x) => x !== id) } : f,
-        ),
-      }
-    }
-    this.commit(data, { ...this.meta, deleted: [...deleted] })
+    for (const d of r.deleted) deleted.add(d)
+    this.commit(r.data, { ...this.meta, deleted: [...deleted] })
+    return true
   }
 
   updateStudio(changes: Partial<Studio>): void {
@@ -216,9 +232,10 @@ export class StudioStore {
 
   /** Sustituye todos los datos (importar). Devuelve los problemas si no son válidos. */
   replaceAll(raw: unknown): string[] {
-    const errors = validateStudioData(raw)
-    if (errors.length) return errors
-    this.commit(raw as StudioData, { seedVersion: this.seedVersion, edited: [], deleted: [] })
+    const r = prepare(raw)
+    if (r.newer) return ['La copia es de una versión más nueva de Studio Hub: actualiza la aplicación antes de importarla.']
+    if (!r.data) return r.errors
+    this.commit(r.data, { seedVersion: this.seedVersion, edited: [], deleted: [] })
     return []
   }
 

@@ -40,3 +40,10 @@ describe('preferencias', () => {
     expect(resolveAccent('#1a1a6e', 'dark')).toEqual({ color: '#1a1a6e', onColor: '#ffffff' })
   })
 })
+
+describe('vistas guardadas de la versión anterior', () => {
+  it('se reescriben a las rutas de ahora', () => {
+    const p = sanitizePreferences({ savedViews: [{ id: 'v', name: 'Bloqueado', path: '/trabajo?estado=blocked' }] })
+    expect(p.savedViews[0].path).toBe('/tareas?filtro=bloqueadas')
+  })
+})

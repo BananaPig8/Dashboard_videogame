@@ -20,6 +20,11 @@ const ICON: Record<StudioNotification['kind'], IconName> = {
   eventStale: 'question',
   blocked: 'lock',
   newFeedback: 'message',
+  reminder: 'bell',
+  registrationSoon: 'ticket',
+  releaseSoon: 'rocket',
+  releaseLate: 'question',
+  budgetOver: 'wallet',
 }
 
 const TITLE: Record<StudioNotification['kind'], MessageKey> = {
@@ -29,6 +34,11 @@ const TITLE: Record<StudioNotification['kind'], MessageKey> = {
   eventStale: 'notifications.eventStale',
   blocked: 'notifications.blocked',
   newFeedback: 'notifications.newFeedback',
+  reminder: 'notifications.reminder',
+  registrationSoon: 'notifications.registrationSoon',
+  releaseSoon: 'notifications.releaseSoon',
+  releaseLate: 'notifications.releaseLate',
+  budgetOver: 'notifications.budgetOver',
 }
 
 export function NotificationsMenu() {

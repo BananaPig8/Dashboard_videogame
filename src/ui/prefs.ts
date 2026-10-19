@@ -4,6 +4,7 @@ import { useSyncExternalStore } from 'react'
 import { DEFAULT_TIME_ZONE, setClockTimeZone, type WeekStart } from '../domain/dates'
 import { DEFAULT_LOCALE, setLocale, type Locale } from '../i18n'
 import type { DateFormat, HourCycle } from '../i18n/format'
+import { migratePath } from './navigation'
 
 export type ThemePref = 'dark' | 'light' | 'system'
 export type Density = 'comfortable' | 'compact'
@@ -56,6 +57,14 @@ export interface Preferences {
   accent: string
   density: Density
   sidebarCollapsed: boolean
+  /** Secciones de la barra lateral desplegadas a mano (la activa siempre lo está). */
+  navExpanded: string[]
+  /** Secciones activas que se han plegado a mano. */
+  navFolded: string[]
+  /** Secciones opcionales que el estudio no usa y no salen en la barra lateral. */
+  hiddenSections: string[]
+  /** Quién soy en el equipo (para «Mis tareas»), en este navegador. */
+  meId?: string
   widgets: { order: WidgetId[]; hidden: WidgetId[]; collapsed: WidgetId[] }
   savedViews: SavedView[]
   locale: Locale
@@ -72,6 +81,9 @@ export const DEFAULT_PREFERENCES: Preferences = {
   accent: 'violet',
   density: 'comfortable',
   sidebarCollapsed: false,
+  navExpanded: [],
+  navFolded: [],
+  hiddenSections: [],
   widgets: { order: DEFAULT_WIDGET_ORDER, hidden: [], collapsed: [] },
   savedViews: [],
   locale: DEFAULT_LOCALE,
@@ -83,6 +95,8 @@ export const DEFAULT_PREFERENCES: Preferences = {
 }
 
 export const PREFS_KEY = 'studio-hub:preferencias'
+
+const strings = (list: unknown): string[] => (Array.isArray(list) ? list.filter((x): x is string => typeof x === 'string') : [])
 
 /** Completa lo que falte y descarta lo que no se entienda (preferencias de otra versión). */
 export function sanitizePreferences(raw: unknown): Preferences {
@@ -97,9 +111,16 @@ export function sanitizePreferences(raw: unknown): Preferences {
     accent: typeof p.accent === 'string' && (p.accent in ACCENTS || /^#[0-9a-f]{6}$/i.test(p.accent)) ? p.accent : d.accent,
     density: p.density === 'compact' ? 'compact' : 'comfortable',
     sidebarCollapsed: !!p.sidebarCollapsed,
+    navExpanded: strings(p.navExpanded).slice(0, 30),
+    navFolded: strings(p.navFolded).slice(0, 30),
+    hiddenSections: strings(p.hiddenSections).slice(0, 30),
+    meId: typeof p.meId === 'string' && p.meId ? p.meId : undefined,
     widgets: { order: [...new Set(order)], hidden: ids(p.widgets?.hidden), collapsed: ids(p.widgets?.collapsed) },
+    // Las vistas guardadas con rutas de la versión anterior se reescriben a las de ahora.
     savedViews: Array.isArray(p.savedViews)
-      ? p.savedViews.filter((v) => v && typeof v.id === 'string' && typeof v.name === 'string' && typeof v.path === 'string' && v.path.startsWith('/'))
+      ? p.savedViews
+          .filter((v) => v && typeof v.id === 'string' && typeof v.name === 'string' && typeof v.path === 'string' && v.path.startsWith('/'))
+          .map((v) => ({ ...v, path: migratePath(v.path) }))
       : [],
     locale: p.locale === 'es' ? p.locale : d.locale,
     timeZone: typeof p.timeZone === 'string' && p.timeZone ? p.timeZone : d.timeZone,

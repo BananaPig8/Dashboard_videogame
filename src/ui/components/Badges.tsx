@@ -95,6 +95,7 @@ export const KIND_ICON: Record<ItemKind, IconName> = {
   milestone: 'flag',
   decision: 'scale',
   issue: 'bug',
+  goal: 'target',
 }
 
 export function KindIcon({ kind }: { kind: ItemKind }) {
@@ -154,6 +155,7 @@ export const BuildChannelPill = ({ channel }: { channel: BuildChannel }) => (
 const BUILD_STATUS_ICON: Record<BuildStatus, IconName> = {
   in_progress: 'play',
   ready: 'check',
+  candidate: 'star',
   published: 'checkCircle',
   superseded: 'history',
   withdrawn: 'xCircle',

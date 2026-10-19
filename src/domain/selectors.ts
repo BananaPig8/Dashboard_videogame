@@ -1,7 +1,10 @@
 // Las preguntas del panel, como funciones puras sobre los datos. Ninguna conoce a un
 // proyecto concreto: reciben los datos, la fecha de hoy y, si acaso, el proyecto.
 import { FEEDBACK_STATUSES, PRIORITIES, STATUSES } from './catalog'
+import type { CollectionKey } from './collections'
 import { addDays, daysBetween, startOfWeek, type WeekStart } from './dates'
+import { registrationsClosingSoon } from './secciones/eventos'
+import { budgetUsage } from './secciones/finanzas'
 import type {
   Activity,
   Build,
@@ -393,7 +396,18 @@ export function matchesQuery(item: WorkItem, query: string): boolean {
 
 // ——— Notificaciones ————————————————————————————————————————————————————————
 
-export type NotificationKind = 'overdue' | 'dueToday' | 'eventSoon' | 'eventStale' | 'blocked' | 'newFeedback'
+export type NotificationKind =
+  | 'overdue'
+  | 'dueToday'
+  | 'eventSoon'
+  | 'eventStale'
+  | 'blocked'
+  | 'newFeedback'
+  | 'reminder'
+  | 'registrationSoon'
+  | 'releaseSoon'
+  | 'releaseLate'
+  | 'budgetOver'
 
 export interface StudioNotification {
   /** Estable mientras la situación no cambie: si vuelve a vencer otra fecha, es otra notificación. */
@@ -403,12 +417,14 @@ export interface StudioNotification {
   title: string
   date?: ISODate
   projectId?: ID
-  target: { collection: 'items' | 'events' | 'feedback'; id: ID }
+  target: { collection: CollectionKey; id: ID }
 }
 
 /**
  * Lo que merece un aviso hoy: lo vencido, lo que vence hoy, eventos de los próximos 14
- * días, eventos pasados sin actualizar, bloqueos importantes y feedback sin revisar.
+ * días, eventos pasados sin actualizar, bloqueos importantes, feedback sin revisar,
+ * recordatorios del día, inscripciones que cierran, versiones que se acercan o cuya fecha
+ * ya pasó y presupuestos superados.
  */
 export function notificationsFor(data: StudioData, today: ISODate): StudioNotification[] {
   const out: StudioNotification[] = []
@@ -429,9 +445,45 @@ export function notificationsFor(data: StudioData, today: ISODate): StudioNotifi
     else if ((e.endDate ?? e.date) < today && (e.status === 'planned' || e.status === 'confirmed'))
       out.push({ id: `stale:${e.id}:${e.date}`, kind: 'eventStale', tone: 'warning', title: e.title, date: e.date, projectId: e.projectId, target: { collection: 'events', id: e.id } })
   }
+  for (const e of registrationsClosingSoon(data, today, 7)) {
+    const days = daysBetween(today, e.registrationDeadline!)
+    out.push({
+      id: `registration:${e.id}:${e.registrationDeadline}`,
+      kind: 'registrationSoon',
+      tone: days <= 3 ? 'warning' : 'info',
+      title: e.title,
+      date: e.registrationDeadline,
+      projectId: e.projectId,
+      target: { collection: 'events', id: e.id },
+    })
+  }
   for (const f of data.feedback)
     if (f.status === 'new')
       out.push({ id: `feedback:${f.id}`, kind: 'newFeedback', tone: 'info', title: f.title, date: f.receivedAt, projectId: f.projectId, target: { collection: 'feedback', id: f.id } })
+  for (const r of data.reminders)
+    if (!r.done && r.date <= today)
+      out.push({ id: `reminder:${r.id}:${r.date}`, kind: 'reminder', tone: r.date < today ? 'warning' : 'info', title: r.title, date: r.date, projectId: r.projectId, target: { collection: 'reminders', id: r.id } })
+  for (const r of data.releases) {
+    if (r.releasedAt || !r.targetDate || r.status === 'released' || r.status === 'cancelled') continue
+    const days = daysBetween(today, r.targetDate)
+    if (days < 0)
+      out.push({ id: `releaseLate:${r.id}:${r.targetDate}`, kind: 'releaseLate', tone: 'warning', title: r.name, date: r.targetDate, projectId: r.projectId, target: { collection: 'releases', id: r.id } })
+    else if (days <= 14)
+      out.push({ id: `release:${r.id}:${r.targetDate}`, kind: 'releaseSoon', tone: days <= 3 ? 'warning' : 'info', title: r.name, date: r.targetDate, projectId: r.projectId, target: { collection: 'releases', id: r.id } })
+  }
+  for (const b of data.budgets) {
+    const u = budgetUsage(data, b)
+    if (u.over && b.from <= today)
+      out.push({ id: `budget:${b.id}:${u.spent}`, kind: 'budgetOver', tone: 'warning', title: b.name, projectId: b.projectId, target: { collection: 'budgets', id: b.id } })
+  }
   const rank = { danger: 0, warning: 1, info: 2 }
   return out.sort((a, b) => rank[a.tone] - rank[b.tone] || (a.date ?? '9999').localeCompare(b.date ?? '9999'))
 }
+
+// ——— Por sección ——————————————————————————————————————————————————————————
+// Cada sección tiene sus cálculos en domain/secciones/<sección>.ts; las pantallas los piden
+// aquí. Esos ficheros importan de este, así que solo usan lo importado dentro de funciones.
+export * from './secciones/calendario'
+export * from './secciones/eventos'
+export * from './secciones/etiquetas'
+export * from './secciones/finanzas'

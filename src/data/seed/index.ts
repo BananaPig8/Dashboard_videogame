@@ -13,6 +13,7 @@ import type {
   WorkItem,
 } from '../../domain/types'
 import { SCHEMA_VERSION } from '../../domain/types'
+import { emptyCollections } from '../../domain/collections'
 import { DEFAULT_AREAS } from './areas'
 import { INDIE_DEV_TYCOON } from './indie-dev-tycoon/project'
 import idtActivity from './indie-dev-tycoon/activity.json'
@@ -72,6 +73,7 @@ function withAreas(activity: Activity[], items: WorkItem[]): Activity[] {
 export function createSeedData(): StudioData {
   const items = PROJECTS.flatMap((p) => p.items as WorkItem[])
   return structuredClone({
+    ...emptyCollections(),
     schemaVersion: SCHEMA_VERSION,
     studio: {
       id: 'estudio',

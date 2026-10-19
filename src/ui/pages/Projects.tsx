@@ -1,20 +1,25 @@
 // La lista de proyectos y la ficha de cada uno. La ficha reutiliza las mismas pantallas
 // del estudio con el proyecto como ámbito: se pasa de lo general al detalle sin cambiar
 // de herramienta ni perder el sitio.
-import { Link, Navigate, useParams } from 'react-router-dom'
+import { Suspense } from 'react'
+import { Link, Navigate, useLocation, useParams } from 'react-router-dom'
 import { STAGES } from '../../domain/catalog'
 import { yearOf } from '../../domain/dates'
 import { useFormat, useToday } from '../hooks'
-import { itemsOf, projectSummaries, projectSummary } from '../../domain/selectors'
+import { projectSummaries, projectSummary } from '../../domain/selectors'
 import { useCanEdit, useStudioData } from '../../data/store'
 import { HealthPill, StagePill } from '../components/Badges'
 import { Card, ExternalLink, PageHeader } from '../components/Common'
 import { Icon } from '../components/Icon'
 import { useUI } from '../context'
-import { HistoryPage } from './History'
-import { ProjectCard, WidgetArea } from './Overview'
-import { AgendaPage, BuildsPage, DecisionsPage, FeedbackPage, PublishPage, ResourcesPage } from './Production'
-import { WorkPage } from './Work'
+import { PageSkeleton } from '../feedback'
+import { isOldTab, migratePath, projectTabs, type NavSection, type SectionId } from '../navigation'
+import { useDocumentTitle } from '../components/SectionHeader'
+import { Popover } from '../components/Popover'
+import { usePreferences } from '../prefs'
+import { t } from '../../i18n'
+import { SECTION_PAGES } from '../sections/registry'
+import { ProjectCard } from './Overview'
 
 export function ProjectsPage() {
   const data = useStudioData()
@@ -56,123 +61,144 @@ export function ProjectsPage() {
   )
 }
 
-const TABS = [
-  { id: 'resumen', label: 'Resumen' },
-  { id: 'trabajo', label: 'Trabajo' },
-  { id: 'agenda', label: 'Agenda' },
-  { id: 'builds', label: 'Builds' },
-  { id: 'publicacion', label: 'Publicación' },
-  { id: 'feedback', label: 'Feedback' },
-  { id: 'decisiones', label: 'Decisiones' },
-  { id: 'recursos', label: 'Recursos' },
-  { id: 'historial', label: 'Historial' },
-] as const
-
-type TabId = (typeof TABS)[number]['id']
-
 export function ProjectPage() {
   const { slug, tab = 'resumen' } = useParams()
+  const location = useLocation()
   const data = useStudioData()
+  const prefs = usePreferences()
   const { edit } = useUI()
   const today = useToday()
   const fmt = useFormat()
   const year = yearOf(today)
   const project = data.projects.find((p) => p.slug === slug)
+  const tabs = projectTabs(prefs.hiddenSections)
+  const current = tabs.find((s) => s.tab === tab)
+  useDocumentTitle([current && current.tab !== 'resumen' ? current.tabLabel : undefined, project?.name])
   if (!project) return <Navigate to="/proyectos" replace />
-  if (!TABS.some((t) => t.id === tab)) return <Navigate to={`/proyectos/${project.slug}`} replace />
+  // Pestañas antiguas (trabajo, agenda…): a las de ahora, con los filtros de la URL.
+  if (isOldTab(tab)) return <Navigate to={migratePath(location.pathname + location.search)} replace />
+  if (!current) return <Navigate to={`/proyectos/${project.slug}`} replace />
   const summary = projectSummary(data, project, today)
-  const items = itemsOf(data, project.id)
-  const counts: Partial<Record<TabId, number>> = {
-    trabajo: summary.open,
+  const counts: Partial<Record<SectionId, number>> = {
+    tareas: summary.open,
     builds: data.builds.filter((b) => b.projectId === project.id).length,
-    feedback: data.feedback.filter((f) => f.projectId === project.id).length,
-    decisiones: items.filter((i) => i.kind === 'decision').length,
-    recursos: data.resources.filter((r) => r.projectId === project.id).length,
+    feedback: data.feedback.filter((f) => f.projectId === project.id && f.status === 'new').length,
   }
+  const Section = SECTION_PAGES[current.id]
+  const isSummary = current.tab === 'resumen'
+  // Las primeras pestañas siempre a la vista; el resto, en «Más» (y la activa, si está ahí, también fuera).
+  const shown = tabs.filter((s, i) => i < VISIBLE_TABS || s === current)
+  const more = tabs.filter((s) => !shown.includes(s))
+  const tabHref = (s: NavSection) => `/proyectos/${project.slug}${s.tab === 'resumen' ? '' : `/${s.tab}`}`
 
   return (
     <div className="page">
-      <header className="project-hero" style={{ ['--project-color' as string]: project.color }}>
+      <header className={isSummary ? 'project-hero' : 'project-hero compact'} style={{ ['--project-color' as string]: project.color }}>
         <div className="project-hero-main">
-          <nav className="breadcrumb" aria-label="Ruta">
-            <Link to="/">Estudio</Link> <Icon name="chevronRight" size={12} /> <Link to="/proyectos">Proyectos</Link>
+          <nav className="breadcrumb" aria-label={t('nav.breadcrumb')}>
+            <Link to="/">{t('projectPage.studio')}</Link> <Icon name="chevronRight" size={12} /> <Link to="/proyectos">{t('nav.sections.proyectos')}</Link>
           </nav>
           <h1>
             {project.name}
-            <button type="button" className="icon-btn" aria-label="Editar el proyecto" onClick={() => edit({ collection: 'projects', id: project.id })}>
+            <button type="button" className="icon-btn" aria-label={t('projectPage.edit')} onClick={() => edit({ collection: 'projects', id: project.id })}>
               <Icon name="edit" size={16} />
             </button>
           </h1>
-          {project.tagline && <p className="project-tagline">{project.tagline}</p>}
+          {isSummary && project.tagline && <p className="project-tagline">{project.tagline}</p>}
           <div className="pills">
             <StagePill stage={project.stage} />
             <HealthPill level={summary.health.level} />
-            {project.engine && (
+            {isSummary && project.engine && (
               <span className="meta-date">
                 {project.engine} {project.engineVersion}
               </span>
             )}
-            {project.genre && <span className="meta-date">{project.genre}</span>}
-            {project.platforms.length > 0 && <span className="meta-date">{project.platforms.join(' · ')}</span>}
-            {project.startedAt && <span className="meta-date">Desde el {fmt.date(project.startedAt, year)}</span>}
+            {isSummary && project.genre && <span className="meta-date">{project.genre}</span>}
+            {isSummary && project.platforms.length > 0 && <span className="meta-date">{project.platforms.join(' · ')}</span>}
+            {isSummary && project.startedAt && (
+              <span className="meta-date">
+                {t('projectPage.since', {
+                  date: fmt.date(project.startedAt, year),
+                })}
+              </span>
+            )}
           </div>
-          {project.nextGoal && (
+          {isSummary && project.nextGoal && (
             <p className="next-goal">
-              <Icon name="target" size={16} /> <strong>Objetivo inmediato:</strong> {project.nextGoal}
+              <Icon name="target" size={16} /> <strong>{t('projectPage.nextGoal')}</strong> {project.nextGoal}
             </p>
           )}
         </div>
-        <aside className="project-hero-side">
-          {project.versions.length > 0 && (
-            <dl className="version-list">
-              {project.versions.map((v) => (
-                <div key={v.label} title={v.note}>
-                  <dt>{v.label}</dt>
-                  <dd>
-                    {v.version}
-                    {v.note && <span className="muted small"> · {v.note}</span>}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          )}
-          {project.links.length > 0 && (
-            <ul className="link-list">
-              {project.links.map((l) => (
-                <li key={l.url}>
-                  <ExternalLink href={l.url}>{l.label}</ExternalLink>
-                </li>
-              ))}
-            </ul>
-          )}
-        </aside>
+        {isSummary && (project.versions.length > 0 || project.links.length > 0) && (
+          <aside className="project-hero-side">
+            {project.versions.length > 0 && (
+              <dl className="version-list">
+                {project.versions.map((v) => (
+                  <div key={v.label} title={v.note}>
+                    <dt>{v.label}</dt>
+                    <dd>
+                      {v.version}
+                      {v.note && <span className="muted small"> · {v.note}</span>}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            )}
+            {project.links.length > 0 && (
+              <ul className="link-list">
+                {project.links.map((l) => (
+                  <li key={l.url}>
+                    <ExternalLink href={l.url}>{l.label}</ExternalLink>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </aside>
+        )}
       </header>
 
-      <nav className="tabs" aria-label="Secciones del proyecto">
-        {TABS.map((t) => (
-          <Link key={t.id} to={`/proyectos/${project.slug}${t.id === 'resumen' ? '' : `/${t.id}`}`} className={t.id === tab ? 'tab active' : 'tab'} aria-current={t.id === tab ? 'page' : undefined}>
-            {t.label}
-            {counts[t.id] !== undefined && <span className="tab-count">{counts[t.id]}</span>}
-          </Link>
-        ))}
+      <nav className="tabs-bar" aria-label={t('projectPage.tabs')}>
+        <div className="tabs">
+          {shown.map((s) => (
+            <Link key={s.id} to={tabHref(s)} className={s === current ? 'tab active' : 'tab'} aria-current={s === current ? 'page' : undefined}>
+              {s.tabLabel}
+              {counts[s.id] ? (
+                <span className="tab-count" title={t(`projectPage.counts.${s.id as 'tareas' | 'builds' | 'feedback'}`, { n: counts[s.id]! })}>
+                  <span aria-hidden="true">{counts[s.id]}</span>
+                  <span className="visually-hidden">{t(`projectPage.counts.${s.id as 'tareas' | 'builds' | 'feedback'}`, { n: counts[s.id]! })}</span>
+                </span>
+              ) : null}
+            </Link>
+          ))}
+        </div>
+        {more.length > 0 && (
+          <Popover
+            label={t('nav.moreTabs')}
+            trigger={(p) => (
+              <button type="button" className="tab" onClick={p.toggle} aria-expanded={p['aria-expanded']} aria-haspopup="menu">
+                {t('nav.more')} <Icon name="chevronDown" size={14} />
+              </button>
+            )}
+          >
+            {(close) =>
+              more.map((s) => (
+                <div key={s.id} role="none">
+                  <Link role="menuitem" className="menu-item" to={tabHref(s)} onClick={close}>
+                    <Icon name={s.icon} size={16} /> {s.tabLabel}
+                  </Link>
+                </div>
+              ))
+            }
+          </Popover>
+        )}
       </nav>
 
-      {tab === 'resumen' && (
-        <>
-          <Card title="De qué va" icon="book">
-            <p>{project.description}</p>
-          </Card>
-          <WidgetArea data={data} scope={project.id} today={today} year={year} fmt={fmt} />
-        </>
-      )}
-      {tab === 'trabajo' && <WorkPage embedded />}
-      {tab === 'agenda' && <AgendaPage embedded />}
-      {tab === 'builds' && <BuildsPage embedded />}
-      {tab === 'publicacion' && <PublishPage embedded />}
-      {tab === 'feedback' && <FeedbackPage embedded />}
-      {tab === 'decisiones' && <DecisionsPage embedded />}
-      {tab === 'recursos' && <ResourcesPage embedded />}
-      {tab === 'historial' && <HistoryPage embedded />}
+      <Suspense fallback={<PageSkeleton />}>
+        <Section embedded />
+      </Suspense>
     </div>
   )
 }
+
+/** Pestañas de la ficha que siempre se ven (el resto va en «Más»). */
+const VISIBLE_TABS = 7

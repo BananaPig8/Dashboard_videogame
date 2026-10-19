@@ -1,162 +1,46 @@
-// Formularios de edición, descritos como datos: cada tipo de elemento tiene su lista de
-// campos y un único componente los pinta. Añadir un campo es añadir una línea.
-import { useMemo, useRef, useState, type FormEvent } from 'react'
-import {
-  BUILD_CHANNELS,
-  BUILD_STATUSES,
-  CHECKLIST_TARGETS,
-  CONFIDENCES,
-  EVENT_STATUSES,
-  EVENT_TYPES,
-  FEEDBACK_ORIGINS,
-  FEEDBACK_STATUSES,
-  KINDS,
-  PRIORITIES,
-  RESOURCE_TYPES,
-  STAGES,
-  STATUSES,
-  STATUS_ORDER,
-  label,
-} from '../domain/catalog'
+// Formularios de edición: los campos de cada colección se describen en specs.ts y un único
+// componente los pinta, los valida y los convierte antes de guardar.
+import { useMemo, useRef, useState, type CSSProperties, type FormEvent } from 'react'
 import { todayISO } from '../domain/dates'
 import type { StudioData } from '../domain/types'
-import type { CollectionKey } from '../data/store'
+import { parseAmount } from '../i18n/format'
 import { Field } from './components/Common'
 import { Icon } from './components/Icon'
 import { t, type MessageKey } from '../i18n'
+import type { Draft, FieldSpec } from './specs'
 
-type Draft = Record<string, unknown>
+export { SPECS, type Draft, type FieldSpec, type ListField, type Option } from './specs'
 
-export interface FieldSpec {
-  key: string
-  label: string
-  type: 'text' | 'textarea' | 'select' | 'date' | 'checkbox' | 'tags' | 'url' | 'color' | 'multi'
-  required?: boolean
-  hint?: string
-  /** Opciones de los desplegables; se calculan con los datos (proyectos, áreas…). */
-  options?: (data: StudioData, draft: Draft) => { value: string; label: string }[]
-  /** Opción vacía del desplegable (si el campo es opcional). */
-  empty?: string
-  show?: (draft: Draft) => boolean
-  wide?: boolean
+type Row = Record<string, string>
+
+const CLOCK = /^([01]\d|2[0-3]):[0-5]\d$/
+
+/** Céntimos → texto editable («12,50», «120»). */
+export function centsToText(cents: unknown): string {
+  if (typeof cents !== 'number' || !Number.isFinite(cents)) return ''
+  const abs = Math.abs(Math.round(cents))
+  const whole = Math.floor(abs / 100)
+  const frac = abs % 100
+  return `${cents < 0 ? '-' : ''}${whole}${frac ? `,${String(frac).padStart(2, '0')}` : ''}`
 }
 
-const fromTable = (table: Record<string, unknown>, order?: string[]) => () =>
-  (order ?? Object.keys(table)).map((value) => ({ value, label: label(table as Record<string, string>, value) }))
-
-const projectOptions = (data: StudioData) => data.projects.map((p) => ({ value: p.id, label: p.name }))
-const areaOptions = (data: StudioData) => data.areas.map((a) => ({ value: a.id, label: a.name }))
-
-export const SPECS: Partial<Record<CollectionKey, FieldSpec[]>> = {
-  items: [
-    { key: 'title', label: 'Título', type: 'text', required: true, wide: true },
-    { key: 'projectId', label: 'Proyecto', type: 'select', required: true, options: projectOptions },
-    { key: 'kind', label: 'Tipo', type: 'select', required: true, options: fromTable(KINDS) },
-    { key: 'status', label: 'Estado', type: 'select', required: true, options: fromTable(STATUSES, STATUS_ORDER) },
-    { key: 'priority', label: 'Prioridad', type: 'select', required: true, options: fromTable(PRIORITIES, ['critical', 'high', 'medium', 'low']) },
-    { key: 'areaId', label: 'Área', type: 'select', empty: 'Sin área', options: areaOptions },
-    { key: 'confidence', label: 'Fiabilidad del dato', type: 'select', required: true, options: fromTable(CONFIDENCES) },
-    { key: 'description', label: 'Descripción', type: 'textarea', wide: true },
-    {
-      key: 'blockedReason',
-      label: 'Qué lo bloquea o qué falta para retomarlo',
-      type: 'textarea',
-      wide: true,
-      show: (d) => ['blocked', 'paused', 'to_confirm', 'review'].includes(String(d.status)) || !!d.blockedReason,
-    },
-    {
-      key: 'decisionOutcome',
-      label: 'Lo decidido (o las opciones, si sigue abierta)',
-      type: 'textarea',
-      wide: true,
-      show: (d) => d.kind === 'decision' || !!d.decisionOutcome,
-    },
-    { key: 'dueDate', label: 'Fecha límite', type: 'date' },
-    { key: 'focusDate', label: 'Para hacer el día', type: 'date', hint: 'Lo que tenga la fecha de hoy sale en «Hoy».' },
-    { key: 'startedAt', label: 'Empezado', type: 'date' },
-    { key: 'completedAt', label: 'Terminado', type: 'date', show: (d) => d.status === 'done' || d.status === 'cancelled' || !!d.completedAt },
-    { key: 'tags', label: 'Etiquetas', type: 'tags', hint: 'Separadas por comas.', wide: true },
-  ],
-  builds: [
-    { key: 'name', label: 'Nombre', type: 'text', required: true, wide: true },
-    { key: 'projectId', label: 'Proyecto', type: 'select', required: true, options: projectOptions },
-    { key: 'version', label: 'Versión', type: 'text', required: true },
-    { key: 'channel', label: 'Canal', type: 'select', required: true, options: fromTable(BUILD_CHANNELS) },
-    { key: 'status', label: 'Estado', type: 'select', required: true, options: fromTable(BUILD_STATUSES) },
-    { key: 'date', label: 'Fecha', type: 'date' },
-    { key: 'platforms', label: 'Plataformas', type: 'tags', hint: 'Windows, Linux, macOS…' },
-    { key: 'distribution', label: 'Dónde está', type: 'text', hint: 'GitHub Releases, Steam (rama beta), itch.io…' },
-    { key: 'url', label: 'Enlace', type: 'url', wide: true },
-    { key: 'confidence', label: 'Fiabilidad del dato', type: 'select', required: true, options: fromTable(CONFIDENCES) },
-    { key: 'notes', label: 'Notas', type: 'textarea', wide: true },
-  ],
-  events: [
-    { key: 'title', label: 'Nombre', type: 'text', required: true, wide: true },
-    { key: 'projectId', label: 'Proyecto', type: 'select', empty: 'Todo el estudio', options: projectOptions },
-    { key: 'type', label: 'Tipo', type: 'select', required: true, options: fromTable(EVENT_TYPES) },
-    { key: 'status', label: 'Estado', type: 'select', required: true, options: fromTable(EVENT_STATUSES) },
-    { key: 'date', label: 'Fecha', type: 'date' },
-    { key: 'endDate', label: 'Hasta', type: 'date' },
-    { key: 'dateConfirmed', label: 'Fecha confirmada', type: 'checkbox' },
-    { key: 'location', label: 'Lugar', type: 'text' },
-    { key: 'confidence', label: 'Fiabilidad del dato', type: 'select', required: true, options: fromTable(CONFIDENCES) },
-    { key: 'notes', label: 'Notas', type: 'textarea', wide: true },
-  ],
-  feedback: [
-    { key: 'title', label: 'Qué se ha dicho', type: 'text', required: true, wide: true },
-    { key: 'projectId', label: 'Proyecto', type: 'select', required: true, options: projectOptions },
-    { key: 'origin', label: 'Origen', type: 'select', required: true, options: fromTable(FEEDBACK_ORIGINS) },
-    { key: 'originDetail', label: 'Dónde o quién', type: 'text', hint: 'Feria, Discord, prueba con amigos…' },
-    { key: 'receivedAt', label: 'Recibido', type: 'date' },
-    { key: 'status', label: 'Estado', type: 'select', required: true, options: fromTable(FEEDBACK_STATUSES) },
-    { key: 'impact', label: 'Impacto', type: 'select', required: true, options: fromTable(PRIORITIES, ['critical', 'high', 'medium', 'low']) },
-    { key: 'confidence', label: 'Fiabilidad del dato', type: 'select', required: true, options: fromTable(CONFIDENCES) },
-    { key: 'detail', label: 'Detalle', type: 'textarea', wide: true },
-    {
-      key: 'linkedItemIds',
-      label: 'Elementos que lo resuelven',
-      type: 'multi',
-      wide: true,
-      hint: 'Ctrl o Cmd + clic para elegir varios.',
-      options: (data, d) =>
-        data.items
-          .filter((i) => i.projectId === d.projectId)
-          .map((i) => ({ value: i.id, label: `${i.title} (${label(STATUSES, i.status)})` })),
-    },
-  ],
-  resources: [
-    { key: 'title', label: 'Título', type: 'text', required: true, wide: true },
-    { key: 'projectId', label: 'Proyecto', type: 'select', empty: 'Todo el estudio', options: projectOptions },
-    { key: 'type', label: 'Tipo', type: 'select', required: true, options: fromTable(RESOURCE_TYPES) },
-    { key: 'url', label: 'Enlace', type: 'url', wide: true },
-    { key: 'path', label: 'Ruta en el repositorio', type: 'text', wide: true },
-    { key: 'description', label: 'Para qué sirve', type: 'textarea', wide: true },
-    { key: 'tags', label: 'Etiquetas', type: 'tags', wide: true },
-  ],
-  checklists: [
-    { key: 'title', label: 'Título', type: 'text', required: true, wide: true },
-    { key: 'projectId', label: 'Proyecto', type: 'select', required: true, options: projectOptions },
-    { key: 'target', label: 'Para', type: 'select', required: true, options: fromTable(CHECKLIST_TARGETS) },
-    { key: 'description', label: 'Descripción', type: 'textarea', wide: true },
-  ],
-  projects: [
-    { key: 'name', label: 'Nombre', type: 'text', required: true, wide: true },
-    { key: 'stage', label: 'Etapa', type: 'select', required: true, options: fromTable(STAGES) },
-    { key: 'color', label: 'Color', type: 'color' },
-    { key: 'tagline', label: 'En una frase', type: 'text', wide: true },
-    { key: 'description', label: 'Descripción', type: 'textarea', wide: true },
-    { key: 'nextGoal', label: 'Objetivo inmediato', type: 'text', wide: true },
-    { key: 'engine', label: 'Motor', type: 'text' },
-    { key: 'engineVersion', label: 'Versión del motor', type: 'text' },
-    { key: 'genre', label: 'Género', type: 'text' },
-    { key: 'startedAt', label: 'Empezado', type: 'date' },
-    { key: 'platforms', label: 'Plataformas', type: 'tags', wide: true },
-    { key: 'repoUrl', label: 'Repositorio', type: 'url', wide: true },
-    { key: 'tags', label: 'Etiquetas', type: 'tags', wide: true },
-  ],
+/** El borrador tal y como lo edita el formulario: etiquetas, números e importes como texto. */
+export function toEditable(spec: FieldSpec[], entity: Draft): Draft {
+  const out: Draft = { ...entity }
+  for (const f of spec) {
+    const v = entity[f.key]
+    if (f.type === 'tags') out[f.key] = Array.isArray(v) ? v.join(', ') : String(v ?? '')
+    else if (f.type === 'money') out[f.key] = centsToText(v)
+    else if (f.type === 'number') out[f.key] = typeof v === 'number' ? String(v) : String(v ?? '')
+    else if (f.type === 'list') out[f.key] = Array.isArray(v) ? (v as Draft[]).map((r) => ({ ...r })) : []
+  }
+  return out
 }
 
-/** Quita los textos vacíos y convierte las etiquetas en listas antes de guardar. */
+const isEmpty = (v: unknown) => v === undefined || v === null || (typeof v === 'string' && !v.trim()) || (Array.isArray(v) && !v.length)
+const rowIsEmpty = (row: Row) => Object.values(row).every((v) => !String(v ?? '').trim())
+
+/** Quita los textos vacíos y convierte etiquetas, números, importes y listas antes de guardar. */
 export function normalizeDraft(spec: FieldSpec[], draft: Draft): Draft {
   const out: Draft = { ...draft }
   for (const f of spec) {
@@ -168,45 +52,127 @@ export function normalizeDraft(spec: FieldSpec[], draft: Draft): Draft {
       out[f.key] = !!v
     } else if (f.type === 'multi') {
       out[f.key] = Array.isArray(v) ? v : []
+    } else if (f.type === 'money') {
+      const cents = typeof v === 'number' ? v : parseAmount(String(v ?? ''))
+      if (cents === null || isEmpty(v)) delete out[f.key]
+      else out[f.key] = cents
+    } else if (f.type === 'number') {
+      const n = typeof v === 'number' ? v : Number(String(v ?? '').trim().replace(',', '.'))
+      if (isEmpty(v) || !Number.isFinite(n)) delete out[f.key]
+      else out[f.key] = n
+    } else if (f.type === 'list') {
+      const rows = Array.isArray(v) ? (v as Row[]) : []
+      out[f.key] = rows
+        .filter((r) => !rowIsEmpty(r))
+        .map((r) => {
+          const clean: Record<string, string> = {}
+          for (const [k, x] of Object.entries(r)) {
+            const s = String(x ?? '').trim()
+            if (s) clean[k] = s
+          }
+          return clean
+        })
     } else if (typeof v === 'string') {
-      const t = v.trim()
-      if (t) out[f.key] = t
+      const s = v.trim()
+      if (s) out[f.key] = s
       else delete out[f.key]
     }
   }
+  // Un desplegable vaciado deja la clave sin valor: fuera.
+  for (const key of Object.keys(out)) if (out[key] === undefined) delete out[key]
   return out
 }
 
 /** Pares de fechas que no pueden ir al revés: [inicio, fin, mensaje]. */
 const DATE_PAIRS: [string, string, MessageKey][] = [
   ['date', 'endDate', 'errors.endBeforeStart'],
+  ['startDate', 'endDate', 'errors.endBeforeStart'],
+  ['from', 'to', 'errors.endBeforeStart'],
   ['startedAt', 'completedAt', 'errors.doneBeforeStart'],
 ]
+
+const validUrl = (text: string) => {
+  try {
+    const u = new URL(text.trim())
+    return u.protocol === 'https:' || u.protocol === 'http:'
+  } catch {
+    return false
+  }
+}
+
+/** El problema de un campo, o nada. */
+function fieldError(f: FieldSpec, v: unknown): string | undefined {
+  const empty = isEmpty(v)
+  if (f.required && empty) return t('errors.required')
+  if (empty) return undefined
+  switch (f.type) {
+    case 'url':
+      return validUrl(String(v)) ? undefined : t('errors.url')
+    case 'time':
+      return CLOCK.test(String(v).trim()) ? undefined : t('errors.time')
+    case 'money': {
+      const cents = typeof v === 'number' ? v : parseAmount(String(v))
+      return cents === null || cents < 0 ? t('errors.amount') : undefined
+    }
+    case 'number': {
+      const n = typeof v === 'number' ? v : Number(String(v).trim().replace(',', '.'))
+      if (!Number.isFinite(n)) return t('errors.number')
+      if (f.integer && !Number.isInteger(n)) return t('errors.integer')
+      if (f.min !== undefined && n < f.min) return t('errors.min', { min: f.min })
+      if (f.max !== undefined && n > f.max) return t('errors.max', { max: f.max })
+      return undefined
+    }
+    case 'list': {
+      const rows = (Array.isArray(v) ? (v as Row[]) : []).filter((r) => !rowIsEmpty(r))
+      for (const [i, row] of rows.entries())
+        for (const sf of f.fields ?? []) {
+          const x = String(row[sf.key] ?? '').trim()
+          if (sf.required && !x) return t('errors.listRow', { n: i + 1, problem: t('errors.listMissing', { field: sf.label }) })
+          if (sf.type === 'url' && x && !validUrl(x)) return t('errors.listRow', { n: i + 1, problem: t('errors.listUrl', { field: sf.label }) })
+        }
+      if (f.required && !rows.length) return t('errors.required')
+      return undefined
+    }
+    default:
+      return undefined
+  }
+}
 
 /** Problemas de un borrador, por campo (vacío si se puede guardar). */
 export function validateDraft(spec: FieldSpec[], draft: Draft): Record<string, string> {
   const errors: Record<string, string> = {}
   const visible = spec.filter((f) => !f.show || f.show(draft))
   for (const f of visible) {
-    const v = draft[f.key]
-    const empty = v === undefined || v === null || (typeof v === 'string' && !v.trim()) || (Array.isArray(v) && !v.length)
-    if (f.required && empty) errors[f.key] = t('errors.required')
-    else if (f.type === 'url' && !empty) {
-      try {
-        const u = new URL(String(v).trim())
-        if (u.protocol !== 'https:' && u.protocol !== 'http:') errors[f.key] = t('errors.url')
-      } catch {
-        errors[f.key] = t('errors.url')
-      }
-    }
+    const e = fieldError(f, draft[f.key])
+    if (e) errors[f.key] = e
   }
   const keys = new Set(visible.map((f) => f.key))
   for (const [a, b, msg] of DATE_PAIRS) {
     const from = draft[a]
     const to = draft[b]
-    if (keys.has(b) && typeof from === 'string' && typeof to === 'string' && from && to && to < from) errors[b] = t(msg)
+    if (keys.has(a) && keys.has(b) && !errors[b] && typeof from === 'string' && typeof to === 'string' && from && to && to < from) errors[b] = t(msg)
   }
+  // La hora de fin, si es el mismo día.
+  const { time, endTime, date, endDate } = draft
+  if (keys.has('endTime') && !errors.endTime && typeof time === 'string' && typeof endTime === 'string' && time && endTime && (!endDate || endDate === date) && endTime < time)
+    errors.endTime = t('errors.endTimeBeforeStart')
   return errors
+}
+
+/**
+ * Al cambiar de proyecto, lo que apuntaba a cosas del proyecto anterior (builds, eventos,
+ * versiones…) se vacía si ya no se puede elegir.
+ */
+export function dropForeign(spec: FieldSpec[], draft: Draft, data: StudioData): Draft {
+  const next = { ...draft }
+  for (const f of spec) {
+    if (!f.sameProject || !f.options || isEmpty(next[f.key])) continue
+    const allowed = new Set(f.options(data, next).map((o) => o.value))
+    const v = next[f.key]
+    if (Array.isArray(v)) next[f.key] = v.filter((x) => allowed.has(String(x)))
+    else if (!allowed.has(String(v))) delete next[f.key]
+  }
+  return next
 }
 
 export function EntityForm({
@@ -222,19 +188,18 @@ export function EntityForm({
   onSubmit: (draft: Draft) => void
   formId: string
 }) {
-  const [draft, setDraft] = useState<Draft>(() => ({
-    ...initial,
-    ...Object.fromEntries(spec.filter((f) => f.type === 'tags').map((f) => [f.key, ((initial[f.key] as string[]) ?? []).join(', ')])),
-  }))
+  const [draft, setDraft] = useState<Draft>(() => toEditable(spec, initial))
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [tried, setTried] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)
+  const currency = data.studio.currency ?? 'EUR'
   const set = (key: string, value: unknown) =>
     setDraft((d) => {
-      const next = { ...d, [key]: value }
+      let next: Draft = { ...d, [key]: value }
       // Al dar algo por hecho se apunta el día; al reabrirlo se quita.
       if (key === 'status' && value === 'done' && !d.completedAt) next.completedAt = todayISO()
       if (key === 'status' && value !== 'done' && value !== 'cancelled') delete next.completedAt
+      if (key === 'projectId') next = dropForeign(spec, next, data)
       if (tried) setErrors(validateDraft(spec, next))
       return next
     })
@@ -274,6 +239,9 @@ export function EntityForm({
           'aria-invalid': error ? true : undefined,
           'aria-describedby': error ? `${fieldId}-error` : undefined,
         }
+        const text = (type: string, extra: Record<string, unknown> = {}) => (
+          <input type={type} {...common} {...extra} value={String(value ?? '')} onChange={(e) => set(f.key, e.target.value)} />
+        )
         let control
         switch (f.type) {
           case 'textarea':
@@ -282,7 +250,7 @@ export function EntityForm({
           case 'select':
             control = (
               <select {...common} value={String(value ?? '')} onChange={(e) => set(f.key, e.target.value || undefined)}>
-                {(f.empty !== undefined || !value) && <option value="">{f.empty ?? 'Elige…'}</option>}
+                {(f.empty !== undefined || !value) && <option value="">{f.empty ?? t('forms.choose')}</option>}
                 {f.options?.(data, draft).map((o) => (
                   <option key={o.value} value={o.value}>
                     {o.label}
@@ -312,17 +280,33 @@ export function EntityForm({
             control = <input type="checkbox" {...common} checked={!!value} onChange={(e) => set(f.key, e.target.checked)} />
             break
           case 'date':
-            control = <input type="date" {...common} value={String(value ?? '')} onChange={(e) => set(f.key, e.target.value)} />
+            control = text('date')
+            break
+          case 'time':
+            control = text('time')
+            break
+          case 'number':
+            control = text('number', { inputMode: f.integer ? 'numeric' : 'decimal', min: f.min, max: f.max, step: f.integer ? 1 : 'any' })
+            break
+          case 'money':
+            control = text('text', { inputMode: 'decimal', autoComplete: 'off', placeholder: '0,00' })
             break
           case 'color':
             control = <input type="color" {...common} value={String(value ?? '#7c6cf0')} onChange={(e) => set(f.key, e.target.value)} />
             break
           case 'url':
-            control = <input type="url" {...common} value={String(value ?? '')} onChange={(e) => set(f.key, e.target.value)} placeholder="https://…" />
+            control = text('url', { placeholder: 'https://…' })
             break
+          case 'list':
+            return (
+              <div key={f.key} className="span-2">
+                <ListEditor spec={f} rows={(value as Row[]) ?? []} onChange={(rows) => set(f.key, rows)} error={error} fieldId={fieldId} />
+              </div>
+            )
           default:
-            control = <input type="text" {...common} value={String(value ?? '')} onChange={(e) => set(f.key, e.target.value)} />
+            control = text('text')
         }
+        const labelText = (f.type === 'money' ? `${f.label} (${currency})` : f.label) + (f.required ? ' *' : '')
         return (
           <div key={f.key} className={f.wide ? 'span-2' : undefined}>
             {f.type === 'checkbox' ? (
@@ -330,7 +314,7 @@ export function EntityForm({
                 {control} {f.label}
               </label>
             ) : (
-              <Field label={f.label + (f.required ? ' *' : '')} hint={f.hint} error={error} id={fieldId}>
+              <Field label={labelText} hint={f.hint} error={error} id={fieldId}>
                 {control}
               </Field>
             )}
@@ -338,5 +322,45 @@ export function EntityForm({
         )
       })}
     </form>
+  )
+}
+
+/** Filas con varias columnas (versiones, enlaces…): se añaden y se quitan. */
+function ListEditor({ spec, rows, onChange, error, fieldId }: { spec: FieldSpec; rows: Row[]; onChange: (rows: Row[]) => void; error?: string; fieldId: string }) {
+  const fields = spec.fields ?? []
+  const edit = (i: number, key: string, value: string) => onChange(rows.map((r, k) => (k === i ? { ...r, [key]: value } : r)))
+  return (
+    <fieldset className="list-field" aria-describedby={error ? `${fieldId}-error` : undefined}>
+      <legend className="field-label">{spec.label + (spec.required ? ' *' : '')}</legend>
+      {rows.length === 0 && <p className="muted small">{t('forms.emptyList')}</p>}
+      {rows.map((row, i) => (
+        <div key={i} className="list-row" style={{ '--cols': fields.length } as CSSProperties}>
+          {fields.map((sf, k) => (
+            <input
+              key={sf.key}
+              type={sf.type}
+              name={i === 0 && k === 0 ? spec.key : undefined}
+              aria-label={t('forms.rowField', { field: sf.label, n: i + 1 })}
+              placeholder={sf.label + (sf.required ? ' *' : '')}
+              value={row[sf.key] ?? ''}
+              onChange={(e) => edit(i, sf.key, e.target.value)}
+            />
+          ))}
+          <button type="button" className="icon-btn small" aria-label={t('forms.removeRow', { n: i + 1 })} onClick={() => onChange(rows.filter((_, k) => k !== i))}>
+            <Icon name="close" size={14} />
+          </button>
+        </div>
+      ))}
+      <div>
+        <button type="button" name={rows.length ? undefined : spec.key} className="btn btn-small btn-ghost" onClick={() => onChange([...rows, {}])}>
+          <Icon name="plus" size={14} /> {t('forms.addRow')}
+        </button>
+      </div>
+      {error && (
+        <span className="field-error" id={`${fieldId}-error`}>
+          <Icon name="alert" size={12} /> {error}
+        </span>
+      )}
+    </fieldset>
   )
 }

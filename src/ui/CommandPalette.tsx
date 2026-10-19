@@ -3,14 +3,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { STATUSES } from '../domain/catalog'
-import { matchesQuery, normalize } from '../domain/selectors'
+import { allTags, matchesQuery, normalize } from '../domain/selectors'
 import { t } from '../i18n'
 import { useCanEdit, useStudioData, type CollectionKey } from '../data/store'
 import { Modal } from './components/Common'
 import { Icon, type IconName } from './components/Icon'
 import { useScope, useUI } from './context'
 import { getPreferences, resolvedTheme, updatePreferences, usePreferences } from './prefs'
-import { navPages, quickCreate } from './navigation'
+import { allSections, isHidden, quickCreate, tagPath } from './navigation'
 
 interface Command {
   id: string
@@ -44,7 +44,7 @@ export function CommandPalette({ open, initialQuery, onClose }: { open: boolean;
     const match = (text: string) => !q || q.split(/\s+/).every((w) => normalize(text).includes(w))
     const go = (path: string) => () => navigate(path)
     const out: Command[] = []
-    for (const a of canEdit ? quickCreate() : []) {
+    for (const a of canEdit ? quickCreate(getPreferences().hiddenSections) : []) {
       const label = `${t('topbar.new')}: ${a.label}`
       if (match(label)) out.push({ id: `new-${a.id}`, group: t('palette.actions'), label, icon: 'plus', run: () => create(a.collection as CollectionKey, a.defaults) })
     }
@@ -57,7 +57,20 @@ export function CommandPalette({ open, initialQuery, onClose }: { open: boolean;
         icon: 'moon',
         run: () => updatePreferences({ theme: resolvedTheme(getPreferences().theme) === 'dark' ? 'light' : 'dark' }),
       })
-    for (const p of navPages()) if (match(p.label)) out.push({ id: `page-${p.to}`, group: t('palette.pages'), label: p.label, icon: p.icon, run: go(href(p.to)) })
+    // Secciones y, al escribir, también sus subsecciones («Tareas › Bloqueadas»). Desde la
+    // ficha de un proyecto llevan a su pestaña.
+    for (const s of allSections()) {
+      if (isHidden(s, prefs.hiddenSections)) continue
+      if (match(s.label)) out.push({ id: `page-${s.id}`, group: t('palette.pages'), label: s.label, icon: s.icon, run: go(href(s.to)) })
+      if (q)
+        for (const c of s.children.filter((x) => x.value !== null)) {
+          const label = `${s.label} › ${c.label}`
+          if (match(label)) out.push({ id: `page-${s.id}-${c.id}`, group: t('palette.pages'), label, icon: s.icon, run: go(href(c.to)) })
+        }
+    }
+    if (q)
+      for (const tag of allTags(data).filter((u) => match(u.tag)).slice(0, 8))
+        out.push({ id: `tag-${tag.tag}`, group: t('palette.tags'), label: `#${tag.tag}`, icon: 'tag', meta: t('palette.tagUses', { n: tag.count }), run: go(href(tagPath(tag.tag))) })
     for (const p of data.projects)
       if (match(p.name)) out.push({ id: `project-${p.id}`, group: t('palette.projects'), label: p.name, icon: 'folder', meta: p.tagline, run: go(`/proyectos/${p.slug}`) })
     for (const v of prefs.savedViews) if (match(v.name)) out.push({ id: `view-${v.id}`, group: t('palette.views'), label: v.name, icon: 'bookmark', run: go(v.path) })
@@ -70,11 +83,11 @@ export function CommandPalette({ open, initialQuery, onClose }: { open: boolean;
         group: t('palette.items'),
         label: t('palette.searchAll', { q: query.trim() }),
         icon: 'search',
-        run: go(`/trabajo?${new URLSearchParams({ ...(scope ? { p: scope } : {}), q: query.trim(), estado: 'todos' })}`),
+        run: go(href(`/tareas?${new URLSearchParams({ q: query.trim() })}`)),
       })
     }
     return out
-  }, [query, data, prefs.savedViews, scope, navigate, create, href, openItem, canEdit])
+  }, [query, data, prefs.savedViews, prefs.hiddenSections, scope, href, navigate, create, openItem, canEdit])
 
   useEffect(() => setActive(0), [query])
   useEffect(() => {

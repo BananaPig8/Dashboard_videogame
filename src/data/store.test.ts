@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { emptyCollections } from '../domain/collections'
 import type { StudioData, WorkItem } from '../domain/types'
 import { SCHEMA_VERSION } from '../domain/types'
 import { MemoryAdapter } from './storage'
@@ -18,6 +19,7 @@ const task = (id: string, title: string): WorkItem => ({
 
 function seed(items: WorkItem[]): () => StudioData {
   return () => ({
+    ...emptyCollections(),
     schemaVersion: SCHEMA_VERSION,
     studio: { id: 's', name: 'Estudio', createdAt: '2026-01-01' },
     areas: [],

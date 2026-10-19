@@ -4,24 +4,21 @@ import { t } from './i18n'
 import { store, useStoreMeta, useStoreStatus } from './data/store'
 import { SEED_VERSION } from './data/seed'
 import { AppShell } from './ui/AppShell'
+import { allSections, migratePath, OLD_PATHS } from './ui/navigation'
+import { SECTION_PAGES } from './ui/sections/registry'
 import { UIProvider } from './ui/context'
 import { ErrorBoundary, FeedbackProvider, PageSkeleton } from './ui/feedback'
 import { Icon } from './ui/components/Icon'
 
-// Cada pantalla se carga cuando se abre: el arranque es más rápido.
-const DashboardPage = lazy(() => import('./ui/pages/Overview').then((m) => ({ default: m.DashboardPage })))
-const TodayPage = lazy(() => import('./ui/pages/Today').then((m) => ({ default: m.TodayPage })))
-const WorkPage = lazy(() => import('./ui/pages/Work').then((m) => ({ default: m.WorkPage })))
-const HistoryPage = lazy(() => import('./ui/pages/History').then((m) => ({ default: m.HistoryPage })))
-const ProjectsPage = lazy(() => import('./ui/pages/Projects').then((m) => ({ default: m.ProjectsPage })))
+// Cada sección se carga cuando se abre (sections/registry.tsx): el arranque es más rápido.
 const ProjectPage = lazy(() => import('./ui/pages/Projects').then((m) => ({ default: m.ProjectPage })))
-const SettingsPage = lazy(() => import('./ui/pages/Settings').then((m) => ({ default: m.SettingsPage })))
-const AgendaPage = lazy(() => import('./ui/pages/Production').then((m) => ({ default: m.AgendaPage })))
-const BuildsPage = lazy(() => import('./ui/pages/Production').then((m) => ({ default: m.BuildsPage })))
-const PublishPage = lazy(() => import('./ui/pages/Production').then((m) => ({ default: m.PublishPage })))
-const FeedbackPage = lazy(() => import('./ui/pages/Production').then((m) => ({ default: m.FeedbackPage })))
-const DecisionsPage = lazy(() => import('./ui/pages/Production').then((m) => ({ default: m.DecisionsPage })))
-const ResourcesPage = lazy(() => import('./ui/pages/Production').then((m) => ({ default: m.ResourcesPage })))
+
+/** Lleva a otra ruta conservando la consulta de la URL (filtros, ámbito, vistas guardadas antiguas). */
+/** Lleva una ruta de la versión anterior a la de ahora (con su consulta). */
+function MigrateRedirect() {
+  const location = useLocation()
+  return <Navigate to={migratePath(location.pathname + location.search)} replace />
+}
 
 function SeedBanner() {
   const meta = useStoreMeta()
@@ -117,20 +114,15 @@ function Screens() {
     <ErrorBoundary resetKey={location.pathname}>
       <Suspense fallback={<PageSkeleton />}>
         <Routes>
-          <Route path="/" element={<DashboardPage />} />
-          <Route path="/hoy" element={<TodayPage />} />
-          <Route path="/trabajo" element={<WorkPage />} />
-          <Route path="/agenda" element={<AgendaPage />} />
-          <Route path="/builds" element={<BuildsPage />} />
-          <Route path="/publicacion" element={<PublishPage />} />
-          <Route path="/feedback" element={<FeedbackPage />} />
-          <Route path="/decisiones" element={<DecisionsPage />} />
-          <Route path="/recursos" element={<ResourcesPage />} />
-          <Route path="/historial" element={<HistoryPage />} />
-          <Route path="/proyectos" element={<ProjectsPage />} />
+          {allSections().map((section) => {
+            const Page = SECTION_PAGES[section.id]
+            return <Route key={section.id} path={section.to} element={<Page />} />
+          })}
           <Route path="/proyectos/:slug" element={<ProjectPage />} />
           <Route path="/proyectos/:slug/:tab" element={<ProjectPage />} />
-          <Route path="/ajustes" element={<SettingsPage />} />
+          {OLD_PATHS.map((from) => (
+            <Route key={from} path={from} element={<MigrateRedirect />} />
+          ))}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>

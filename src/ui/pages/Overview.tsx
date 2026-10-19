@@ -131,6 +131,23 @@ export function DashboardPage() {
   )
 }
 
+/** El resumen de un proyecto: la pestaña «Resumen» de su ficha. */
+export function ProjectSummaryTab() {
+  const data = useStudioData()
+  const { project } = useScope()
+  const today = useToday()
+  const fmt = useFormat()
+  if (!project) return null
+  return (
+    <>
+      <Card title="De qué va" icon="book">
+        <p>{project.description}</p>
+      </Card>
+      <WidgetArea data={data} scope={project.id} today={today} year={yearOf(today)} fmt={fmt} />
+    </>
+  )
+}
+
 /** Los widgets visibles, en el orden elegido. */
 export function WidgetArea(props: WidgetProps) {
   const prefs = usePreferences()

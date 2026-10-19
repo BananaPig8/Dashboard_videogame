@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { makeFormatter } from './format'
+import { makeFormatter, parseAmount } from './format'
 import { setLocale, t, tr } from './index'
 
 const fmt = (dateFormat: 'short' | 'numeric' | 'long' | 'iso' = 'short', hourCycle: 'h23' | 'h12' = 'h23') =>
@@ -43,5 +43,29 @@ describe('textos', () => {
     setLocale('es')
     expect(t('palette.searchAll', { q: 'feria' })).toBe('Buscar «feria» en todo el trabajo')
     expect(tr('no.existe')).toBe('no.existe')
+  })
+})
+
+describe('importes', () => {
+  it('lee importes escritos a mano en céntimos', () => {
+    expect(parseAmount('12,50')).toBe(1250)
+    expect(parseAmount('12.50')).toBe(1250)
+    expect(parseAmount('1.234,56')).toBe(123456)
+    expect(parseAmount('1,234.56')).toBe(123456)
+    expect(parseAmount('100')).toBe(10000)
+    expect(parseAmount('1.000')).toBe(100000)
+    expect(parseAmount('100 €')).toBe(10000)
+    expect(parseAmount('-3,5')).toBe(-350)
+    expect(parseAmount('doce')).toBeNull()
+    expect(parseAmount('')).toBeNull()
+    expect(parseAmount('1,2,3')).toBeNull()
+  })
+
+  it('escribe importes y duraciones', () => {
+    const f = makeFormatter({ locale: 'es-ES', dateFormat: 'short', hourCycle: 'h23', noDate: '—' })
+    expect(f.money(123450, 'EUR').replace(/\s/g, ' ')).toBe('1234,50 €')
+    expect(f.duration(150)).toBe('2 h 30 min')
+    expect(f.duration(45)).toBe('45 min')
+    expect(f.duration(120)).toBe('2 h')
   })
 })

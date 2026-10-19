@@ -1,21 +1,25 @@
 // Almacén remoto: la base de datos de la página de Studio Hub en claude.ai, que comparten
-// el estudio y Claude. Cada elemento es un documento («items/<id>»); el historial va
-// agrupado por proyecto y mes («activity/<proyecto>~<AAAA-MM>») para no gastar un
-// documento por commit; el estudio va en «estudio/datos». Los cambios de otros (o de
+// el estudio y Claude. Cada elemento es un documento («items/<id>»); las colecciones que
+// crecen sin parar van agrupadas (el historial por proyecto y mes, las horas por persona y
+// mes: «activity/<proyecto>~<AAAA-MM>» con {entries: […]}), según el registro de
+// domain/collections.ts; el estudio va en «estudio/datos». Los cambios de otros (o de
 // Claude) llegan en vivo y solo se escribe lo que cambia.
+import { COLLECTIONS, COLLECTION_BY_KEY, type CollectionKey } from '../domain/collections'
 import type { Activity, StudioData } from '../domain/types'
 import type { Db, DbError, UserInfo } from './runtime'
 import type { Persisted, RemoteStatus, StorageAdapter, StoreMeta } from './storage'
-import type { CollectionKey } from './store'
 
 type Body = Record<string, unknown>
-
-const COLLECTIONS: CollectionKey[] = ['areas', 'projects', 'items', 'builds', 'events', 'feedback', 'resources', 'checklists', 'activity']
 
 /** Dónde vive el estudio (nombre, lema) y la versión del esquema. */
 export const STUDIO_DOC = 'estudio/datos'
 /** Colecciones agrupadas: cada documento lleva {entries: [...]}. */
-const BUCKETED = new Set<CollectionKey>(['activity'])
+const BUCKETED = new Set<CollectionKey>(COLLECTIONS.filter((k) => COLLECTION_BY_KEY[k].bucket))
+
+/** El documento de su colección agrupada donde va un elemento. */
+function groupOf(k: CollectionKey, e: object): string {
+  return docIdFor(COLLECTION_BY_KEY[k].bucket!(e as Record<string, unknown>))
+}
 /** Campo con el que se conserva el orden de las listas (la base ordena por id). */
 const ORDER_FIELD = '_orden'
 
@@ -30,7 +34,7 @@ export function docIdFor(id: string): string {
 
 /** El documento del historial donde va una actividad: su proyecto y su mes. */
 export function bucketOf(a: Pick<Activity, 'projectId' | 'at'>): string {
-  return docIdFor(`${a.projectId}~${a.at.slice(0, 7)}`)
+  return groupOf('activity', a)
 }
 
 /** Quita lo que la base no guarda (undefined) y deja JSON plano. */
@@ -147,15 +151,15 @@ export class RemoteAdapter implements StorageAdapter {
       const nextIds = new Set(list.map((e) => e.id))
       if (BUCKETED.has(k)) {
         const touched = new Set<string>()
-        for (const e of list as Activity[]) {
-          const was = prevById.get(e.id) as Activity | undefined
+        for (const e of list) {
+          const was = prevById.get(e.id)
           if (was === e) continue
-          touched.add(bucketOf(e))
-          if (was) touched.add(bucketOf(was))
+          touched.add(groupOf(k, e))
+          if (was) touched.add(groupOf(k, was))
         }
-        for (const e of old as Activity[]) if (!nextIds.has(e.id)) touched.add(bucketOf(e))
+        for (const e of old) if (!nextIds.has(e.id)) touched.add(groupOf(k, e))
         for (const bucket of touched) {
-          const entries = (list as Activity[]).filter((e) => bucketOf(e) === bucket)
+          const entries = list.filter((e) => groupOf(k, e) === bucket)
           this.enqueue(`${k}/${bucket}`, entries.length ? plain({ entries }) : null)
         }
       } else {

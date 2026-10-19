@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { emptyCollections } from '../domain/collections'
 import type { Activity, StudioData, WorkItem } from '../domain/types'
 import { SCHEMA_VERSION } from '../domain/types'
 import { bucketOf, docIdFor, reconcile, RemoteAdapter, STUDIO_DOC } from './remote'
@@ -88,6 +89,7 @@ class FakeDb implements Db {
 }
 
 const empty = (): StudioData => ({
+  ...emptyCollections(),
   schemaVersion: SCHEMA_VERSION,
   studio: { id: 'estudio', name: 'Mi estudio', createdAt: '2026-09-27' },
   areas: [],
@@ -196,10 +198,22 @@ describe('almacén remoto (base de datos de la página)', () => {
     const db = filled()
     const { store } = setup(db)
     await tick()
-    db.external('items/d', { ...task('d', 'Rota'), projectId: 'no-existe' })
+    db.external('items/d', { ...task('d', 'Rota'), status: 'inventado' })
     await tick()
     expect(store.getData().items).toHaveLength(2)
     expect(store.getStatus().loadErrors.length).toBeGreaterThan(0)
+  })
+
+  it('lo que apunta a algo que no existe no bloquea: se ignora esa referencia', async () => {
+    const db = filled()
+    const { store } = setup(db)
+    await tick()
+    db.external('items/d', { ...task('d', 'Huérfana'), projectId: 'no-existe' })
+    db.external('items/e', { ...task('e', 'Con área perdida'), areaId: 'no-existe' })
+    await tick()
+    expect(store.getStatus().loadErrors).toEqual([])
+    expect(store.getData().items.map((i) => i.id)).toEqual(['a', 'b', 'e'])
+    expect(store.getData().items[2]).not.toHaveProperty('areaId')
   })
 
   it('quien solo puede ver no cambia nada', async () => {

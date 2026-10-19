@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { emptyCollections } from './collections'
 import { addDays, daysBetween, startOfWeek, zonedParts } from './dates'
 import {
   notificationsFor,
@@ -35,6 +36,7 @@ const item = (over: Partial<WorkItem>): WorkItem => ({
 
 function fixture(): StudioData {
   return {
+    ...emptyCollections(),
     schemaVersion: SCHEMA_VERSION,
     studio: { id: 's', name: 'Estudio', createdAt: '2026-01-01' },
     areas: [{ id: 'steam', name: 'Steam', color: '#000' }],

@@ -28,6 +28,42 @@ export interface Formatter {
   /** «octubre de 2026». */
   monthYear(yyyyMM: string): string
   number(n: number): string
+  /** Un importe en céntimos, en la moneda dada: «1.234,50 €». */
+  money(cents: number, currency: string): string
+  /** Minutos como «2 h 30 min». */
+  duration(minutes: number): string
+}
+
+/**
+ * Lee un importe escrito a mano y lo devuelve en céntimos: «12,50», «12.50», «1.234,56»,
+ * «1,234.56», «-3». null si no es un importe.
+ */
+export function parseAmount(text: string): number | null {
+  const t = text.replace(/[\s€$£]/g, '')
+  if (!/^-?[\d.,]+$/.test(t) || !/\d/.test(t)) return null
+  const negative = t.startsWith('-')
+  const body = negative ? t.slice(1) : t
+  const lastComma = body.lastIndexOf(',')
+  const lastDot = body.lastIndexOf('.')
+  let decimalSep: string | null = null
+  if (lastComma >= 0 && lastDot >= 0) decimalSep = lastComma > lastDot ? ',' : '.'
+  else if (lastComma >= 0) decimalSep = body.length - lastComma - 1 <= 2 ? ',' : null
+  else if (lastDot >= 0) decimalSep = body.length - lastDot - 1 <= 2 && body.indexOf('.') === lastDot ? '.' : null
+  let whole = body
+  let frac = ''
+  if (decimalSep) {
+    const i = body.lastIndexOf(decimalSep)
+    whole = body.slice(0, i)
+    frac = body.slice(i + 1)
+  }
+  // El separador decimal solo una vez, y los de miles, en grupos de tres.
+  if (decimalSep && whole.includes(decimalSep)) return null
+  const groups = whole.split(/[.,]/)
+  if (groups.length > 1 && (groups[0].length > 3 || groups.slice(1).some((g) => g.length !== 3))) return null
+  whole = groups.join('')
+  if (!/^\d*$/.test(whole) || !/^\d{0,2}$/.test(frac) || (!whole && !frac)) return null
+  const cents = Number(whole || '0') * 100 + Number(frac.padEnd(2, '0') || '0')
+  return negative ? -cents : cents
 }
 
 // Las fechas del modelo son de calendario: se pintan en UTC para que no cambien de día.
@@ -44,6 +80,19 @@ export function makeFormatter(o: FormatOptions): Formatter {
   const time = fmt({ hour: o.hourCycle === 'h12' ? 'numeric' : '2-digit', minute: '2-digit', hourCycle: o.hourCycle })
   const rel = new Intl.RelativeTimeFormat(o.locale, { numeric: 'auto' })
   const num = new Intl.NumberFormat(o.locale)
+  const moneyFormats = new Map<string, Intl.NumberFormat>()
+  const moneyFormat = (currency: string) => {
+    let f = moneyFormats.get(currency)
+    if (!f) {
+      try {
+        f = new Intl.NumberFormat(o.locale, { style: 'currency', currency })
+      } catch {
+        f = new Intl.NumberFormat(o.locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+      }
+      moneyFormats.set(currency, f)
+    }
+    return f
+  }
 
   const date = (s: ISODate | undefined, refYear?: number) => {
     if (!s) return o.noDate
@@ -80,5 +129,12 @@ export function makeFormatter(o: FormatOptions): Formatter {
     },
     monthYear: (yyyyMM) => monthYear.format(parseISODate(`${yyyyMM}-15`)),
     number: (n) => num.format(n),
+    money: (cents, currency) => moneyFormat(currency).format(cents / 100),
+    duration: (minutes) => {
+      const h = Math.floor(Math.abs(minutes) / 60)
+      const m = Math.abs(minutes) % 60
+      const sign = minutes < 0 ? '-' : ''
+      return h ? `${sign}${h} h${m ? ` ${m} min` : ''}` : `${sign}${m} min`
+    },
   }
 }

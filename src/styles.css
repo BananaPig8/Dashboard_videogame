@@ -397,6 +397,110 @@ kbd {
   text-align: left;
 }
 
+.nav-collapse {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+/* Árbol de secciones: la fila (enlace + flecha) y sus subsecciones. */
+.nav-sections,
+.nav-children {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-children[hidden],
+.app[data-sidebar] .nav-children[hidden] {
+  display: none;
+}
+
+.nav-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.nav-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.nav-row .nav-link {
+  flex: 1;
+  min-width: 0;
+}
+
+.nav-toggle {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-3);
+  cursor: pointer;
+}
+
+.nav-toggle:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.nav-children {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin: 2px 0 6px 19px;
+  padding-left: 10px;
+  border-left: 1px solid var(--border);
+}
+
+.nav-sublink {
+  display: block;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  color: var(--text-3);
+  font-size: 0.84rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition:
+    background var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+
+.nav-sublink:hover {
+  background: var(--surface-2);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.nav-sublink.active {
+  color: var(--text);
+  font-weight: 600;
+  background: var(--surface-2);
+}
+
+/* Dentro de una sección activa, el resaltado fuerte es de la subsección. */
+.nav-section.current .nav-link.active:not([aria-current]) {
+  background: transparent;
+}
+
+.nav-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 0 7px;
+  font-variant-numeric: tabular-nums;
+}
+
 .sidebar-foot {
   margin-top: auto;
   padding-top: var(--space-2);
@@ -414,7 +518,10 @@ kbd {
 .app[data-sidebar='collapsed'] .nav-label,
 .app[data-sidebar='collapsed'] .nav-count,
 .app[data-sidebar='collapsed'] .nav-title-text,
-.app[data-sidebar='collapsed'] .nav-title .icon-btn {
+.app[data-sidebar='collapsed'] .nav-title .icon-btn,
+.app[data-sidebar='collapsed'] .nav-toggle,
+.app[data-sidebar='collapsed'] .nav-children,
+.app[data-sidebar='collapsed'] .nav-badge {
   display: none;
 }
 .app[data-sidebar='collapsed'] .nav-title {
@@ -593,6 +700,90 @@ kbd {
 .embedded-actions {
   justify-content: flex-end;
   margin-bottom: var(--space-3);
+}
+
+/* Cabecera de sección: migas, título y subsecciones (enlaces con forma de pestaña). */
+.section-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.section-head.embedded {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.section-head.embedded .embedded-actions {
+  margin-bottom: 0;
+}
+
+.breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 2px;
+  padding: 0;
+  list-style: none;
+  font-size: 0.8rem;
+  color: var(--text-3);
+}
+
+.breadcrumb li + li::before {
+  content: '›';
+  margin-right: 6px;
+  color: var(--text-3);
+}
+
+.breadcrumb a {
+  color: var(--text-2);
+}
+
+.section-tabs {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-head.embedded .section-tabs {
+  flex: 1 1 320px;
+}
+
+.section-tabs ul {
+  display: flex;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.section-tab {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 2px solid transparent;
+  color: var(--text-2);
+  font-weight: 600;
+  font-size: 0.86rem;
+  white-space: nowrap;
+  transition:
+    color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease);
+}
+
+.section-tab:hover {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.section-tab.active {
+  color: var(--text);
+  border-bottom-color: var(--accent);
 }
 
 .banner {
@@ -1230,6 +1421,44 @@ input[type='color'] {
 
 .span-2 {
   grid-column: 1 / -1;
+}
+
+/* Campos con filas (versiones, enlaces…). */
+.list-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.list-row {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr)) auto;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.list-row > input {
+  width: 100%;
+  min-width: 0;
+}
+
+@media (max-width: 560px) {
+  .list-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .list-row > input:not(:first-child) {
+    grid-column: 1;
+  }
+
+  .list-row > button {
+    grid-row: 1;
+    grid-column: 2;
+  }
 }
 
 .quick-add {
@@ -1904,6 +2133,20 @@ input[type='color'] {
   scrollbar-width: thin;
 }
 
+/* Pestañas de la ficha con «Más» fuera de la zona que se desplaza (el menú no se recorta). */
+.tabs-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tabs-bar > .tabs {
+  flex: 1 1 auto;
+  min-width: 0;
+  border-bottom: 0;
+}
+
 .tab {
   display: inline-flex;
   align-items: center;
@@ -1954,6 +2197,16 @@ input[type='color'] {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   overflow: hidden;
+}
+
+/* En las pestañas que no son el resumen, la cabecera del proyecto se queda en lo justo. */
+.project-hero.compact {
+  grid-template-columns: minmax(0, 1fr);
+  padding-block: var(--space-3);
+}
+
+.project-hero.compact h1 {
+  font-size: 1.3rem;
 }
 
 .project-hero::before {
@@ -2841,8 +3094,13 @@ input[type='color'] {
   .app[data-sidebar='collapsed'] .nav-label,
   .app[data-sidebar='collapsed'] .nav-count,
   .app[data-sidebar='collapsed'] .nav-title-text,
-  .app[data-sidebar='collapsed'] .nav-title .icon-btn {
+  .app[data-sidebar='collapsed'] .nav-title .icon-btn,
+  .app[data-sidebar='collapsed'] .nav-toggle,
+  .app[data-sidebar='collapsed'] .nav-badge {
     display: revert;
+  }
+  .app[data-sidebar='collapsed'] .nav-children {
+    display: flex;
   }
   .app[data-sidebar='collapsed'] .nav-link {
     justify-content: flex-start;
