@@ -350,6 +350,31 @@ export const es = {
     listUrl: '«{field}» tiene que ser una dirección completa (https://…).',
     saveRefused: 'No se ha guardado:',
   },
+  records: {
+    empty: 'Nada por aquí todavía.',
+    name: 'Nombre',
+  },
+  calendarUi: {
+    prev: 'Mes anterior',
+    next: 'Mes siguiente',
+    today: 'Este mes',
+    unconfirmed: 'sin confirmar',
+    emptyMonth: 'Nada este mes.',
+  },
+  tagFilter: {
+    only: 'Solo lo que lleva #{tag}',
+    clear: 'Quitar el filtro',
+    everything: 'Todo lo que lleva esta etiqueta',
+  },
+  me: {
+    question: '¿Quién eres? Así «Mis tareas» y lo nuevo que crees se asignan a tu nombre (solo en este navegador).',
+    noMembers: 'Todavía no hay nadie en el equipo. Crea tu ficha para tener «Mis tareas».',
+    select: 'Quién eres',
+    thisIsMe: 'Soy yo',
+    addSomeone: 'Añadir a alguien',
+    createMine: 'Crear mi ficha',
+    forget: 'No soy {name}',
+  },
   projectPage: {
     studio: 'Estudio',
     edit: 'Editar el proyecto',

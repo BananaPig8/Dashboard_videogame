@@ -146,3 +146,19 @@ describe('validar lo nuevo', () => {
     expect(validateStudioData(d).join(' ')).toContain('viene de un evento')
   })
 })
+
+describe('etiquetas comunes', () => {
+  it('renombra y fusiona una etiqueta en todas las colecciones', async () => {
+    const { renameTag, allTags, byTag } = await import('./selectors')
+    const d = data()
+    d.items[0].tags = ['Steam', 'demo']
+    d.builds[0].tags = ['steam']
+    d.events[0].tags = ['feria']
+    expect(allTags(d).find((u) => u.tag.toLowerCase() === 'steam')?.count).toBe(2)
+    expect(Object.keys(byTag(d, 'STEAM'))).toEqual(['items', 'builds'])
+    const r = renameTag(d, 'steam', 'demo')
+    expect(r.changed.sort()).toEqual(['builds:b', 'items:i1'])
+    expect(r.data.items[0].tags).toEqual(['demo'])
+    expect(r.data.builds[0].tags).toEqual(['demo'])
+  })
+})

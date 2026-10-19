@@ -27,6 +27,8 @@ export interface Formatter {
   relative(s: ISODate, today: ISODate): string
   /** «octubre de 2026». */
   monthYear(yyyyMM: string): string
+  /** Día de la semana abreviado: «lun». */
+  weekday(s: ISODate): string
   number(n: number): string
   /** Un importe en céntimos, en la moneda dada: «1.234,50 €». */
   money(cents: number, currency: string): string
@@ -77,6 +79,7 @@ export function makeFormatter(o: FormatOptions): Formatter {
   const long = fmt({ day: 'numeric', month: 'long', year: 'numeric' })
   const withWeekday = fmt({ weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
   const monthYear = fmt({ month: 'long', year: 'numeric' })
+  const weekday = fmt({ weekday: 'short' })
   const time = fmt({ hour: o.hourCycle === 'h12' ? 'numeric' : '2-digit', minute: '2-digit', hourCycle: o.hourCycle })
   const rel = new Intl.RelativeTimeFormat(o.locale, { numeric: 'auto' })
   const num = new Intl.NumberFormat(o.locale)
@@ -127,7 +130,8 @@ export function makeFormatter(o: FormatOptions): Formatter {
       if (abs < 60) return rel.format(Math.round(n / 7), 'week')
       return rel.format(Math.round(n / 30), 'month')
     },
-    monthYear: (yyyyMM) => monthYear.format(parseISODate(`${yyyyMM}-15`)),
+    monthYear: (yyyyMM) => monthYear.format(parseISODate(`${yyyyMM.slice(0, 7)}-15`)),
+    weekday: (s) => weekday.format(parseISODate(s)),
     number: (n) => num.format(n),
     money: (cents, currency) => moneyFormat(currency).format(cents / 100),
     duration: (minutes) => {

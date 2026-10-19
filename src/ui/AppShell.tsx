@@ -2,6 +2,7 @@
 // ámbito, búsqueda, notificaciones y acciones rápidas, y atajos de teclado.
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
+import { setCatalogLabels } from '../domain/catalog'
 import { t } from '../i18n'
 import { useCanEdit, useStudioData } from '../data/store'
 import { CommandPalette } from './CommandPalette'
@@ -29,6 +30,8 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [palette, setPalette] = useState<{ open: boolean; query?: string }>({ open: false })
   const collapsed = prefs.sidebarCollapsed
+  // Los nombres de estado que el estudio ha cambiado (Ajustes) valen en todas las pantallas.
+  setCatalogLabels('status', data.studio.statusLabels)
 
   const mobile = useMediaQuery('(max-width: 960px)')
   const menuButton = useRef<HTMLButtonElement>(null)

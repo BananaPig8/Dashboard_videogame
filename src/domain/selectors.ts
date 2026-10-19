@@ -483,7 +483,19 @@ export function notificationsFor(data: StudioData, today: ISODate): StudioNotifi
 // ——— Por sección ——————————————————————————————————————————————————————————
 // Cada sección tiene sus cálculos en domain/secciones/<sección>.ts; las pantallas los piden
 // aquí. Esos ficheros importan de este, así que solo usan lo importado dentro de funciones.
+export * from './secciones/panel'
+export * from './secciones/proyectos'
+export * from './secciones/tareas'
+export * from './secciones/roadmap'
 export * from './secciones/calendario'
+export * from './secciones/builds'
+export * from './secciones/publicacion'
+export * from './secciones/feedback'
 export * from './secciones/eventos'
-export * from './secciones/etiquetas'
+export * from './secciones/documentacion'
+export * from './secciones/recursos'
+export * from './secciones/equipo'
 export * from './secciones/finanzas'
+export * from './secciones/estadisticas'
+export * from './secciones/ajustes'
+export * from './secciones/etiquetas'

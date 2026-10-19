@@ -5,6 +5,7 @@ import { COLLECTIONS, type CollectionKey } from '../domain/collections'
 import { nowISODateTime } from '../domain/dates'
 import { normalizeData } from '../domain/migrate'
 import { removeWithReferences } from '../domain/references'
+import { renameTag } from '../domain/secciones/etiquetas'
 import type { ID, StudioData, Studio } from '../domain/types'
 import { validateStudioData } from '../domain/validate'
 import { reconcile, RemoteAdapter } from './remote'
@@ -224,6 +225,18 @@ export class StudioStore {
     for (const d of r.deleted) deleted.add(d)
     this.commit(r.data, { ...this.meta, deleted: [...deleted] })
     return true
+  }
+
+  /**
+   * Renombra o fusiona una etiqueta en todas las colecciones (domain/secciones/etiquetas.ts).
+   * Devuelve cuántos elementos han cambiado.
+   */
+  renameTag(from: string, to: string): number {
+    const r = renameTag(this.data, from, to)
+    if (!r.changed.length) return 0
+    // «colección:id», la misma clave que lleva la lista de editados.
+    this.commit(r.data, this.markEdited(...r.changed))
+    return r.changed.length
   }
 
   updateStudio(changes: Partial<Studio>): void {

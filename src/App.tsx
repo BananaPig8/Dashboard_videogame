@@ -12,8 +12,8 @@ import { Icon } from './ui/components/Icon'
 
 // Cada sección se carga cuando se abre (sections/registry.tsx): el arranque es más rápido.
 const ProjectPage = lazy(() => import('./ui/pages/Projects').then((m) => ({ default: m.ProjectPage })))
+const EtiquetasPage = lazy(() => import('./ui/sections/etiquetas/EtiquetasPage'))
 
-/** Lleva a otra ruta conservando la consulta de la URL (filtros, ámbito, vistas guardadas antiguas). */
 /** Lleva una ruta de la versión anterior a la de ahora (con su consulta). */
 function MigrateRedirect() {
   const location = useLocation()
@@ -118,6 +118,7 @@ function Screens() {
             const Page = SECTION_PAGES[section.id]
             return <Route key={section.id} path={section.to} element={<Page />} />
           })}
+          <Route path="/etiquetas/:tag" element={<EtiquetasPage />} />
           <Route path="/proyectos/:slug" element={<ProjectPage />} />
           <Route path="/proyectos/:slug/:tab" element={<ProjectPage />} />
           {OLD_PATHS.map((from) => (

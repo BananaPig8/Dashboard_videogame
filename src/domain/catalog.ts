@@ -50,11 +50,21 @@ export interface Entry {
 }
 
 /** Tabla con tono y nombre traducido (el nombre se lee al usarlo, en el idioma de ese momento). */
+/** Nombres que el estudio ha cambiado (Ajustes › Estados personalizables), por tabla. */
+const OVERRIDES: Record<string, Record<string, string>> = {}
+
+/** Cambia los nombres de una tabla del catálogo (p. ej. los estados). Vacío = los de siempre. */
+export function setCatalogLabels(ns: 'status', labels: Partial<Record<string, string>> | undefined): void {
+  const clean: Record<string, string> = {}
+  for (const [k, v] of Object.entries(labels ?? {})) if (typeof v === 'string' && v.trim()) clean[k] = v.trim()
+  OVERRIDES[ns] = clean
+}
+
 function entries<K extends string, X extends { tone: Tone }>(ns: string, spec: Record<K, X>): Record<K, X & Entry> {
   const out = {} as Record<K, X & Entry>
   for (const key of Object.keys(spec) as K[]) {
     const value = { ...spec[key] } as X & Entry
-    Object.defineProperty(value, 'label', { get: () => tr(`catalog.${ns}.${key}`), enumerable: true })
+    Object.defineProperty(value, 'label', { get: () => OVERRIDES[ns]?.[key] || tr(`catalog.${ns}.${key}`), enumerable: true })
     out[key] = value
   }
   return out

@@ -188,7 +188,7 @@ function ConfidenceFacts({ confidence }: { confidence: Confidence }) {
   const c = CONFIDENCES[confidence]
   if (!c) return null
   return (
-    <div className={`facts tone-soft-${c.tone}`}>
+    <div className={`facts tone-${c.tone}`}>
       <strong>{c.label}.</strong> {c.hint}
     </div>
   )
