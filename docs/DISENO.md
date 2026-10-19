@@ -59,22 +59,60 @@ ayuda al pasar el ratón y la tabla de datos debajo («Ver como tabla»).
 
 ## Estructura
 
-- **Barra lateral** fija: Estudio, Trabajo, Producción, Proyectos y Vistas guardadas.
-  En escritorio se contrae a solo iconos (botón de abajo o tecla `[`). En tableta y móvil
-  pasa a ser un panel que se abre con el botón de menú.
+- **Barra lateral** con las 15 secciones del estudio en grupos, en este orden:
+  - **Estudio**: Panel y Proyectos; justo debajo, **Juegos** (acceso directo a la ficha de
+    cada juego no archivado, con sus tareas abiertas).
+  - **Trabajo**: Tareas, Roadmap y Calendario.
+  - **Producción**: Builds y versiones, Publicación, Feedback y pruebas, y Eventos.
+  - **Conocimiento**: Documentación y Recursos.
+  - **Gestión**: Equipo, Finanzas y Estadísticas.
+  - Las **vistas guardadas**, y al pie, **Ajustes** y «Contraer».
+
+  Cada sección se despliega para ver sus subsecciones (botón con flecha, `aria-expanded`);
+  la activa se despliega sola y lo que se pliega o despliega se recuerda en el navegador.
+  Contraída (solo iconos), cada icono lleva a la raíz de su sección. En tableta y móvil es
+  un panel que se abre con el botón de menú, se cierra al elegir cualquier destino o con
+  `Esc`, y cerrado no recibe el foco del teclado.
+- **Contadores** en la barra, solo de lo que pide acción y siempre con texto para lectores
+  de pantalla: Tareas (vencidas y bloqueadas, contadas una vez), Feedback (sin revisar) y
+  Eventos (inscripciones que cierran en 14 días).
+- **Secciones opcionales**: en Ajustes › Preferencias se pueden ocultar las que el estudio
+  no use (Roadmap, Calendario, Builds, Publicación, Feedback, Eventos, Documentación,
+  Recursos, Equipo, Finanzas, Estadísticas); Panel, Proyectos, Tareas y Ajustes no. Lo
+  oculto desaparece de la barra, de la paleta, de «Nuevo» y de las pestañas de la ficha.
 - **Barra superior**: ámbito (todo el estudio o un proyecto), búsqueda / paleta de órdenes,
-  notificaciones y acciones rápidas («Nuevo»: tarea, decisión, incidencia, evento, build,
-  feedback, recurso, lista de pasos o proyecto).
+  notificaciones y «Nuevo» (en tres grupos: trabajo, producción y estudio).
+- **Cabecera de cada sección**: migas («Tareas › Mis tareas · Tablero Kanban»), título,
+  subtítulo, acciones y las subsecciones como pestañas-enlace. El título de la pestaña del
+  navegador dice dónde estás.
+- **Ficha de un proyecto**: las mismas secciones como pestañas con nombre corto (las siete
+  primeras a la vista y el resto en «Más»); en las pestañas que no son el resumen, la
+  cabecera del proyecto se queda en lo justo.
 - **Área principal** con la pantalla de cada sección. Las pantallas se cargan al abrirlas
   (con un esqueleto mientras tanto) y un fallo en una no tumba la aplicación: sale una
   pantalla de error con salida (volver al panel, recargar o exportar una copia).
-- **Paneles laterales** para editar (formularios descritos como datos en `forms.tsx`, con
-  errores claros junto a cada campo y un resumen arriba) y **ventanas** de confirmación.
+- **Paneles laterales** para editar (los campos de cada colección en `specs.ts`, con
+  errores claros junto a cada campo, un resumen arriba y las reglas de los datos al
+  guardar) y **ventanas** de confirmación. Al borrar, la confirmación dice qué se va con
+  ello y qué deja de apuntarle; a una persona con trabajo asignado no se la borra: se
+  marca que ya no sigue en el estudio.
 - **Avisos** abajo a la derecha tras guardar, borrar o marcar algo como hecho, con
   «Deshacer» cuando se puede.
 - **Notificaciones** (campana): lo vencido, lo que vence hoy, eventos de los próximos 14
-  días, eventos pasados sin actualizar, bloqueos importantes y feedback sin revisar. Se
-  calculan de los datos; «leído» se recuerda en el navegador.
+  días, eventos pasados sin actualizar, bloqueos importantes, feedback sin revisar,
+  recordatorios del día, inscripciones que cierran, versiones que se acercan o cuya fecha
+  ya pasó y presupuestos superados. Se calculan de los datos; «leído» se recuerda en el
+  navegador.
+
+### Subsecciones que se combinan
+
+Las subsecciones son vistas de la misma pantalla, no pantallas sueltas, y van en la URL.
+Cada una elige un valor de una **faceta** (`vista`, `filtro`, `tipo`, `canal`, `estado`,
+`seccion` o `ver`), y facetas distintas se combinan: «Mis tareas» (`filtro=mias`) y
+«Tablero Kanban» (`vista=tablero`) pueden estar activas a la vez, y pasar de una a otra
+cambia solo su faceta. Algunas son vistas aparte («Plan de hoy», «Historial de cambios»,
+«Informes de pruebas»): al entrar se quitan las demás facetas. Una subsección está activa
+cuando pulsarla no cambiaría lo que se ve. El registro está en `src/ui/navigation.ts`.
 
 ## Teclado
 
@@ -82,7 +120,7 @@ ayuda al pasar el ratón y la tabla de datos debajo («Ver como tabla»).
 |---|---|
 | `Ctrl K` / `Cmd K` o `/` | Abre la paleta: ir a una pantalla, proyecto, vista o elemento; crear cosas; cambiar el tema |
 | `↑` `↓` `Intro` | Moverse y abrir en la paleta |
-| `Esc` | Cerrar la paleta, un menú o un panel |
+| `Esc` | Cerrar la paleta, un menú, un panel o el menú lateral en móvil |
 | `[` | Contraer o expandir la barra lateral |
 
 ## Personalización
@@ -93,7 +131,9 @@ En **Ajustes** (se guarda en este navegador, aparte de los datos del estudio):
 - **Panel**: qué bloques se ven y en qué orden (también desde «Personalizar» en el propio
   panel). Cada bloque se puede plegar desde su cabecera.
 - **Vistas guardadas**: en Tareas o Historial, filtra y pulsa «Guardar vista»; sale en la
-  barra lateral y en la paleta. Se renombran y borran en Ajustes.
+  barra lateral y en la paleta. Se renombran y borran en Ajustes. Las guardadas con las
+  rutas de la versión anterior (`/trabajo`, `/agenda`…) se reescriben solas a las nuevas.
+- **Barra lateral**: secciones visibles y quién eres en este navegador (para «Mis tareas»).
 - **Idioma y región**: idioma (español; inglés en preparación), zona horaria
   (`Europe/Madrid` por defecto: con ella se calcula qué día es «hoy»), formato de fecha
   (corta, numérica, larga o ISO), formato de hora (24 o 12 horas) y primer día de la
@@ -112,9 +152,8 @@ En **Ajustes** (se guarda en este navegador, aparte de los datos del estudio):
 ## Idioma
 
 Los textos de la interfaz salen de `src/i18n/es.ts` (diccionario tipado) con `t('clave')`.
-Para añadir otro idioma: copiar `es.ts`, traducirlo (TypeScript avisa si falta una clave)
-y añadirlo a `LOCALES` en `src/i18n/index.ts`. Fechas, horas y números se escriben con
-`Intl` según el idioma. Ya pasan por el diccionario la navegación, la barra superior, la
-paleta, las notificaciones, los avisos, los estados y categorías del catálogo, los
-bloques del panel y los ajustes; los textos largos de algunas pantallas aún están en el
-código y se irán pasando al diccionario.
+Los de cada sección están en `src/i18n/secciones-es/<sección>.ts` y `es.ts` los junta bajo
+`secciones` (se leen con `tr('secciones.<sección>.<clave>')`). Para añadir otro idioma:
+copiar `es.ts` y `secciones-es/`, traducirlos (TypeScript avisa si falta una clave) y
+añadirlo a `LOCALES` en `src/i18n/index.ts`. Fechas, horas, números e importes se
+escriben con `Intl` según el idioma.
