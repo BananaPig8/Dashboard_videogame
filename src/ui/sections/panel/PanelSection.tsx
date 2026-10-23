@@ -35,7 +35,10 @@ export default function PanelSection({ embedded }: SectionPageProps) {
     ? tr(`secciones.panel.views.${ver === 'proyectos' && scope ? 'proyectosOne' : ver}`)
     : scope
       ? t('secciones.panel.dateProject', { date })
-      : t(active === 0 ? 'secciones.panel.dateActiveNone' : active === 1 ? 'secciones.panel.dateActiveOne' : 'secciones.panel.dateActiveOther', { date, n: active })
+      : t(active === 0 ? 'secciones.panel.dateActiveNone' : active === 1 ? 'secciones.panel.dateActiveOne' : 'secciones.panel.dateActiveOther', {
+          date,
+          n: active,
+        })
   // En el modo foco, el título es el de la subsección (lo pone SectionHeader).
   const title = focus ? undefined : project ? t('secciones.panel.titleProject', { project: project.name }) : t('secciones.panel.title')
 

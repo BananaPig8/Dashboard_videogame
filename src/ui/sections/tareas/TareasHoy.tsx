@@ -64,7 +64,13 @@ export function TareasHoy({ embedded }: { embedded?: boolean }) {
   }
 
   const toggle = me && (
-    <button type="button" className="btn btn-ghost tareas-toggle" aria-pressed={onlyMine} title={t('secciones.tareas.hoy.onlyMineHint', { name: me.name })} onClick={() => setPersona(onlyMine ? null : me.id)}>
+    <button
+      type="button"
+      className="btn btn-ghost tareas-toggle"
+      aria-pressed={onlyMine}
+      title={t('secciones.tareas.hoy.onlyMineHint', { name: me.name })}
+      onClick={() => setPersona(onlyMine ? null : me.id)}
+    >
       <Icon name={onlyMine ? 'checkCircle' : 'user'} size={16} /> {t('secciones.tareas.hoy.onlyMine')}
     </button>
   )
@@ -138,7 +144,9 @@ export function TareasHoy({ embedded }: { embedded?: boolean }) {
                     title={t('secciones.tareas.hoy.done')}
                     aria-label={t('secciones.tareas.hoy.doneLabel', { title: item.title })}
                     onClick={() =>
-                      undoable(t('secciones.tareas.hoy.doneToast'), () => store.patch('items', item.id, { status: 'done', completedAt: today, focusDate: undefined }))
+                      undoable(t('secciones.tareas.hoy.doneToast'), () =>
+                        store.patch('items', item.id, { status: 'done', completedAt: today, focusDate: undefined }),
+                      )
                     }
                   >
                     <Icon name="check" size={14} />
@@ -148,7 +156,7 @@ export function TareasHoy({ embedded }: { embedded?: boolean }) {
             )}
           />
         </Card>
-        <Card title={t('secciones.tareas.hoy.pickTitle')} icon="list" subtitle={t('secciones.tareas.hoy.pickSubtitle')}>
+        <Card className="tareas-narrow" title={t('secciones.tareas.hoy.pickTitle')} icon="list" subtitle={t('secciones.tareas.hoy.pickSubtitle')}>
           <ItemList
             items={plan.candidates}
             data={data}
@@ -156,7 +164,7 @@ export function TareasHoy({ embedded }: { embedded?: boolean }) {
             showAssignee={!onlyMine}
             year={year}
             limit={25}
-            empty={t('secciones.tareas.hoy.pickEmpty')}
+            empty={onlyMine ? t('secciones.tareas.hoy.pickEmptyMine') : t('secciones.tareas.hoy.pickEmpty')}
             aside={(item) =>
               canEdit && (
                 <button

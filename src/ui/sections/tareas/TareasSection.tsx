@@ -13,7 +13,7 @@ import { MePicker, useMe } from '../../components/MePicker'
 import { SaveViewButton } from '../../components/SaveView'
 import { SectionHeader, useSectionNav } from '../../components/SectionHeader'
 import { TagFilterNotice } from '../../components/TagFilter'
-import { useUI } from '../../context'
+import { useScope, useUI } from '../../context'
 import { updatePreferences } from '../../prefs'
 import type { SectionPageProps } from '../registry'
 import { countLabel, useTaskParams, ViewSwitch } from './comunes'
@@ -44,6 +44,7 @@ function TareasTrabajo({ embedded }: SectionPageProps) {
   const { create } = useUI()
   const canEdit = useCanEdit()
   const me = useMe()
+  const { project } = useScope()
   const nav = useSectionNav('tareas')
   const { vista, filtro, query, filtered } = useTaskParams()
   const items = filterTasks(data, query).sort(compareTasks)
@@ -70,7 +71,12 @@ function TareasTrabajo({ embedded }: SectionPageProps) {
 
   return (
     <div className={embedded ? 'tareas-page' : 'page tareas-page'}>
-      <SectionHeader id="tareas" embedded={embedded} actions={actions} />
+      <SectionHeader
+        id="tareas"
+        embedded={embedded}
+        actions={actions}
+        subtitle={project ? t('secciones.tareas.subtitleIn', { project: project.name }) : undefined}
+      />
       <div className="tareas-toolbar">
         <ViewSwitch />
         {!needMe && (
@@ -79,7 +85,7 @@ function TareasTrabajo({ embedded }: SectionPageProps) {
           </p>
         )}
       </div>
-      <TareasFiltros vista={vista} filtro={filtro} filtered={filtered} />
+      {!needMe && <TareasFiltros vista={vista} filtro={filtro} filtered={filtered} />}
       <TagFilterNotice />
       {filtro === 'mias' && me && (
         <p className="muted small tareas-me">
@@ -92,7 +98,8 @@ function TareasTrabajo({ embedded }: SectionPageProps) {
       {needMe ? (
         <Card title={t('me.select')} icon="user">
           <p className="tareas-note">{t('secciones.tareas.me.intro')}</p>
-          <MePicker />
+          {/* La clave lo vuelve a montar al crear a alguien: así sale elegida esa persona. */}
+          <MePicker key={data.members.length} />
         </Card>
       ) : vista === 'tablero' ? (
         <TareasTablero items={items} filtro={filtro} filtered={filtered} embedded={embedded} />

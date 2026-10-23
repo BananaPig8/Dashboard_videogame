@@ -5,9 +5,10 @@
 // '../selectors' (selectors.ts reexporta este fichero; solo dentro de funciones).
 import { CALENDAR_SECTION_KINDS, type CalendarKind } from '../catalog'
 import type { CollectionKey } from '../collections'
-import { addDays } from '../dates'
+import { addDays, DEFAULT_TIME_ZONE, isValidTimeZone, yearOf } from '../dates'
 import type { ClockTime, ID, ISODate, StudioData, StudioEvent } from '../types'
 import { isOpen, type Scope } from '../selectors'
+import { hasTag } from './etiquetas'
 
 export interface CalendarEntry {
   /** Estable: «colección:id:qué». */
@@ -148,4 +149,249 @@ export function upcomingEntries(data: StudioData, today: ISODate, days: number, 
 /** Los tipos de una subsección del calendario (?tipo=); sin subsección, todos. */
 export function calendarKindsFor(tipo: string | null): readonly CalendarKind[] | undefined {
   return tipo ? CALENDAR_SECTION_KINDS[tipo] : undefined
+}
+
+// ——— Sección Calendario ————————————————————————————————————————————————————
+
+/** El mes de ?mes=AAAA-MM (su día 1); si falta o no vale, el de hoy. */
+export function calendarMonthParam(mes: string | null, today: ISODate): ISODate {
+  return mes && /^\d{4}-(0[1-9]|1[0-2])$/.test(mes) ? `${mes}-01` : `${today.slice(0, 7)}-01`
+}
+
+/** Con ?etiqueta=, solo las fechas de lo que la lleva (los recordatorios no tienen etiquetas). */
+export function calendarWithTag<T extends { target: { collection: CollectionKey; id: ID } }>(data: StudioData, entries: T[], tag: string | null): T[] {
+  if (!tag) return entries
+  const tagged = new Set<string>()
+  for (const k of ['items', 'events', 'releases', 'builds'] as const)
+    for (const x of data[k] as { id: ID; tags?: string[] }[]) if (hasTag(x, tag)) tagged.add(`${k}:${x.id}`)
+  return entries.filter((e) => tagged.has(`${e.target.collection}:${e.target.id}`))
+}
+
+/**
+ * Lo que tendría que haber pasado y sigue pendiente: fechas límite vencidas, eventos sin
+ * cerrar, inscripciones sin enviar, versiones sin publicar, recordatorios sin hacer. Las
+ * builds no cuentan (su fecha es la de la build, no un plazo).
+ */
+export function calendarOverdue(data: StudioData, today: ISODate, scope: Scope = null, kinds?: readonly CalendarKind[]): CalendarEntry[] {
+  return allCalendarEntries(data, scope).filter((e) => !e.done && e.kind !== 'build' && (e.endDate ?? e.date) < today && (!kinds || kinds.includes(e.kind)))
+}
+
+/** De hoy en adelante, con fecha prevista pero sin confirmar. */
+export function calendarTentative(data: StudioData, today: ISODate, scope: Scope = null, kinds?: readonly CalendarKind[]): CalendarEntry[] {
+  return calendarEntries(data, { from: today, to: '9999-12-31', scope, kinds, pendingOnly: true }).filter((e) => !e.confirmed)
+}
+
+/** Algo que debería estar en el calendario y aún no tiene fecha. */
+export interface CalendarUndated {
+  /** Estable: «colección:id:qué». */
+  id: string
+  kind: CalendarKind
+  title: string
+  projectId?: ID
+  target: { collection: CollectionKey; id: ID }
+}
+
+/**
+ * Lo que falta en el calendario: eventos sin fecha, inscripciones sin plazo, versiones
+ * previstas sin fecha y hitos abiertos sin fecha límite (las tareas sin fecha no: no todas
+ * la necesitan). Los eventos del estudio salen también en cada proyecto.
+ */
+export function calendarUndated(data: StudioData, scope: Scope = null, kinds?: readonly CalendarKind[]): CalendarUndated[] {
+  const out: CalendarUndated[] = []
+  const own = (x: { projectId?: ID }) => scope === null || x.projectId === scope
+  for (const e of data.events.filter(inScope(scope))) {
+    if (e.status === 'cancelled' || e.status === 'done') continue
+    const target = { collection: 'events' as const, id: e.id }
+    if (!e.date) out.push({ id: `events:${e.id}:date`, kind: eventKind(e), title: e.title, projectId: e.projectId, target })
+    if ((e.registrationStatus === 'open' || e.registrationStatus === 'not_open') && !e.registrationDeadline)
+      out.push({ id: `events:${e.id}:registration`, kind: 'registration', title: e.title, projectId: e.projectId, target })
+  }
+  for (const r of data.releases.filter(own))
+    if ((r.status === 'idea' || r.status === 'planned' || r.status === 'in_progress') && !r.targetDate && !r.releasedAt)
+      out.push({ id: `releases:${r.id}:target`, kind: 'release', title: r.name, projectId: r.projectId, target: { collection: 'releases', id: r.id } })
+  for (const i of data.items.filter(own))
+    if (i.kind === 'milestone' && isOpen(i) && !i.dueDate)
+      out.push({ id: `items:${i.id}:due`, kind: 'deadline', title: i.title, projectId: i.projectId, target: { collection: 'items', id: i.id } })
+  return out.filter((u) => !kinds || kinds.includes(u.kind)).sort((a, b) => a.title.localeCompare(b.title))
+}
+
+/** Lo que se exporta a .ics: lo pendiente de hoy en adelante de esa vista (tipos, ámbito y etiqueta). */
+export function calendarForExport(
+  data: StudioData,
+  today: ISODate,
+  scope: Scope = null,
+  kinds?: readonly CalendarKind[],
+  tag: string | null = null,
+): CalendarEntry[] {
+  return calendarWithTag(data, calendarEntries(data, { from: today, to: '9999-12-31', scope, kinds, pendingOnly: true }), tag)
+}
+
+// ——— Exportar a .ics (RFC 5545) ——————————————————————————————————————————————
+// Un fichero para importar en Google Calendar, Outlook o Apple Calendar: una copia de las
+// fechas de hoy, no una sincronización (no hay ninguna integración activa).
+
+/** Una fecha del calendario con lo que se quiera añadir al exportarla. */
+export interface IcsEntry extends CalendarEntry {
+  /** Hora de fin (de una reunión, por ejemplo). */
+  endTime?: ClockTime
+  description?: string
+  location?: string
+  url?: string
+}
+
+export interface IcsOptions {
+  /** Nombre del calendario al importarlo. */
+  calName: string
+  /** Zona horaria de las horas (la del estudio). */
+  timeZone: string
+  /** Momento de la exportación (DTSTAMP). Por defecto, ahora. */
+  now?: Date
+}
+
+const CRLF = '\r\n'
+const encoder = new TextEncoder()
+const pad2 = (n: number) => String(n).padStart(2, '0')
+
+/** Escapa un texto (TEXT de RFC 5545): barra, punto y coma, coma y saltos de línea. */
+export const icsText = (s: string) =>
+  s
+    .replace(/\\/g, '\\\\')
+    .replace(/;/g, '\\;')
+    .replace(/,/g, '\\,')
+    .replace(/\r\n|\r|\n/g, '\\n')
+
+/** Pliega una línea a 75 octetos (sin partir un carácter UTF-8): las siguientes empiezan por un espacio. */
+export function foldIcsLine(line: string): string {
+  if (encoder.encode(line).length <= 75) return line
+  const parts: string[] = []
+  let current = ''
+  let bytes = 0
+  let limit = 75
+  for (const ch of line) {
+    const n = encoder.encode(ch).length
+    if (bytes + n > limit) {
+      parts.push(current)
+      current = ''
+      bytes = 0
+      limit = 74
+    }
+    current += ch
+    bytes += n
+  }
+  parts.push(current)
+  return parts.join(`${CRLF} `)
+}
+
+const icsDate = (d: ISODate) => d.replace(/-/g, '')
+const icsLocal = (d: ISODate, time: ClockTime) => `${icsDate(d)}T${time.replace(':', '')}00`
+const icsStamp = (instant: Date) =>
+  `${instant.getUTCFullYear()}${pad2(instant.getUTCMonth() + 1)}${pad2(instant.getUTCDate())}T${pad2(instant.getUTCHours())}${pad2(instant.getUTCMinutes())}${pad2(instant.getUTCSeconds())}Z`
+const icsOffset = (minutes: number) => `${minutes < 0 ? '-' : '+'}${pad2(Math.floor(Math.abs(minutes) / 60))}${pad2(Math.abs(minutes) % 60)}`
+
+/** Minutos que la zona va por delante de UTC en ese instante. */
+function zoneOffset(fmt: Intl.DateTimeFormat, ms: number): number {
+  const p = Object.fromEntries(fmt.formatToParts(new Date(ms)).map((x) => [x.type, x.value]))
+  const local = Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour % 24, +p.minute, +p.second)
+  return Math.round((local - Math.floor(ms / 1000) * 1000) / 60_000)
+}
+
+/**
+ * VTIMEZONE de una zona para esos años: sus cambios de hora reales (los da Intl), cada uno
+ * con su hora local de antes del cambio, como pide RFC 5545.
+ */
+function vtimezone(timeZone: string, fromYear: number, toYear: number): string[] {
+  const fmt = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    hourCycle: 'h23',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  })
+  const DAY = 86_400_000
+  const MIN = 60_000
+  const start = Date.UTC(fromYear, 0, 1)
+  const end = Date.UTC(toYear + 1, 0, 1)
+  const changes: { at: number; from: number; to: number }[] = []
+  let prev = zoneOffset(fmt, start)
+  const initial = prev
+  for (let t = start; t < end; t += DAY) {
+    const next = zoneOffset(fmt, t + DAY)
+    if (next === prev) continue
+    // El minuto exacto del cambio, entre t y t + 1 día.
+    let lo = t
+    let hi = t + DAY
+    while (hi - lo > MIN) {
+      const mid = lo + Math.floor((hi - lo) / 2 / MIN) * MIN
+      if (zoneOffset(fmt, mid) === prev) lo = mid
+      else hi = mid
+    }
+    changes.push({ at: hi, from: prev, to: next })
+    prev = next
+  }
+  const wall = (ms: number) => icsStamp(new Date(ms)).slice(0, 15)
+  const observance = (type: 'STANDARD' | 'DAYLIGHT', at: number, from: number, to: number) => [
+    `BEGIN:${type}`,
+    `DTSTART:${wall(at + from * MIN)}`,
+    `TZOFFSETFROM:${icsOffset(from)}`,
+    `TZOFFSETTO:${icsOffset(to)}`,
+    `END:${type}`,
+  ]
+  // Lo que rige desde el 1 de enero del primer año (a las 0:00 de allí) hasta el primer cambio.
+  const firstType = changes.length && changes[0].to < initial ? 'DAYLIGHT' : 'STANDARD'
+  return [
+    'BEGIN:VTIMEZONE',
+    `TZID:${timeZone}`,
+    ...observance(firstType, start - initial * MIN, initial, initial),
+    ...changes.flatMap((c) => observance(c.to > c.from ? 'DAYLIGHT' : 'STANDARD', c.at, c.from, c.to)),
+    'END:VTIMEZONE',
+  ]
+}
+
+/**
+ * El calendario como fichero iCalendar (RFC 5545): un VEVENT por fecha, con UID estable
+ * («entrada@studio-hub», así al volver a importarlo se actualiza en vez de duplicarse).
+ * Los días completos van con VALUE=DATE y DTEND exclusivo (el día siguiente al último);
+ * con hora, en la zona del estudio (TZID y su VTIMEZONE). Lo no confirmado va TENTATIVE.
+ * Líneas con CRLF y plegadas a 75 octetos.
+ */
+export function toICS(entries: readonly IcsEntry[], opts: IcsOptions): string {
+  const timeZone = isValidTimeZone(opts.timeZone) ? opts.timeZone : DEFAULT_TIME_ZONE
+  const stamp = icsStamp(opts.now ?? new Date())
+  // Con hora: si dura varios días sin hora de fin, se exporta como días completos (no se inventa el fin).
+  const timed = (e: IcsEntry) => !!e.time && (!e.endDate || e.endDate === e.date || !!e.endTime)
+  const lines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Studio Hub//Calendario del estudio//ES',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    `NAME:${icsText(opts.calName)}`,
+    `X-WR-CALNAME:${icsText(opts.calName)}`,
+    `X-WR-TIMEZONE:${timeZone}`,
+  ]
+  const withTime = entries.filter(timed)
+  if (withTime.length) {
+    const years = withTime.flatMap((e) => [yearOf(e.date), yearOf(e.endDate ?? e.date)])
+    lines.push(...vtimezone(timeZone, Math.min(...years), Math.max(...years)))
+  }
+  for (const e of entries) {
+    lines.push('BEGIN:VEVENT', `UID:${icsText(`${e.id}@studio-hub`)}`, `DTSTAMP:${stamp}`)
+    if (timed(e)) {
+      lines.push(`DTSTART;TZID=${timeZone}:${icsLocal(e.date, e.time!)}`)
+      const endDay = e.endDate ?? e.date
+      if (e.endTime && (endDay > e.date || e.endTime > e.time!)) lines.push(`DTEND;TZID=${timeZone}:${icsLocal(endDay, e.endTime)}`)
+    } else {
+      lines.push(`DTSTART;VALUE=DATE:${icsDate(e.date)}`, `DTEND;VALUE=DATE:${icsDate(addDays(e.endDate && e.endDate > e.date ? e.endDate : e.date, 1))}`)
+    }
+    lines.push(`SUMMARY:${icsText(e.title)}`)
+    if (e.description) lines.push(`DESCRIPTION:${icsText(e.description)}`)
+    if (e.location) lines.push(`LOCATION:${icsText(e.location)}`)
+    if (e.url) lines.push(`URL:${e.url}`)
+    lines.push(`STATUS:${e.confirmed ? 'CONFIRMED' : 'TENTATIVE'}`, 'END:VEVENT')
+  }
+  lines.push('END:VCALENDAR')
+  return lines.map(foldIcsLine).join(CRLF) + CRLF
 }

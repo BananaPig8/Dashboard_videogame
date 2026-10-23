@@ -20,6 +20,7 @@ import {
   panelAlerts,
   panelEntriesByMonth,
   panelRecentDone,
+  panelToConfirm,
   pausedItems,
   pendingInAreas,
   projectsByStage,
@@ -28,7 +29,6 @@ import {
   projectSummary,
   staleEvents,
   todayItems,
-  toConfirmItems,
   undatedEvents,
   upcomingEntries,
   weeklyEvolution,
@@ -55,7 +55,7 @@ import { ProjectCard } from '../proyectos/ProjectCard'
 import { StageLine } from '../proyectos/StageLine'
 
 /** Días que abarca «Próximas fechas» (el bloque y su cifra). */
-export const UPCOMING_DAYS = 60
+const UPCOMING_DAYS = 60
 /** Fechas que enseña el bloque fuera del modo foco (el resto, en el calendario). */
 const AGENDA_LIMIT = 8
 
@@ -67,7 +67,7 @@ const REASON: Record<TodayReason, { tone: 'danger' | 'warning' | 'info' | 'speci
   review: { tone: 'special', icon: 'eye' },
 }
 
-export function ReasonPill({ reason }: { reason: TodayReason }) {
+function ReasonPill({ reason }: { reason: TodayReason }) {
   const r = REASON[reason]
   return (
     <Pill tone={r.tone} icon={r.icon}>
@@ -119,8 +119,17 @@ export const WIDGETS: Record<WidgetId, WidgetDef> = {
   builds: { icon: 'box', Body: BuildsBody, Action: () => <ScopedMore to="/builds" label={t('secciones.panel.builds.all')} /> },
   publish: { icon: 'rocket', Body: PublishBody, Action: () => <ScopedMore to="/publicacion?vista=lanzamiento" label={t('secciones.panel.publish.steps')} /> },
   feedback: { icon: 'message', Body: FeedbackBody, Action: () => <ScopedMore to="/feedback" label={t('secciones.panel.feedback.all')} /> },
-  evolution: { icon: 'activity', full: true, Body: EvolutionBody, Action: () => <ScopedMore to="/estadisticas?vista=actividad" label={t('secciones.panel.evolution.stats')} /> },
-  decisions: { icon: 'scale', Body: DecisionsBody, Action: () => <ScopedMore to="/documentacion?tipo=decisiones" label={t('secciones.panel.decisions.log')} /> },
+  evolution: {
+    icon: 'activity',
+    full: true,
+    Body: EvolutionBody,
+    Action: () => <ScopedMore to="/estadisticas?vista=actividad" label={t('secciones.panel.evolution.stats')} />,
+  },
+  decisions: {
+    icon: 'scale',
+    Body: DecisionsBody,
+    Action: () => <ScopedMore to="/documentacion?tipo=decisiones" label={t('secciones.panel.decisions.log')} />,
+  },
   recent: { icon: 'check', Body: RecentBody, Action: () => <ScopedMore to="/builds?vista=cambios" label={t('secciones.panel.recent.history')} /> },
   resources: { icon: 'book', Body: ResourcesBody, Action: () => <ScopedMore to="/recursos" label={t('secciones.panel.resources.all')} /> },
 }
@@ -148,7 +157,9 @@ export function ProjectSummaryTab() {
         ) : (
           <Empty
             icon="edit"
-            action={canEdit ? { label: t('secciones.panel.about.write'), icon: 'edit', onClick: () => edit({ collection: 'projects', id: project.id }) } : undefined}
+            action={
+              canEdit ? { label: t('secciones.panel.about.write'), icon: 'edit', onClick: () => edit({ collection: 'projects', id: project.id }) } : undefined
+            }
           >
             {t('secciones.panel.about.empty')}
           </Empty>
@@ -283,7 +294,13 @@ export function WidgetOrderList({
               {WIDGETS[id].studioOnly && <span className="muted small"> · {t('customize.onlyStudio')}</span>}
             </span>
           </label>
-          <button type="button" className="icon-btn small" onClick={() => onMove(id, -1)} disabled={n === 0} aria-label={`${t('actions.moveUp')}: ${tr(`widgets.${id}.title`)}`}>
+          <button
+            type="button"
+            className="icon-btn small"
+            onClick={() => onMove(id, -1)}
+            disabled={n === 0}
+            aria-label={`${t('actions.moveUp')}: ${tr(`widgets.${id}.title`)}`}
+          >
             <Icon name="arrowUp" size={14} />
           </button>
           <button
@@ -308,7 +325,7 @@ function KpisBody({ data, scope, today }: WidgetProps) {
   const items = itemsOf(data, scope)
   const blocked = blockedItems(data, scope).length
   const overdue = overdueItems(data, today, scope).length
-  const confirm = toConfirmItems(data, scope).length
+  const confirm = panelToConfirm(data, scope)
   const next = upcomingEntries(data, today, UPCOMING_DAYS, scope).length
   const undated = undatedEvents(data, scope).length
   const builds = currentBuilds(data, scope).filter((b) => b.status === 'published' || b.status === 'ready').length
@@ -326,8 +343,25 @@ function KpisBody({ data, scope, today }: WidgetProps) {
       />
       <Stat label={t('secciones.panel.kpis.today')} value={todayItems(data, today, scope).length} tone="info" icon="sun" to={href('/tareas?vista=hoy')} />
       <Stat label={t('secciones.panel.kpis.overdue')} value={overdue} tone={overdue ? 'danger' : 'neutral'} icon="clock" to={href('/tareas?filtro=vencidas')} />
-      <Stat label={t('secciones.panel.kpis.blocked')} value={blocked} tone={blocked ? 'danger' : 'neutral'} icon="lock" to={href('/tareas?filtro=bloqueadas')} />
-      <Stat label={t('secciones.panel.kpis.toConfirm')} value={confirm} tone={confirm ? 'warning' : 'neutral'} icon="question" to={href('/tareas?estado=to_confirm')} />
+      <Stat
+        label={t('secciones.panel.kpis.blocked')}
+        value={blocked}
+        tone={blocked ? 'danger' : 'neutral'}
+        icon="lock"
+        to={href('/tareas?filtro=bloqueadas')}
+      />
+      <Stat
+        label={t('secciones.panel.kpis.toConfirm')}
+        value={confirm.status}
+        hint={
+          confirm.unverified
+            ? t(confirm.unverified === 1 ? 'secciones.panel.kpis.unverifiedOne' : 'secciones.panel.kpis.unverifiedOther', { n: confirm.unverified })
+            : undefined
+        }
+        tone={confirm.status ? 'warning' : 'neutral'}
+        icon="question"
+        to={href('/tareas?estado=to_confirm')}
+      />
       <Stat
         label={t('secciones.panel.kpis.upcoming')}
         value={next}
@@ -360,7 +394,19 @@ const ALERT_ICON: Record<NotificationKind, IconName> = {
 }
 
 /** Avisos (los de la campana): icono y texto de qué pasa; al pulsarlos se abre lo que avisan. */
-function AlertList({ alerts, data, showProject, today, year }: { alerts: StudioNotification[]; data: StudioData; showProject: boolean; today: string; year: number }) {
+function AlertList({
+  alerts,
+  data,
+  showProject,
+  today,
+  year,
+}: {
+  alerts: StudioNotification[]
+  data: StudioData
+  showProject: boolean
+  today: string
+  year: number
+}) {
   const { edit } = useUI()
   const fmt = useFormat()
   return (
@@ -551,7 +597,7 @@ function BlockedBody({ data, scope, year }: WidgetProps) {
   )
 }
 
-export function EventLine({ event, data, today, year }: { event: StudioEvent; data: StudioData; today: string; year: number }) {
+function EventLine({ event, data, today, year, showProject }: { event: StudioEvent; data: StudioData; today: string; year: number; showProject: boolean }) {
   const { edit } = useUI()
   const fmt = useFormat()
   const project = data.projects.find((p) => p.id === event.projectId)
@@ -574,7 +620,7 @@ export function EventLine({ event, data, today, year }: { event: StudioEvent; da
         <div className="item-meta">
           <span className="meta-date">{EVENT_TYPES[event.type]}</span>
           {event.location && <span className="meta-date">{event.location}</span>}
-          <ProjectChip project={project} />
+          {showProject && <ProjectChip project={project} />}
         </div>
       </div>
       <EventStatusPill status={event.status} />
@@ -653,7 +699,7 @@ function AgendaBody({ data, scope, today, year, fmt, focus }: WidgetProps) {
           <h3 className="subhead">{t('secciones.panel.agenda.stale')}</h3>
           <ul className="agenda-list">
             {stale.map((ev) => (
-              <EventLine key={ev.id} event={ev} data={data} today={today} year={year} />
+              <EventLine key={ev.id} event={ev} data={data} today={today} year={year} showProject={!scope} />
             ))}
           </ul>
         </div>
@@ -663,7 +709,7 @@ function AgendaBody({ data, scope, today, year, fmt, focus }: WidgetProps) {
           <h3 className="subhead">{t('secciones.panel.agenda.undated')}</h3>
           <ul className="agenda-list">
             {undated.map((ev) => (
-              <EventLine key={ev.id} event={ev} data={data} today={today} year={year} />
+              <EventLine key={ev.id} event={ev} data={data} today={today} year={year} showProject={!scope} />
             ))}
           </ul>
         </div>
@@ -793,7 +839,9 @@ function FeedbackBody({ data, scope, year, fmt }: WidgetProps) {
         </ul>
       )}
       {open.length > 0 && addressed > 0 && (
-        <p className="muted small">{t(addressed === 1 ? 'secciones.panel.feedback.addressedOne' : 'secciones.panel.feedback.addressedOther', { n: addressed })}</p>
+        <p className="muted small">
+          {t(addressed === 1 ? 'secciones.panel.feedback.addressedOne' : 'secciones.panel.feedback.addressedOther', { n: addressed })}
+        </p>
       )}
     </>
   )

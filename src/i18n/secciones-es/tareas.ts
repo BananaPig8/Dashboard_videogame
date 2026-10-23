@@ -3,6 +3,7 @@
 export const tareas = {
   title: 'Tareas',
   subtitle: 'Tareas, funcionalidades, hitos, decisiones e incidencias de todos los proyectos',
+  subtitleIn: 'Tareas, funcionalidades, hitos, decisiones e incidencias de {project}',
   actions: {
     new: 'Nueva tarea',
     viewName: 'Tareas · {view}',
@@ -117,6 +118,7 @@ export const tareas = {
     pickTitle: 'Elegir qué hacer',
     pickSubtitle: 'Lo abierto y en marcha, por prioridad',
     pickEmpty: 'No hay nada abierto en marcha.',
+    pickEmptyMine: 'No hay nada más tuyo abierto. Lo que te asignen saldrá aquí.',
     addToday: 'Hoy',
     addTodayLabel: 'Añadir «{title}» a hoy',
     blockedTitle: 'Bloqueado',

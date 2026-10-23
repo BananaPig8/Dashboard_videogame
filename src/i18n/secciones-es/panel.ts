@@ -38,6 +38,8 @@ export const panel = {
     overdue: 'Vencidas',
     blocked: 'Bloqueadas',
     toConfirm: 'Por confirmar',
+    unverifiedOne: 'Y 1 con datos sin verificar',
+    unverifiedOther: 'Y {n} con datos sin verificar',
     upcoming: 'Próximas fechas',
     upcomingHint: 'En los próximos 60 días',
     undatedOne: '1 evento sin fecha confirmada',

@@ -16,7 +16,8 @@ import { useScope, useUI } from '../../context'
 import { useToday } from '../../hooks'
 import { EmptyTasks } from './TareasLista'
 
-const columnLabel = (c: TaskColumn) => (c.statuses.length === 1 && c.id === c.statuses[0] ? STATUSES[c.statuses[0]].label : tr(`secciones.tareas.board.columns.${c.id}`))
+const columnLabel = (c: TaskColumn) =>
+  c.statuses.length === 1 && c.id === c.statuses[0] ? STATUSES[c.statuses[0]].label : tr(`secciones.tareas.board.columns.${c.id}`)
 
 export function TareasTablero({ items, filtro, filtered, embedded }: { items: WorkItem[]; filtro: TaskFilter | null; filtered: boolean; embedded?: boolean }) {
   const data = useStudioData()
@@ -36,7 +37,7 @@ export function TareasTablero({ items, filtro, filtered, embedded }: { items: Wo
   }
   return (
     <>
-      <div className="board tareas-board" aria-label={t('secciones.tareas.board.label')} style={{ ['--tareas-cols' as string]: columns.length }}>
+      <div className="board tareas-board" role="region" aria-label={t('secciones.tareas.board.label')} style={{ ['--tareas-cols' as string]: columns.length }}>
         {columns.map(({ column, items: list, total }) => {
           const headingId = `tareas-col-${column.id}`
           return (
@@ -58,7 +59,12 @@ export function TareasTablero({ items, filtro, filtered, embedded }: { items: Wo
       </div>
       {board.hidden.length > 0 && (
         <p className="muted small">
-          {t('secciones.tareas.board.hidden', { n: board.hidden.length, statuses: STATUS_ORDER.filter((s) => hiddenStatuses.includes(s)).map((s) => STATUSES[s].label).join(', ') })}{' '}
+          {t('secciones.tareas.board.hidden', {
+            n: board.hidden.length,
+            statuses: STATUS_ORDER.filter((s) => hiddenStatuses.includes(s))
+              .map((s) => STATUSES[s].label)
+              .join(', '),
+          })}{' '}
           <Link to={listHref()}>{t('secciones.tareas.board.hiddenLink')}</Link>
         </p>
       )}
@@ -94,7 +100,12 @@ function TaskCard({ item, data, showProject }: { item: WorkItem; data: StudioDat
         <TagLinks tags={item.tags} />
       </div>
       {canEdit ? (
-        <select className="board-status" value={item.status} aria-label={t('secciones.tareas.board.statusOf', { title: item.title })} onChange={(e) => setStatus(e.target.value as ItemStatus)}>
+        <select
+          className="board-status"
+          value={item.status}
+          aria-label={t('secciones.tareas.board.statusOf', { title: item.title })}
+          onChange={(e) => setStatus(e.target.value as ItemStatus)}
+        >
           {STATUS_ORDER.map((s) => (
             <option key={s} value={s}>
               {STATUSES[s].label}

@@ -44,24 +44,36 @@ export function monthGrid(month: ISODate, weekStart: 0 | 1): ISODate[] {
   return days
 }
 
-/** Una entrada: icono + tipo + título (+ «sin confirmar»). */
+/** Una entrada: icono + tipo + título (+ «sin confirmar»). En la cuadrícula (compact), el tipo y «sin confirmar» van para el lector de pantalla y en la ayuda emergente, y el título se queda el sitio. */
 export function CalendarChip({ entry, onOpen, compact }: { entry: CalendarEntry; onOpen?: (e: CalendarEntry) => void; compact?: boolean }) {
   const kind = CALENDAR_KINDS[entry.kind]
+  const unconfirmed = t('calendarUi.unconfirmed')
   const body = (
     <>
       <Icon name={CALENDAR_ICON[entry.kind]} size={12} />
       <span className={compact ? 'visually-hidden' : 'cal-kind'}>{kind.label}:</span> {entry.time && <span className="cal-time">{entry.time}</span>}{' '}
       <span className="cal-title">{entry.title}</span>
-      {!entry.confirmed && <span className="cal-unconfirmed">{t('calendarUi.unconfirmed')}</span>}
+      {!entry.confirmed &&
+        (compact ? (
+          <>
+            <Icon name="question" size={11} className="cal-unconfirmed-icon" />
+            <span className="visually-hidden">{unconfirmed}</span>
+          </>
+        ) : (
+          <span className="cal-unconfirmed">{unconfirmed}</span>
+        ))}
     </>
   )
+  const hint = `${kind.label}: ${entry.time ? `${entry.time} ` : ''}${entry.title}${entry.confirmed ? '' : ` (${unconfirmed})`}`
   const cls = `cal-chip tone-${kind.tone} ${entry.done ? 'done' : ''}`
   return onOpen ? (
-    <button type="button" className={cls} onClick={() => onOpen(entry)}>
+    <button type="button" className={cls} onClick={() => onOpen(entry)} title={compact ? hint : undefined}>
       {body}
     </button>
   ) : (
-    <span className={cls}>{body}</span>
+    <span className={cls} title={compact ? hint : undefined}>
+      {body}
+    </span>
   )
 }
 
@@ -97,7 +109,9 @@ export function MonthCalendar({
     }
   }
   const weekdays = days.slice(0, 7).map((d) => fmt.weekday(d))
-  const title = fmt.monthYear(first)
+  // «Octubre de 2026»: mayúscula solo al principio (no en cada palabra).
+  const monthName = fmt.monthYear(first)
+  const title = monthName.charAt(0).toLocaleUpperCase() + monthName.slice(1)
   const inMonth = (d: ISODate) => d.slice(0, 7) === first.slice(0, 7)
   const listDays = days.filter((d) => inMonth(d) && byDay.has(d))
   return (
@@ -106,7 +120,9 @@ export function MonthCalendar({
         <button type="button" className="icon-btn" onClick={() => onMonth(shiftMonth(first, -1))} aria-label={t('calendarUi.prev')}>
           <Icon name="chevronLeft" size={16} />
         </button>
-        <h3 aria-live="polite">{title}</h3>
+        <h3 aria-live="polite" style={{ textTransform: 'none' }}>
+          {title}
+        </h3>
         <button type="button" className="icon-btn" onClick={() => onMonth(shiftMonth(first, 1))} aria-label={t('calendarUi.next')}>
           <Icon name="chevronRight" size={16} />
         </button>

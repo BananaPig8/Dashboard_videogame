@@ -2,7 +2,7 @@
 // Regla: lo que se importa de '../selectors' solo se usa dentro de funciones (hay un ciclo de import).
 import type { ISODate, StudioData, WorkItem } from '../types'
 import type { CalendarEntry } from './calendario'
-import { itemsOf, notificationsFor, type NotificationKind, type Scope, type StudioNotification } from '../selectors'
+import { isOpen, itemsOf, notificationsFor, type NotificationKind, type Scope, type StudioNotification } from '../selectors'
 
 /**
  * Los avisos que el bloque «Necesita atención» añade a la salud de cada proyecto: los que
@@ -20,6 +20,19 @@ export function panelAlerts(data: StudioData, today: ISODate, scope: Scope = nul
   return notificationsFor(data, today).filter(
     (n) => (!kinds || kinds.includes(n.kind)) && (scope === null || n.projectId === scope || (!n.projectId && n.kind !== 'budgetOver')),
   )
+}
+
+/**
+ * La cifra «Por confirmar»: lo que está en ese estado, como lo cuenta la tarjeta de cada
+ * proyecto y lo lista Tareas (?estado=to_confirm). `unverified` es lo abierto en otro estado
+ * con algún dato sin verificar (fiabilidad «por confirmar»), que se dice aparte.
+ */
+export function panelToConfirm(data: StudioData, scope: Scope = null): { status: number; unverified: number } {
+  const items = itemsOf(data, scope)
+  return {
+    status: items.filter((i) => i.status === 'to_confirm').length,
+    unverified: items.filter((i) => isOpen(i) && i.status !== 'to_confirm' && i.confidence === 'to_confirm').length,
+  }
 }
 
 /** Lo terminado, de lo más reciente a lo más antiguo (solo lo que tiene fecha de fin). */

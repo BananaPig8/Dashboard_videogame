@@ -58,7 +58,9 @@ export function ProjectCard({ summary, data, today }: { summary: ProjectSummary;
       <TagLinks tags={p.tags} />
       <footer>
         <span className="muted small">
-          {summary.lastActivity ? t('secciones.proyectos.card.lastActivity', { when: fmt.relative(summary.lastActivity, today) }) : t('secciones.proyectos.card.noActivity')}
+          {summary.lastActivity
+            ? t('secciones.proyectos.card.lastActivity', { when: fmt.relative(summary.lastActivity, today) })
+            : t('secciones.proyectos.card.noActivity')}
         </span>
         <Sparkline
           values={dailyCommits(data, today, DAYS, p.id)}

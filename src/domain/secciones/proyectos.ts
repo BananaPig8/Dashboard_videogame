@@ -2,6 +2,7 @@
 // Regla: lo que se importa de '../selectors' solo se usa dentro de funciones (hay un ciclo de import).
 import { STAGE_GROUPS, STAGES } from '../catalog'
 import type { Project, ProjectStage, StudioData } from '../types'
+import { hasTag } from '../selectors'
 
 /** Los grupos de etapas que son las subsecciones de Proyectos (?estado=). */
 export type ProjectStageGroup = keyof typeof STAGE_GROUPS
@@ -22,15 +23,15 @@ export function stageGroupOf(stage: ProjectStage): ProjectStageGroup {
 /** Por etapa (de la idea al archivo) y, dentro de cada una, por nombre. */
 export const projectsByStage = (a: Project, b: Project) => STAGES[a.stage].order - STAGES[b.stage].order || a.name.localeCompare(b.name, 'es')
 
-/** Los proyectos de un grupo (null = todos), ordenados por etapa y nombre. */
-export function projectsInGroup(data: StudioData, group: ProjectStageGroup | null): Project[] {
-  return data.projects.filter((p) => group === null || stageGroupOf(p.stage) === group).sort(projectsByStage)
+/** Los proyectos de un grupo (null = todos) y, si se da, con esa etiqueta; por etapa y nombre. */
+export function projectsInGroup(data: StudioData, group: ProjectStageGroup | null, tag: string | null = null): Project[] {
+  return data.projects.filter((p) => (group === null || stageGroupOf(p.stage) === group) && hasTag(p, tag)).sort(projectsByStage)
 }
 
-/** Cuántos proyectos hay en cada grupo. */
-export function projectGroupCounts(data: StudioData): Record<ProjectStageGroup, number> {
+/** Cuántos proyectos hay en cada grupo (con esa etiqueta, si se da). */
+export function projectGroupCounts(data: StudioData, tag: string | null = null): Record<ProjectStageGroup, number> {
   const counts = Object.fromEntries(PROJECT_GROUPS.map((g) => [g, 0])) as Record<ProjectStageGroup, number>
-  for (const p of data.projects) counts[stageGroupOf(p.stage)]++
+  for (const p of data.projects) if (hasTag(p, tag)) counts[stageGroupOf(p.stage)]++
   return counts
 }
 

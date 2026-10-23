@@ -55,9 +55,21 @@ export function TareasCalendario({ items, filtro, embedded }: { items: WorkItem[
             <Link to={nav.href(vencidas)}>{t('secciones.tareas.calendar.overdueLink')}</Link>
           </p>
         )}
-        <MonthCalendar month={month} entries={entries} today={today} onOpen={(e) => edit(e.target)} onMonth={setMonth} caption={t('secciones.tareas.calendar.caption')} />
+        <MonthCalendar
+          month={month}
+          entries={entries}
+          today={today}
+          onOpen={(e) => edit(e.target)}
+          onMonth={setMonth}
+          caption={t('secciones.tareas.calendar.caption')}
+        />
       </Card>
-      <Card title={t('secciones.tareas.calendar.undatedTitle')} icon="clock" subtitle={t('secciones.tareas.calendar.undatedSubtitle')}>
+      <Card
+        className="tareas-narrow"
+        title={t('secciones.tareas.calendar.undatedTitle')}
+        icon="clock"
+        subtitle={t('secciones.tareas.calendar.undatedSubtitle')}
+      >
         {undated.length === 0 ? (
           <Empty>{t('secciones.tareas.calendar.undatedNone')}</Empty>
         ) : (

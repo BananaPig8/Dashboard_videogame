@@ -104,10 +104,27 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
+  white-space: nowrap;
 }
 
 .assignee-tag.nobody {
   font-style: italic;
+}
+
+/* Columnas estrechas (Elegir qué hacer, Sin fecha límite): los botones y el estado bajan
+   debajo del título para que este no quede en una columna de una palabra. */
+.tareas-narrow .item-row {
+  flex-wrap: wrap;
+}
+
+.tareas-narrow .item-main {
+  flex-basis: calc(100% - 40px);
+}
+
+.tareas-narrow .item-side {
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: flex-end;
 }
 
 /* Tablero: tantas columnas como estados elegidos; en el móvil, se desliza de una en una. */

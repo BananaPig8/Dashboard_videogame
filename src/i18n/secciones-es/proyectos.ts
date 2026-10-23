@@ -27,7 +27,8 @@ export const proyectos = {
       title: 'En pausa',
       hint: 'Parados a propósito: no piden atención ni cuentan como activos.',
       empty: 'Ningún proyecto en pausa.',
-      emptyHint: 'Un proyecto en pausa está parado a propósito: no pide atención ni cuenta como activo. Para pausar uno, cambia su etapa a «En pausa» en su ficha.',
+      emptyHint:
+        'Un proyecto en pausa está parado a propósito: no pide atención ni cuenta como activo. Para pausar uno, cambia su etapa a «En pausa» en su ficha.',
     },
     lanzados: {
       title: 'Lanzados',

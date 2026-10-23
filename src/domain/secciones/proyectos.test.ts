@@ -5,7 +5,18 @@ import { isProjectStageGroup, PROJECT_GROUPS, projectGroupCounts, projectsInGrou
 import { SCHEMA_VERSION, type ProjectStage, type StudioData } from '../types'
 import { validateStudioData } from '../validate'
 
-const project = (id: string, stage: ProjectStage, name = id) => ({ id, slug: id, name, description: '', platforms: [], stage, color: '#000', versions: [], tags: [], links: [] })
+const project = (id: string, stage: ProjectStage, name = id, tags: string[] = []) => ({
+  id,
+  slug: id,
+  name,
+  description: '',
+  platforms: [],
+  stage,
+  color: '#000',
+  versions: [],
+  tags,
+  links: [],
+})
 
 function data(): StudioData {
   return {
@@ -13,11 +24,11 @@ function data(): StudioData {
     schemaVersion: SCHEMA_VERSION,
     studio: { id: 's', name: 'Estudio', createdAt: '2026-01-01' },
     projects: [
-      project('zeta', 'production', 'Zeta'),
+      project('zeta', 'production', 'Zeta', ['godot']),
       project('alfa', 'production', 'Alfa'),
       project('salida', 'release'),
       project('idea', 'idea'),
-      project('publicado', 'live'),
+      project('publicado', 'live', 'publicado', ['Godot']),
       project('parado', 'paused'),
       project('viejo', 'archived'),
     ],
@@ -54,6 +65,12 @@ describe('proyectos por grupo de etapas', () => {
     expect(stages.production).toBe(2)
     expect(stages.polish).toBe(0)
     expect(Object.values(stages).reduce((a, b) => a + b, 0)).toBe(7)
+  })
+
+  it('con ?etiqueta=, solo los que la llevan (sin distinguir mayúsculas), en la lista y en las cifras', () => {
+    expect(projectsInGroup(data(), null, 'godot').map((p) => p.id)).toEqual(['zeta', 'publicado'])
+    expect(projectsInGroup(data(), 'activos', 'godot').map((p) => p.id)).toEqual(['zeta'])
+    expect(projectGroupCounts(data(), 'godot')).toEqual({ activos: 1, planificacion: 0, pausa: 0, lanzados: 1, archivados: 0 })
   })
 
   it('sin proyectos, todo a cero y listas vacías', () => {

@@ -104,3 +104,17 @@
     row-gap: 2px;
   }
 }
+
+/* Builds y versiones: el nombre se parte antes de empujar el estado fuera de la tarjeta. */
+.widget-grid .build-row > :first-child {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 640px) {
+  /* Como las demás filas: el estado baja a su propia línea. */
+  .widget-grid .build-row {
+    flex-wrap: wrap;
+  }
+}

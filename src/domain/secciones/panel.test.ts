@@ -1,12 +1,23 @@
 import { describe, expect, it } from 'vitest'
 import { emptyCollections } from '../collections'
-import { PANEL_ALERT_KINDS, panelAlerts, panelEntriesByMonth, panelRecentDone, upcomingEntries } from '../selectors'
+import { PANEL_ALERT_KINDS, panelAlerts, panelEntriesByMonth, panelRecentDone, panelToConfirm, upcomingEntries } from '../selectors'
 import { SCHEMA_VERSION, type StudioData, type WorkItem } from '../types'
 import { validateStudioData } from '../validate'
 
 const TODAY = '2026-10-19'
 const src = [{ type: 'manual' as const, ref: 'prueba' }]
-const project = (id: string) => ({ id, slug: id, name: id, description: '', platforms: [], stage: 'production' as const, color: '#000', versions: [], tags: [], links: [] })
+const project = (id: string) => ({
+  id,
+  slug: id,
+  name: id,
+  description: '',
+  platforms: [],
+  stage: 'production' as const,
+  color: '#000',
+  versions: [],
+  tags: [],
+  links: [],
+})
 const item = (id: string, over: Partial<WorkItem> = {}): WorkItem => ({
   id,
   projectId: 'a',
@@ -57,8 +68,29 @@ function data(): StudioData {
       { id: 'r-hecho', title: 'Ya hecho', date: '2026-10-18', done: true },
     ],
     transactions: [
-      { id: 't-estudio', kind: 'expense', category: 'events', description: 'Stand', amount: 50000, date: '2026-10-05', status: 'done', sources: src, confidence: 'verified' },
-      { id: 't-b', kind: 'expense', projectId: 'b', category: 'assets', description: 'Música', amount: 30000, date: '2026-10-06', status: 'done', sources: src, confidence: 'verified' },
+      {
+        id: 't-estudio',
+        kind: 'expense',
+        category: 'events',
+        description: 'Stand',
+        amount: 50000,
+        date: '2026-10-05',
+        status: 'done',
+        sources: src,
+        confidence: 'verified',
+      },
+      {
+        id: 't-b',
+        kind: 'expense',
+        projectId: 'b',
+        category: 'assets',
+        description: 'Música',
+        amount: 30000,
+        date: '2026-10-06',
+        status: 'done',
+        sources: src,
+        confidence: 'verified',
+      },
     ],
     budgets: [
       { id: 'p-estudio', name: 'Ferias', category: 'events', amount: 40000, from: '2026-01-01', to: '2026-12-31' },
@@ -100,16 +132,26 @@ describe('panel: lo terminado', () => {
   })
 })
 
+describe('panel: por confirmar', () => {
+  it('cuenta el estado como Tareas y aparte lo abierto con datos sin verificar', () => {
+    const d = data()
+    d.items.push(
+      item('estado', { status: 'to_confirm' }),
+      item('estado-dato', { status: 'to_confirm', confidence: 'to_confirm' }),
+      item('dato', { status: 'in_progress', confidence: 'to_confirm' }),
+      item('dato-hecho', { status: 'done', completedAt: '2026-10-01', confidence: 'to_confirm' }),
+      item('dato-b', { projectId: 'b', confidence: 'to_confirm' }),
+    )
+    expect(panelToConfirm(d)).toEqual({ status: 2, unverified: 2 })
+    expect(panelToConfirm(d, 'a')).toEqual({ status: 2, unverified: 1 })
+    expect(panelToConfirm(data())).toEqual({ status: 0, unverified: 0 })
+  })
+})
+
 describe('panel: próximas fechas', () => {
   it('salen del calendario unificado y se agrupan por mes', () => {
     const next = upcomingEntries(data(), TODAY, 60, 'a')
-    expect(next.map((e) => e.id)).toEqual([
-      'reminders:r-a:date',
-      'events:feria:registration',
-      'releases:demo:target',
-      'events:feria:date',
-      'items:limite:due',
-    ])
+    expect(next.map((e) => e.id)).toEqual(['reminders:r-a:date', 'events:feria:registration', 'releases:demo:target', 'events:feria:date', 'items:limite:due'])
     const months = panelEntriesByMonth(next)
     expect(months.map((m) => [m.month, m.entries.length])).toEqual([
       ['2026-10', 4],

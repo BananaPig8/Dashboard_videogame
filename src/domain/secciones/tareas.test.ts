@@ -23,7 +23,18 @@ import {
 
 const TODAY = '2026-10-19'
 const src = [{ type: 'manual' as const, ref: 'prueba' }]
-const project = (id: string) => ({ id, slug: id, name: id, description: '', platforms: [], stage: 'production' as const, color: '#000', versions: [], tags: [], links: [] })
+const project = (id: string) => ({
+  id,
+  slug: id,
+  name: id,
+  description: '',
+  platforms: [],
+  stage: 'production' as const,
+  color: '#000',
+  versions: [],
+  tags: [],
+  links: [],
+})
 const item = (id: string, over: Partial<WorkItem> = {}): WorkItem => ({
   id,
   projectId: 'p',
@@ -181,7 +192,9 @@ describe('tareas', () => {
 
     it('las fechas límite de las tareas dadas, sin las de otras colecciones', () => {
       const d = data()
-      d.events = [{ id: 'e', title: 'Entrega', type: 'deadline', status: 'planned', date: '2026-10-15', dateConfirmed: true, sources: src, confidence: 'verified' }]
+      d.events = [
+        { id: 'e', title: 'Entrega', type: 'deadline', status: 'planned', date: '2026-10-15', dateConfirmed: true, sources: src, confidence: 'verified' },
+      ]
       const tasks = filterTasks(d, { today: TODAY, estado: 'todos' })
       const entries = taskCalendarEntries(d, tasks, '2026-10-01', '2026-10-31')
       expect(entries.map((e) => e.target.id)).toEqual(['hecha', 'vencida', 'vence-hoy', 'futura'])

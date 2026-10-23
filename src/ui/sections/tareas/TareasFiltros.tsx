@@ -51,7 +51,11 @@ export function TareasFiltros({ vista, filtro, filtered }: Pick<TaskParams, 'vis
         </button>
         <div className="tareas-filters-more" id={panelId}>
           {showStatus && (
-            <select value={value('estado') || 'abiertos'} onChange={(e) => set('estado', e.target.value === 'abiertos' ? '' : e.target.value)} aria-label={t('secciones.tareas.filters.status')}>
+            <select
+              value={value('estado') || 'abiertos'}
+              onChange={(e) => set('estado', e.target.value === 'abiertos' ? '' : e.target.value)}
+              aria-label={t('secciones.tareas.filters.status')}
+            >
               <option value="abiertos">{t('secciones.tareas.filters.statusOpen')}</option>
               <option value="todos">{t('secciones.tareas.filters.statusAll')}</option>
               {STATUS_ORDER.map((s) => (

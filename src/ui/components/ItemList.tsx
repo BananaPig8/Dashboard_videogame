@@ -35,7 +35,10 @@ export function AssigneeTag({ item, data }: { item: WorkItem; data: StudioData }
   const member = taskAssignee(data, item)
   const name = member ? (member.active ? member.name : t('secciones.tareas.assignee.gone', { name: member.name })) : t('secciones.tareas.assignee.nobody')
   return (
-    <span className={member ? 'meta-date assignee-tag' : 'meta-date assignee-tag nobody'} title={member ? t('secciones.tareas.assignee.label', { name: member.name }) : undefined}>
+    <span
+      className={member ? 'meta-date assignee-tag' : 'meta-date assignee-tag nobody'}
+      title={member ? t('secciones.tareas.assignee.label', { name: member.name }) : undefined}
+    >
       <Icon name="user" size={12} /> {name}
     </span>
   )

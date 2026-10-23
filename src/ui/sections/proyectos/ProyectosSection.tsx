@@ -5,7 +5,6 @@ import type { ReactNode } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { STAGE_GROUPS } from '../../../domain/catalog'
 import {
-  hasTag,
   isProjectStageGroup,
   PROJECT_GROUPS,
   projectGroupCounts,
@@ -45,8 +44,8 @@ export default function ProyectosSection({ embedded }: SectionPageProps) {
   const tag = useTagFilter()
   const estado = params.get('estado')
   const group = isProjectStageGroup(estado) ? estado : null
-  const counts = projectGroupCounts(data)
-  const projects = projectsInGroup(data, group).filter((p) => hasTag(p, tag))
+  const counts = projectGroupCounts(data, tag)
+  const projects = projectsInGroup(data, group, tag)
   const childOf = (g: ProjectStageGroup) => nav.section.children.find((c) => c.value === g)!
   const groupHref = (g: ProjectStageGroup) => nav.href(childOf(g))
   const newProject = (stage?: Project['stage']) => create('projects', stage ? { stage } : undefined)
@@ -73,7 +72,11 @@ export default function ProyectosSection({ embedded }: SectionPageProps) {
         <ul>
           {PROJECT_GROUPS.map((g) => (
             <li key={g}>
-              <Link to={groupHref(g)} className={g === group ? 'proyectos-count is-current' : 'proyectos-count'} aria-current={g === group ? 'page' : undefined}>
+              <Link
+                to={groupHref(g)}
+                className={g === group ? 'proyectos-count is-current' : 'proyectos-count'}
+                aria-current={g === group ? 'page' : undefined}
+              >
                 <span className="proyectos-count-value">{counts[g]}</span>
                 <span className="proyectos-count-label">{t(`secciones.proyectos.groups.${g}.title`)}</span>
               </Link>
@@ -103,7 +106,9 @@ export default function ProyectosSection({ embedded }: SectionPageProps) {
               subtitle={t(`secciones.proyectos.groups.${g}.hint`)}
               icon="folder"
               action={
-                <span className="muted small">{inGroup.length === 1 ? t('secciones.proyectos.countOne') : t('secciones.proyectos.countOther', { n: inGroup.length })}</span>
+                <span className="muted small">
+                  {inGroup.length === 1 ? t('secciones.proyectos.countOne') : t('secciones.proyectos.countOther', { n: inGroup.length })}
+                </span>
               }
             >
               <div className="project-grid">{inGroup.map(card)}</div>
@@ -136,8 +141,10 @@ function GroupList({
   if (projects.length > 0) return <div className="project-grid">{children}</div>
   if (tag) return <Empty icon="tag">{t('secciones.proyectos.noneWithTag')}</Empty>
   return (
-    <Empty icon="folder" action={onNew ? { label: t('secciones.proyectos.new'), onClick: onNew } : undefined}>
-      <strong>{t(`secciones.proyectos.groups.${group}.empty`)}</strong> {t(`secciones.proyectos.groups.${group}.emptyHint`)}
-    </Empty>
+    <div className="proyectos-empty">
+      <Empty icon="folder" action={onNew ? { label: t('secciones.proyectos.new'), onClick: onNew } : undefined}>
+        <strong>{t(`secciones.proyectos.groups.${group}.empty`)}</strong> {t(`secciones.proyectos.groups.${group}.emptyHint`)}
+      </Empty>
+    </div>
   )
 }
