@@ -1,0 +1,184 @@
+/* Builds y versiones: tablas de builds, historial por build e incidencias por versión. */
+
+.builds-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.builds-intro {
+  margin: 0;
+  max-width: 72ch;
+  color: var(--text-2);
+  font-size: 0.9rem;
+}
+
+.builds-versions {
+  margin: 0 0 var(--space-2);
+}
+
+/* Tabla de builds: el nombre con su versión, su fiabilidad y sus notas. */
+.builds-table .builds-name {
+  text-align: left;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: inherit;
+  color: inherit;
+  min-width: 220px;
+  padding: var(--cell-y) 10px var(--cell-y) 0;
+  vertical-align: top;
+}
+
+.builds-name-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.builds-table .item-meta {
+  margin-top: var(--space-1);
+}
+
+.builds-table .item-detail {
+  margin: var(--space-1) 0 0;
+  max-width: 60ch;
+}
+
+/* Historial: un tramo por build (o por día con builds). */
+.builds-stretches {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.builds-stretch {
+  position: relative;
+  padding: var(--space-3) 0 0 var(--space-4);
+  border-left: 2px solid var(--border-strong);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.builds-stretch.open {
+  border-left-style: dashed;
+}
+
+.builds-stretch-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+}
+
+.builds-stretch-head h3 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.builds-stretch-builds {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.builds-stretch-builds li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+}
+
+.builds-changelog ul {
+  margin: var(--space-1) 0 0;
+  padding-left: var(--space-5);
+  font-size: 0.88rem;
+}
+
+.builds-changelog h4 {
+  margin: 0;
+}
+
+.builds-done summary {
+  font-size: 0.8rem;
+  color: var(--text-3);
+}
+
+.builds-nolog {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  margin: 0;
+}
+
+.builds-done .history-items {
+  margin-top: var(--space-2);
+}
+
+.builds-undated {
+  margin-top: var(--space-4);
+}
+
+.builds-undated .pills {
+  list-style: none;
+  margin: var(--space-1) 0 0;
+  padding: 0;
+}
+
+/* Incidencias por versión. */
+.builds-issues {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.builds-issue-build {
+  margin-bottom: var(--space-2);
+}
+
+.builds-issues .subhead {
+  margin: var(--space-3) 0 var(--space-1);
+}
+
+.builds-closed {
+  margin-top: var(--space-3);
+}
+
+.builds-closed > summary {
+  margin-bottom: var(--space-2);
+}
+
+@media (max-width: 640px) {
+  .builds-table .builds-name {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    padding: 0 0 var(--space-1);
+    border: 0;
+  }
+
+  .builds-stretch {
+    padding-left: var(--space-3);
+  }
+
+  /* La etiqueta de cada celda, separada de su valor aunque sea larga. */
+  .builds-table td[data-label]::before {
+    margin-right: var(--space-2);
+  }
+}
+
+/* Los botones con el nombre de la build pueden ser largos: que bajen de línea. */
+.builds-nolog .btn {
+  white-space: normal;
+  text-align: left;
+  max-width: 100%;
+}

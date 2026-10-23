@@ -1,0 +1,434 @@
+[
+  {
+    "id": "idt-res-repo",
+    "projectId": "indie-dev-tycoon",
+    "title": "Repositorio de Indie Dev Tycoon",
+    "type": "repo",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon",
+    "description": "Código del juego (privado): versión web, versión de Godot, Electron y herramientas.",
+    "tags": [
+      "repo",
+      "godot",
+      "web"
+    ]
+  },
+  {
+    "id": "idt-res-rama-lucid",
+    "projectId": "indie-dev-tycoon",
+    "title": "Rama claude/lucid-lamport-fl6em4",
+    "type": "link",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/tree/claude/lucid-lamport-fl6em4",
+    "description": "Rama de trabajo; hoy lleva la Demo 1.4 y la base de Idiomas sin PR.",
+    "tags": [
+      "rama",
+      "demo",
+      "idiomas"
+    ]
+  },
+  {
+    "id": "idt-res-release-descargas",
+    "projectId": "indie-dev-tycoon",
+    "title": "Release «descargas»",
+    "type": "link",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/releases/tag/descargas",
+    "description": "Las descargas de Windows, Linux y Mac del juego y las demos; se actualiza sola con cada cambio en main.",
+    "tags": [
+      "release",
+      "descargas"
+    ]
+  },
+  {
+    "id": "idt-res-actions",
+    "projectId": "indie-dev-tycoon",
+    "title": "GitHub Actions del repositorio",
+    "type": "link",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/actions",
+    "description": "Las ejecuciones de los flujos CI, Godot, Descargas, PC y Limpiar, con sus registros y artefactos.",
+    "tags": [
+      "ci",
+      "github"
+    ]
+  },
+  {
+    "id": "idt-res-readme-descargar",
+    "projectId": "indie-dev-tycoon",
+    "title": "README: Descargar",
+    "type": "doc",
+    "path": "README.md#descargar",
+    "description": "Tabla de descargas y cómo abrir el juego en cada sistema.",
+    "tags": [
+      "readme",
+      "descargas"
+    ]
+  },
+  {
+    "id": "idt-res-readme-demo",
+    "projectId": "indie-dev-tycoon",
+    "title": "README: La demo",
+    "type": "doc",
+    "path": "README.md#la-demo",
+    "description": "Qué lleva cada demo, sus versiones, la Demo Valladolid y el modo stand.",
+    "tags": [
+      "readme",
+      "demo",
+      "feria"
+    ]
+  },
+  {
+    "id": "idt-res-readme-ranking",
+    "projectId": "indie-dev-tycoon",
+    "title": "README: El ranking",
+    "type": "doc",
+    "path": "README.md#el-ranking-demo-y-juego-completo",
+    "description": "Puntuación, tablas de Talo, cómo poner la clave, palabrotas y trampas.",
+    "tags": [
+      "readme",
+      "ranking",
+      "talo"
+    ]
+  },
+  {
+    "id": "idt-res-readme-steam",
+    "projectId": "indie-dev-tycoon",
+    "title": "README: Pasos para publicarlo en Steam",
+    "type": "guide",
+    "path": "README.md#pasos-para-publicarlo-en-steam",
+    "description": "Los cinco pasos para Steam y los nombres de API de los logros.",
+    "tags": [
+      "readme",
+      "steam"
+    ]
+  },
+  {
+    "id": "idt-res-readme-electron",
+    "projectId": "indie-dev-tycoon",
+    "title": "README: Versión de PC y Steam (Electron)",
+    "type": "doc",
+    "path": "README.md#versión-de-pc-y-steam-electron",
+    "description": "La app de Electron con logros de Steam y el uso de los minutos de Actions.",
+    "tags": [
+      "readme",
+      "electron",
+      "ci"
+    ]
+  },
+  {
+    "id": "idt-res-readme-godot",
+    "projectId": "indie-dev-tycoon",
+    "title": "README: Versión en Godot",
+    "type": "doc",
+    "path": "README.md#versión-en-godot-en-godot",
+    "description": "Comandos para exportar, comprobar, grabar el tráiler y sacar el key art, las imágenes de Steam y el roll-up.",
+    "tags": [
+      "readme",
+      "godot"
+    ]
+  },
+  {
+    "id": "idt-res-readme-firma",
+    "projectId": "indie-dev-tycoon",
+    "title": "README: Firma de los ejecutables",
+    "type": "guide",
+    "path": "README.md#firma-de-los-ejecutables",
+    "description": "Cómo se firman los .exe, los secretos que usa y el aviso de SmartScreen.",
+    "tags": [
+      "readme",
+      "firma"
+    ]
+  },
+  {
+    "id": "idt-res-readme-taskview",
+    "projectId": "indie-dev-tycoon",
+    "title": "README: Tareas del proyecto (TaskView)",
+    "type": "guide",
+    "path": "README.md#tareas-del-proyecto-taskview",
+    "description": "Cómo conectar TaskView a Claude Code con su token.",
+    "tags": [
+      "readme",
+      "taskview"
+    ]
+  },
+  {
+    "id": "idt-res-claude-md",
+    "projectId": "indie-dev-tycoon",
+    "title": "CLAUDE.md del juego",
+    "type": "doc",
+    "path": "CLAUDE.md",
+    "description": "Reglas del proyecto: idioma, los dos motores, qué comprobar antes de dar algo por hecho.",
+    "tags": [
+      "reglas",
+      "ccgs"
+    ]
+  },
+  {
+    "id": "idt-res-project-yaml",
+    "projectId": "indie-dev-tycoon",
+    "title": "project.yaml",
+    "type": "doc",
+    "path": "project.yaml",
+    "description": "Configuración de CCGS: motor, plataformas, pruebas y comandos (su versión, 0.0.5, está desfasada).",
+    "tags": [
+      "ccgs",
+      "config"
+    ]
+  },
+  {
+    "id": "idt-res-game-gd",
+    "projectId": "indie-dev-tycoon",
+    "title": "game.gd: versiones y enlaces",
+    "type": "doc",
+    "path": "godot/scripts/game.gd",
+    "description": "VERSION, DEMO_VERSION, FERIA_VERSION, STEAM_URL y DISCORD_URL de la versión de Godot.",
+    "tags": [
+      "godot",
+      "version",
+      "steam"
+    ]
+  },
+  {
+    "id": "idt-res-export-presets",
+    "projectId": "indie-dev-tycoon",
+    "title": "Presets de exportación de Godot",
+    "type": "doc",
+    "path": "godot/export_presets.cfg",
+    "description": "Presets de Windows, Linux y macOS del juego y de cada demo, con la versión del .exe.",
+    "tags": [
+      "godot",
+      "release"
+    ]
+  },
+  {
+    "id": "idt-res-steam-appid",
+    "projectId": "indie-dev-tycoon",
+    "title": "Carpeta del App ID de Steam",
+    "type": "doc",
+    "path": "desktop/steam/LEEME.txt",
+    "description": "Dónde va steam_appid.txt cuando Steam dé el App ID.",
+    "tags": [
+      "steam",
+      "electron"
+    ]
+  },
+  {
+    "id": "idt-res-flujo-ci",
+    "projectId": "indie-dev-tycoon",
+    "title": "Flujo «CI»",
+    "type": "tool",
+    "path": ".github/workflows/ci.yml",
+    "description": "Pruebas de Node y el juego en un solo HTML en cada PR y en main.",
+    "tags": [
+      "ci",
+      "web"
+    ]
+  },
+  {
+    "id": "idt-res-flujo-descargas",
+    "projectId": "indie-dev-tycoon",
+    "title": "Flujo «Descargas»",
+    "type": "tool",
+    "path": ".github/workflows/descargas.yml",
+    "description": "Compila, firma y publica en la release «descargas» con cada cambio en main.",
+    "tags": [
+      "ci",
+      "release"
+    ]
+  },
+  {
+    "id": "idt-res-flujo-godot",
+    "projectId": "indie-dev-tycoon",
+    "title": "Flujo «Godot»",
+    "type": "tool",
+    "path": ".github/workflows/godot.yml",
+    "description": "Comprobación rápida en cada PR y completa a mano o con la etiqueta «comprobación completa».",
+    "tags": [
+      "ci",
+      "godot"
+    ]
+  },
+  {
+    "id": "idt-res-flujo-escritorio",
+    "projectId": "indie-dev-tycoon",
+    "title": "Flujo «Indie Dev Tycoon para PC»",
+    "type": "tool",
+    "path": ".github/workflows/escritorio.yml",
+    "description": "Compila a mano la versión de Electron para Windows y Linux.",
+    "tags": [
+      "ci",
+      "electron"
+    ]
+  },
+  {
+    "id": "idt-res-flujo-limpiar",
+    "projectId": "indie-dev-tycoon",
+    "title": "Flujo «Limpiar descargas antiguas»",
+    "type": "tool",
+    "path": ".github/workflows/limpiar.yml",
+    "description": "Borra las descargas de ejecuciones anteriores de Actions si se llena el espacio (Actions → Run workflow). Llegó con 293d72a.",
+    "tags": [
+      "ci",
+      "github-actions"
+    ]
+  },
+  {
+    "id": "idt-res-godot-check",
+    "projectId": "indie-dev-tycoon",
+    "title": "Comprobación de Godot contra la web",
+    "type": "tool",
+    "path": "tools/godot_check.sh",
+    "description": "Bots que juegan partidas enteras en las dos versiones; «rapida» (unos 10 min) o completa (unos 40).",
+    "tags": [
+      "godot",
+      "pruebas"
+    ]
+  },
+  {
+    "id": "idt-res-partida-ui",
+    "projectId": "indie-dev-tycoon",
+    "title": "Prueba de una partida con la interfaz de Godot",
+    "type": "tool",
+    "path": "godot/tests/partida_ui.gd",
+    "description": "Juega una partida entera de un bot con la interfaz de verdad; va dentro de tools/godot_check.sh. Llegó con b937dad.",
+    "tags": [
+      "godot",
+      "pruebas"
+    ]
+  },
+  {
+    "id": "idt-res-keyart",
+    "projectId": "indie-dev-tycoon",
+    "title": "keyart.gd: key art, imágenes de Steam y roll-up",
+    "type": "tool",
+    "path": "godot/tests/keyart.gd",
+    "description": "Pinta con el propio juego el key art (16:9, 9:16 y 2:3), las cápsulas, fondos y biblioteca de Steam y el roll-up del stand; los comandos están en el README (Versión en Godot).",
+    "tags": [
+      "steam",
+      "arte",
+      "feria",
+      "keyart",
+      "godot"
+    ]
+  },
+  {
+    "id": "idt-res-capturas-steam",
+    "projectId": "indie-dev-tycoon",
+    "title": "steam.gd: capturas para la tienda",
+    "type": "tool",
+    "path": "godot/tests/steam.gd",
+    "description": "Once capturas 1920×1080 con partidas de bots. Llegó con 3a4216c.",
+    "tags": [
+      "steam",
+      "capturas",
+      "godot"
+    ]
+  },
+  {
+    "id": "idt-res-trailer",
+    "projectId": "indie-dev-tycoon",
+    "title": "Grabación del tráiler",
+    "type": "tool",
+    "path": "tools/trailer.sh",
+    "description": "Graba desde el juego el tráiler con Movie Maker y ffmpeg. Llegó con af2857a (60 s); hoy graba el de 44 s en 1080p.",
+    "tags": [
+      "trailer",
+      "marketing",
+      "godot"
+    ]
+  },
+  {
+    "id": "idt-res-qr",
+    "projectId": "indie-dev-tycoon",
+    "title": "Generador de QR",
+    "type": "tool",
+    "path": "tools/qr.py",
+    "description": "Hace los QR de Discord y de Steam para el roll-up.",
+    "tags": [
+      "qr",
+      "feria"
+    ]
+  },
+  {
+    "id": "idt-res-firma",
+    "projectId": "indie-dev-tycoon",
+    "title": "Herramientas de firma",
+    "type": "tool",
+    "path": "tools/crear_certificado.sh",
+    "description": "Crea el certificado del estudio; tools/firmar_windows.sh y .ps1 firman los .exe.",
+    "tags": [
+      "firma",
+      "windows"
+    ]
+  },
+  {
+    "id": "idt-res-arreglar-icono-exe",
+    "projectId": "indie-dev-tycoon",
+    "title": "Arreglo del icono del .exe de Windows",
+    "type": "tool",
+    "path": "tools/arreglar_icono_exe.py",
+    "description": "Después de exportar y antes de firmar, hace que Windows vea el icono del juego en el .exe de Godot. Llegó con f551537.",
+    "tags": [
+      "godot",
+      "windows",
+      "icono"
+    ]
+  },
+  {
+    "id": "idt-res-icono-gd",
+    "projectId": "indie-dev-tycoon",
+    "title": "Generador del icono del .exe",
+    "type": "tool",
+    "path": "godot/tests/icono.gd",
+    "description": "Rehace godot/icon.ico después de cambiar icon.png. Llegó con f551537.",
+    "tags": [
+      "godot",
+      "icono"
+    ]
+  },
+  {
+    "id": "idt-res-discord",
+    "projectId": "indie-dev-tycoon",
+    "title": "Discord del juego",
+    "type": "link",
+    "url": "https://discord.gg/x37cnneKQu",
+    "description": "Invitación al servidor; sale en la portada, la despedida de la demo y el roll-up.",
+    "tags": [
+      "discord",
+      "comunidad"
+    ]
+  },
+  {
+    "id": "idt-res-talo",
+    "projectId": "indie-dev-tycoon",
+    "title": "Talo",
+    "type": "tool",
+    "url": "https://trytalo.com",
+    "description": "Servicio de código abierto del ranking mundial. El juego usa las tablas demo, feria_valladolid y Jueguito; que estén creadas en Talo está por confirmar.",
+    "tags": [
+      "talo",
+      "ranking"
+    ]
+  },
+  {
+    "id": "idt-res-taskview",
+    "projectId": "indie-dev-tycoon",
+    "title": "TaskView",
+    "type": "tool",
+    "url": "https://github.com/Gimanh/taskview-community",
+    "description": "Tablero de tareas. El servidor MCP taskview-mcp está configurado en .mcp.json; falta confirmar TASKVIEW_TOKEN y si las tareas se llevan allí.",
+    "tags": [
+      "taskview",
+      "tareas"
+    ]
+  },
+  {
+    "id": "idt-res-steamworks",
+    "projectId": "indie-dev-tycoon",
+    "title": "Steamworks",
+    "type": "link",
+    "url": "https://partner.steamgames.com",
+    "description": "Cuenta de desarrollador, App ID, logros, página de la tienda y subida de builds.",
+    "tags": [
+      "steam",
+      "steamworks"
+    ]
+  }
+]
