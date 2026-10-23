@@ -2126,6 +2126,7 @@ input[type='color'] {
 /* ——— Pestañas ——————————————————————————————————————————————————————————— */
 
 .tabs {
+  position: relative;
   display: flex;
   gap: 2px;
   border-bottom: 1px solid var(--border);
@@ -3303,7 +3304,10 @@ input[type='color'] {
   min-width: 11ch;
   text-align: center;
   font-size: 1.05rem;
-  text-transform: capitalize;
+}
+
+.month-cal-head h3::first-letter {
+  text-transform: uppercase;
 }
 
 .month-grid {

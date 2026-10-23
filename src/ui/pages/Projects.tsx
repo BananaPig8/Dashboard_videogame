@@ -14,7 +14,6 @@ import { Icon } from '../components/Icon'
 import { useUI } from '../context'
 import { PageSkeleton } from '../feedback'
 import { isOldTab, migratePath, projectTabs, type NavSection, type SectionId } from '../navigation'
-import { useDocumentTitle } from '../components/SectionHeader'
 import { Popover } from '../components/Popover'
 import { usePreferences } from '../prefs'
 import { t } from '../../i18n'
@@ -73,7 +72,6 @@ export function ProjectPage() {
   const project = data.projects.find((p) => p.slug === slug)
   const tabs = projectTabs(prefs.hiddenSections)
   const current = tabs.find((s) => s.tab === tab)
-  useDocumentTitle([current && current.tab !== 'resumen' ? current.tabLabel : undefined, project?.name])
   if (!project) return <Navigate to="/proyectos" replace />
   // Pestañas antiguas (trabajo, agenda…): a las de ahora, con los filtros de la URL.
   if (isOldTab(tab)) return <Navigate to={migratePath(location.pathname + location.search)} replace />

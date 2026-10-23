@@ -10,7 +10,6 @@ import {
   projectSummary,
   staleEvents,
   todayItems,
-  toConfirmItems,
   undatedEvents,
   weeklyEvolution,
 } from './selectors'
@@ -116,9 +115,6 @@ describe('qué toca hoy', () => {
 describe('bloqueos y confirmaciones', () => {
   it('separa lo bloqueado de lo que está en pausa', () => {
     expect(blockedItems(fixture()).map((i) => i.id)).toEqual(['bloqueada'])
-  })
-  it('lista lo que hay que confirmar', () => {
-    expect(toConfirmItems(fixture(), 'a').map((i) => i.id).sort()).toEqual(['abierta', 'confirmar'])
   })
   it('separa decisiones tomadas y abiertas', () => {
     const d = decisions(fixture())

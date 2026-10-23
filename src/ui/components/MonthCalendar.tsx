@@ -120,7 +120,7 @@ export function MonthCalendar({
         <button type="button" className="icon-btn" onClick={() => onMonth(shiftMonth(first, -1))} aria-label={t('calendarUi.prev')}>
           <Icon name="chevronLeft" size={16} />
         </button>
-        <h3 aria-live="polite" style={{ textTransform: 'none' }}>
+        <h3 aria-live="polite">
           {title}
         </h3>
         <button type="button" className="icon-btn" onClick={() => onMonth(shiftMonth(first, 1))} aria-label={t('calendarUi.next')}>

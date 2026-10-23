@@ -22,6 +22,8 @@ export function MePicker({ compact }: { compact?: boolean }) {
   const me = useMe()
   const active = data.members.filter((m) => m.active)
   const [choice, setChoice] = useState(me?.id ?? active[0]?.id ?? '')
+  // Si al abrir no había nadie (o la elegida ya no está), vale la primera que haya ahora.
+  const value = active.some((m) => m.id === choice) ? choice : (me?.id ?? active[0]?.id ?? '')
   return (
     <div className={compact ? 'me-picker compact' : 'me-picker'}>
       <p>
@@ -29,14 +31,14 @@ export function MePicker({ compact }: { compact?: boolean }) {
       </p>
       {active.length > 0 && (
         <div className="me-picker-row">
-          <select value={choice} onChange={(e) => setChoice(e.target.value)} aria-label={t('me.select')}>
+          <select value={value} onChange={(e) => setChoice(e.target.value)} aria-label={t('me.select')}>
             {active.map((m) => (
               <option key={m.id} value={m.id}>
                 {m.name}
               </option>
             ))}
           </select>
-          <button type="button" className="btn btn-small btn-primary" disabled={!choice} onClick={() => updatePreferences({ meId: choice })}>
+          <button type="button" className="btn btn-small btn-primary" disabled={!value} onClick={() => updatePreferences({ meId: value })}>
             {t('me.thisIsMe')}
           </button>
         </div>

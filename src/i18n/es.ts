@@ -96,7 +96,7 @@ export const es = {
     },
     children: {
       panel: {
-        resumen: 'Resumen del estudio',
+        resumen: 'Resumen',
         actividad: 'Actividad reciente',
         fechas: 'Próximas fechas',
         prioritarias: 'Tareas prioritarias',

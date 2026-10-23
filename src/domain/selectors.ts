@@ -80,13 +80,6 @@ export function pausedItems(data: StudioData, scope: Scope = null): WorkItem[] {
   return itemsOf(data, scope).filter((i) => i.status === 'paused').sort(byPriority)
 }
 
-/** Lo que el estudio tiene que confirmar: estado «por confirmar» o dato sin fuente. */
-export function toConfirmItems(data: StudioData, scope: Scope = null): WorkItem[] {
-  return itemsOf(data, scope)
-    .filter((i) => isOpen(i) && (i.status === 'to_confirm' || i.confidence === 'to_confirm'))
-    .sort(byPriority)
-}
-
 export function overdueItems(data: StudioData, today: ISODate, scope: Scope = null): WorkItem[] {
   return itemsOf(data, scope).filter((i) => isOpen(i) && !!i.dueDate && i.dueDate < today)
 }
