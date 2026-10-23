@@ -1,0 +1,11 @@
+// La web en Cloudflare Workers: solo ficheros estáticos (la compilación de Vite en dist/),
+// sin código de servidor. El nombre tiene que ser el del Worker en el panel de Cloudflare.
+// La protege Cloudflare Access (ver README, «La web privada»).
+{
+  "name": "dashboardmytu",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  }
+}

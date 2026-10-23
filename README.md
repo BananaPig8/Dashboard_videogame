@@ -62,34 +62,27 @@ PW_PATH=$(npm root -g)/playwright node e2e/recorrido.mjs http://localhost:4173 /
 
 Hace falta Node 22 (`.node-version`).
 
-## La web privada (Cloudflare Pages + Cloudflare Access)
+## La web privada (Cloudflare Workers + Cloudflare Access)
 
-Studio Hub se publica como web normal de navegador en **Cloudflare Pages**, detrás de
-**Cloudflare Access**: para entrar hay que escribir un correo autorizado y el código que
-llega a ese correo. Cada cambio en `main` se publica solo. Se configura una vez:
+Studio Hub se publica como web normal de navegador en **Cloudflare Workers** (solo
+ficheros estáticos, sin servidor: `wrangler.jsonc` sirve `dist/`), detrás de
+**Cloudflare Access**: para entrar hay que identificarse con un correo autorizado. Cada
+cambio en la rama de producción se publica solo. Se configura una vez:
 
-1. **Proyecto de Pages.** En el panel de Cloudflare: *Workers & Pages → Create
-   application → Pages → Connect to Git*, autoriza GitHub y elige este repositorio.
-   - *Production branch*: `main`
-   - *Framework preset*: ninguno (o Vite)
-   - *Build command*: `npm run build`
-   - *Build output directory*: `dist`
-
-   *Save and Deploy*. La web queda en `https://<proyecto>.pages.dev`.
-2. **Proteger la web y las vistas previas.** En el proyecto: *Settings → General →
-   Enable access policy* (la primera vez, Cloudflare pide un nombre de equipo para Zero
-   Trust y elegir plan: el gratuito vale para hasta 50 personas). Eso protege las vistas previas de las ramas, pero **no** la
-   dirección principal. Para protegerla también: en la política creada, *Manage*; en
-   *Access → Applications*, el proyecto → *Configure*; en *Public hostname*, borra el `*`
-   del campo *Subdomain* y guarda (si da error, cambia el nombre de la aplicación).
-   Vuelve a *Settings → General* y marca otra vez *Enable access policy*: deben quedar
-   dos aplicaciones de Access, una para `<proyecto>.pages.dev` y otra para las vistas
-   previas.
-3. **Quién entra.** En *Zero Trust → Access → Applications*, en cada una de las dos
-   aplicaciones, edita la política: *Include → Emails* con tu correo y los de quien
-   quieras invitar. El acceso por código de un solo uso al correo viene activado.
-4. **Comprobar.** Abre `https://<proyecto>.pages.dev` en una ventana privada: tiene que
-   pedir el correo antes de enseñar nada.
+1. **El Worker.** En el panel de Cloudflare: *Workers & Pages → Create → Import a
+   repository*, este repositorio. *Build command*: `npm run build`; *Deploy command*:
+   `npx wrangler deploy` (lee `wrangler.jsonc`). El nombre del Worker tiene que ser el de
+   `wrangler.jsonc` (`dashboardmytu`); si lo cambias en un sitio, cámbialo en el otro.
+2. **Proteger la web (y las vistas previas).** En el Worker: pestaña *Access → Protect
+   this Worker behind Access → All traffic* («Previews only» dejaría abierta la web
+   principal) y *Apply Access*. Así quedan protegidas la dirección `*.workers.dev`, las
+   vistas previas y cualquier dominio propio del Worker.
+3. **Quién entra.** La política que se crea deja entrar a los miembros de tu cuenta de
+   Cloudflare (o a un dominio de correo). Para dejar entrar a personas concretas: en
+   *Zero Trust → Access → Applications*, la aplicación del Worker → su política →
+   *Include → Emails* con tu correo y los de quien quieras invitar.
+4. **Comprobar.** Abre la dirección del Worker en una ventana privada: tiene que pedir
+   identificarse antes de enseñar nada.
 
 Lo que se apunta en la web se guarda **en el navegador** de cada persona (localStorage):
 no pasa solo a otros dispositivos ni lo ven los demás. Para llevarlo a otro sitio,
@@ -97,7 +90,8 @@ no pasa solo a otros dispositivos ni lo ven los demás. Para llevarlo a otro sit
 repositorio de GitHub, que es público.
 
 `public/_headers` pide a los buscadores que no la indexen y cierra lo que la web no usa
-(cámara, micrófono, ubicación, incrustarla en otra página).
+(cámara, micrófono, ubicación, incrustarla en otra página). La misma compilación sirve
+también en Cloudflare Pages (directorio de salida `dist`) si algún día se prefiere.
 
 ## Otra forma: la página de claude.ai (opcional)
 

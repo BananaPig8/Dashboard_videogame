@@ -1,4 +1,4 @@
-# Cabeceras de la web publicada en Cloudflare Pages (la protege Cloudflare Access).
+# Cabeceras de la web publicada en Cloudflare (Workers o Pages); la protege Cloudflare Access.
 /*
   X-Robots-Tag: noindex, nofollow
   X-Content-Type-Options: nosniff
