@@ -1,0 +1,165 @@
+[
+  {
+    "id": "idt-release-demo-1-3",
+    "projectId": "indie-dev-tycoon",
+    "kind": "demo",
+    "name": "Demo 1.3",
+    "version": "1.3",
+    "status": "released",
+    "releasedAt": "2026-10-11",
+    "notes": "Siete años (hasta 1991) o hasta la primera oficina. En la release desde el 11-10 (PR #31); la sustituirá la Demo 1.4 cuando se fusione la rama. En la release «descargas» de GitHub: el repositorio es privado y solo la descarga quien tiene acceso.",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "ba1f4c4",
+        "date": "2026-10-11",
+        "note": "La demo pasa a la 1.3"
+      },
+      {
+        "type": "pr",
+        "ref": "#31",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/31",
+        "date": "2026-10-11"
+      },
+      {
+        "type": "release",
+        "ref": "descargas",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/releases/tag/descargas",
+        "date": "2026-10-13",
+        "note": "«Descargas (juego v0.0.8 · demo v1.3)»"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-release-demo-1-3-v2",
+    "projectId": "indie-dev-tycoon",
+    "kind": "demo",
+    "name": "Demo 1.3 V2 (barras de las fases de antes)",
+    "version": "1.3 V2",
+    "status": "released",
+    "releasedAt": "2026-10-12",
+    "notes": "La misma demo con las barras de las fases de antes, como descarga aparte desde el 12-10 (PR #32). En la rama sin fusionar pasa a ser la Demo 1.4 y se quita la descarga aparte. En la release «descargas» de GitHub: el repositorio es privado y solo la descarga quien tiene acceso.",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "d172df3",
+        "date": "2026-10-12",
+        "note": "Demo «1.3 V2»"
+      },
+      {
+        "type": "pr",
+        "ref": "#32",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/32",
+        "date": "2026-10-12"
+      },
+      {
+        "type": "release",
+        "ref": "descargas",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/releases/tag/descargas",
+        "date": "2026-10-13",
+        "note": "«demo v1.3 V2 (con las barras de las fases de antes)»"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-release-demo-valladolid-1-0",
+    "projectId": "indie-dev-tycoon",
+    "kind": "demo",
+    "name": "Demo Valladolid 1.0 (la de la feria)",
+    "version": "1.0",
+    "status": "released",
+    "releasedAt": "2026-10-12",
+    "notes": "La demo para el stand de la feria de Valladolid, con modo stand y ranking propio; descarga aparte desde el 12-10 (PR #33). En la release «descargas» de GitHub: el repositorio es privado y solo la descarga quien tiene acceso.",
+    "tags": [
+      "demo",
+      "feria"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "d04d37b",
+        "date": "2026-10-12",
+        "note": "Demo Valladolid 1.0"
+      },
+      {
+        "type": "pr",
+        "ref": "#33",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/33",
+        "date": "2026-10-12"
+      },
+      {
+        "type": "release",
+        "ref": "descargas",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/releases/tag/descargas",
+        "date": "2026-10-13",
+        "note": "«Demo Valladolid v1.0 (la de la feria)»"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-release-demo-1-4",
+    "projectId": "indie-dev-tycoon",
+    "kind": "demo",
+    "name": "Demo 1.4",
+    "version": "1.4",
+    "status": "in_progress",
+    "notes": "Una sola demo con las barras de antes (la que fue la 1.3 V2); según la rama es la que irá a Steam, pero en main sigue sin decidir. Está en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar, y no está en la release «descargas». Sin fecha.",
+    "tags": [
+      "demo",
+      "steam"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "d8eca50",
+        "date": "2026-10-14",
+        "note": "«la 1.3 V2, que es la que irá a Steam»; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+      },
+      {
+        "type": "readme",
+        "ref": "La demo",
+        "note": "En main: «Aún no está decidido si a Steam irá la 1.3 o la 1.3 V2»"
+      }
+    ],
+    "confidence": "inferred"
+  },
+  {
+    "id": "idt-release-lanzamiento-steam",
+    "projectId": "indie-dev-tycoon",
+    "kind": "launch",
+    "name": "Lanzamiento en Steam",
+    "status": "planned",
+    "targetConfirmed": false,
+    "notes": "El README y CLAUDE.md apuntan a Steam como destino de la versión de PC (la de Godot). No hay fecha, ni App ID, ni consta qué versión será: el README nombra una 1.0 del juego completo, pero no dice que sea la del lanzamiento.",
+    "tags": [
+      "steam"
+    ],
+    "sources": [
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam"
+      },
+      {
+        "type": "doc",
+        "ref": "CLAUDE.md",
+        "note": "«La versión que importa es la de Godot (PC/Steam)»"
+      },
+      {
+        "type": "commit",
+        "ref": "27cb2fe",
+        "date": "2026-10-04",
+        "note": "CLAUDE.md: «La versión que importa es la de Godot (PC/Steam)»"
+      }
+    ],
+    "confidence": "to_confirm"
+  }
+]

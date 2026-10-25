@@ -53,7 +53,7 @@ export const recursos = {
   count: { one: '{n} recurso', many: '{n} recursos' },
   summary: {
     title: 'Por tipo',
-    none: 'ninguno',
+    none: 'Nada apuntado',
     label: '{name}: {count}',
   },
   group: {

@@ -1,0 +1,72 @@
+/* Página de una etiqueta: todo lo que la lleva, por colección. Solo variables de styles.css. */
+
+.etiquetas-note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--text-2);
+  font-size: 0.88rem;
+}
+
+.etiquetas-note .icon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--info);
+}
+
+.etiquetas-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
+  gap: var(--gap);
+  align-items: start;
+}
+
+.etiquetas-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.etiquetas-list li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2) 0;
+  border-top: 1px solid var(--border);
+  min-width: 0;
+}
+
+.etiquetas-list li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.etiquetas-name {
+  align-self: flex-start;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.etiquetas-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+}
+
+.etiquetas-meta:empty {
+  display: none;
+}
+
+.etiquetas-also {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}

@@ -103,6 +103,9 @@ export function publicationChecklists(data: StudioData, targets: ChecklistTarget
 
 // ——— Versiones para jugadores ——————————————————————————————————————————————
 
+/** El nombre de una versión con su número, si el nombre no lo lleva ya: «Actualización de otoño (1.1.0)». */
+export const releaseLabel = (r: Pick<Release, 'name' | 'version'>): string => (r.version && !r.name.includes(r.version) ? `${r.name} (${r.version})` : r.name)
+
 /** La fecha que resume una versión: la de publicación o, si no ha salido, la prevista. */
 export const releaseDate = (r: Release): ISODate | undefined => r.releasedAt ?? r.targetDate
 

@@ -12,6 +12,7 @@ import {
   publicationChecklists,
   publicationResources,
   releaseDate,
+  releaseLabel,
   releaseLate,
   releasesWithContent,
   steamGaps,
@@ -215,6 +216,12 @@ describe('versiones para jugadores', () => {
 
   it('los datos de prueba son válidos', () => {
     expect(validateStudioData(d)).toEqual([])
+  })
+
+  it('el nombre de una versión lleva su número si no lo tiene ya', () => {
+    expect(releaseLabel({ name: 'Actualización de otoño', version: '1.1.0' })).toBe('Actualización de otoño (1.1.0)')
+    expect(releaseLabel({ name: 'Demo 1.3 V2 (barras)', version: '1.3 V2' })).toBe('Demo 1.3 V2 (barras)')
+    expect(releaseLabel({ name: 'Lanzamiento' })).toBe('Lanzamiento')
   })
 
   it('la fecha de una versión: la de salida o la prevista', () => {

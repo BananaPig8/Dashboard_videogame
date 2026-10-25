@@ -1,7 +1,7 @@
 // Las builds de una subsección (?canal=), en una tabla por proyecto: qué versión es, en qué
 // canal y estado está, dónde se descarga y para qué versión o evento es.
 import { useSearchParams } from 'react-router-dom'
-import { buildGroupDefaults, buildGroupOf, buildsInChannelGroup, hasTag } from '../../../domain/selectors'
+import { buildGroupDefaults, buildGroupOf, buildsInChannelGroup, hasTag, releaseLabel } from '../../../domain/selectors'
 import type { Build, Project, StudioData } from '../../../domain/types'
 import { useCanEdit, useStudioData } from '../../../data/store'
 import { t } from '../../../i18n'
@@ -156,7 +156,7 @@ export function BuildsTable({ builds, data, project, showProject }: { builds: Bu
                 <td data-label={L('release')}>
                   {release ? (
                     <button type="button" className="link-btn" onClick={() => edit({ collection: 'releases', id: release.id })}>
-                      {release.version ? `${release.name} (${release.version})` : release.name}
+                      {releaseLabel(release)}
                     </button>
                   ) : b.releaseId ? (
                     <span className="muted">{t('secciones.builds.table.missing')}</span>

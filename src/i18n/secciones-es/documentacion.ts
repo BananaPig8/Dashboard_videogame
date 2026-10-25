@@ -42,11 +42,14 @@ export const documentacion = {
     enlaces: 'No hay enlaces apuntados.',
   },
   emptyTag: 'Nada de esta vista lleva la etiqueta.',
+  count: { one: '{n} documento', many: '{n} documentos' },
   group: {
     doc: 'Los documentos también salen en Recursos › Documentos.',
   },
   minutes: {
     title: 'Actas',
+    count: { one: '{n} acta', many: '{n} actas' },
+    meetingsCount: { one: '{n} reunión', many: '{n} reuniones' },
     titleOf: 'Acta de «{name}»',
     meeting: 'Reunión',
     noMeeting: 'Sin reunión enlazada',
@@ -67,6 +70,8 @@ export const documentacion = {
     open: 'Por decidir',
     openSub: 'Abiertas, con sus opciones',
     openEmpty: 'Nada pendiente de decidir.',
+    openCount: { one: '{n} abierta', many: '{n} abiertas' },
+    logCount: { one: '{n} cerrada', many: '{n} cerradas' },
     options: 'Opciones y estado',
     missing: 'Qué falta para decidir',
     log: 'Registro de decisiones',

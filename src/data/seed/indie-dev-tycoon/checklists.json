@@ -273,6 +273,10 @@
           }
         ]
       }
+    ],
+    "listingId": "idt-ficha-steam-juego",
+    "tags": [
+      "steam"
     ]
   },
   {
@@ -670,6 +674,10 @@
           }
         ]
       }
+    ],
+    "eventId": "idt-feria-valladolid",
+    "tags": [
+      "feria"
     ]
   }
 ]

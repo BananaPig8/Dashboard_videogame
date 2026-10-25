@@ -19,6 +19,7 @@
       "idt-web-informes-cuando-quieras-demos-investigables",
       "idt-web-nota-funciones-web-recuerdos"
     ],
+    "kind": "request",
     "sources": [
       {
         "type": "commit",
@@ -45,6 +46,8 @@
     "linkedItemIds": [
       "idt-progresion-cosas-aparecen"
     ],
+    "kind": "comment",
+    "playtestId": "idt-prueba-beta-testers",
     "sources": [
       {
         "type": "commit",
@@ -72,6 +75,8 @@
     "linkedItemIds": [
       "idt-letra-pixelify-sans"
     ],
+    "kind": "comment",
+    "playtestId": "idt-prueba-beta-testers",
     "sources": [
       {
         "type": "commit",
@@ -98,6 +103,11 @@
     "impact": "high",
     "linkedItemIds": [
       "idt-demo-no-se-corta-a-mitad"
+    ],
+    "kind": "request",
+    "playtestId": "idt-prueba-minlok",
+    "tags": [
+      "demo"
     ],
     "sources": [
       {
@@ -126,6 +136,11 @@
     "linkedItemIds": [
       "idt-modas-en-nuevo-juego"
     ],
+    "kind": "request",
+    "playtestId": "idt-prueba-minlok",
+    "tags": [
+      "demo"
+    ],
     "sources": [
       {
         "type": "commit",
@@ -153,6 +168,11 @@
     "linkedItemIds": [
       "idt-decision-demo-sin-modos-de-juego"
     ],
+    "kind": "request",
+    "playtestId": "idt-prueba-minlok",
+    "tags": [
+      "demo"
+    ],
     "sources": [
       {
         "type": "commit",
@@ -179,6 +199,11 @@
     "impact": "high",
     "linkedItemIds": [
       "idt-estrellas-plataforma-no-se-veian"
+    ],
+    "kind": "bug",
+    "eventId": "idt-feria-valladolid",
+    "tags": [
+      "feria"
     ],
     "sources": [
       {
@@ -208,6 +233,10 @@
     "linkedItemIds": [
       "idt-cansancio-tema-relajado"
     ],
+    "eventId": "idt-feria-valladolid",
+    "tags": [
+      "feria"
+    ],
     "sources": [
       {
         "type": "commit",
@@ -235,6 +264,11 @@
     "impact": "medium",
     "linkedItemIds": [
       "idt-tutorial-informe-para-todos"
+    ],
+    "kind": "bug",
+    "eventId": "idt-feria-valladolid",
+    "tags": [
+      "feria"
     ],
     "sources": [
       {
@@ -265,6 +299,10 @@
       "idt-ranking-por-dificultad",
       "idt-ranking-subida-automatica",
       "idt-ranking-feria-valladolid"
+    ],
+    "eventId": "idt-feria-valladolid",
+    "tags": [
+      "feria"
     ],
     "sources": [
       {

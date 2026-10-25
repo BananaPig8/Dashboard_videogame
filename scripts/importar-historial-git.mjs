@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Convierte el historial de git de un proyecto en la «actividad» de Studio Hub:
-// un registro por commit y otro por cada PR fusionada, con su fecha y su enlace.
+// un registro por commit y otro por cada PR fusionada, con su fecha, su autor (el nombre
+// tal cual lo guarda git; no se crean personas) y su enlace.
 //
 //   node scripts/importar-historial-git.mjs \
 //     --repo ../Indie-Dev-Tycoon --proyecto indie-dev-tycoon \
@@ -35,7 +36,7 @@ const END = '\u001e'
 function gitLog(repo, revs, zona) {
   const raw = execFileSync(
     'git',
-    ['-C', repo, 'log', ...revs, '--date=format-local:%Y-%m-%dT%H:%M', `--format=%H${SEP}%P${SEP}%ad${SEP}%s${SEP}%b${END}`],
+    ['-C', repo, 'log', ...revs, '--date=format-local:%Y-%m-%dT%H:%M', `--format=%H${SEP}%P${SEP}%ad${SEP}%an${SEP}%s${SEP}%b${END}`],
     { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, env: { ...process.env, TZ: zona } },
   )
   return raw
@@ -43,8 +44,8 @@ function gitLog(repo, revs, zona) {
     .map((r) => r.replace(/^\n/, ''))
     .filter(Boolean)
     .map((r) => {
-      const [hash, parents, at, subject, body] = r.split(SEP)
-      return { hash, merge: parents.trim().split(' ').length > 1, at, subject, body: body ?? '' }
+      const [hash, parents, at, author, subject, body] = r.split(SEP)
+      return { hash, merge: parents.trim().split(' ').length > 1, at, author, subject, body: body ?? '' }
     })
 }
 
@@ -67,6 +68,7 @@ const activity = commits.map((c) => {
         title: `PR #${pr[1]} fusionada: ${c.body.split('\n')[0].trim() || c.subject}`,
         ref: `#${pr[1]}`,
         ...(repoUrl && { url: `${repoUrl}/pull/${pr[1]}` }),
+        author: c.author,
       }
     : {
         id: `${opt.proyecto}-c-${short}`,
@@ -76,6 +78,7 @@ const activity = commits.map((c) => {
         title: c.subject,
         ref: short,
         ...(repoUrl && { url: `${repoUrl}/commit/${c.hash}` }),
+        author: c.author,
       }
   if (!inMain.has(c.hash) && others.length) entry.note = `En la rama ${others.join(', ').replace(/^origin\//, '')}, sin fusionar en ${main.replace(/^origin\//, '')}.`
   return entry

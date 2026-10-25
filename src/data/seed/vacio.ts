@@ -7,6 +7,9 @@ import { SCHEMA_VERSION } from '../../domain/types'
 
 export const SEED_VERSION = 'base-de-datos'
 
+/** En la build de claude.ai no hay datos iniciales que retirar. */
+export const SEED_RETIRED: string[] = []
+
 export function createSeedData(): StudioData {
   return {
     schemaVersion: SCHEMA_VERSION,

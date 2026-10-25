@@ -1,0 +1,96 @@
+[
+  {
+    "id": "idt-prueba-beta-testers",
+    "projectId": "indie-dev-tycoon",
+    "title": "Beta testers del juego",
+    "method": "closed",
+    "summary": "Constan dos avisos de beta testers en los commits del 5-10: uno, que sale toda la información de golpe; tres, que la letra pixel se lee apretada. No consta cuántos eran en total, cuándo probaron ni con qué versión.",
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "7d5c595",
+        "date": "2026-10-05",
+        "note": "«Un beta tester avisó de que sale toda la información de golpe»"
+      },
+      {
+        "type": "pr",
+        "ref": "#16",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/16",
+        "date": "2026-10-05"
+      },
+      {
+        "type": "commit",
+        "ref": "aba34ef",
+        "date": "2026-10-05",
+        "note": "«Tres beta testers decían que la letra pixel … se leía muy apretada»"
+      },
+      {
+        "type": "pr",
+        "ref": "#17",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/17",
+        "date": "2026-10-05"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-prueba-minlok",
+    "projectId": "indie-dev-tycoon",
+    "title": "Minlok (Hexistence) prueba la demo",
+    "method": "other",
+    "participants": 1,
+    "summary": "Probó la demo y pidió tres cambios, hechos el 11-10. No consta cuándo la probó, cómo (descarga o web) ni con qué versión.",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "3b06314",
+        "date": "2026-10-11",
+        "note": "«Lo que pidió Minlok (Hexistence) tras probar la demo»"
+      },
+      {
+        "type": "pr",
+        "ref": "#29",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/29",
+        "date": "2026-10-11"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-prueba-feria-valladolid",
+    "projectId": "indie-dev-tycoon",
+    "title": "Partidas en el stand de la feria de Valladolid",
+    "method": "event",
+    "eventId": "idt-feria-valladolid",
+    "buildId": "idt-build-demo-valladolid-1-0",
+    "summary": "La Demo Valladolid está preparada para que jueguen los visitantes: modo stand (partida nueva para cada uno) y ranking propio de la feria. No consta la fecha de la feria, ni si ya se ha celebrado, ni cuántos jugaron; lo que se cambió por la feria está como feedback del evento.",
+    "tags": [
+      "feria",
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "d04d37b",
+        "date": "2026-10-12",
+        "note": "Demo Valladolid 1.0 (la de la feria)"
+      },
+      {
+        "type": "commit",
+        "ref": "bec8f65",
+        "date": "2026-10-13",
+        "note": "Modo stand"
+      },
+      {
+        "type": "pr",
+        "ref": "#35",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/35",
+        "date": "2026-10-13"
+      }
+    ],
+    "confidence": "to_confirm"
+  }
+]

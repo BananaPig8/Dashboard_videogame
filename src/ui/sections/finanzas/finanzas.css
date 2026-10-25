@@ -1,0 +1,266 @@
+/* Sección «Finanzas»: resumen, movimientos, presupuestos, costes e informes. Solo variables de styles.css. */
+
+.finanzas-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  min-width: 0;
+}
+
+/* Notas («todo a mano», cómo se cuenta). */
+.finanzas-note,
+.finanzas-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--text-2);
+}
+
+.finanzas-note .icon,
+.finanzas-alert .icon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--info);
+}
+
+.finanzas-alert .icon {
+  color: var(--danger);
+}
+
+.finanzas-nothing {
+  margin: 0;
+  color: var(--text-2);
+}
+
+.finanzas-upcoming-line {
+  margin: 0;
+}
+
+/* Importes. */
+.finanzas-amount {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.finanzas-income {
+  color: var(--success);
+}
+
+.finanzas-cancelled {
+  color: var(--text-3);
+  text-decoration: line-through;
+}
+
+.finanzas-original {
+  display: block;
+}
+
+.finanzas-over {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.finanzas-date {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+}
+
+/* Filtros y total del filtro. */
+.finanzas-filters select {
+  max-width: 100%;
+}
+
+.finanzas-total {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--text-2);
+}
+
+/* Listas de movimientos (resumen, eventos): fecha · concepto · importe. */
+.finanzas-list,
+.finanzas-budgets,
+.finanzas-events {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.finanzas-row {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--space-1) var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.finanzas-row:last-child {
+  border-bottom: 0;
+}
+
+.finanzas-row-event {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.finanzas-row-date {
+  padding-top: 2px;
+}
+
+.finanzas-row-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.finanzas-row-main .item-title {
+  overflow-wrap: anywhere;
+}
+
+/* Presupuestos y eventos: un bloque por elemento. */
+.finanzas-budget,
+.finanzas-event {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.finanzas-budget:first-child,
+.finanzas-event:first-child {
+  padding-top: 0;
+}
+
+.finanzas-budget:last-child,
+.finanzas-event:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.finanzas-budget-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.finanzas-budget-head h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.finanzas-budget .meta-date,
+.finanzas-event .meta-date {
+  margin: 0;
+}
+
+.finanzas-figures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--space-2) var(--space-4);
+  margin: 0;
+}
+
+.finanzas-figures div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.finanzas-figures dt {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.finanzas-figures dd {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* Informes: tipo de periodo (enlaces) y anterior / siguiente. */
+.finanzas-period {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+}
+
+.finanzas-segments {
+  display: inline-flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--surface-2);
+}
+
+.finanzas-segments li + li {
+  border-left: 1px solid var(--border-strong);
+}
+
+.finanzas-segments a {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  font-size: 0.84rem;
+  color: var(--text-2);
+  text-decoration: none;
+}
+
+.finanzas-segments a:hover {
+  color: var(--text);
+}
+
+.finanzas-segments a.active {
+  background: var(--accent-soft);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.finanzas-segments a:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+
+.finanzas-period-steps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.finanzas-period-name {
+  min-width: 9rem;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .finanzas-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .finanzas-row-date {
+    grid-column: 1 / -1;
+    padding-top: 0;
+  }
+  .finanzas-period,
+  .finanzas-period-steps {
+    justify-content: flex-start;
+  }
+  .finanzas-period-name {
+    min-width: 0;
+  }
+}

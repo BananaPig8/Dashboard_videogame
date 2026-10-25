@@ -75,6 +75,7 @@ const PATHS = {
   code: 'm8 7-5 5 5 5m8-10 5 5-5 5M14 4l-4 16',
   megaphone: 'M3 10v4h4l8 5V5l-8 5zm4 4 1.5 6H11l-1-5.5M18.5 9a4 4 0 0 1 0 6',
   sticky: 'M5 4h14v10l-6 6H5zm8 16v-6h6',
+  copy: 'M9 9h11v11H9zM5 15H4V4h11v1',
 } as const
 
 export type IconName = keyof typeof PATHS

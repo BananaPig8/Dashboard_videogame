@@ -9,13 +9,17 @@ fecha de los datos (`SEED_VERSION` en `src/data/seed/index.ts`).
 | Fichero (`src/data/seed/indie-dev-tycoon/`) | Qué es | Cómo se hizo |
 |---|---|---|
 | `project.ts` | La ficha del juego: motor, plataformas, versiones, enlaces | A mano, del README, `project.yaml`, `export_presets.cfg` y la release «descargas» |
-| `activity.json` | Cada commit y cada PR fusionada, con su fecha y su enlace | Automático: `scripts/importar-historial-git.mjs` |
+| `activity.json` | Cada commit y cada PR fusionada, con su fecha, su autor (el nombre que guarda git) y su enlace | Automático: `scripts/importar-historial-git.mjs` |
 | `items.json` | Lo hecho (funcionalidades, hitos, decisiones, fallos arreglados) y lo pendiente o por confirmar | Leyendo el historial commit a commit y el README (ver abajo) |
-| `builds.json` | Las versiones compiladas (juego completo, demos, demo de feria) | De la release «descargas» y del historial |
-| `events.json` | Ferias y fechas | Del historial; sin fecha si el repositorio no la dice |
-| `feedback.json` | Lo que se cambió por lo que se vio o se pidió (p. ej. en la feria) | Del historial, casi siempre como «deducido» |
+| `builds.json` | Las versiones compiladas (juego completo, demos, demo de feria), cada demo publicada con su versión (`releaseId`) y la de feria con su evento | De la release «descargas» y del historial |
+| `releases.json` | Lo que sale a los jugadores: las demos publicadas (1.3, 1.3 V2 y Valladolid 1.0) con su fecha, la Demo 1.4 en preparación y el lanzamiento en Steam previsto, sin fecha | De las builds publicadas; lo previsto, del README y de la rama, como «sin confirmar» o «deducido» |
+| `storeListings.json` | Las fichas de Steam del juego y de la demo, sin empezar y sin App ID | Del README, `desktop/steam/` y `Game.STEAM_URL`: se llevan a mano y están «sin confirmar» |
+| `achievements.json` | Los 56 logros del juego con su nombre de API (los 23 de la demo, con la etiqueta `demo`) | De `js/engine.js` y `godot/scripts/sim.gd`, con el commit que añadió cada uno; ninguno «en la tienda» |
+| `events.json` | Ferias y fechas (las publicaciones van en `releases.json` y Steam, en `storeListings.json`) | Del historial; sin fecha si el repositorio no la dice |
+| `feedback.json` | Lo que se cambió por lo que se vio o se pidió, con su tipo (comentario, fallo o petición) cuando el commit lo dice | Del historial, casi siempre como «deducido» |
+| `playtests.json` | Las pruebas con jugadores: beta testers, Minlok (Hexistence) y las partidas del stand de la feria | Del historial; la de la feria, «sin confirmar» (no consta que se haya celebrado) |
 | `resources.json` | Repositorio, release, secciones del README, flujos de CI, herramientas | Del repositorio |
-| `checklists.json` | Pasos para publicar en Steam, sacar una versión y llevar el juego a una feria | Del README y del historial: hecho solo si el repositorio lo demuestra |
+| `checklists.json` | Pasos para publicar en Steam (de la ficha del juego), sacar una versión y llevar el juego a una feria (de la de Valladolid) | Del README y del historial: hecho solo si el repositorio lo demuestra |
 
 ## Reglas que siguen los datos
 
@@ -35,12 +39,26 @@ fecha de los datos (`SEED_VERSION` en `src/data/seed/index.ts`).
    fecha de su último commit; lo empezado, la del primero.
 5. **Lo que solo está en una rama sin fusionar no está hecho** (está «en revisión» o «en
    marcha», también las decisiones). Así están la Demo 1.4 y la base de Idiomas del 14 de
-   octubre y las traducciones de la demo del 18 de octubre, en `claude/lucid-lamport-fl6em4`
-   sin PR.
+   octubre, las traducciones de la demo del 18 y el 20 de octubre, y el cartel A3 y las
+   pegatinas del 20 de octubre, en `claude/lucid-lamport-fl6em4` sin PR.
+6. **Lo de fuera se lleva a mano.** No hay ninguna integración: el estado de Steam (fichas,
+   App ID, logros dados de alta) no se puede comprobar desde el repositorio, así que las
+   fichas están «sin empezar» y «sin confirmar», y los logros, «en el juego», nunca «en la
+   tienda».
+7. **No se inventan personas.** La actividad guarda el autor tal cual lo dice git
+   (`Claude` en los commits, `BananaPig8` en las fusiones); el equipo (`members`) lo da de
+   alta el estudio.
+8. **Feedback, eventos y pruebas, sin mezclar.** Lo que salió por la feria va con
+   `origin: event` y el `eventId` de la feria; lo de los beta testers y Minlok, con
+   `origin: playtest` y su `playtestId`.
 
 `src/data/seed.test.ts` comprueba las reglas 2, 4 y 5 contra el historial de git (cada
-commit citado existe y tiene esa fecha; cada commit del juego acaba en algún elemento) y
-que todas las líneas de trabajo del estudio tienen elementos.
+commit citado existe y tiene esa fecha; cada commit del juego acaba en algún elemento),
+que todas las líneas de trabajo del estudio tienen elementos, y las reglas 6 a 8: cada
+versión publicada tiene su build con esa fecha, nada de la tienda pasa de borrador sin estar
+verificado, los nombres de API de los logros valen para Steam, la actividad dice su autor y
+no hay personas, no quedan eventos de Steam ni de lanzamientos de la versión 1, y el
+feedback de un evento o de una prueba dice de cuál.
 
 ## Cómo se extrajo
 
@@ -52,11 +70,21 @@ estados entre tramos (lo aparcado que se retomó, la decisión de qué demo va a
 escribió los JSON; y una auditoría final con tres enfoques (fechas y fuentes, nada
 inventado, cobertura y estado actual) cuyos hallazgos se corrigieron.
 
+Al pasar al modelo v2 (`SEED_VERSION` 2026-10-25.1) no se volvió a leer todo: el evento de
+Steam pasó a la ficha de Steam, las builds publicadas de las demos dieron sus versiones, los
+logros salieron de la lista del código (con `git log -S` para el commit de cada uno), las
+pruebas con jugadores de los commits que las citan, y el historial se regeneró con el autor
+y con lo nuevo de la rama hasta el 20 de octubre (traducciones, cartel A3 y pegatinas), que
+tiene sus elementos.
+
 ## Actualizar el historial
 
 ```bash
-# en el repositorio del juego, con las ramas al día
-git -C ../Indie-Dev-Tycoon fetch --depth=5000 origin main claude/lucid-lamport-fl6em4
+# en el repositorio del juego, con las ramas al día (con la ruta de cada rama: si no, un
+# clon que solo sigue main no actualiza origin/claude/…)
+git -C ../Indie-Dev-Tycoon fetch --depth=5000 origin \
+  +refs/heads/main:refs/remotes/origin/main \
+  +refs/heads/claude/lucid-lamport-fl6em4:refs/remotes/origin/claude/lucid-lamport-fl6em4
 npm run historial -- --repo ../Indie-Dev-Tycoon --proyecto indie-dev-tycoon \
   --url https://github.com/BananaPig8/Indie-Dev-Tycoon \
   --rama origin/main --rama origin/claude/lucid-lamport-fl6em4 \
@@ -67,7 +95,9 @@ Las horas salen en la hora de Madrid (`--zona Europe/Madrid`, la de por defecto)
 
 Después: añadir a `items.json` lo nuevo (con su fuente), subir `SEED_VERSION` y pasar
 `npm test`. En el panel saldrá «Hay datos iniciales nuevos»; al traerlos se respeta lo que
-el estudio haya editado o borrado a mano.
+el estudio haya editado o borrado a mano. Lo que se quita de los datos iniciales (como el
+evento «Página de Steam en Próximamente» de la versión 1, que ahora es la ficha de Steam)
+no se borra de unos datos ya guardados: se borra a mano o se empieza de cero.
 
 ## Lo que el estudio tiene que confirmar
 
@@ -75,3 +105,7 @@ Están en el panel como «Por confirmar» (filtro «Fiabilidad: Sin confirmar» 
 la cuenta de Steamworks y Steam Direct, si el secreto `TALO_ACCESS_KEY` está puesto, la
 fecha y el nombre exacto de la feria de Valladolid, y las líneas de trabajo sin trabajo
 registrado (inventario y objetos de Steam, DLC reales, planificación de lanzamientos).
+Y, en la publicación: si las fichas de Steam del juego y de la demo siguen sin empezar, la
+fecha y la versión del lanzamiento en Steam, si la feria ya se celebró y cuánta gente jugó
+en el stand, y si el juego completo 0.0.8 de la release «descargas» cuenta como versión
+publicada (de momento no tiene `releases.json`: no es un lanzamiento ni una actualización).

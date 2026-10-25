@@ -14,7 +14,7 @@ import {
   STORE_TEXT_STATUSES,
 } from '../../../domain/catalog'
 import { yearOf } from '../../../domain/dates'
-import { releaseLate } from '../../../domain/selectors'
+import { releaseLabel, releaseLate } from '../../../domain/selectors'
 import type { AchievementStatus, ListingStatus, Project, Release, ReleaseStatus, Resource, SourceRef, StoreListing, StoreText } from '../../../domain/types'
 import { useCanEdit, useStudioData, type CollectionKey } from '../../../data/store'
 import { intlLocale, t } from '../../../i18n'
@@ -129,8 +129,8 @@ export const StoreTextStatusPill = ({ status }: { status: StoreText['status'] })
 /** «Steam · Juego». */
 export const listingName = (l: Pick<StoreListing, 'platform' | 'kind'>) => `${STORE_PLATFORMS[l.platform]} · ${LISTING_KINDS[l.kind]}`
 
-/** «Actualización 1.1 (1.1.0)». */
-export const releaseName = (r: Release) => (r.version ? `${r.name} (${r.version})` : r.name)
+/** «Actualización de otoño (1.1.0)» (sin repetir el número si ya está en el nombre). */
+export const releaseName = (r: Release) => releaseLabel(r)
 
 /** Cuándo sale una versión: publicada, prevista (sin confirmar, con retraso) o sin fecha. */
 export function ReleaseWhen({ release: r }: { release: Release }) {

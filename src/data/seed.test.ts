@@ -41,6 +41,10 @@ describe('datos iniciales', () => {
     for (const e of data.events) check(e.id, e.sources)
     for (const f of data.feedback) check(f.id, f.sources)
     for (const c of data.checklists) for (const s of c.items) check(`${c.id}/${s.id}`, s.sources)
+    for (const r of data.releases) check(r.id, r.sources)
+    for (const l of data.storeListings) check(l.id, l.sources)
+    for (const a of data.achievements) check(a.id, a.sources)
+    for (const p of data.playtests) check(p.id, p.sources)
     expect(problems).toEqual([])
   })
 
@@ -81,12 +85,61 @@ describe('datos iniciales', () => {
   })
 
   it('lo que no tiene fuente comprobable no se da por verificado', () => {
-    const wrong = items.filter((i) => i.confidence === 'verified' && i.sources.every((s) => s.type === 'manual'))
+    const all = [...items, ...data.builds, ...data.events, ...data.feedback, ...data.releases, ...data.storeListings, ...data.achievements, ...data.playtests]
+    const wrong = all.filter((i) => i.confidence === 'verified' && i.sources.every((s) => s.type === 'manual'))
     expect(wrong.map((i) => i.id)).toEqual([])
   })
 
   it('ningún evento tiene una fecha confirmada sin fuente', () => {
     const wrong = data.events.filter((e) => e.dateConfirmed && e.sources.every((s) => s.type === 'manual'))
     expect(wrong.map((e) => e.id)).toEqual([])
+  })
+
+  it('el historial dice quién hizo cada commit y cada PR, sin inventar personas', () => {
+    expect(activity.filter((a) => !a.author?.trim()).map((a) => a.id)).toEqual([])
+    expect(data.members).toEqual([])
+  })
+
+  it('no traen eventos de la versión 1 de Steam ni de lanzamientos', () => {
+    // Las fechas de publicación son de las versiones y el estado de la tienda, de sus fichas.
+    expect(data.events.filter((e) => e.type === 'steam' || e.type === 'release').map((e) => e.id)).toEqual([])
+  })
+
+  it('cada versión publicada tiene su build publicada y su fecha', () => {
+    const problems: string[] = []
+    for (const r of data.releases.filter((r) => r.status === 'released')) {
+      const dates = data.builds
+        .filter((b) => b.releaseId === r.id && (b.status === 'published' || b.status === 'superseded'))
+        .map((b) => b.date)
+        .filter((d): d is string => !!d)
+        .sort()
+      if (!dates.length) problems.push(`${r.id}: publicada sin ninguna build publicada con fecha`)
+      else if (r.releasedAt !== dates[0]) problems.push(`${r.id}: releasedAt ${r.releasedAt}, primera build del ${dates[0]}`)
+    }
+    for (const b of data.builds)
+      if (b.status === 'published' && (b.channel === 'demo' || b.channel === 'event') && !b.releaseId) problems.push(`${b.id}: demo publicada sin versión`)
+    expect(problems).toEqual([])
+  })
+
+  it('las fichas de tienda y los logros no dan por hecho lo que no se puede comprobar', () => {
+    // No hay conexión con Steamworks: lo que pasa de borrador, un App ID o un logro dado de alta
+    // en la tienda necesita una fuente comprobable.
+    const wrong = [
+      ...data.storeListings.filter((l) => (!['not_started', 'draft'].includes(l.status) || l.appId) && l.confidence !== 'verified').map((l) => l.id),
+      ...data.achievements.filter((a) => a.status === 'in_store' && a.confidence !== 'verified').map((a) => a.id),
+    ]
+    expect(wrong).toEqual([])
+  })
+
+  it('los logros tienen un nombre de API válido para Steam y sin repetir', () => {
+    // desktop/main.js del juego solo activa en Steam los nombres con letras minúsculas, cifras y «_».
+    const names = data.achievements.map((a) => a.apiName ?? '')
+    expect(names.filter((n) => !/^[a-z0-9_]{1,40}$/.test(n))).toEqual([])
+    expect(names.length).toBe(new Set(names).size)
+  })
+
+  it('el feedback de un evento o de una prueba dice de cuál', () => {
+    const wrong = data.feedback.filter((f) => (f.origin === 'event' && !f.eventId) || (f.origin === 'playtest' && !f.playtestId))
+    expect(wrong.map((f) => f.id)).toEqual([])
   })
 })

@@ -9778,7 +9778,8 @@
         "ref": "La demo · Su versión"
       }
     ],
-    "confidence": "verified"
+    "confidence": "verified",
+    "releaseId": "idt-release-demo-1-3"
   },
   {
     "id": "idt-hito-juego-0-0-8",
@@ -9850,7 +9851,8 @@
         "note": "Demo V2 (v1.3 V2, barras de las fases de antes)"
       }
     ],
-    "confidence": "verified"
+    "confidence": "verified",
+    "releaseId": "idt-release-demo-1-3-v2"
   },
   {
     "id": "idt-logo-mando-botones-alineados",
@@ -9916,7 +9918,8 @@
         "ref": "La demo › Demo Valladolid"
       }
     ],
-    "confidence": "verified"
+    "confidence": "verified",
+    "releaseId": "idt-release-demo-valladolid-1-0"
   },
   {
     "id": "idt-demo-valladolid-seis-juegos",
@@ -10693,7 +10696,8 @@
         "note": "En la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
       }
     ],
-    "confidence": "verified"
+    "confidence": "verified",
+    "releaseId": "idt-release-demo-1-4"
   },
   {
     "id": "idt-idiomas-base",
@@ -10780,7 +10784,7 @@
     "projectId": "indie-dev-tycoon",
     "kind": "task",
     "title": "Abrir PR y fusionar la Demo 1.4 y los idiomas",
-    "description": "La rama claude/lucid-lamport-fl6em4 tiene cuatro commits sin PR: la Demo 1.4 y la base de Idiomas (14-10) y 816 frases de la demo traducidas (18-10); hasta fusionarlos, main y la release siguen con la demo 1.3 y la 1.3 V2. Como toca sim.gd, la PR necesita la etiqueta «comprobación completa». Mientras GitHub Actions no arranque, no pasará las comprobaciones ni se compilarán las descargas.",
+    "description": "La rama claude/lucid-lamport-fl6em4 tiene once commits sin PR: la Demo 1.4 y la base de Idiomas (14-10), las traducciones de la demo (18 y 20-10), el cartel A3 del key art y las pegatinas (20-10); hasta fusionarlos, main y la release siguen con la demo 1.3 y la 1.3 V2. Como toca sim.gd, la PR necesita la etiqueta «comprobación completa». Mientras GitHub Actions no arranque, no pasará las comprobaciones ni se compilarán las descargas.",
     "status": "review",
     "priority": "high",
     "areaId": "release",
@@ -10818,9 +10822,15 @@
         "note": "Traducciones; toca godot/scripts/sim.gd; en la rama, sin fusionar"
       },
       {
+        "type": "commit",
+        "ref": "912976f",
+        "date": "2026-10-20",
+        "note": "Traducciones; toca godot/scripts/sim.gd; en la rama, sin fusionar"
+      },
+      {
         "type": "doc",
         "ref": "GitHub: pull requests del repositorio",
-        "note": "39 PR, todas fusionadas; ninguna abierta a 2026-10-19"
+        "note": "39 PR, todas fusionadas; ninguna más en el remoto (refs/pull) a 2026-10-25"
       },
       {
         "type": "release",
@@ -11160,7 +11170,8 @@
         "note": "«la que irá a Steam»; rama sin fusionar"
       }
     ],
-    "confidence": "inferred"
+    "confidence": "inferred",
+    "releaseId": "idt-release-demo-1-4"
   },
   {
     "id": "idt-publicar-steam",
@@ -11186,7 +11197,8 @@
         "note": "«La versión que importa es la de Godot (PC/Steam)»"
       }
     ],
-    "confidence": "inferred"
+    "confidence": "inferred",
+    "releaseId": "idt-release-lanzamiento-steam"
   },
   {
     "id": "idt-talo-tablas-ranking",
@@ -11517,9 +11529,9 @@
     "id": "idt-idiomas-traducciones",
     "projectId": "indie-dev-tycoon",
     "kind": "task",
-    "title": "Traducir las frases de la demo (816 hechas en la rama)",
-    "description": "En la rama, sin PR: 816 de las 1.144 frases de la demo traducidas al inglés, francés, alemán, chino, japonés y coreano (godot/idiomas/<idioma>.json); el castellano de Latinoamérica lleva las 22 frases que cambian. nombres.txt guarda lo que no se traduce. Quedan 328 frases por traducir en cada idioma.",
-    "status": "in_progress",
+    "title": "Traducir las frases de la demo (las 1.142, en la rama)",
+    "description": "En la rama, sin PR: las 1.142 frases de la demo traducidas al inglés, francés, alemán, chino, japonés y coreano (godot/idiomas/<idioma>.json); el castellano de Latinoamérica lleva las 37 frases que cambian. nombres.txt guarda lo que no se traduce. Falta revisarlas en pantalla (capturas por idioma) y ver las frases que se queden sin traducir.",
+    "status": "review",
     "priority": "medium",
     "areaId": "localization",
     "startedAt": "2026-10-14",
@@ -11549,9 +11561,15 @@
         "note": "816 frases y plurales que se pueden traducir; toca godot/scripts/sim.gd; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
       },
       {
+        "type": "commit",
+        "ref": "912976f",
+        "date": "2026-10-20",
+        "note": "«las 1.142 frases de la demo traducidas a 6 idiomas (y 37 cambios para Latinoamérica)»; «Faltan por revisar en pantalla (capturas por idioma)»; toca godot/scripts/sim.gd; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+      },
+      {
         "type": "doc",
-        "ref": "godot/idiomas/ (rama claude/lucid-lamport-fl6em4, 33a3632)",
-        "note": "Contado como tools/idiomas.py estado el 2026-10-19: 816 de 1.144 en en, fr, de, zh_CN, ja y ko (sin los nombres de nombres.txt); es_419 con 22 frases"
+        "ref": "godot/idiomas/ (rama claude/lucid-lamport-fl6em4, ac614ee)",
+        "note": "Contado con tools/idiomas.py estado el 2026-10-25: 1.142 de 1.142 en en, fr, de, zh_CN, ja y ko; es_419 con 37 frases que cambian (173 nombres no se traducen)"
       }
     ],
     "confidence": "verified"
@@ -11560,8 +11578,8 @@
     "id": "idt-idiomas-plurales-y-titulos",
     "projectId": "indie-dev-tycoon",
     "kind": "feature",
-    "title": "Plurales enteros y títulos de juegos sin traducir a trozos",
-    "description": "Los plurales hechos pegando una «s» pasan a frases enteras; en castellano se ven igual. El traductor no traduce a trozos los títulos de los juegos ni usa plantillas muy cortas si no sabe traducir sus huecos. Está en la rama, sin PR ni fusionar.",
+    "title": "Plurales y frases enteras, y títulos de juegos sin traducir a trozos",
+    "description": "Los plurales hechos pegando una «s» pasan a frases enteras; en castellano se ven igual. El traductor no traduce a trozos los títulos de los juegos ni usa plantillas muy cortas si no sabe traducir sus huecos. El 20-10, más frases del motor y de la interfaz que se montaban a trozos pasan a frases enteras (resumen del año, biografía, investigar, «empieza/empiezan»…). Está en la rama, sin PR ni fusionar.",
     "status": "review",
     "priority": "medium",
     "areaId": "localization",
@@ -11584,6 +11602,130 @@
         "ref": "33a3632",
         "date": "2026-10-18",
         "note": "«Los plurales hechos pegando una «s» … pasan a frases enteras»; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+      },
+      {
+        "type": "commit",
+        "ref": "912976f",
+        "date": "2026-10-20",
+        "note": "«Frases del motor y de la interfaz que se montaban a trozos pasan a frases enteras»; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-keyart-cartel-a3",
+    "projectId": "indie-dev-tycoon",
+    "kind": "feature",
+    "title": "Cartel A3 con el key art",
+    "description": "keyart.gd saca un cartel A3 con 3 mm de sangrado (303×426 mm) en dos versiones: con el logo, las tres oficinas y hueco para los textos y el QR, que se ponen encima al montar el PDF, y otra solo con el arte, con las oficinas más grandes. Está en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar; no consta para qué se va a usar.",
+    "status": "review",
+    "priority": "medium",
+    "areaId": "marketing",
+    "startedAt": "2026-10-20",
+    "tags": [
+      "keyart",
+      "arte",
+      "marketing",
+      "godot",
+      "rama"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "bb690a6",
+        "date": "2026-10-20",
+        "note": "«cartel A3 (solo arte y con hueco para textos), a 307 ppp con 3 mm de sangrado»; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/tests/keyart.gd (rama claude/lucid-lamport-fl6em4)",
+        "note": "Diseños «a3» y «a3_arte»"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-pegatinas",
+    "projectId": "indie-dev-tycoon",
+    "kind": "feature",
+    "title": "Pegatinas troqueladas con las piezas del juego",
+    "description": "godot/tests/pegatinas.gd dibuja con las piezas del juego, sobre fondo transparente, cuatro pegatinas (el logo, el cuarto, la sede y la insignia «Juego del año») y, con «memes», cuatro memes conocidos con los personajes del juego («Esto está bien», «Stonks», el de Drake y el de los dos botones). tools/pegatinas/troquel.py deja cada una como la piden las empresas de pegatinas: PNG transparente, PNG con fondo blanco y PDF troquelado con borde blanco de 3 mm y la línea de corte «CutContour». Está en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar; no consta para qué se van a usar ni si se han encargado.",
+    "status": "review",
+    "priority": "medium",
+    "areaId": "marketing",
+    "startedAt": "2026-10-20",
+    "tags": [
+      "pegatinas",
+      "marketing",
+      "arte",
+      "godot",
+      "rama"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "6c58818",
+        "date": "2026-10-20",
+        "note": "Cuatro diseños troquelados (logo, cuarto 1984, sede 2050 y «Juego del año»); en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+      },
+      {
+        "type": "commit",
+        "ref": "22a179b",
+        "date": "2026-10-20",
+        "note": "Sin los años y con fondo transparente, cada una por separado; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+      },
+      {
+        "type": "commit",
+        "ref": "d5e2364",
+        "date": "2026-10-20",
+        "note": "Primera tanda de memes con textos; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+      },
+      {
+        "type": "commit",
+        "ref": "c2c91a0",
+        "date": "2026-10-20",
+        "note": "«Esto está bien», «Stonks» y Drake; sustituye a la tanda anterior; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+      },
+      {
+        "type": "commit",
+        "ref": "ac614ee",
+        "date": "2026-10-20",
+        "note": "Meme de los dos botones y archivos para la imprenta (PNG y PDF con «CutContour»); en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/tests/pegatinas.gd (rama claude/lucid-lamport-fl6em4)"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-decision-memes-solo-formato",
+    "projectId": "indie-dev-tycoon",
+    "kind": "decision",
+    "title": "Memes de las pegatinas: solo el formato, con los personajes del juego",
+    "description": "Las pegatinas en plan meme copian solo el formato de memes conocidos. Decidido en la rama, sin PR ni fusionar.",
+    "status": "review",
+    "priority": "medium",
+    "areaId": "marketing",
+    "startedAt": "2026-10-20",
+    "decisionOutcome": "Los memes se redibujan con las piezas del juego: ni caras de gente real ni personajes de otros. Sustituyen a la primera tanda de textos de meme.",
+    "tags": [
+      "pegatinas",
+      "marketing",
+      "rama"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "c2c91a0",
+        "date": "2026-10-20",
+        "note": "«Solo el formato: los personajes son los del juego. Sustituye a la tanda anterior de textos de meme»; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/tests/pegatinas.gd (rama claude/lucid-lamport-fl6em4)",
+        "note": "«solo el formato: ni caras de gente real ni personajes de otros»"
       }
     ],
     "confidence": "verified"

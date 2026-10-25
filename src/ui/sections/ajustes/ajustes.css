@@ -1,0 +1,232 @@
+/* Sección «Ajustes»: perfil, preferencias, categorías, estados, integraciones, seguridad y datos. Solo variables de styles.css. */
+
+.ajustes-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  min-width: 0;
+}
+
+.ajustes-grid {
+  min-width: 0;
+}
+
+/* Notas con icono: información (neutra) o aviso (ámbar). El texto dice siempre qué pasa. */
+.ajustes-note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--text-2);
+  font-size: 0.88rem;
+}
+
+.ajustes-note .icon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--info);
+}
+
+.ajustes-note-warning {
+  color: var(--text);
+  background: color-mix(in srgb, var(--warning) var(--tone-alpha), var(--surface));
+}
+
+.ajustes-note-warning .icon {
+  color: var(--warning);
+}
+
+.ajustes-lead {
+  margin: 0;
+}
+
+.ajustes-error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: var(--space-2) 0 0;
+  color: var(--danger);
+  font-size: 0.84rem;
+}
+
+.ajustes-actions {
+  margin-top: var(--space-3);
+}
+
+/* ——— Perfil —————————————————————————————————————————————————————————————— */
+
+.ajustes-stats .stat {
+  min-width: 0;
+}
+
+/* ——— Preferencias ————————————————————————————————————————————————————————— */
+
+.ajustes-color {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+}
+
+.ajustes-checks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-1) var(--space-3);
+  font-size: 0.9rem;
+}
+
+.ajustes-checks label {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: var(--space-1) 0;
+  cursor: pointer;
+}
+
+.ajustes-checks .ajustes-fixed {
+  cursor: default;
+  color: var(--text-2);
+}
+
+.ajustes-checks .muted {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* ——— Categorías ——————————————————————————————————————————————————————————— */
+
+.ajustes-areas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.ajustes-areas li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+
+.ajustes-area-name {
+  align-self: flex-start;
+}
+
+/* ——— Estados ——————————————————————————————————————————————————————————————— */
+
+.ajustes-estados th[scope='row'] {
+  white-space: nowrap;
+}
+
+.ajustes-status-input {
+  width: 100%;
+  min-width: 140px;
+}
+
+.ajustes-estados td .ajustes-error {
+  margin-top: var(--space-1);
+}
+
+/* ——— Integraciones ————————————————————————————————————————————————————————— */
+
+.ajustes-int {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.ajustes-int li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border);
+}
+
+.ajustes-int li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.ajustes-int p {
+  margin: 0;
+}
+
+.ajustes-int-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.ajustes-int-head .icon {
+  color: var(--text-3);
+}
+
+.ajustes-int-head h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 620;
+}
+
+.ajustes-int-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  align-self: flex-start;
+}
+
+/* ——— Seguridad ——————————————————————————————————————————————————————————— */
+
+.ajustes-lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-size: 0.9rem;
+}
+
+.ajustes-line {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.ajustes-line .icon {
+  flex: none;
+  margin-top: 3px;
+  color: var(--text-3);
+}
+
+.ajustes-line-warning .icon {
+  color: var(--warning);
+}
+
+.ajustes-lines + .btn {
+  align-self: flex-start;
+}
+
+/* ——— Datos ——————————————————————————————————————————————————————————————— */
+
+.ajustes-import-errors {
+  margin-top: var(--space-2);
+}

@@ -24,6 +24,7 @@ export const finanzas = {
     noDone: 'No hay nada hecho anotado en {period}.',
     noProject: 'Sin proyecto (del estudio)',
     eventGone: 'Evento borrado',
+    noEvent: 'Sin evento',
     late: 'Fecha pasada',
     lateHint: 'Sigue previsto o pendiente y su fecha ya pasó: márcalo como hecho o cancélalo',
     paidIn: 'Pagado: {amount}',

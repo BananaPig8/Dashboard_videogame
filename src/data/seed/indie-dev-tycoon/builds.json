@@ -15,6 +15,9 @@
     "distribution": "GitHub Releases (descargas)",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/releases/tag/descargas",
     "notes": "Primera demo con versión propia (.exe 1.1.0.0). El README de 51c8135 ya enlazaba la «Demo (v1.1)» en la tabla «Descargar». Que se publicara se infiere: el flujo publica en cada push a main y la release se publicó por primera vez el 2026-10-06, pero no guarda versiones anteriores. La sustituyó la 1.2 el mismo día.",
+    "tags": [
+      "demo"
+    ],
     "sources": [
       {
         "type": "commit",
@@ -87,6 +90,9 @@
     "distribution": "GitHub Releases (descargas)",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/releases/tag/descargas",
     "notes": "Ejecutables 1.2.0.0; el README de 85bad40 pasa la tabla «Descargar» a la v1.2. Se infiere que la publicó el flujo «Descargas» al fusionar la PR #22. La sustituyó la 1.3 el 2026-10-11.",
+    "tags": [
+      "demo"
+    ],
     "sources": [
       {
         "type": "commit",
@@ -149,6 +155,10 @@
     "distribution": "GitHub Releases (descargas)",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/releases/tag/descargas",
     "notes": "Siete años (hasta 1991) o hasta la primera oficina; .exe 1.3.0.0. En la release desde el 11-10 (PR #31); lo de ahora se compiló del commit 8845556 (13-10, hora local). La sustituye la Demo 1.4 cuando se fusione la rama.",
+    "releaseId": "idt-release-demo-1-3",
+    "tags": [
+      "demo"
+    ],
     "sources": [
       {
         "type": "commit",
@@ -245,6 +255,10 @@
     "distribution": "GitHub Releases (descargas)",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/releases/tag/descargas",
     "notes": "La misma demo con las barras de las fases de antes; .exe 1.3.0.2. En la release desde el 12-10 (PR #32); lo de ahora se compiló del commit 8845556 (13-10, hora local). En la rama sin fusionar (d8eca50) se elige para Steam como Demo 1.4; en main el README aún dice que no está decidido. Con la 1.4 deja de compilarse, pero sus zips no se borran solos de la release.",
+    "releaseId": "idt-release-demo-1-3-v2",
+    "tags": [
+      "demo"
+    ],
     "sources": [
       {
         "type": "commit",
@@ -300,6 +314,12 @@
     "distribution": "GitHub Releases (descargas)",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/releases/tag/descargas",
     "notes": "Para el stand: modo stand, seis juegos, seis encargos, QR de Discord y ranking feria_valladolid; .exe 1.0.0.0, portada «v1.0» y cartel «DEMO VALLADOLID». En la release desde el 12-10 (PR #33); lo de ahora, con el modo stand y el filtro de palabrotas, se compiló del commit 8845556 (13-10, hora local).",
+    "releaseId": "idt-release-demo-valladolid-1-0",
+    "eventId": "idt-feria-valladolid",
+    "tags": [
+      "demo",
+      "feria"
+    ],
     "sources": [
       {
         "type": "commit",
@@ -383,6 +403,11 @@
     "date": "2026-10-14",
     "distribution": "Sin publicar (rama claude/lucid-lamport-fl6em4)",
     "notes": "La demo con las barras de antes, la que fue la 1.3 V2 y la que irá a Steam según la rama (en main sigue sin decidir); .exe 1.4.0.0 y Mac 1.4. Solo en la rama, sin PR: no está en la release «descargas». El flujo «Descargas» la compilará al fusionar la rama en main, cuando Actions vuelva a arrancar.",
+    "releaseId": "idt-release-demo-1-4",
+    "tags": [
+      "demo",
+      "steam"
+    ],
     "sources": [
       {
         "type": "commit",

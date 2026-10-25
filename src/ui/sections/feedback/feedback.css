@@ -1,0 +1,196 @@
+/* Feedback y pruebas: listas por estado, cuadro de priorización, cambios e informes de pruebas. */
+
+.feedback-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.feedback-intro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-width: 78ch;
+  color: var(--text-2);
+  font-size: 0.9rem;
+}
+
+.feedback-intro p {
+  margin: 0;
+}
+
+/* «Sin clasificar»: un botón que se queda pulsado. */
+.feedback-toggle.active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.feedback-row .item-main > .linked {
+  margin-top: var(--space-1);
+}
+
+.feedback-row .chip-btn {
+  max-width: 100%;
+  text-align: left;
+  white-space: normal;
+}
+
+.feedback-row .chip-btn .version-tag {
+  margin-left: var(--space-1);
+}
+
+.feedback-row .item-side {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.feedback-quick {
+  margin-top: var(--space-2);
+}
+
+/* Cuadro impacto × estado: cada casilla es un enlace que filtra la lista. */
+.feedback-matrix th[scope='row'] {
+  text-align: left;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.feedback-cell {
+  display: inline-grid;
+  place-items: center;
+  min-width: 36px;
+  min-height: 28px;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--text);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.feedback-cell:hover {
+  border-color: var(--accent);
+}
+
+.feedback-cell.active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.feedback-stats {
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.feedback-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  margin: 0;
+  color: var(--text-2);
+  font-size: 0.88rem;
+}
+
+.feedback-note .icon {
+  color: var(--info);
+}
+
+/* Cambios: lo que resuelve cada feedback, con su estado. */
+.feedback-progress {
+  display: grid;
+  grid-template-columns: minmax(80px, 200px) auto;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+.feedback-change-items {
+  list-style: none;
+  margin: var(--space-1) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.feedback-change-items li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  font-size: 0.86rem;
+}
+
+.feedback-change-items .kind-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.feedback-change-items .link-btn {
+  text-align: left;
+}
+
+.feedback-close {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--info) var(--tone-alpha), var(--surface));
+}
+
+.feedback-close .icon {
+  color: var(--info);
+  vertical-align: -2px;
+}
+
+/* Informes de pruebas. */
+.feedback-summary {
+  margin: 0;
+  white-space: pre-line;
+  max-width: 78ch;
+  font-size: 0.9rem;
+}
+
+.feedback-report-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.feedback-report-head .subhead {
+  margin: 0;
+}
+
+.feedback-page .item-meta .link-btn {
+  font-size: inherit;
+}
+
+@media (max-width: 640px) {
+  .feedback-matrix th[scope='row'] {
+    display: block;
+    padding: 0 0 var(--space-1);
+    border: 0;
+  }
+
+  .feedback-matrix td.num {
+    text-align: left;
+  }
+
+  .feedback-matrix td[data-label]::before {
+    margin-right: var(--space-2);
+  }
+
+  .feedback-progress {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
