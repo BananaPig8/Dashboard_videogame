@@ -512,8 +512,8 @@ export function normalizePath(to: string): string {
   return join(path, params)
 }
 
-/** Parámetros de la URL que no eligen subsección (el ámbito, la búsqueda y la etiqueta). */
-const NOT_A_VIEW = new Set(['p', 'q', 'etiqueta'])
+/** Parámetros de la URL que no eligen subsección (el ámbito, la búsqueda, la etiqueta y cómo se pinta). */
+const NOT_A_VIEW = new Set(['p', 'q', 'etiqueta', 'mostrar'])
 
 /** ¿Hay en la URL algún parámetro que elija vista? (para saber si una vista guardada es solo un filtro). */
 export function viewParams(search: string): string[] {

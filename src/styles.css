@@ -3291,6 +3291,16 @@ input[type='color'] {
   text-decoration: underline;
 }
 
+/* Una fecha que abre algo: conserva el tamaño y el tono de las fechas. */
+.link-btn.meta-date {
+  font-size: 0.76rem;
+  color: var(--text-3);
+}
+
+.link-btn.meta-date:hover {
+  color: var(--accent);
+}
+
 /* Calendario mensual. */
 .month-cal-head {
   display: flex;
