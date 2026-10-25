@@ -10,7 +10,7 @@ import type { ID, StudioData, Studio } from '../domain/types'
 import { validateStudioData } from '../domain/validate'
 import { reconcile, RemoteAdapter } from './remote'
 import { capability, EN_CLAUDE } from './runtime'
-import { createSeedData, SEED_VERSION } from './seed'
+import { createSeedData, SEED_RETIRED, SEED_VERSION } from './seed'
 import { LocalStorageAdapter, type Persisted, type StorageAdapter, type StoreMeta } from './storage'
 
 // Las colecciones salen del registro (domain/collections.ts).
@@ -27,7 +27,7 @@ export function newId(prefix: string): ID {
  * Trae los datos iniciales nuevos sin pisar lo que el estudio ha cambiado: añade lo que
  * falta, actualiza lo que nadie ha tocado y respeta lo editado o borrado a mano.
  */
-export function mergeSeed(current: StudioData, meta: StoreMeta, seed: StudioData): StudioData {
+export function mergeSeed(current: StudioData, meta: StoreMeta, seed: StudioData, retired: readonly string[] = []): StudioData {
   const edited = new Set(meta.edited)
   const deleted = new Set(meta.deleted)
   const next: StudioData = { ...current, schemaVersion: seed.schemaVersion }
@@ -45,7 +45,15 @@ export function mergeSeed(current: StudioData, meta: StoreMeta, seed: StudioData
   }
   // Lo que el estudio haya puesto (moneda, nombres de estados…) nunca lo pisa la semilla.
   if (!edited.has('studio')) next.studio = { ...seed.studio, ...current.studio }
-  return next
+  // Lo que los datos iniciales han retirado («colección:id») se quita, con sus referencias,
+  // salvo que el estudio lo haya editado.
+  let out = next
+  for (const kk of retired) {
+    if (edited.has(kk)) continue
+    const i = kk.indexOf(':')
+    out = removeWithReferences(out, kk.slice(0, i) as CollectionKey, kk.slice(i + 1)).data
+  }
+  return out
 }
 
 type Listener = () => void
@@ -259,7 +267,7 @@ export class StudioStore {
 
   /** Trae los datos iniciales nuevos respetando lo editado. */
   applySeedUpdate(): void {
-    this.commit(mergeSeed(this.data, this.meta, this.seed()), { ...this.meta, seedVersion: this.seedVersion })
+    this.commit(mergeSeed(this.data, this.meta, this.seed(), SEED_RETIRED), { ...this.meta, seedVersion: this.seedVersion })
   }
 
   /** Foto del estado (datos y qué se ha editado), para poder deshacer. */

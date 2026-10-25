@@ -84,4 +84,12 @@ describe('mergeSeed', () => {
     const titles = Object.fromEntries(merged.items.map((i) => [i.id, i.title]))
     expect(titles).toEqual({ a: 'A nuevo', b: 'B editado a mano', mio: 'Creado por el estudio', c: 'C nuevo' })
   })
+
+  it('quita lo que los datos iniciales han retirado, salvo lo editado', () => {
+    const current = seed([task('viejo', 'Retirado'), task('tocado', 'Retirado pero editado'), task('a', 'A')])()
+    const fresh = seed([task('a', 'A')])()
+    const meta = { seedVersion: 'v1', edited: ['items:tocado'], deleted: [] }
+    const merged = mergeSeed(current, meta, fresh, ['items:viejo', 'items:tocado'])
+    expect(merged.items.map((i) => i.id).sort()).toEqual(['a', 'tocado'])
+  })
 })
