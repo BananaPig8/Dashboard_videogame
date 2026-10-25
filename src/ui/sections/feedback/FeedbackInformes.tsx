@@ -1,5 +1,6 @@
 // Informes de pruebas (vista aparte): cada prueba con jugadores con su fecha, cómo se hizo,
 // cuántas personas, la build, el evento, el resumen y el feedback que salió de ella.
+import { Link } from 'react-router-dom'
 import { PLAYTEST_METHODS } from '../../../domain/catalog'
 import { yearOf } from '../../../domain/dates'
 import { playtestFeedbackWithoutTest, playtestReports, type PlaytestReport } from '../../../domain/selectors'
@@ -63,7 +64,10 @@ function Report({ report: r, showProject }: { report: PlaytestReport; showProjec
   const canEdit = useCanEdit()
   const fmt = useFormat()
   const year = yearOf(useToday())
+  const { href } = useScope()
   const p = r.playtest
+  // El feedback del evento de la prueba que no dice venir de la prueba (va con el evento).
+  const eventFeedback = r.event ? data.feedback.filter((f) => f.eventId === r.event!.id && !f.playtestId).length : 0
   const subtitle = [
     p.date ? fmt.date(p.date, year) : t('secciones.feedback.informes.noDate'),
     PLAYTEST_METHODS[p.method],
@@ -144,6 +148,15 @@ function Report({ report: r, showProject }: { report: PlaytestReport; showProjec
         </ul>
       ) : (
         <p className="muted small">{t('secciones.feedback.informes.noFeedback')}</p>
+      )}
+      {eventFeedback > 0 && (
+        <p className="muted small">
+          {t(eventFeedback === 1 ? 'secciones.feedback.informes.eventFeedback.one' : 'secciones.feedback.informes.eventFeedback.many', {
+            n: eventFeedback,
+            event: r.event!.title,
+          })}{' '}
+          <Link to={href(`/feedback?${new URLSearchParams({ evento: r.event!.id })}`)}>{t('secciones.feedback.informes.eventFeedback.link')}</Link>
+        </p>
       )}
     </Card>
   )

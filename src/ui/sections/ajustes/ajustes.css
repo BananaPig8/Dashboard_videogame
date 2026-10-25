@@ -243,13 +243,9 @@
   color: var(--warning);
 }
 
-/* ——— Datos ——————————————————————————————————————————————————————————————— */
+/* ——— Tablas de etiquetas y estados ————————————————————————————————————————— */
 
-.ajustes-import-errors {
-  margin-top: var(--space-2);
-}
-
-/* Las filas de mis tablas empiezan con su nombre (una etiqueta, un estado): sin el estilo de cabecera. */
+/* Cada fila empieza con su nombre (una etiqueta, un estado): sin el estilo de cabecera. */
 .ajustes-tags .table tbody th,
 .ajustes-estados tbody th {
   text-transform: none;
@@ -272,4 +268,24 @@
 
 .ajustes-more {
   align-self: flex-start;
+}
+
+/* En móvil, las tablas son tarjetas (styles.css): el nombre ocupa su línea y los números van a la izquierda, tras su etiqueta. */
+@media (max-width: 640px) {
+  .ajustes-tags .table tbody th,
+  .ajustes-estados tbody th {
+    display: block;
+    width: 100%;
+    border: 0;
+    padding: 3px 0;
+  }
+  .ajustes-tags .table td.num {
+    text-align: left;
+  }
+}
+
+/* ——— Datos ——————————————————————————————————————————————————————————————— */
+
+.ajustes-import-errors {
+  margin-top: var(--space-2);
 }

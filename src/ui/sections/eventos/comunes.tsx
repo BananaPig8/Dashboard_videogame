@@ -1,7 +1,7 @@
 // Piezas comunes de Eventos: la fecha de un evento (con «sin confirmar»), su tipo, su
 // inscripción, la fila de la agenda y la cabecera de la página con «Nuevo evento».
 import type { ReactNode } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { EVENT_TYPES, REGISTRATION_STATUSES } from '../../../domain/catalog'
 import { yearOf } from '../../../domain/dates'
 import { eventoDefaultType, eventoFeedbackCount, eventoIsStale, eventoTipoOf, type EventoQuery, type EventoTipo } from '../../../domain/selectors'
@@ -100,6 +100,7 @@ export function EventProject({ event: e, showProject }: { event: StudioEvent; sh
 /** Una fila de la agenda de eventos: fecha, nombre, tipo, lugar, inscripción y estado. */
 export function EventRow({ event: e, showProject, today, children }: { event: StudioEvent; showProject: boolean; today: ISODate; children?: ReactNode }) {
   const data = useStudioData()
+  const { href } = useScope()
   const { edit } = useUI()
   const fmt = useFormat()
   const when = useEventDate()
@@ -130,9 +131,9 @@ export function EventRow({ event: e, showProject, today, children }: { event: St
           <EventProject event={e} showProject={showProject} />
           {e.registrationStatus && <RegistrationPill status={e.registrationStatus} />}
           {feedback > 0 && (
-            <span className="meta-date">
+            <Link className="meta-date eventos-feedback-link" to={href(`/feedback?${new URLSearchParams({ evento: e.id })}`)}>
               <Icon name="message" size={12} /> {t('secciones.eventos.feedbackCount', { n: feedback })}
-            </span>
+            </Link>
           )}
           <ConfidenceTag confidence={e.confidence} compact />
           {e.url && <ExternalLink href={e.url}>{t('secciones.eventos.web')}</ExternalLink>}

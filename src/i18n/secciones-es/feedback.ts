@@ -31,6 +31,8 @@ export const feedback = {
     origin: 'Origen',
     originAll: 'Cualquier origen',
     unclassified: 'Sin clasificar ({n})',
+    event: 'Solo de «{event}»',
+    eventGone: 'un evento que ya no existe',
     clear: 'Quitar filtros',
   },
   list: {
@@ -143,5 +145,10 @@ export const feedback = {
     feedback: 'Feedback de esta prueba ({n})',
     addFeedback: 'Añadir feedback',
     noFeedback: 'Ningún feedback apuntado de esta prueba.',
+    eventFeedback: {
+      one: '{n} de feedback más va con el evento «{event}» (dice venir del evento, no de la prueba).',
+      many: '{n} de feedback más van con el evento «{event}» (dicen venir del evento, no de la prueba).',
+      link: 'Ver todo el feedback del evento',
+    },
   },
 } as const

@@ -271,3 +271,12 @@
     width: 100%;
   }
 }
+
+.eventos-feedback-link {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.eventos-feedback-link:hover {
+  color: var(--accent);
+}

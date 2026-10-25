@@ -119,7 +119,8 @@ export function AjustesEstados() {
           </div>
           {duplicated.length > 0 && (
             <p className="ajustes-error" role="alert">
-              <Icon name="alert" size={14} /> {t('secciones.ajustes.estados.duplicated', { list: joinList([...new Set(duplicated.map((k) => `«${finalName(k)}»`))]) })}
+              <Icon name="alert" size={14} />{' '}
+              {t('secciones.ajustes.estados.duplicated', { list: joinList([...new Set(duplicated.map((k) => `«${finalName(k)}»`))]) })}
             </p>
           )}
           {canEdit ? (

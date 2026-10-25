@@ -30,7 +30,7 @@ export const IMPACT_ORDER: Priority[] = ['critical', 'high', 'medium', 'low']
 
 export const isFeedbackOpen = (f: Feedback) => FEEDBACK_STATUSES[f.status].open
 
-// ——— Filtros finos (?estado=, ?impacto=, ?origen=, ?clase=, ?q=) ————————————————
+// ——— Filtros finos (?estado=, ?impacto=, ?origen=, ?clase=, ?evento=, ?q=) ———————————
 
 /** ?estado=: abierto (por atender), cerrado (atendido) o un estado concreto. */
 export type FeedbackStateFilter = 'abierto' | 'cerrado' | FeedbackStatus
@@ -48,10 +48,15 @@ export interface FeedbackQuery {
   origen?: FeedbackOrigin | null
   q?: string
   tag?: string | null
+  /** ?evento=: solo el feedback de ese evento (el que dice venir de él y el de sus pruebas). */
+  evento?: ID | null
+  /** Las pruebas de ese evento (las rellena feedbackQueryOf si se le pasan los datos). */
+  eventoTests?: ID[]
 }
 
 /** Los filtros finos leídos de la URL; lo que no se entiende se ignora. */
-export function feedbackQueryOf(params: URLSearchParams, scope: Scope = null): FeedbackQuery {
+export function feedbackQueryOf(params: URLSearchParams, scope: Scope = null, data?: StudioData): FeedbackQuery {
+  const evento = params.get('evento') || null
   const estado = params.get('estado')
   const impacto = params.get('impacto')
   const origen = params.get('origen')
@@ -65,12 +70,14 @@ export function feedbackQueryOf(params: URLSearchParams, scope: Scope = null): F
     origen: origen && origen in FEEDBACK_ORIGINS ? (origen as FeedbackOrigin) : null,
     q: params.get('q') ?? '',
     tag: params.get('etiqueta') || null,
+    evento,
+    eventoTests: evento && data ? data.playtests.filter((p) => p.eventId === evento).map((p) => p.id) : [],
   }
 }
 
 /** ¿Hay algún filtro fino puesto (además de la subsección)? */
 export function feedbackFiltered(q: FeedbackQuery): boolean {
-  return !!(q.unclassified || q.estado || q.impacto || q.origen || q.q?.trim())
+  return !!(q.unclassified || q.estado || q.impacto || q.origen || q.evento || q.q?.trim())
 }
 
 const words = (q: string | undefined) => normalize(q ?? '').split(/\s+/).filter(Boolean)
@@ -93,6 +100,7 @@ export function feedbackMatches(f: Feedback, q: FeedbackQuery): boolean {
   if (q.impacto && f.impact !== q.impacto) return false
   if (q.origen && f.origin !== q.origen) return false
   if (!hasTag(f, q.tag ?? null)) return false
+  if (q.evento && f.eventId !== q.evento && !(f.playtestId && q.eventoTests?.includes(f.playtestId))) return false
   return matchesWords([f.title, f.detail, f.originDetail, ...(f.tags ?? [])], words(q.q))
 }
 
@@ -150,7 +158,7 @@ export function unlinkedIssues(data: StudioData, scope: Scope = null): WorkItem[
 
 /** ¿Entra esta incidencia con los filtros finos? (las incidencias no tienen origen ni estados de feedback). */
 export function issueMatches(i: WorkItem, q: FeedbackQuery): boolean {
-  if (q.origen || q.unclassified) return false
+  if (q.origen || q.unclassified || q.evento) return false
   if (q.estado && q.estado !== 'abierto' && q.estado !== 'cerrado') return false
   if (q.estado === 'abierto' && !isOpen(i)) return false
   if (q.estado === 'cerrado' && isOpen(i)) return false

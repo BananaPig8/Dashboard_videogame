@@ -216,7 +216,9 @@ function RenameTag({ tag, existing, onClose }: { tag: string; existing: string[]
           },
     )
     if (!ok) return
-    undoable(plan.merge ? t('secciones.ajustes.categorias.merged', vars) : t('secciones.ajustes.categorias.renamed', vars), () => store.renameTag(tag, plan.target))
+    undoable(plan.merge ? t('secciones.ajustes.categorias.merged', vars) : t('secciones.ajustes.categorias.renamed', vars), () =>
+      store.renameTag(tag, plan.target),
+    )
   }
 
   return (

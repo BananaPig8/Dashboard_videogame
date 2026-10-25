@@ -56,7 +56,16 @@ export function EstadisticasTareas() {
           ]}
         />
         {(s.createdUndated > 0 || s.doneUndated > 0) && (
-          <p className="muted small">{t('secciones.estadisticas.tareas.undated', { created: s.createdUndated, done: s.doneUndated })}</p>
+          <p className="muted small">
+            {t('secciones.estadisticas.tareas.undated', {
+              list: [
+                s.createdUndated ? t('secciones.estadisticas.tareas.undatedCreated', { n: s.createdUndated }) : '',
+                s.doneUndated ? t('secciones.estadisticas.tareas.undatedDone', { n: s.doneUndated }) : '',
+              ]
+                .filter(Boolean)
+                .join(t('secciones.estadisticas.tareas.and')),
+            })}
+          </p>
         )}
       </Card>
       <div className="estadisticas-grid">

@@ -1,6 +1,7 @@
 // La lista de feedback de una subsección (?tipo=), agrupada por estado. En Bugs se juntan el
 // feedback que es un bug y las incidencias de Tareas, sin repetir: las que un bug enlaza salen
 // dentro de él.
+import { useState, type ReactNode } from 'react'
 import { FEEDBACK_STATUSES } from '../../../domain/catalog'
 import { yearOf } from '../../../domain/dates'
 import { bugEntryId, bugEntryOpen, feedbackBugs, feedbackByStatus, feedbackFiltered, feedbackList, feedbackTipoDefaults, type BugEntry } from '../../../domain/selectors'
@@ -9,7 +10,7 @@ import { useCanEdit, useStudioData } from '../../../data/store'
 import { t } from '../../../i18n'
 import { ConfidenceTag, KindTag, ProjectChip, StatusPill } from '../../components/Badges'
 import { Card, Empty } from '../../components/Common'
-import { Icon } from '../../components/Icon'
+import { Icon, type IconName } from '../../components/Icon'
 import { TagLinks } from '../../components/TagFilter'
 import { useScope, useUI } from '../../context'
 import { useFormat, useToday } from '../../hooks'
@@ -46,27 +47,37 @@ export function FeedbackLista({ embedded }: SectionPageProps) {
     body = entries.length ? (
       <>
         {open.length > 0 && <BugGroup title={t('secciones.feedback.bugs.open')} icon="bug" entries={open} showProject={showProject} />}
-        {closed.length > 0 && <BugGroup title={t('secciones.feedback.bugs.closed')} icon="checkCircle" entries={closed} showProject={showProject} />}
+        {closed.length > 0 && (
+          <BugGroup
+            title={t('secciones.feedback.bugs.closed')}
+            icon="checkCircle"
+            entries={closed}
+            showProject={showProject}
+            folded={open.length > 0 && closed.length > FOLD_AFTER}
+          />
+        )}
       </>
     ) : (
       empty
     )
   } else {
     const groups = feedbackByStatus(feedbackList(data, query))
+    const anyOpen = groups.some((g) => FEEDBACK_STATUSES[g.status].open)
     body = groups.length
       ? groups.map((g) => (
-          <Card
+          <Group
             key={g.status}
             title={FEEDBACK_STATUSES[g.status].label}
             icon={FEEDBACK_STATUS_ICON[g.status]}
             subtitle={t(g.list.length === 1 ? 'secciones.feedback.count.one' : 'secciones.feedback.count.many', { n: g.list.length })}
+            folded={anyOpen && !FEEDBACK_STATUSES[g.status].open && g.list.length > FOLD_AFTER}
           >
             <ul className="item-list">
               {g.list.map((f) => (
                 <FeedbackRow key={f.id} feedback={f} showProject={showProject} showStatus={false} />
               ))}
             </ul>
-          </Card>
+          </Group>
         ))
       : empty
   }
@@ -79,7 +90,31 @@ export function FeedbackLista({ embedded }: SectionPageProps) {
   )
 }
 
-function BugGroup({ title, icon, entries, showProject }: { title: string; icon: 'bug' | 'checkCircle'; entries: BugEntry[]; showProject: boolean }) {
+/** Lo ya atendido se pliega si es largo y hay algo abierto (se despliega con un clic). */
+const FOLD_AFTER = 8
+
+function Group({ folded, children, ...card }: { title: string; icon: IconName; subtitle: string; folded?: boolean; children: ReactNode }) {
+  const [collapsed, setCollapsed] = useState(!!folded)
+  return (
+    <Card {...card} collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)}>
+      {children}
+    </Card>
+  )
+}
+
+function BugGroup({
+  title,
+  icon,
+  entries,
+  showProject,
+  folded,
+}: {
+  title: string
+  icon: 'bug' | 'checkCircle'
+  entries: BugEntry[]
+  showProject: boolean
+  folded?: boolean
+}) {
   const fb = entries.filter((e) => e.type === 'feedback').length
   const issues = entries.length - fb
   const subtitle = [
@@ -89,7 +124,7 @@ function BugGroup({ title, icon, entries, showProject }: { title: string; icon: 
     .filter(Boolean)
     .join(' · ')
   return (
-    <Card title={title} icon={icon} subtitle={subtitle}>
+    <Group title={title} icon={icon} subtitle={subtitle} folded={folded}>
       <ul className="item-list">
         {entries.map((e) =>
           e.type === 'feedback' ? (
@@ -99,7 +134,7 @@ function BugGroup({ title, icon, entries, showProject }: { title: string; icon: 
           ),
         )}
       </ul>
-    </Card>
+    </Group>
   )
 }
 

@@ -171,13 +171,14 @@ export function FeedbackRow({
 // ——— Filtros finos ——————————————————————————————————————————————————————————
 
 /** Los filtros finos de la URL (sin la subsección), los que borra «Quitar filtros». */
-export const FEEDBACK_FINE_FILTERS = ['estado', 'impacto', 'origen', 'clase', 'q'] as const
+export const FEEDBACK_FINE_FILTERS = ['estado', 'impacto', 'origen', 'clase', 'evento', 'q'] as const
 
 /** La subsección y los filtros finos de la URL, ya leídos. */
 export function useFeedbackQuery(): { tipo: FeedbackTipo | null; vista: string | null; query: FeedbackQuery } {
   const [params] = useSearchParams()
   const { scope } = useScope()
-  return { tipo: feedbackTipoOf(params.get('tipo')), vista: params.get('vista'), query: feedbackQueryOf(params, scope) }
+  const data = useStudioData()
+  return { tipo: feedbackTipoOf(params.get('tipo')), vista: params.get('vista'), query: feedbackQueryOf(params, scope, data) }
 }
 
 /** Búsqueda, estado, impacto, origen y (en Todo) «Sin clasificar». Viven en la URL. */
@@ -244,6 +245,13 @@ export function FeedbackFiltros({ query, statuses = true }: { query: FeedbackQue
           onClick={() => set('clase', query.unclassified ? '' : FEEDBACK_UNCLASSIFIED)}
         >
           <Icon name="question" size={14} /> {t('secciones.feedback.filters.unclassified', { n: unclassified })}
+        </button>
+      )}
+      {query.evento && (
+        <button type="button" className="btn btn-small feedback-toggle active" aria-pressed="true" onClick={() => set('evento', '')}>
+          <Icon name="ticket" size={14} />{' '}
+          {t('secciones.feedback.filters.event', { event: data.events.find((e) => e.id === query.evento)?.title ?? t('secciones.feedback.filters.eventGone') })}
+          <Icon name="close" size={12} />
         </button>
       )}
       {feedbackFiltered(query) && (

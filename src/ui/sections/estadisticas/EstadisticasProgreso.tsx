@@ -46,7 +46,9 @@ function ByKind({ rows }: { rows: StatsProjectProgress[] }) {
             <tr>
               <th scope="col">{L('kind')}</th>
               <th scope="col">{L('progress')}</th>
-              <th scope="col">{L('cancelled')}</th>
+              <th scope="col" className="num">
+                {L('cancelled')}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -97,13 +99,15 @@ export function EstadisticasProgreso() {
   const toConfirm = total((r) => r.summary.toConfirm)
   const pct = (c: StatsCount) => (c.ratio === null ? undefined : t('secciones.estadisticas.common.pct', { n: Math.round(c.ratio * 100) }))
   const of = (c: StatsCount) => t('secciones.estadisticas.common.of', { done: c.done, total: c.total })
+  const ofTotal = (c: StatsCount) =>
+    c.ratio === null ? t('secciones.estadisticas.common.nothingYet') : t('secciones.estadisticas.common.ofTotal', { total: c.total, pct: pct(c) ?? '' })
   const L = (k: 'project' | 'stage' | 'health' | 'progress' | 'milestones' | 'open') => t(`secciones.estadisticas.progreso.${k}`)
 
   const tiles = (
     <div className="stats">
       {!scope && <Stat label={t('secciones.estadisticas.progreso.projects')} value={rows.length} icon="folder" />}
-      <Stat label={t('secciones.estadisticas.progreso.tasks')} value={of(tasks)} hint={pct(tasks) ?? t('secciones.estadisticas.common.nothingYet')} icon="checkCircle" />
-      <Stat label={t('secciones.estadisticas.progreso.milestones')} value={of(milestones)} hint={pct(milestones)} icon="flag" />
+      <Stat label={t('secciones.estadisticas.progreso.tasks')} value={tasks.done} hint={ofTotal(tasks)} icon="checkCircle" />
+      <Stat label={t('secciones.estadisticas.progreso.milestones')} value={milestones.done} hint={ofTotal(milestones)} icon="flag" />
       <Stat label={t('secciones.estadisticas.progreso.open')} value={total((r) => r.summary.open)} icon="list" to={href('/tareas')} />
       <Stat label={t('secciones.estadisticas.progreso.blocked')} value={blocked} icon="lock" tone={blocked ? 'danger' : 'neutral'} to={href('/tareas?filtro=bloqueadas')} />
       <Stat label={t('secciones.estadisticas.progreso.overdue')} value={overdue} icon="clock" tone={overdue ? 'danger' : 'neutral'} to={href('/tareas?filtro=vencidas')} />
@@ -158,7 +162,9 @@ export function EstadisticasProgreso() {
                 <th scope="col">{L('health')}</th>
                 <th scope="col">{L('progress')}</th>
                 <th scope="col">{L('milestones')}</th>
-                <th scope="col">{L('open')}</th>
+                <th scope="col" className="num">
+                  {L('open')}
+                </th>
               </tr>
             </thead>
             <tbody>

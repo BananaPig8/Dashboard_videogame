@@ -199,7 +199,8 @@ export const ajustes = {
   },
   seguridad: {
     where: 'Dónde están los datos',
-    whereLocal: 'En este navegador, en este equipo (localStorage). La web solo sirve los ficheros de la aplicación: lo que apuntas no se envía a ningún servidor.',
+    whereLocal:
+      'En este navegador, en este equipo (localStorage). La web solo sirve los ficheros de la aplicación: lo que apuntas no se envía a ningún servidor.',
     whereLocalOthers:
       'Cada persona tiene los suyos: no pasan solos a otros dispositivos ni los ven los demás. Para llevarlos a otro sitio, exporta una copia e impórtala allí.',
     whereClaude: 'En la base de datos de esta página de claude.ai. La comparten el estudio y Claude: lo que cambia uno lo ve el otro al momento.',
@@ -221,7 +222,8 @@ export const ajustes = {
     passwordsClaude: 'Para entrar se usa la cuenta de Claude. Eso lo gestiona claude.ai.',
     passwordsDont: 'No apuntes contraseñas ni claves en notas, recursos o descripciones: se guardan tal cual y van en las copias exportadas.',
     backups: 'Copias de seguridad',
-    backupsBody: 'La copia es un fichero JSON con todo (también las finanzas): guárdala en un sitio seguro. Exporta una antes de importar otra o de volver a los datos iniciales.',
+    backupsBody:
+      'La copia es un fichero JSON con todo (también las finanzas): guárdala en un sitio seguro. Exporta una antes de importar otra o de volver a los datos iniciales.',
     backupsGo: 'Ir a Exportación e importación',
     repo: 'El código y los datos iniciales están en un repositorio público de GitHub: lo que va en los datos iniciales lo puede ver cualquiera. Lo que apuntas en la web, no.',
     headers: 'La web pide a los buscadores que no la indexen y no deja que otras páginas la incrusten.',

@@ -119,13 +119,16 @@ export default function EtiquetasPage() {
           <Icon name="folder" size={16} />
           <span>
             {t('secciones.ajustes.etiquetas.scoped', { project: project.name })}{' '}
-            {everywhere && t('secciones.ajustes.etiquetas.elsewhere', { list: everywhere })} <Link to={tagPath(tag)}>{t('secciones.ajustes.etiquetas.seeAll')}</Link>
+            {everywhere && t('secciones.ajustes.etiquetas.elsewhere', { list: everywhere })}{' '}
+            <Link to={tagPath(tag)}>{t('secciones.ajustes.etiquetas.seeAll')}</Link>
           </span>
         </p>
       )}
 
       {groups.length === 0 ? (
-        <Empty icon="tag">{project ? t('secciones.ajustes.etiquetas.emptyScoped', { project: project.name, tag }) : t('secciones.ajustes.etiquetas.empty', { tag })}</Empty>
+        <Empty icon="tag">
+          {project ? t('secciones.ajustes.etiquetas.emptyScoped', { project: project.name, tag }) : t('secciones.ajustes.etiquetas.empty', { tag })}
+        </Empty>
       ) : (
         <div className="etiquetas-groups">
           {groups.map((g) => {

@@ -61,7 +61,13 @@ function Apariencia() {
       <FieldGroup label={t('settings.theme')}>
         <div className="segmented" role="group" aria-label={t('settings.theme')}>
           {themes.map(([id, label, icon]) => (
-            <button key={id} type="button" className={prefs.theme === id ? 'active' : ''} aria-pressed={prefs.theme === id} onClick={() => updatePreferences({ theme: id })}>
+            <button
+              key={id}
+              type="button"
+              className={prefs.theme === id ? 'active' : ''}
+              aria-pressed={prefs.theme === id}
+              onClick={() => updatePreferences({ theme: id })}
+            >
               <Icon name={icon} size={15} /> {label}
             </button>
           ))}
@@ -90,7 +96,13 @@ function Apariencia() {
       <FieldGroup label={t('settings.density')}>
         <div className="segmented" role="group" aria-label={t('settings.density')}>
           {densities.map(([id, label]) => (
-            <button key={id} type="button" className={prefs.density === id ? 'active' : ''} aria-pressed={prefs.density === id} onClick={() => updatePreferences({ density: id })}>
+            <button
+              key={id}
+              type="button"
+              className={prefs.density === id ? 'active' : ''}
+              aria-pressed={prefs.density === id}
+              onClick={() => updatePreferences({ density: id })}
+            >
               {label}
             </button>
           ))}

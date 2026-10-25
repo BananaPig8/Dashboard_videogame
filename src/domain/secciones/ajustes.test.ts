@@ -21,7 +21,18 @@ import {
 import { renameTag } from './etiquetas'
 
 const src = [{ type: 'manual' as const, ref: 'prueba' }]
-const project = (id: string, tags: string[] = []) => ({ id, slug: id, name: id, description: '', platforms: [], stage: 'production' as const, color: '#000', versions: [], tags, links: [] })
+const project = (id: string, tags: string[] = []) => ({
+  id,
+  slug: id,
+  name: id,
+  description: '',
+  platforms: [],
+  stage: 'production' as const,
+  color: '#000',
+  versions: [],
+  tags,
+  links: [],
+})
 const item = (id: string, over: Partial<WorkItem> = {}): WorkItem => ({
   id,
   projectId: 'p',
@@ -51,9 +62,36 @@ function data(): StudioData {
       item('Otra', { projectId: 'q', tags: ['feria'], areaId: 'arte' }),
     ],
     members: [{ id: 'ana', name: 'Ana', kind: 'core', areaIds: ['arte', 'audio'], active: true }],
-    builds: [{ id: 'b', projectId: 'p', name: 'Demo', version: '0.3', channel: 'demo', platforms: [], status: 'ready', tags: ['demo'], sources: src, confidence: 'verified' }],
-    releases: [{ id: 'r', projectId: 'q', kind: 'update', name: 'Parche 1.1', version: '1.1', status: 'planned', tags: ['feria'], sources: src, confidence: 'to_confirm' }],
-    storeListings: [{ id: 'l', projectId: 'p', platform: 'steam', kind: 'demo', status: 'not_started', tags: ['demo'], sources: src, confidence: 'to_confirm' }],
+    builds: [
+      {
+        id: 'b',
+        projectId: 'p',
+        name: 'Demo',
+        version: '0.3',
+        channel: 'demo',
+        platforms: [],
+        status: 'ready',
+        tags: ['demo'],
+        sources: src,
+        confidence: 'verified',
+      },
+    ],
+    releases: [
+      {
+        id: 'r',
+        projectId: 'q',
+        kind: 'update',
+        name: 'Parche 1.1',
+        version: '1.1',
+        status: 'planned',
+        tags: ['feria'],
+        sources: src,
+        confidence: 'to_confirm',
+      },
+    ],
+    storeListings: [
+      { id: 'l', projectId: 'p', platform: 'steam', kind: 'demo', status: 'not_started', tags: ['demo'], sources: src, confidence: 'to_confirm' },
+    ],
     // Los logros no dicen de qué tienda son: no cuentan como «de Steam».
     achievements: [{ id: 'lg', projectId: 'p', name: 'Primer juego', status: 'idea', sources: src, confidence: 'to_confirm' }],
     metrics: [{ id: 'm', projectId: 'p', kind: 'wishlists', value: 10, date: '2026-10-01', platform: 'itch', sources: src, confidence: 'to_confirm' }],
@@ -61,7 +99,19 @@ function data(): StudioData {
       { id: 'a1', projectId: 'p', at: '2026-09-01T10:00', type: 'commit', title: 'Uno', areaId: 'arte' },
       { id: 'a2', projectId: 'p', at: '2026-10-02T10:00', type: 'commit', title: 'Dos' },
     ],
-    transactions: [{ id: 't', kind: 'expense', category: 'events', description: 'Stand', amount: 12000, date: '2026-10-01', status: 'done', sources: src, confidence: 'verified' }],
+    transactions: [
+      {
+        id: 't',
+        kind: 'expense',
+        category: 'events',
+        description: 'Stand',
+        amount: 12000,
+        date: '2026-10-01',
+        status: 'done',
+        sources: src,
+        confidence: 'verified',
+      },
+    ],
   }
 }
 
@@ -92,7 +142,18 @@ describe('perfil del estudio: la moneda', () => {
 })
 
 describe('estados personalizables', () => {
-  const defaults = { idea: 'Idea', backlog: 'Pendiente', planned: 'Planificado', in_progress: 'En curso', review: 'En revisión', blocked: 'Bloqueado', paused: 'En pausa', to_confirm: 'Por confirmar', done: 'Hecho', cancelled: 'Descartado' } as Record<ItemStatus, string>
+  const defaults = {
+    idea: 'Idea',
+    backlog: 'Pendiente',
+    planned: 'Planificado',
+    in_progress: 'En curso',
+    review: 'En revisión',
+    blocked: 'Bloqueado',
+    paused: 'En pausa',
+    to_confirm: 'Por confirmar',
+    done: 'Hecho',
+    cancelled: 'Descartado',
+  } as Record<ItemStatus, string>
 
   it('guarda solo los nombres propios: sin vacíos, sin espacios de más y sin los de siempre', () => {
     expect(cleanStatusLabels({ blocked: '  Atascado   ya ', done: 'Hecho', idea: '   ' }, defaults)).toEqual({ blocked: 'Atascado ya' })
@@ -206,7 +267,11 @@ describe('integraciones', () => {
   })
 
   it('en claude.ai, solo la base de datos de la página está activa', () => {
-    expect(integrationsStatus(data(), true).filter((i) => i.state === 'active').map((i) => i.id)).toEqual(['storage'])
+    expect(
+      integrationsStatus(data(), true)
+        .filter((i) => i.state === 'active')
+        .map((i) => i.id),
+    ).toEqual(['storage'])
   })
 
   it('cuenta lo anotado a mano y lo importado, sin ceros', () => {

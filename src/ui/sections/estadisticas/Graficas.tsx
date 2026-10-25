@@ -1,11 +1,31 @@
 // Gráficas de Estadísticas, en SVG y sin librerías: columnas por semana o por mes (una o dos
 // series), barras horizontales con su cifra en texto y la evolución de una métrica. Todas
 // llevan nombre accesible, su tabla de datos y los colores de la paleta (--series-1/2).
-import { useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import type { ISODate } from '../../../domain/types'
 import { daysBetween } from '../../../domain/dates'
 import { t } from '../../../i18n'
+
+/**
+ * El ancho real de la gráfica, para dibujarla a escala 1:1: así los textos del eje miden lo
+ * mismo en el móvil que en una pantalla ancha (sin medir todavía, `fallback`).
+ */
+function useWidth(fallback: number) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [width, setWidth] = useState(fallback)
+  useEffect(() => {
+    const el = ref.current
+    if (!el || typeof ResizeObserver === 'undefined') return
+    const ro = new ResizeObserver(([entry]) => {
+      const w = Math.round(entry.contentRect.width)
+      if (w > 0) setWidth(w)
+    })
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+  return { ref, width }
+}
 
 /** El tope del eje: 4, 6, 8, 10, 20, 40… (la mitad también es entera). `unit` = 60 para minutos (en horas). */
 export function niceMax(max: number, unit = 1): number {
@@ -53,7 +73,7 @@ export function ColumnChart({
   headLabel: string
 }) {
   const [hover, setHover] = useState<number | null>(null)
-  const W = 640
+  const { ref, width: W } = useWidth(640)
   const H = 200
   const pad = { l: 46, r: 8, t: 10, b: 26 }
   const innerW = W - pad.l - pad.r
@@ -64,7 +84,8 @@ export function ColumnChart({
   const barW = Math.max(4, Math.min(two ? 18 : 28, two ? (band - 10) / 2 : band - 12))
   const y = (v: number) => pad.t + innerH - (v / top) * innerH
   const ticks = [0, top / 2, top]
-  const labelEvery = Math.ceil(labels.length / 8)
+  // Una etiqueta cada tantas columnas como haga falta para que no se pisen (unos 56 px cada una).
+  const labelEvery = Math.max(1, Math.ceil(labels.length / Math.max(1, Math.floor(innerW / 56))))
   const totals = series.map((s) => s.values.reduce((a, b) => a + b, 0))
   const describe = series.map((s, k) => t('secciones.estadisticas.chart.total', { label: s.label, value: format(totals[k]) })).join('; ')
 
@@ -79,7 +100,7 @@ export function ColumnChart({
           ))}
         </div>
       )}
-      <div className="chart-wrap" onMouseLeave={() => setHover(null)}>
+      <div className="chart-wrap" ref={ref} onMouseLeave={() => setHover(null)}>
         <svg viewBox={`0 0 ${W} ${H}`} className="chart-svg" role="img" aria-label={`${title}. ${describe}`}>
           {ticks.map((v) => (
             <g key={v}>
@@ -209,7 +230,7 @@ export function LineChart({
   formatDate: (d: ISODate) => string
 }) {
   const [hover, setHover] = useState<number | null>(null)
-  const W = 480
+  const { ref, width: W } = useWidth(480)
   const H = 160
   const pad = { l: 46, r: 14, t: 12, b: 24 }
   const innerW = W - pad.l - pad.r
@@ -223,7 +244,7 @@ export function LineChart({
   const last = points[points.length - 1]
   return (
     <figure className="chart estadisticas-chart">
-      <div className="chart-wrap" onMouseLeave={() => setHover(null)}>
+      <div className="chart-wrap" ref={ref} onMouseLeave={() => setHover(null)}>
         <svg
           viewBox={`0 0 ${W} ${H}`}
           className="chart-svg"

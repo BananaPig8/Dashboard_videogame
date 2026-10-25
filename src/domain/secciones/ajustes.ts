@@ -69,7 +69,11 @@ export function settingsAreaUsage(data: StudioData): Record<ID, { items: number;
 type Tagged = { id: ID; projectId?: ID; tags?: string[] }
 
 /** Deja una etiqueta escrita a mano como se guarda: sin «#» delante ni espacios de más. */
-export const cleanTag = (tag: string): string => tag.replace(/^\s*#+/, '').replace(/\s+/g, ' ').trim()
+export const cleanTag = (tag: string): string =>
+  tag
+    .replace(/^\s*#+/, '')
+    .replace(/\s+/g, ' ')
+    .trim()
 
 export interface TagRenamePlan {
   /** El nombre nuevo, limpio. */
@@ -186,7 +190,8 @@ export function integrationsStatus(data: StudioData, enClaude: boolean): Integra
     storeListings: data.storeListings.filter((l) => l.platform === p).length,
     metrics: data.metrics.filter((m) => m.platform === p).length,
   })
-  const nonZero = (c: Partial<Record<CollectionKey, number>>) => Object.fromEntries(Object.entries(c).filter(([, n]) => n)) as Partial<Record<CollectionKey, number>>
+  const nonZero = (c: Partial<Record<CollectionKey, number>>) =>
+    Object.fromEntries(Object.entries(c).filter(([, n]) => n)) as Partial<Record<CollectionKey, number>>
   const lastAt = data.activity.reduce<string | undefined>((max, a) => (a.at && (!max || a.at > max) ? a.at : max), undefined)
   return [
     { id: 'storage', state: enClaude ? 'active' : 'local', counts: {} },
