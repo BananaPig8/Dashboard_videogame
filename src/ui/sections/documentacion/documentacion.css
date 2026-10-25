@@ -21,10 +21,6 @@
   text-align: left;
 }
 
-.documentacion-event:hover {
-  color: var(--accent);
-}
-
 /* Decisiones abiertas. */
 .documentacion-decisions {
   list-style: none;
@@ -182,4 +178,14 @@
 
 .documentacion-last {
   margin: var(--space-1) 0 0;
+}
+
+/* La reunión de la que sale algo: botón con aspecto de dato (la regla de .link-btn hereda la letra). */
+.link-btn.documentacion-event {
+  font-size: 0.76rem;
+  color: var(--text-3);
+}
+
+.link-btn.documentacion-event:hover {
+  color: var(--accent);
 }

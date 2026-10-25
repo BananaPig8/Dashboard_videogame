@@ -57,7 +57,11 @@ export default function RecursosSection({ embedded }: SectionPageProps) {
   )
 
   const view = (list: Resource[], caption: string) =>
-    layout === 'grid' ? <ResourceGrid resources={list} showProject={showProject} /> : <ResourceTable resources={list} showProject={showProject} caption={caption} />
+    layout === 'grid' ? (
+      <ResourceGrid resources={list} showProject={showProject} />
+    ) : (
+      <ResourceTable resources={list} showProject={showProject} caption={caption} />
+    )
 
   const childOf = (id: string) => nav.section.children.find((c) => c.id === id)
 
@@ -125,7 +129,8 @@ export default function RecursosSection({ embedded }: SectionPageProps) {
                 {view(g.resources, name)}
                 {g.type === 'marketing' && (
                   <p className="muted small recursos-group-note">
-                    {t('secciones.recursos.group.marketing')} <Link to={href('/publicacion?vista=materiales')}>{t('secciones.recursos.group.marketingLink')}</Link>
+                    {t('secciones.recursos.group.marketing')}{' '}
+                    <Link to={href('/publicacion?vista=materiales')}>{t('secciones.recursos.group.marketingLink')}</Link>
                   </p>
                 )}
               </Card>
@@ -134,5 +139,4 @@ export default function RecursosSection({ embedded }: SectionPageProps) {
       )}
     </div>
   )
-
 }

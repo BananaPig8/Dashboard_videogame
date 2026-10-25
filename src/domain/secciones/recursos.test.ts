@@ -17,7 +17,15 @@ const project = (id: string, repoUrl?: string) => ({
   links: [],
   repoUrl,
 })
-const res = (id: string, over: Partial<Resource> = {}): Resource => ({ id, projectId: 'p', title: id, type: 'doc', url: `https://ejemplo.org/${id}`, tags: [], ...over })
+const res = (id: string, over: Partial<Resource> = {}): Resource => ({
+  id,
+  projectId: 'p',
+  title: id,
+  type: 'doc',
+  url: `https://ejemplo.org/${id}`,
+  tags: [],
+  ...over,
+})
 
 function data(resources: Resource[]): StudioData {
   return {

@@ -298,7 +298,9 @@ export function ResourceSummary({ section }: { section: ResourceSection }) {
                 <Icon name={subsectionIcon(section, sub)} size={16} />
                 <span className="recursos-summary-text">
                   <span className="recursos-summary-label">{child.label}</span>
-                  <span className={count ? 'recursos-summary-count' : 'recursos-summary-count none'}>{count ? tr(`secciones.${section}.count.${count === 1 ? 'one' : 'many'}`, { n: count }) : t('secciones.recursos.summary.none')}</span>
+                  <span className={count ? 'recursos-summary-count' : 'recursos-summary-count none'}>
+                    {count ? tr(`secciones.${section}.count.${count === 1 ? 'one' : 'many'}`, { n: count }) : t('secciones.recursos.summary.none')}
+                  </span>
                 </span>
               </Link>
             </li>

@@ -66,9 +66,9 @@ export default function EtiquetasPage() {
   const groups = tagPageGroups(data, tag, scope)
   const total = Object.fromEntries(groups.map((g) => [g.collection, g.entries.length])) as Partial<Record<CollectionKey, number>>
   // Con un proyecto elegido: lo que la lleva en el resto del estudio, para no esconderlo sin decirlo.
-  const everywhere = scope
-    ? countsText(Object.entries(byTag(data, tag)).map(([k, list]) => [k as CollectionKey, list?.length ?? 0]) as [CollectionKey, number][])
-    : ''
+  const all = scope ? (Object.entries(byTag(data, tag)).map(([k, list]) => [k as CollectionKey, list?.length ?? 0]) as [CollectionKey, number][]) : []
+  const shown = groups.reduce((n, g) => n + g.entries.length, 0)
+  const everywhere = all.reduce((n, [, c]) => n + c, 0) > shown ? countsText(all) : ''
   const ajustes = settingsSection()
   const categorias = ajustes.children.find((c) => c.id === 'categorias')!
   useDocumentTitle([`#${tag}`, tr('secciones.ajustes.etiquetas.crumb')])

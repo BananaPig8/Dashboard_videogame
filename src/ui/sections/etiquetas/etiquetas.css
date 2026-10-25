@@ -18,11 +18,15 @@
   color: var(--info);
 }
 
+/* Columnas que se rellenan de arriba abajo: un grupo largo no deja huecos al lado. */
 .etiquetas-groups {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
-  gap: var(--gap);
-  align-items: start;
+  column-width: 380px;
+  column-gap: var(--gap);
+}
+
+.etiquetas-groups > .card {
+  break-inside: avoid;
+  margin-bottom: var(--gap);
 }
 
 .etiquetas-list {

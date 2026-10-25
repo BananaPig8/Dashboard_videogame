@@ -207,6 +207,12 @@ export function eventoFollowUp(data: StudioData, event: StudioEvent, today: ISOD
   return { event, stale: eventoIsStale(event, today), feedback, playtests, transactions, spent, plannedSpend, income }
 }
 
+/** Cuánto feedback hay de un evento: el que dice venir de él y el de sus pruebas. */
+export function eventoFeedbackCount(data: StudioData, event: StudioEvent): number {
+  const tests = new Set(data.playtests.filter((p) => p.eventId === event.id).map((p) => p.id))
+  return data.feedback.filter((f) => f.eventId === event.id || (!!f.playtestId && tests.has(f.playtestId))).length
+}
+
 /** El seguimiento de los eventos pasados o celebrados (no los cancelados), del más reciente al más antiguo. */
 export function eventoFollowUps(data: StudioData, today: ISODate, q: EventoQuery = {}): EventoFollowUp[] {
   return eventosAgenda(sectorEvents(data, q), today).past.map((e) => eventoFollowUp(data, e, today))

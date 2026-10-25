@@ -54,6 +54,8 @@ function data(): StudioData {
     builds: [{ id: 'b', projectId: 'p', name: 'Demo', version: '0.3', channel: 'demo', platforms: [], status: 'ready', tags: ['demo'], sources: src, confidence: 'verified' }],
     releases: [{ id: 'r', projectId: 'q', kind: 'update', name: 'Parche 1.1', version: '1.1', status: 'planned', tags: ['feria'], sources: src, confidence: 'to_confirm' }],
     storeListings: [{ id: 'l', projectId: 'p', platform: 'steam', kind: 'demo', status: 'not_started', tags: ['demo'], sources: src, confidence: 'to_confirm' }],
+    // Los logros no dicen de qué tienda son: no cuentan como «de Steam».
+    achievements: [{ id: 'lg', projectId: 'p', name: 'Primer juego', status: 'idea', sources: src, confidence: 'to_confirm' }],
     metrics: [{ id: 'm', projectId: 'p', kind: 'wishlists', value: 10, date: '2026-10-01', platform: 'itch', sources: src, confidence: 'to_confirm' }],
     activity: [
       { id: 'a1', projectId: 'p', at: '2026-09-01T10:00', type: 'commit', title: 'Uno', areaId: 'arte' },

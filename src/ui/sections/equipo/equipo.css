@@ -188,6 +188,11 @@
 }
 
 @media (max-width: 640px) {
+  /* Las etiquetas largas («Horas apuntadas») no se pegan al valor. */
+  .equipo-table td[data-label]::before {
+    min-width: 128px;
+    margin-right: var(--space-2);
+  }
   .equipo-table tbody th {
     display: block;
     width: 100%;

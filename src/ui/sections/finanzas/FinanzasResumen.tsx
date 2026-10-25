@@ -82,7 +82,7 @@ export function FinanzasResumen() {
 
   return (
     <>
-      <div className="grid-2">
+      <div className="grid grid-2">
         <Card title={t('secciones.finanzas.resumen.month')} icon="calendar" subtitle={fmt.monthYear(month.key)}>
           <PeriodFigures totals={monthTotals} period={fmt.monthYear(month.key)} />
         </Card>
@@ -90,7 +90,7 @@ export function FinanzasResumen() {
           <PeriodFigures totals={yearTotals} period={year.key} />
         </Card>
       </div>
-      <div className="grid-2">
+      <div className="grid grid-2">
         <Card
           title={t('secciones.finanzas.resumen.budgets')}
           icon="target"

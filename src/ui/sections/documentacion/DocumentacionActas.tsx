@@ -43,7 +43,11 @@ export function DocumentacionActas({ embedded }: SectionPageProps) {
   const anyMeeting = data.events.some((e) => e.type === 'meeting' && (scope === null || !e.projectId || e.projectId === scope))
 
   return (
-    <DocumentacionPage embedded={embedded} intro={t('secciones.documentacion.intro.actas')} actions={<NewButton collection="resources" defaults={defaults} label={label} primary />}>
+    <DocumentacionPage
+      embedded={embedded}
+      intro={t('secciones.documentacion.intro.actas')}
+      actions={<NewButton collection="resources" defaults={defaults} label={label} primary />}
+    >
       <div className="grid grid-2-1">
         <Card title={t('secciones.documentacion.minutes.title')} icon="users" subtitle={minutes.length ? plural('count', minutes.length) : undefined}>
           {minutes.length === 0 ? (
@@ -62,7 +66,11 @@ export function DocumentacionActas({ embedded }: SectionPageProps) {
           title={t('secciones.documentacion.minutes.without')}
           icon="calendar"
           subtitle={meetings.length ? plural('meetingsCount', meetings.length) : t('secciones.documentacion.minutes.withoutSub')}
-          action={canEdit && anyMeeting ? <NewButton collection="events" defaults={NEW_MEETING} label={t('secciones.documentacion.actions.newMeeting')} small /> : undefined}
+          action={
+            canEdit && anyMeeting ? (
+              <NewButton collection="events" defaults={NEW_MEETING} label={t('secciones.documentacion.actions.newMeeting')} small />
+            ) : undefined
+          }
         >
           {meetings.length === 0 ? (
             <Empty
@@ -145,7 +153,12 @@ function MinutesRow({ entry: { minutes: r, event, decisions }, showProject }: { 
             <p className="muted small">{t('secciones.documentacion.minutes.noDecisions')}</p>
           )}
           {canEdit && (
-            <button type="button" className="btn btn-small btn-ghost" onClick={() => newDecision(event)} aria-label={t('secciones.documentacion.actions.newDecisionOf', { name: event.title })}>
+            <button
+              type="button"
+              className="btn btn-small btn-ghost"
+              onClick={() => newDecision(event)}
+              aria-label={t('secciones.documentacion.actions.newDecisionOf', { name: event.title })}
+            >
               <Icon name="plus" size={14} /> {t('secciones.documentacion.actions.newDecision')}
             </button>
           )}
@@ -172,7 +185,9 @@ function MeetingRow({ meeting: { event: e, upcoming, decisions }, showProject }:
         </button>
         <div className="item-meta">
           <span className="meta-date">
-            {e.date ? `${fmt.date(e.date, year)}${e.time ? ` · ${e.time}` : ''} · ${fmt.relative(e.date, today)}` : t('secciones.documentacion.minutes.undated')}
+            {e.date
+              ? `${fmt.date(e.date, year)}${e.time ? ` · ${e.time}` : ''} · ${fmt.relative(e.date, today)}`
+              : t('secciones.documentacion.minutes.undated')}
           </span>
           {upcoming && (
             <Pill tone="info" icon="clock">

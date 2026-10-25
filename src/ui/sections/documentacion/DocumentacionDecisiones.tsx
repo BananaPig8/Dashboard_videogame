@@ -88,7 +88,11 @@ export function DocumentacionDecisiones({ embedded }: SectionPageProps) {
       </Card>
 
       <div className="grid grid-2-1">
-        <Card title={t('secciones.documentacion.decisions.log')} icon="scale" subtitle={closed ? plural('logCount', closed) : t('secciones.documentacion.decisions.logSub')}>
+        <Card
+          title={t('secciones.documentacion.decisions.log')}
+          icon="scale"
+          subtitle={closed ? plural('logCount', closed) : t('secciones.documentacion.decisions.logSub')}
+        >
           {log.length === 0 ? (
             <Empty icon="scale" action={taken.length ? undefined : emptyAction}>
               {tag && taken.length ? t('secciones.documentacion.emptyTag') : t('secciones.documentacion.decisions.logEmpty')}
@@ -120,7 +124,15 @@ export function DocumentacionDecisiones({ embedded }: SectionPageProps) {
           )}
         </Card>
         <Card title={t('secciones.documentacion.decisions.parked')} icon="pause" subtitle={t('secciones.documentacion.decisions.parkedSub')}>
-          <ItemList items={parked} data={data} showProject={showProject} detail="blocked" year={year} showTags empty={t('secciones.documentacion.decisions.parkedEmpty')} />
+          <ItemList
+            items={parked}
+            data={data}
+            showProject={showProject}
+            detail="blocked"
+            year={year}
+            showTags
+            empty={t('secciones.documentacion.decisions.parkedEmpty')}
+          />
         </Card>
       </div>
     </DocumentacionPage>

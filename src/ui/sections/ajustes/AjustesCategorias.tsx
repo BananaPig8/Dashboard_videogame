@@ -3,7 +3,7 @@
 // renombra o se fusiona con otra en todas las colecciones a la vez, tras confirmarlo.
 import { useId, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { allTags, settingsAreaUsage, tagRenamePlan, type TagUse } from '../../../domain/selectors'
+import { allTags, cleanTag, normalize, settingsAreaUsage, tagRenamePlan, type TagUse } from '../../../domain/selectors'
 import type { Area } from '../../../domain/types'
 import { t, tr } from '../../../i18n'
 import { store, useCanEdit, useStudioData } from '../../../data/store'
@@ -76,16 +76,25 @@ function Areas() {
   )
 }
 
+/** Cuántas etiquetas se enseñan sin buscar (las más usadas). */
+const TAG_LIMIT = 25
+
 function Etiquetas() {
   const data = useStudioData()
   const canEdit = useCanEdit()
   const { scope, project, href } = useScope()
   const fmt = useFormat()
   const [renaming, setRenaming] = useState<string | null>(null)
+  const [query, setQuery] = useState('')
+  const [showAll, setShowAll] = useState(false)
   const tags = allTags(data, scope)
-  const rows = tags.map((u) => ({ ...u, id: u.tag }))
+  const q = normalize(cleanTag(query))
+  const matching = q ? tags.filter((u) => normalize(u.tag).includes(q)) : tags
+  // Sin buscar, las más usadas (puede haber cientos); buscando, todas las que coinciden.
+  const limited = !q && !showAll && matching.length > TAG_LIMIT
+  const rows = (limited ? matching.slice(0, TAG_LIMIT) : matching).map((u) => ({ ...u, id: u.tag }))
   return (
-    <Card title={t('secciones.ajustes.categorias.tags')} icon="tag" subtitle={t('secciones.ajustes.categorias.tagsHint')}>
+    <Card className="ajustes-tags" title={t('secciones.ajustes.categorias.tags')} icon="tag" subtitle={t('secciones.ajustes.categorias.tagsHint')}>
       {project && (
         <p className="ajustes-note">
           <Icon name="folder" size={16} />
@@ -95,6 +104,22 @@ function Etiquetas() {
           </span>
         </p>
       )}
+      {tags.length > 0 && (
+        <div className="ajustes-tag-tools">
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={t('secciones.ajustes.categorias.searchPlaceholder')}
+            aria-label={t('secciones.ajustes.categorias.search')}
+          />
+          <span className="muted small" role="status">
+            {limited
+              ? t('secciones.ajustes.categorias.shownTop', { n: TAG_LIMIT, total: fmt.number(tags.length) })
+              : t('secciones.ajustes.categorias.shown', { n: fmt.number(rows.length), total: fmt.number(tags.length) })}
+          </span>
+        </div>
+      )}
       <RecordTable<TagUse & { id: string }>
         rows={rows}
         caption={t('secciones.ajustes.categorias.caption')}
@@ -103,7 +128,13 @@ function Etiquetas() {
             #{u.tag}
           </Link>
         )}
-        empty={project ? t('secciones.ajustes.categorias.tagsEmptyScoped', { project: project.name }) : t('secciones.ajustes.categorias.tagsEmpty')}
+        empty={
+          q
+            ? t('secciones.ajustes.categorias.noMatch', { q: query.trim() })
+            : project
+              ? t('secciones.ajustes.categorias.tagsEmptyScoped', { project: project.name })
+              : t('secciones.ajustes.categorias.tagsEmpty')
+        }
         columns={[
           { key: 'uses', label: t('secciones.ajustes.categorias.colUses'), numeric: true, render: (u) => fmt.number(u.count) },
           {
@@ -131,6 +162,13 @@ function Etiquetas() {
             : []),
         ]}
       />
+      {!q && matching.length > TAG_LIMIT && (
+        <button type="button" className="btn btn-small btn-ghost ajustes-more" onClick={() => setShowAll(!showAll)}>
+          {showAll
+            ? t('secciones.ajustes.categorias.showTop', { n: TAG_LIMIT })
+            : t('secciones.ajustes.categorias.showAll', { n: fmt.number(matching.length) })}
+        </button>
+      )}
       {renaming && <RenameTag tag={renaming} existing={allTags(data).map((u) => u.tag)} onClose={() => setRenaming(null)} />}
     </Card>
   )

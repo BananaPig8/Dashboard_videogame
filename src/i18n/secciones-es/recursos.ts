@@ -29,7 +29,8 @@ export const recursos = {
     imagenes: 'Imágenes: key art, cápsulas, banners, fondos y cualquier imagen que no sea una captura ni un logo.',
     logos: 'Los logos del estudio y de cada juego, en sus variantes.',
     documentos: 'Documentos de cada proyecto: README, presentaciones, dosieres, ficheros de configuración…',
-    enlaces: 'Enlaces externos que el estudio apunta a mano (son los mismos que en Documentación › Enlaces externos). Studio Hub no abre ni comprueba nada de fuera.',
+    enlaces:
+      'Enlaces externos que el estudio apunta a mano (son los mismos que en Documentación › Enlaces externos). Studio Hub no abre ni comprueba nada de fuera.',
     arte: 'Recursos artísticos: sprites, modelos, música, sonidos, fuentes y lo que se usa dentro del juego.',
     referencia: 'Archivos de referencia: inspiración, juegos parecidos, guías de estilo de otros, estudios de mercado…',
   },

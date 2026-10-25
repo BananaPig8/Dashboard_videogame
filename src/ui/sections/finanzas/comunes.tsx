@@ -110,6 +110,38 @@ export function Dash({ label }: { label: string }) {
   )
 }
 
+/** Un importe hecho en una celda; sin nada hecho, una raya (no un 0 que parezca un dato). */
+export function DoneCell({ cents, strong }: { cents: number; strong?: boolean }) {
+  const money = useMoney()
+  if (!cents) return <Dash label={t('secciones.finanzas.common.noneOfKind')} />
+  return strong ? <strong>{money(cents)}</strong> : <>{money(cents)}</>
+}
+
+/** El saldo de un grupo; sin nada hecho, una raya. */
+export function BalanceCell({ totals }: { totals: FinanceTotals }) {
+  const money = useMoney()
+  if (!totals.doneCount) return <Dash label={t('secciones.finanzas.common.noneOfKind')} />
+  return <strong>{money(totals.balance)}</strong>
+}
+
+/** Lo previsto o pendiente de un grupo («gastos 92,00 € · ingresos 15,00 €», solo lo que hay). */
+export function UpcomingCell({ totals }: { totals: FinanceTotals }) {
+  const money = useMoney()
+  const expense = totals.expense.planned + totals.expense.pending
+  const income = totals.income.planned + totals.income.pending
+  if (!expense && !income) return <Dash label={t('secciones.finanzas.common.upcomingNone')} />
+  return (
+    <>
+      {[
+        expense ? t('secciones.finanzas.common.upcomingExpense', { amount: money(expense) }) : '',
+        income ? t('secciones.finanzas.common.upcomingIncome', { amount: money(income) }) : '',
+      ]
+        .filter(Boolean)
+        .join(' · ')}
+    </>
+  )
+}
+
 /** Una nota con icono (lo que hay que saber de una vista). */
 export function FinanceNote({ children, icon = 'info' }: { children: ReactNode; icon?: IconName }) {
   return (
@@ -133,7 +165,16 @@ export function UpcomingLine({ totals }: { totals: FinanceTotals }) {
   const cancelled = totals.cancelled === 0 ? '' : totals.cancelled === 1 ? t('secciones.finanzas.common.cancelledOne') : t('secciones.finanzas.common.cancelled', { n: totals.cancelled })
   return (
     <p className="muted small finanzas-upcoming-line">
-      {income || expense ? t('secciones.finanzas.common.upcoming', { income: money(income), expense: money(expense) }) : t('secciones.finanzas.common.upcomingNone')}
+      {income || expense
+        ? t('secciones.finanzas.common.upcoming', {
+            list: [
+              income ? t('secciones.finanzas.common.upcomingIncome', { amount: money(income) }) : '',
+              expense ? t('secciones.finanzas.common.upcomingExpense', { amount: money(expense) }) : '',
+            ]
+              .filter(Boolean)
+              .join(' · '),
+          })
+        : t('secciones.finanzas.common.upcomingNone')}
       {cancelled && ` ${cancelled}`}
     </p>
   )
@@ -193,7 +234,8 @@ export function BudgetMeter({ usage, showProject, detailed }: { usage: BudgetUsa
   const { edit } = useUI()
   const money = useMoney()
   const fmt = useFormat()
-  const year = Number(useToday().slice(0, 4))
+  const today = useToday()
+  const year = Number(today.slice(0, 4))
   const { budget, spent, planned, left, over } = usage
   const ratio = budgetRatio(usage)
   const afterPending = left - planned
@@ -206,7 +248,8 @@ export function BudgetMeter({ usage, showProject, detailed }: { usage: BudgetUsa
             {budget.name}
           </button>
         </h3>
-        <BudgetStatePill over={over} />
+        {/* Uno que aún no ha empezado ni está dentro ni se ha pasado. */}
+        {budget.from <= today && <BudgetStatePill over={over} />}
       </div>
       {detailed && (
         <div className="item-meta">

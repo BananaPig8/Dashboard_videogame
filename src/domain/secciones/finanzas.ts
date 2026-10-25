@@ -253,9 +253,12 @@ export function financeEventCosts(data: StudioData, f: FinanceFilter = {}): Fina
   return out.sort((a, b) => (a.event?.date ? 0 : 1) - (b.event?.date ? 0 : 1) || dateOf(b).localeCompare(dateOf(a)))
 }
 
-/** Gastos de eventos o tasas sin evento enlazado (para enlazarlos y que cuenten en su evento). */
+/**
+ * Gastos de «Eventos y ferias» sin evento enlazado (para enlazarlos y que cuenten en su
+ * evento). Las tasas sueltas no: una tasa puede no ser de un evento (Steam Direct, un registro…).
+ */
 export function financeUnlinkedEventCosts(data: StudioData, f: FinanceFilter = {}): Transaction[] {
-  return financeMovements(data, f).filter((t) => !t.eventId && t.kind === 'expense' && (t.category === 'events' || t.category === 'fees'))
+  return financeMovements(data, f).filter((t) => !t.eventId && t.kind === 'expense' && t.category === 'events')
 }
 
 /**

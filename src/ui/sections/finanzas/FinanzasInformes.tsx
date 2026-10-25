@@ -34,7 +34,7 @@ import { useScope, useUI } from '../../context'
 import { useNotify } from '../../feedback'
 import { saveFile } from '../../files'
 import { useFormat, useToday } from '../../hooks'
-import { BudgetStatePill, Dash, FinanceNote, PeriodFigures, useCurrency, useMoney, useParamLink } from './comunes'
+import { BalanceCell, BudgetStatePill, Dash, DoneCell, FinanceNote, UpcomingCell, PeriodFigures, useCurrency, useMoney, useParamLink } from './comunes'
 
 type InformeKey = Exclude<keyof typeof finanzas.informes, 'periods'>
 const I = (k: InformeKey, vars?: Record<string, string | number>) => tr(`secciones.finanzas.informes.${k}`, vars)
@@ -96,7 +96,6 @@ function PeriodNav({ range }: { range: FinanceRange }) {
 type GroupRow<K> = FinanceGroup<K> & { id: string }
 
 function GroupTable<K>({ rows, title, caption, label }: { rows: GroupRow<K>[]; title: (g: GroupRow<K>) => ReactNode; caption: string; label: string }) {
-  const money = useMoney()
   if (!rows.length) return <p className="muted small">{I('noMovements')}</p>
   return (
     <RecordTable
@@ -104,25 +103,10 @@ function GroupTable<K>({ rows, title, caption, label }: { rows: GroupRow<K>[]; t
       caption={caption}
       title={title}
       columns={[
-        { key: 'income', label: I('income'), numeric: true, render: (g) => money(g.income.done) },
-        { key: 'expense', label: I('expense'), numeric: true, render: (g) => money(g.expense.done) },
-        { key: 'balance', label: I('balance'), numeric: true, render: (g) => <strong>{money(g.balance)}</strong> },
-        {
-          key: 'upcoming',
-          label: I('upcoming'),
-          numeric: true,
-          render: (g) => {
-            const n = g.income.planned + g.income.pending + g.expense.planned + g.expense.pending
-            return n ? (
-              t('secciones.finanzas.proyectos.upcomingValue', {
-                expense: money(g.expense.planned + g.expense.pending),
-                income: money(g.income.planned + g.income.pending),
-              })
-            ) : (
-              <Dash label={t('secciones.finanzas.common.upcomingNone')} />
-            )
-          },
-        },
+        { key: 'income', label: I('income'), numeric: true, render: (g) => <DoneCell cents={g.income.done} /> },
+        { key: 'expense', label: I('expense'), numeric: true, render: (g) => <DoneCell cents={g.expense.done} /> },
+        { key: 'balance', label: I('balance'), numeric: true, render: (g) => <BalanceCell totals={g} /> },
+        { key: 'upcoming', label: I('upcoming'), numeric: true, render: (g) => <UpcomingCell totals={g} /> },
       ]}
       empty={label}
     />
@@ -168,9 +152,9 @@ function EventTable({ list, caption }: { list: FinanceEventCost[]; caption: stri
       title={(c) => c.event?.title ?? t('secciones.finanzas.common.eventGone')}
       onOpen={(c) => c.event && edit({ collection: 'events', id: c.eventId })}
       columns={[
-        { key: 'fees', label: I('fees'), numeric: true, render: (c) => money(c.fees) },
-        { key: 'other', label: I('otherCosts'), numeric: true, render: (c) => money(c.costs + c.other) },
-        { key: 'total', label: I('total'), numeric: true, render: (c) => <strong>{money(c.spent)}</strong> },
+        { key: 'fees', label: I('fees'), numeric: true, render: (c) => <DoneCell cents={c.fees} /> },
+        { key: 'other', label: I('otherCosts'), numeric: true, render: (c) => <DoneCell cents={c.costs + c.other} /> },
+        { key: 'total', label: I('total'), numeric: true, render: (c) => <DoneCell cents={c.spent} strong /> },
         { key: 'upcoming', label: I('upcoming'), numeric: true, render: (c) => (c.upcoming ? money(c.upcoming) : <Dash label={t('secciones.finanzas.common.upcomingNone')} />) },
       ]}
     />
@@ -212,7 +196,7 @@ export function FinanzasInformes() {
       <Card title={I('summary', { period: name })} icon="chart">
         <PeriodFigures totals={totals} period={name} />
       </Card>
-      <div className={scope ? undefined : 'grid-2'}>
+      <div className="stack">
         <Card title={I('byCategory')} icon="layers">
           <GroupTable<TransactionCategory>
             rows={categories.map((g) => ({ ...g, id: g.key }))}

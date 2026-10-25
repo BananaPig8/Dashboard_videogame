@@ -181,8 +181,9 @@ describe('financeEventCosts y compañía', () => {
     expect(financeEventCosts(d)[0].event).toBeUndefined()
   })
 
-  it('las tasas y gastos de eventos sin evento enlazado', () => {
-    expect(financeUnlinkedEventCosts(data()).map((t) => t.id)).toEqual(['tasa-suelta'])
+  it('los gastos de eventos sin evento enlazado (las tasas sueltas no: pueden no ser de un evento)', () => {
+    const d = data({ transactions: [...data().transactions, tx('cartel', { category: 'events', date: '2026-07-01' })] })
+    expect(financeUnlinkedEventCosts(d).map((t) => t.id)).toEqual(['cartel'])
   })
 
   it('los eventos del sector sin ningún movimiento (sin reuniones ni cancelados)', () => {

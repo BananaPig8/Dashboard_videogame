@@ -1,0 +1,278 @@
+/* Sección «Estadísticas»: progreso, tareas, hitos, tiempo, actividad y métricas. Solo variables de styles.css. */
+
+.estadisticas-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  min-width: 0;
+}
+
+.estadisticas-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gap);
+  align-items: start;
+}
+
+.estadisticas-intro {
+  margin: 0;
+  color: var(--text-2);
+  font-size: 0.88rem;
+}
+
+.estadisticas-manual {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  border: 1px solid color-mix(in srgb, var(--info) 35%, transparent);
+  background: color-mix(in srgb, var(--info) var(--tone-alpha), var(--surface));
+  font-size: 0.88rem;
+}
+
+.estadisticas-manual .icon {
+  color: var(--info);
+  margin-top: 2px;
+}
+
+/* Tablas: la primera celda de cada fila es un encabezado de fila, sin el estilo de los de columna. */
+.estadisticas-table tbody th {
+  text-align: left;
+  font-weight: 560;
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: inherit;
+  color: var(--text);
+  padding: var(--cell-y) 10px var(--cell-y) 0;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.estadisticas-table thead .num {
+  text-align: right;
+}
+
+.estadisticas-project {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text);
+}
+
+.estadisticas-project .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  flex: none;
+}
+
+.estadisticas-row-meta {
+  display: block;
+  font-weight: 400;
+}
+
+.estadisticas-count {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px var(--space-2);
+  min-width: 0;
+}
+
+.estadisticas-count .progress {
+  flex: 1 1 80px;
+  max-width: 160px;
+}
+
+.estadisticas-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.estadisticas-reasons {
+  margin: 0;
+  padding-left: var(--space-5);
+  color: var(--text-2);
+  font-size: 0.88rem;
+}
+
+/* Barras horizontales: etiqueta | proporción | cifra (en móvil, la etiqueta arriba). */
+.estadisticas-bars {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.estadisticas-bars > li {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(60px, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.estadisticas-bar-label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.estadisticas-bar-hint {
+  font-size: 0.74rem;
+}
+
+.estadisticas-bar-track {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--surface-3);
+  overflow: hidden;
+}
+
+.estadisticas-bar-track > span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--series-1);
+}
+
+.estadisticas-bar-value {
+  min-width: 3ch;
+  text-align: right;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Listas de hitos. */
+.estadisticas-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.estadisticas-list > li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 4px var(--space-3);
+  padding: var(--row-y) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.estadisticas-list > li:last-child {
+  border-bottom: 0;
+}
+
+.estadisticas-list-main {
+  flex: 1 1 220px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Gráficas: zonas de acierto con foco visible; la línea y los puntos de una métrica. */
+.estadisticas-hit {
+  outline: none;
+}
+
+.estadisticas-hit:focus-visible {
+  stroke: var(--focus);
+  stroke-width: 2;
+}
+
+.estadisticas-line {
+  fill: none;
+  stroke: var(--series-1);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.estadisticas-dot {
+  fill: var(--series-1);
+  stroke: var(--surface);
+  stroke-width: 2;
+  pointer-events: none;
+}
+
+.estadisticas-chart .chart-table th {
+  font-weight: 400;
+}
+
+/* Métricas. */
+.estadisticas-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
+  gap: var(--gap);
+  align-items: start;
+}
+
+.estadisticas-latest {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px var(--space-3);
+}
+
+.estadisticas-value {
+  font-size: 1.6rem;
+  font-weight: 680;
+  line-height: 1.1;
+}
+
+.estadisticas-source-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px var(--space-3);
+  margin: 0;
+}
+
+.estadisticas-sources {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px var(--space-2);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 960px) {
+  .estadisticas-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .estadisticas-table tbody th {
+    display: block;
+    width: 100%;
+    border: 0;
+    padding: 0 0 var(--space-1);
+  }
+  /* Las etiquetas largas no se pegan al valor. */
+  .estadisticas-table td[data-label]::before {
+    min-width: 112px;
+    margin-right: var(--space-2);
+  }
+  .estadisticas-table td.num {
+    text-align: left;
+  }
+  .estadisticas-bars > li {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .estadisticas-bar-label {
+    grid-column: 1 / -1;
+  }
+}

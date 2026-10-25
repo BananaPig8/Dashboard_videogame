@@ -192,7 +192,7 @@ export function integrationsStatus(data: StudioData, enClaude: boolean): Integra
     { id: 'storage', state: enClaude ? 'active' : 'local', counts: {} },
     { id: 'hosting', state: 'outside', counts: {} },
     { id: 'github', state: 'manual', counts: nonZero({ activity: data.activity.length }), lastAt },
-    { id: 'steamworks', state: 'off', counts: nonZero({ ...onPlatform('steam'), achievements: data.achievements.length }) },
+    { id: 'steamworks', state: 'off', counts: nonZero(onPlatform('steam')) },
     { id: 'itch', state: 'off', counts: nonZero(onPlatform('itch')) },
     { id: 'discord', state: 'off', counts: {} },
     { id: 'talo', state: 'off', counts: {} },

@@ -45,7 +45,7 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: var(--space-2);
 }
 
@@ -247,7 +247,15 @@
   mask-image: linear-gradient(to bottom, var(--text) 70%, transparent);
 }
 
-/* Tabla (vista de lista). */
+/* Tabla (vista de lista): las mismas columnas en todos los grupos. */
+.recursos-table {
+  table-layout: fixed;
+}
+
+.recursos-table thead th:first-child {
+  width: 36%;
+}
+
 .recursos-table .recursos-table-name {
   text-align: left;
   font-weight: 400;
@@ -274,6 +282,10 @@
 }
 
 @media (max-width: 640px) {
+  .recursos-table {
+    table-layout: auto;
+  }
+
   .recursos-table .recursos-table-name {
     display: block;
     width: 100%;

@@ -1,0 +1,273 @@
+/* Eventos: agenda, inscripciones, materiales de los próximos y seguimiento de los pasados. */
+
+.eventos-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.eventos-intro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-width: 78ch;
+  color: var(--text-2);
+  font-size: 0.9rem;
+}
+
+.eventos-intro p {
+  margin: 0;
+}
+
+.eventos-manual .icon {
+  color: var(--info);
+  vertical-align: -2px;
+}
+
+/* Fila de la agenda: la fecha a la izquierda y el estado a la derecha. */
+.eventos-row .item-side {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.eventos-row .item-meta .icon {
+  vertical-align: -2px;
+}
+
+.eventos-row .item-meta .ext-link {
+  font-size: 0.8rem;
+}
+
+.eventos-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  font-size: 0.86rem;
+}
+
+.eventos-quick {
+  margin-top: var(--space-1);
+}
+
+/* Lo que cierra pronto o ya cerró: borde de aviso (además del icono y el título). */
+.eventos-urgent {
+  border-color: color-mix(in srgb, var(--warning) 45%, var(--border));
+}
+
+.eventos-cancelled {
+  padding: var(--space-3) var(--card-pad);
+}
+
+.eventos-cancelled > summary {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.eventos-cancelled[open] > summary {
+  margin-bottom: var(--space-2);
+}
+
+/* Materiales: tres bloques (listas, builds y material) uno al lado del otro. */
+.eventos-materials {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gap);
+}
+
+.eventos-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.eventos-block > * {
+  max-width: 100%;
+}
+
+.eventos-block .item-list {
+  align-self: stretch;
+}
+
+.eventos-block .subhead {
+  margin: 0;
+}
+
+.eventos-mini-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-size: 0.88rem;
+}
+
+.eventos-mini-list li {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.eventos-mini-list .item-meta {
+  margin-top: var(--space-1);
+}
+
+.eventos-mini-list .link-btn {
+  text-align: left;
+}
+
+.eventos-ready,
+.eventos-stale-note {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.eventos-ready .icon {
+  color: var(--success);
+}
+
+.eventos-stale-note .icon {
+  color: var(--warning);
+}
+
+.eventos-missing {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--warning) var(--tone-alpha), var(--surface));
+}
+
+.eventos-missing .subhead {
+  margin: 0 0 var(--space-1);
+}
+
+.eventos-missing ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.86rem;
+}
+
+.eventos-missing .icon {
+  color: var(--warning);
+  vertical-align: -2px;
+}
+
+.eventos-checklist {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.eventos-checklist-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-2);
+}
+
+.eventos-checklist-head .link-btn {
+  text-align: left;
+  font-weight: 600;
+}
+
+.eventos-steps > summary {
+  font-size: 0.82rem;
+  color: var(--text-2);
+}
+
+.eventos-steps .checklist {
+  margin-top: var(--space-1);
+  font-size: 0.86rem;
+}
+
+/* Seguimiento. */
+.eventos-question {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--warning) var(--tone-alpha), var(--surface));
+  font-size: 0.9rem;
+}
+
+.eventos-question .icon {
+  color: var(--warning);
+  vertical-align: -2px;
+}
+
+.eventos-followup {
+  margin: 0;
+  white-space: pre-line;
+  max-width: 78ch;
+  font-size: 0.9rem;
+}
+
+.eventos-money {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-self: stretch;
+  font-size: 0.88rem;
+}
+
+.eventos-money li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  padding: var(--space-1) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.eventos-money li:last-child {
+  border-bottom: 0;
+}
+
+.eventos-money .link-btn {
+  text-align: left;
+}
+
+.eventos-amount {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.eventos-amount.income {
+  color: var(--success);
+}
+
+.eventos-totals {
+  margin: 0;
+  color: var(--text-2);
+}
+
+@media (max-width: 960px) {
+  .eventos-materials {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .eventos-row {
+    flex-wrap: wrap;
+  }
+
+  .eventos-row .item-side {
+    width: 100%;
+  }
+}

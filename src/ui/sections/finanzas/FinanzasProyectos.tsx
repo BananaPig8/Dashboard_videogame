@@ -12,32 +12,18 @@ import { Card, Empty } from '../../components/Common'
 import { RecordTable, type Column } from '../../components/RecordTable'
 import { useTagFilter } from '../../components/TagFilter'
 import { useScope, useUI } from '../../context'
-import { ManualNote, useMoney } from './comunes'
+import { BalanceCell, DoneCell, ManualNote, UpcomingCell } from './comunes'
 
 type Row<K> = FinanceGroup<K> & { id: string }
 
 /** Las columnas de cifras de una tabla de grupos (gastos, ingresos, saldo, previsto y cuántos). */
 function useFigureColumns<K>(): Column<Row<K>>[] {
-  const money = useMoney()
   const L = (k: 'expense' | 'income' | 'balance' | 'upcoming' | 'movements') => t(`secciones.finanzas.proyectos.${k}`)
   return [
-    { key: 'expense', label: L('expense'), numeric: true, render: (g) => money(g.expense.done) },
-    { key: 'income', label: L('income'), numeric: true, render: (g) => money(g.income.done) },
-    { key: 'balance', label: L('balance'), numeric: true, render: (g) => <strong>{money(g.balance)}</strong> },
-    {
-      key: 'upcoming',
-      label: L('upcoming'),
-      numeric: true,
-      render: (g) =>
-        g.expense.planned + g.expense.pending + g.income.planned + g.income.pending > 0 ? (
-          t('secciones.finanzas.proyectos.upcomingValue', {
-            expense: money(g.expense.planned + g.expense.pending),
-            income: money(g.income.planned + g.income.pending),
-          })
-        ) : (
-          <span className="muted">{t('secciones.finanzas.common.upcomingNone')}</span>
-        ),
-    },
+    { key: 'expense', label: L('expense'), numeric: true, render: (g) => <DoneCell cents={g.expense.done} /> },
+    { key: 'income', label: L('income'), numeric: true, render: (g) => <DoneCell cents={g.income.done} /> },
+    { key: 'balance', label: L('balance'), numeric: true, render: (g) => <BalanceCell totals={g} /> },
+    { key: 'upcoming', label: L('upcoming'), numeric: true, render: (g) => <UpcomingCell totals={g} /> },
     { key: 'movements', label: L('movements'), numeric: true, render: (g) => g.expense.count + g.income.count },
   ]
 }

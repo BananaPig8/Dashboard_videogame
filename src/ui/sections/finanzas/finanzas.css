@@ -38,6 +38,16 @@
   margin: 0;
 }
 
+/* Cifras de un periodo: los importes largos (con signo y moneda) no se salen de su recuadro. */
+.finanzas-page .stat {
+  min-width: 0;
+}
+
+.finanzas-page .stat-value {
+  font-size: 1.25rem;
+  overflow-wrap: anywhere;
+}
+
 /* Importes. */
 .finanzas-amount {
   font-weight: 600;
@@ -67,6 +77,14 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-1) var(--space-2);
+}
+
+/* El nombre de cada fila de las tablas de registros, como el resto del texto (no como cabecera). */
+.finanzas-page .table .record-title {
+  font-size: 0.86rem;
+  color: var(--text);
+  text-transform: none;
+  letter-spacing: normal;
 }
 
 /* Filtros y total del filtro. */
@@ -249,6 +267,19 @@
 }
 
 @media (max-width: 640px) {
+  .finanzas-page .table td[data-label]::before {
+    margin-right: var(--space-2);
+  }
+  /* Apiladas, las cifras van como el resto de celdas (tras su etiqueta), no pegadas a la derecha. */
+  .finanzas-page .table td.num {
+    text-align: left;
+  }
+  .finanzas-page .table .record-title {
+    display: block;
+    width: 100%;
+    padding: 0 0 var(--space-1);
+    border: 0;
+  }
   .finanzas-row {
     grid-template-columns: minmax(0, 1fr) auto;
   }
