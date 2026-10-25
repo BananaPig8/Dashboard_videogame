@@ -8,10 +8,11 @@ import { useCanEdit, useStudioData } from '../../../data/store'
 import { t } from '../../../i18n'
 import { Card, Empty } from '../../components/Common'
 import { Icon, type IconName } from '../../components/Icon'
+import { useSectionNav } from '../../components/SectionHeader'
 import { useTagFilter } from '../../components/TagFilter'
 import { useScope, useUI } from '../../context'
 import type { SectionPageProps } from '../registry'
-import { NewButton, PublicacionPage, ResourceRows } from './comunes'
+import { NewButton, PublicacionPage, ResourceRows, childOf } from './comunes'
 
 export function PublicacionMateriales({ embedded }: SectionPageProps) {
   const data = useStudioData()
@@ -21,12 +22,14 @@ export function PublicacionMateriales({ embedded }: SectionPageProps) {
   const tag = useTagFilter()
   const marketing = publicationResources(data, RESOURCE_SECTIONS.publicacion.materiales, scope).filter((r) => hasTag(r, tag))
   const kit = pressKit(data, scope)
-  // Cada parte del kit de prensa, con adónde ir a verla.
+  const nav = useSectionNav('publicacion')
+  const capturas = nav.href(childOf('publicacion', 'capturas'))
+  // Cada parte del kit de prensa, con adónde ir a verla (Recursos o Capturas y vídeos).
   const rows: { key: 'logos' | 'images' | 'screenshots' | 'videos'; icon: IconName; list: Resource[]; to: string }[] = [
-    { key: 'logos', icon: 'star', list: kit.logos, to: '/recursos?tipo=logos' },
-    { key: 'images', icon: 'image', list: kit.images, to: '/recursos?tipo=imagenes' },
-    { key: 'screenshots', icon: 'image', list: kit.screenshots, to: '/publicacion?vista=capturas' },
-    { key: 'videos', icon: 'video', list: kit.videos, to: '/publicacion?vista=capturas' },
+    { key: 'logos', icon: 'star', list: kit.logos, to: href(childOf('recursos', 'logos').to) },
+    { key: 'images', icon: 'image', list: kit.images, to: href(childOf('recursos', 'imagenes').to) },
+    { key: 'screenshots', icon: 'image', list: kit.screenshots, to: capturas },
+    { key: 'videos', icon: 'video', list: kit.videos, to: capturas },
   ]
   const tagged = kit.tagged.filter((r) => hasTag(r, tag))
   return (
@@ -58,7 +61,7 @@ export function PublicacionMateriales({ embedded }: SectionPageProps) {
                 <Icon name={icon} size={16} />
                 <span className="publicacion-kit-label">{t(`secciones.publicacion.materiales.kit.${key}`)}</span>
                 {list.length ? (
-                  <Link to={href(to)}>
+                  <Link to={to}>
                     {t('secciones.publicacion.materiales.see', { n: list.length })}
                     <span className="visually-hidden"> · {t(`secciones.publicacion.materiales.kit.${key}`)}</span>
                   </Link>

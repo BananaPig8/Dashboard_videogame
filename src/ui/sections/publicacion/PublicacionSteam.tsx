@@ -10,12 +10,13 @@ import { ChecklistCard } from '../../components/ChecklistCard'
 import { Card, Empty } from '../../components/Common'
 import { Icon } from '../../components/Icon'
 import { ItemList } from '../../components/ItemList'
+import { useSectionNav } from '../../components/SectionHeader'
 import { useTagFilter } from '../../components/TagFilter'
 import { useScope, useUI } from '../../context'
 import { useToday } from '../../hooks'
 import { yearOf } from '../../../domain/dates'
 import type { SectionPageProps } from '../registry'
-import { ListingRow, ManualNotice, NewButton, PublicacionPage } from './comunes'
+import { ListingRow, ManualNotice, NewButton, PublicacionPage, childOf } from './comunes'
 
 /** El área de trabajo de Steam (de las del estudio); si el estudio la quita, no sale el bloque. */
 const STEAM_AREA = 'steam'
@@ -107,7 +108,7 @@ const GAP_COLLECTION = { listing: 'storeListings', texts: 'storeTexts', screensh
 
 function ProjectGaps({ gaps: g, showProject }: { gaps: SteamGaps; showProject: boolean }) {
   const { create } = useUI()
-  const { href } = useScope()
+  const nav = useSectionNav('publicacion')
   const canEdit = useCanEdit()
   const defaults = (gap: SteamGap): Record<string, unknown> => {
     const projectId = g.project.id
@@ -154,7 +155,7 @@ function ProjectGaps({ gaps: g, showProject }: { gaps: SteamGaps; showProject: b
       )}
       {g.draftTexts > 0 && (
         <p className="muted small">
-          <Link to={href('/publicacion?vista=descripciones')}>
+          <Link to={nav.href(childOf('publicacion', 'descripciones'))}>
             {t(g.draftTexts === 1 ? 'secciones.publicacion.steam.drafts.one' : 'secciones.publicacion.steam.drafts.many', { n: g.draftTexts })}
           </Link>
         </p>

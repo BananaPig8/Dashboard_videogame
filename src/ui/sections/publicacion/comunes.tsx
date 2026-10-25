@@ -25,7 +25,14 @@ import { SectionHeader } from '../../components/SectionHeader'
 import { TagFilterNotice, TagLinks } from '../../components/TagFilter'
 import { useScope, useUI } from '../../context'
 import { useFormat, useToday } from '../../hooks'
+import { sectionById, type NavChild, type SectionId } from '../../navigation'
 import { sourceHref } from '../../util'
+
+/** Una subsección del mapa de navegación por su id (los enlaces salen de ahí, no se escriben a mano). */
+export function childOf(section: SectionId, id: string): NavChild {
+  const s = sectionById(section)
+  return s.children.find((c) => c.id === id) ?? s.children[0]
+}
 
 /** La página de una vista: cabecera de la sección, aviso de etiqueta y el contenido. */
 export function PublicacionPage({ embedded, actions, children }: { embedded?: boolean; actions?: ReactNode; children: ReactNode }) {

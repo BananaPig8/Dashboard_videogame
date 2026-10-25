@@ -408,7 +408,7 @@ export const financeIsLate = (t: Transaction, today: ISODate) => (t.status === '
 //   la hoja de cálculo no lo tome por una fórmula.
 
 export const CSV_SEPARATOR = ';'
-const BOM = '﻿'
+const BOM = '\uFEFF'
 
 /** Un importe en céntimos como «1234,50» (sin miles, coma decimal). */
 export function csvAmount(cents: Cents): string {
@@ -418,7 +418,8 @@ export function csvAmount(cents: Cents): string {
 
 /** Un campo de texto listo para el CSV (comillas y fórmulas). */
 export function csvField(value: string): string {
-  const safe = /^[=+\-@\t\r]/.test(value) ? `'${value}` : value
+  const number = /^-?\d+(,\d+)?$/.test(value)
+  const safe = !number && /^[=+\-@\t\r]/.test(value) ? `'${value}` : value
   return /[";\r\n]|^\s|\s$/.test(safe) ? `"${safe.replace(/"/g, '""')}"` : safe
 }
 
