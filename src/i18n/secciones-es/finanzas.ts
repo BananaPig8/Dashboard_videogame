@@ -10,7 +10,8 @@ export const finanzas = {
     newEventCost: 'Gasto de evento',
   },
   common: {
-    manual: 'Todo se anota a mano, en {currency} y sin convertir. No hay conexión con bancos, tiendas ni Steam: lo que no esté anotado aquí no existe para el panel.',
+    manual:
+      'Todo se anota a mano, en {currency} y sin convertir. No hay conexión con bancos, tiendas ni Steam: lo que no esté anotado aquí no existe para el panel.',
     income: 'Ingresos',
     expense: 'Gastos',
     balance: 'Saldo',
@@ -98,7 +99,8 @@ export const finanzas = {
     noneFiltered: 'Ningún movimiento cumple el filtro.',
     createExpense: 'Anotar un gasto',
     createIncome: 'Anotar un ingreso',
-    incomeManual: 'Las ventas y los pagos de las tiendas (Steam, itch.io…) no llegan solos: anótalos a mano con su fuente (el informe de la tienda, el extracto…).',
+    incomeManual:
+      'Las ventas y los pagos de las tiendas (Steam, itch.io…) no llegan solos: anótalos a mano con su fuente (el informe de la tienda, el extracto…).',
   },
   presupuestos: {
     active: 'En curso',
@@ -213,7 +215,8 @@ export const finanzas = {
     total: 'Total',
     eventsNone: 'Ningún gasto del periodo está enlazado a un evento.',
     export: 'Exportar',
-    exportHint: 'Los movimientos del periodo (con su estado, también los previstos y cancelados) en un CSV: separador «;», coma decimal e importes en {currency} con 2 decimales. Se abre tal cual en Excel o LibreOffice en castellano.',
+    exportHint:
+      'Los movimientos del periodo (con su estado, también los previstos y cancelados) en un CSV: separador «;», coma decimal e importes en {currency} con 2 decimales. Se abre tal cual en Excel o LibreOffice en castellano.',
     exportButton: 'Exportar CSV',
     exportCount: '{n} movimientos en el fichero.',
     exportCountOne: '1 movimiento en el fichero.',

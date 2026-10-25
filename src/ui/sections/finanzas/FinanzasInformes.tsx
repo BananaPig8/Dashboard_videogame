@@ -43,7 +43,11 @@ const I = (k: InformeKey, vars?: Record<string, string | number>) => tr(`seccion
 function usePeriodName(): (r: FinanceRange) => string {
   const fmt = useFormat()
   return (r) =>
-    r.period === 'mes' ? fmt.monthYear(r.from.slice(0, 7)) : r.period === 'trimestre' ? t('secciones.finanzas.common.quarter', { n: r.index, year: r.year }) : String(r.year)
+    r.period === 'mes'
+      ? fmt.monthYear(r.from.slice(0, 7))
+      : r.period === 'trimestre'
+        ? t('secciones.finanzas.common.quarter', { n: r.index, year: r.year })
+        : String(r.year)
 }
 
 function PeriodNav({ range }: { range: FinanceRange }) {
@@ -155,7 +159,12 @@ function EventTable({ list, caption }: { list: FinanceEventCost[]; caption: stri
         { key: 'fees', label: I('fees'), numeric: true, render: (c) => <DoneCell cents={c.fees} /> },
         { key: 'other', label: I('otherCosts'), numeric: true, render: (c) => <DoneCell cents={c.costs + c.other} /> },
         { key: 'total', label: I('total'), numeric: true, render: (c) => <DoneCell cents={c.spent} strong /> },
-        { key: 'upcoming', label: I('upcoming'), numeric: true, render: (c) => (c.upcoming ? money(c.upcoming) : <Dash label={t('secciones.finanzas.common.upcomingNone')} />) },
+        {
+          key: 'upcoming',
+          label: I('upcoming'),
+          numeric: true,
+          render: (c) => (c.upcoming ? money(c.upcoming) : <Dash label={t('secciones.finanzas.common.upcomingNone')} />),
+        },
       ]}
     />
   )

@@ -65,7 +65,8 @@ export function FinanzasMovimientos({ kind, embedded }: { kind: TransactionKind;
 
   const events = new Map(data.events.map((e) => [e.id, e]))
   const projects = new Map(data.projects.map((p) => [p.id, p]))
-  const C = (k: 'category' | 'project' | 'event' | 'date' | 'status' | 'amount' | 'confidence' | 'tags' | 'actions') => t(`secciones.finanzas.movimientos.columns.${k}`)
+  const C = (k: 'category' | 'project' | 'event' | 'date' | 'status' | 'amount' | 'confidence' | 'tags' | 'actions') =>
+    t(`secciones.finanzas.movimientos.columns.${k}`)
   const columns: Column<Transaction>[] = [
     { key: 'category', label: C('category'), render: (x) => categoryName(x) },
     ...(scope === null
@@ -106,7 +107,11 @@ export function FinanzasMovimientos({ kind, embedded }: { kind: TransactionKind;
 
   const F = (k: 'label' | 'project' | 'projectAll' | 'category' | 'categoryAll' | 'status' | 'statusAll' | 'month' | 'monthAll' | 'clear') =>
     t(`secciones.finanzas.movimientos.filters.${k}`)
-  const noneText = tag ? t('secciones.finanzas.movimientos.noneTagged') : kind === 'income' ? t('secciones.finanzas.movimientos.noneIncome') : t('secciones.finanzas.movimientos.noneExpense')
+  const noneText = tag
+    ? t('secciones.finanzas.movimientos.noneTagged')
+    : kind === 'income'
+      ? t('secciones.finanzas.movimientos.noneIncome')
+      : t('secciones.finanzas.movimientos.noneExpense')
   const createLabel = kind === 'income' ? t('secciones.finanzas.movimientos.createIncome') : t('secciones.finanzas.movimientos.createExpense')
   const countText = amounts.count === 1 ? t('secciones.finanzas.common.countOne') : t('secciones.finanzas.common.count', { n: amounts.count })
 
@@ -166,7 +171,8 @@ export function FinanzasMovimientos({ kind, embedded }: { kind: TransactionKind;
           <>
             <p className="finanzas-total" aria-live="polite">
               <strong>{t('secciones.finanzas.movimientos.total')}:</strong> {t('secciones.finanzas.movimientos.totalDone', { amount: money(amounts.done) })}
-              {amounts.planned + amounts.pending > 0 && ` · ${t('secciones.finanzas.movimientos.totalUpcoming', { amount: money(amounts.planned + amounts.pending) })}`}
+              {amounts.planned + amounts.pending > 0 &&
+                ` · ${t('secciones.finanzas.movimientos.totalUpcoming', { amount: money(amounts.planned + amounts.pending) })}`}
               {' · '}
               {countText}
               {totals.cancelled > 0 &&

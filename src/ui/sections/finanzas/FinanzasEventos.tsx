@@ -180,7 +180,9 @@ export function FinanzasEventos() {
                       <EventStatusPill status={e.status} />
                       <EventDate event={e} />
                       {e.registrationStatus && (
-                        <span className="meta-date">{t('secciones.finanzas.eventos.registration', { status: REGISTRATION_STATUSES[e.registrationStatus].label })}</span>
+                        <span className="meta-date">
+                          {t('secciones.finanzas.eventos.registration', { status: REGISTRATION_STATUSES[e.registrationStatus].label })}
+                        </span>
                       )}
                       {showProject && e.projectId && <ProjectChip project={data.projects.find((p) => p.id === e.projectId)} />}
                     </div>

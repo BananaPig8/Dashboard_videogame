@@ -22,7 +22,8 @@ function metricName(m: Pick<Metric, 'kind' | 'label' | 'platform'>): string {
   return m.platform ? `${name} · ${STORE_PLATFORMS[m.platform]}` : name
 }
 
-function Sources({ sources, projectId }: { sources: SourceRef[]; projectId: string }) {
+/** Las fuentes de un dato, con su enlace si lo hay (`bare`: sin «Fuente:», en una columna que ya lo dice). */
+function Sources({ sources, projectId, bare }: { sources: SourceRef[]; projectId: string; bare?: boolean }) {
   const data = useStudioData()
   const project = data.projects.find((p) => p.id === projectId)
   if (!sources.length)
@@ -33,7 +34,7 @@ function Sources({ sources, projectId }: { sources: SourceRef[]; projectId: stri
     )
   return (
     <span className="estadisticas-sources">
-      <span className="muted">{t('secciones.estadisticas.metricas.sources')}</span>
+      {!bare && <span className="muted">{t('secciones.estadisticas.metricas.sources')}</span>}
       {sources.map((s, k) => {
         const href = sourceHref(s, project)
         return (
@@ -125,7 +126,9 @@ function Excluded({ metrics, title, subtitle }: { metrics: Metric[]; title: stri
           <thead>
             <tr>
               <th scope="col">{t('secciones.estadisticas.metricas.table.what')}</th>
-              <th scope="col">{L('value')}</th>
+              <th scope="col" className="num">
+                {L('value')}
+              </th>
               <th scope="col">{L('date')}</th>
               <th scope="col">{L('confidence')}</th>
               <th scope="col">{L('source')}</th>
@@ -154,7 +157,7 @@ function Excluded({ metrics, title, subtitle }: { metrics: Metric[]; title: stri
                   <ConfidenceTag confidence={m.confidence} />
                 </td>
                 <td data-label={L('source')} className="small">
-                  <Sources sources={m.sources} projectId={m.projectId} />
+                  <Sources sources={m.sources} projectId={m.projectId} bare />
                 </td>
               </tr>
             ))}

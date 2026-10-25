@@ -30,7 +30,18 @@ import {
 
 const TODAY = '2026-10-19'
 const src = [{ type: 'manual' as const, ref: 'prueba' }]
-const project = (id: string) => ({ id, slug: id, name: id.toUpperCase(), description: '', platforms: [], stage: 'production' as const, color: '#000', versions: [], tags: [], links: [] })
+const project = (id: string) => ({
+  id,
+  slug: id,
+  name: id.toUpperCase(),
+  description: '',
+  platforms: [],
+  stage: 'production' as const,
+  color: '#000',
+  versions: [],
+  tags: [],
+  links: [],
+})
 const tx = (id: string, over: Partial<Transaction> = {}): Transaction => ({
   id,
   kind: 'expense',
@@ -76,7 +87,12 @@ function data(over: Partial<StudioData> = {}): StudioData {
       tx('otro', { projectId: 'q', category: 'assets', amount: 2000, date: '2025-12-20' }),
       tx('tasa-suelta', { category: 'fees', amount: 300, date: '2026-08-01' }),
     ],
-    budgets: [budget('octubre', { amount: 2000, projectId: 'p' }), budget('eventos', { category: 'events', amount: 20000 }), budget('viejo', { from: '2025-01-01', to: '2025-12-31' }), budget('futuro', { from: '2027-01-01', to: '2027-03-31' })],
+    budgets: [
+      budget('octubre', { amount: 2000, projectId: 'p' }),
+      budget('eventos', { category: 'events', amount: 20000 }),
+      budget('viejo', { from: '2025-01-01', to: '2025-12-31' }),
+      budget('futuro', { from: '2027-01-01', to: '2027-03-31' }),
+    ],
     ...over,
   }
 }
@@ -234,7 +250,14 @@ describe('periodos', () => {
   })
 
   it('un mes natural (por defecto, el de hoy)', () => {
-    expect(financePeriodRange(null, null, TODAY)).toMatchObject({ period: 'mes', from: '2026-10-01', to: '2026-10-31', prev: '2026-09-01', next: '2026-11-01', key: '2026-10' })
+    expect(financePeriodRange(null, null, TODAY)).toMatchObject({
+      period: 'mes',
+      from: '2026-10-01',
+      to: '2026-10-31',
+      prev: '2026-09-01',
+      next: '2026-11-01',
+      key: '2026-10',
+    })
     expect(financePeriodRange('mes', '2024-02-10', TODAY)).toMatchObject({ from: '2024-02-01', to: '2024-02-29', key: '2024-02' })
   })
 
@@ -251,7 +274,13 @@ describe('periodos', () => {
   })
 
   it('un año natural', () => {
-    expect(financePeriodRange('año', '2025-06-01', TODAY)).toMatchObject({ from: '2025-01-01', to: '2025-12-31', prev: '2024-01-01', next: '2026-01-01', key: '2025' })
+    expect(financePeriodRange('año', '2025-06-01', TODAY)).toMatchObject({
+      from: '2025-01-01',
+      to: '2025-12-31',
+      prev: '2024-01-01',
+      next: '2026-01-01',
+      key: '2025',
+    })
   })
 
   it('un periodo o una fecha que no valen: el mes de hoy', () => {
@@ -272,7 +301,16 @@ describe('financeNextMonthCopy', () => {
     const sources = [{ type: 'manual' as const, ref: 'Duplicado' }]
     const copy = financeNextMonthCopy(original, sources)
     expect(copy).not.toHaveProperty('id')
-    expect(copy).toMatchObject({ date: '2026-02-28', status: 'planned', confidence: 'to_confirm', sources, amount: 1000, tags: ['x'], eventId: 'feria', originalAmount: 1100 })
+    expect(copy).toMatchObject({
+      date: '2026-02-28',
+      status: 'planned',
+      confidence: 'to_confirm',
+      sources,
+      amount: 1000,
+      tags: ['x'],
+      eventId: 'feria',
+      originalAmount: 1100,
+    })
     expect(original.status).toBe('done')
   })
 })
@@ -296,7 +334,12 @@ describe('CSV', () => {
   })
 
   it('csvLines separa con «;» y termina cada línea con CRLF', () => {
-    expect(csvLines([['a', 'b'], ['c;d', 'e']])).toBe('a;b\r\n"c;d";e\r\n')
+    expect(
+      csvLines([
+        ['a', 'b'],
+        ['c;d', 'e'],
+      ]),
+    ).toBe('a;b\r\n"c;d";e\r\n')
   })
 
   it('financeToCSV: BOM, cabecera y una fila por movimiento con sus nombres', () => {

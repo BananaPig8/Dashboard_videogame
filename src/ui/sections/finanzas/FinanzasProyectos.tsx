@@ -44,7 +44,10 @@ export function FinanzasProyectos({ embedded }: { embedded?: boolean }) {
   if (!groups.length)
     return (
       <Card>
-        <Empty icon="wallet" action={canEdit && !tag ? { label: t('secciones.finanzas.movimientos.createExpense'), onClick: () => create('transactions') } : undefined}>
+        <Empty
+          icon="wallet"
+          action={canEdit && !tag ? { label: t('secciones.finanzas.movimientos.createExpense'), onClick: () => create('transactions') } : undefined}
+        >
           {tag ? t('secciones.finanzas.proyectos.noneTagged') : t('secciones.finanzas.proyectos.none')}
         </Empty>
         <ManualNote />

@@ -105,16 +105,17 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.estadisticas-bars > li {
   display: grid;
   grid-template-columns: minmax(0, 1.4fr) minmax(60px, 1fr) auto;
+  gap: var(--space-2) var(--space-3);
+}
+
+/* Cada fila usa las columnas de la lista: las barras empiezan y acaban todas a la misma altura. */
+.estadisticas-bars > li {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
   align-items: center;
-  gap: var(--space-3);
 }
 
 .estadisticas-bar-label {
@@ -269,8 +270,9 @@
   .estadisticas-table td.num {
     text-align: left;
   }
-  .estadisticas-bars > li {
+  .estadisticas-bars {
     grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: var(--space-1);
   }
   .estadisticas-bar-label {
     grid-column: 1 / -1;

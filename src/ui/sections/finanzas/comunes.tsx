@@ -162,7 +162,12 @@ export function UpcomingLine({ totals }: { totals: FinanceTotals }) {
   const money = useMoney()
   const income = totals.income.planned + totals.income.pending
   const expense = totals.expense.planned + totals.expense.pending
-  const cancelled = totals.cancelled === 0 ? '' : totals.cancelled === 1 ? t('secciones.finanzas.common.cancelledOne') : t('secciones.finanzas.common.cancelled', { n: totals.cancelled })
+  const cancelled =
+    totals.cancelled === 0
+      ? ''
+      : totals.cancelled === 1
+        ? t('secciones.finanzas.common.cancelledOne')
+        : t('secciones.finanzas.common.cancelled', { n: totals.cancelled })
   return (
     <p className="muted small finanzas-upcoming-line">
       {income || expense
@@ -260,7 +265,8 @@ export function BudgetMeter({ usage, showProject, detailed }: { usage: BudgetUsa
           )}
           <span className="meta-date">{budget.category ? TRANSACTION_CATEGORIES[budget.category] : t('secciones.finanzas.presupuestos.allCategories')}</span>
           <span className="meta-date">
-            <Icon name="calendar" size={12} /> {t('secciones.finanzas.presupuestos.range', { from: fmt.date(budget.from, year), to: fmt.date(budget.to, year) })}
+            <Icon name="calendar" size={12} />{' '}
+            {t('secciones.finanzas.presupuestos.range', { from: fmt.date(budget.from, year), to: fmt.date(budget.to, year) })}
           </span>
         </div>
       )}

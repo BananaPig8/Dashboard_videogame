@@ -73,7 +73,10 @@ export function FinanzasResumen() {
   if (nothing)
     return (
       <Card>
-        <Empty icon="wallet" action={canEdit && !tag ? { label: t('secciones.finanzas.movimientos.createExpense'), onClick: () => create('transactions') } : undefined}>
+        <Empty
+          icon="wallet"
+          action={canEdit && !tag ? { label: t('secciones.finanzas.movimientos.createExpense'), onClick: () => create('transactions') } : undefined}
+        >
           {tag ? t('secciones.finanzas.resumen.emptyTagged') : t('secciones.finanzas.resumen.empty')}
         </Empty>
         <ManualNote />

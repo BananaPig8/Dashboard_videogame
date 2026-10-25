@@ -236,7 +236,17 @@ export function financeEventCosts(data: StudioData, f: FinanceFilter = {}): Fina
   const list = data.transactions.filter((t) => t.eventId && inScope(t) && matches({ ...f, scope: null })(t))
   const out: FinanceEventCost[] = []
   for (const [eventId, txs] of groupBy(list, (t) => t.eventId!)) {
-    const c: FinanceEventCost = { eventId, event: data.events.find((e) => e.id === eventId), fees: 0, costs: 0, other: 0, spent: 0, upcoming: 0, income: 0, transactions: txs.sort(byDateDesc) }
+    const c: FinanceEventCost = {
+      eventId,
+      event: data.events.find((e) => e.id === eventId),
+      fees: 0,
+      costs: 0,
+      other: 0,
+      spent: 0,
+      upcoming: 0,
+      income: 0,
+      transactions: txs.sort(byDateDesc),
+    }
     for (const t of txs) {
       if (t.kind === 'income') {
         if (t.status === 'done') c.income += t.amount

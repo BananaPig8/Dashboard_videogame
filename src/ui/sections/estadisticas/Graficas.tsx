@@ -106,7 +106,7 @@ export function ColumnChart({
             <g key={v}>
               <line x1={pad.l} x2={W - pad.r} y1={y(v)} y2={y(v)} className={v === 0 ? 'axis-line' : 'grid-line'} />
               <text x={pad.l - 6} y={y(v) + 4} className="tick" textAnchor="end">
-                {format(v)}
+                {v === 0 ? '0' : format(v)}
               </text>
             </g>
           ))}
@@ -255,7 +255,7 @@ export function LineChart({
             <g key={v}>
               <line x1={pad.l} x2={W - pad.r} y1={y(v)} y2={y(v)} className={v === 0 ? 'axis-line' : 'grid-line'} />
               <text x={pad.l - 6} y={y(v) + 4} className="tick" textAnchor="end">
-                {format(v)}
+                {v === 0 ? '0' : format(v)}
               </text>
             </g>
           ))}

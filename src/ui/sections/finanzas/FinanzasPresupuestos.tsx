@@ -41,7 +41,11 @@ export function FinanzasPresupuestos() {
   return (
     <>
       <Card title={P('active')} icon="target" subtitle={P('activeSubtitle')}>
-        {active.length ? <BudgetList list={active} showProject={showProject} /> : <p className="muted small">{t('secciones.finanzas.presupuestos.noneActive')}</p>}
+        {active.length ? (
+          <BudgetList list={active} showProject={showProject} />
+        ) : (
+          <p className="muted small">{t('secciones.finanzas.presupuestos.noneActive')}</p>
+        )}
         <FinanceNote>{t('secciones.finanzas.presupuestos.note')}</FinanceNote>
       </Card>
       {upcoming.length > 0 && (
