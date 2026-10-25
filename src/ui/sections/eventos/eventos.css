@@ -280,3 +280,10 @@
 .eventos-feedback-link:hover {
   color: var(--accent);
 }
+
+.eventos-block-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+}

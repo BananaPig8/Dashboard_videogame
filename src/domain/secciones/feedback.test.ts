@@ -325,3 +325,28 @@ describe('Informes de pruebas', () => {
     expect(playtestFeedbackWithoutTest(d, 'p').map((f) => f.id)).toEqual(['de-prueba-sin-decir'])
   })
 })
+
+describe('feedback de un evento (?evento=)', () => {
+  const d = data({
+    events: [{ id: 'feria', projectId: 'p', title: 'Feria', type: 'fair', status: 'done', date: '2026-09-20', dateConfirmed: true, sources: src, confidence: 'verified' }],
+    playtests: [test('stand', { method: 'event', eventId: 'feria' })],
+    items: [item('incidencia')],
+    feedback: [
+      fb('del-evento', { origin: 'event', eventId: 'feria' }),
+      fb('de-su-prueba', { origin: 'playtest', playtestId: 'stand' }),
+      fb('de-otra-cosa', { kind: 'bug' }),
+    ],
+  })
+
+  it('el que dice venir del evento y el de sus pruebas', () => {
+    const q = feedbackQueryOf(params('evento=feria'), null, d)
+    expect(q.eventoTests).toEqual(['stand'])
+    expect(feedbackFiltered(q)).toBe(true)
+    expect(feedbackList(d, q).map((f) => f.id)).toEqual(['de-su-prueba', 'del-evento'])
+  })
+
+  it('las incidencias no son de ningún evento', () => {
+    expect(feedbackBugs(d, feedbackQueryOf(params('tipo=bugs&evento=feria'), null, d))).toEqual([])
+  })
+})
+

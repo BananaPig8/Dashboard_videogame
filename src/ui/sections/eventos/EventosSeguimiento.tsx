@@ -1,6 +1,7 @@
 // Seguimiento de los eventos pasados o celebrados: qué salió y qué queda por hacer, el feedback
 // recogido, las pruebas que se hicieron allí y los gastos e ingresos apuntados. Si un evento
 // pasó y sigue como previsto, pregunta si se celebró.
+import { Link } from 'react-router-dom'
 import { PLAYTEST_METHODS, TRANSACTION_CATEGORIES, TRANSACTION_KINDS, TRANSACTION_STATUSES } from '../../../domain/catalog'
 import { yearOf } from '../../../domain/dates'
 import { eventoFollowUps, sectorEvents, type EventoFollowUp } from '../../../domain/selectors'
@@ -49,6 +50,7 @@ export function EventosSeguimiento({ embedded }: SectionPageProps) {
 function FollowUp({ followUp: f, showProject }: { followUp: EventoFollowUp; showProject: boolean }) {
   const data = useStudioData()
   const { create, edit } = useUI()
+  const { href } = useScope()
   const canEdit = useCanEdit()
   const undoable = useUndoable()
   const fmt = useFormat()
@@ -123,7 +125,14 @@ function FollowUp({ followUp: f, showProject }: { followUp: EventoFollowUp; show
       </section>
 
       <section className="eventos-block">
-        <h3 className="subhead">{t('secciones.eventos.seguimiento.feedback', { n: f.feedback.length })}</h3>
+        <div className="eventos-block-head">
+          <h3 className="subhead">{t('secciones.eventos.seguimiento.feedback', { n: f.feedback.length })}</h3>
+          {f.feedback.length > 0 && (
+            <Link className="small" to={href(`/feedback?${new URLSearchParams({ evento: e.id })}`)}>
+              {t('secciones.eventos.seguimiento.feedbackLink')}
+            </Link>
+          )}
+        </div>
         {f.feedback.length ? (
           <ul className="item-list">
             {f.feedback.map((x) => (

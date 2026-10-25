@@ -131,6 +131,7 @@ export const eventos = {
     writeFollowUp: 'Apuntar el seguimiento',
     feedback: 'Feedback recogido ({n})',
     noFeedback: 'Ningún feedback apuntado de este evento.',
+    feedbackLink: 'Verlo en Feedback y pruebas',
     addFeedback: 'Añadir feedback',
     playtests: 'Pruebas con jugadores ({n})',
     people: '{n} personas',

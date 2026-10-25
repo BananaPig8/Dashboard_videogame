@@ -4,6 +4,7 @@ import { SCHEMA_VERSION, type Feedback, type StudioData, type StudioEvent } from
 import { validateStudioData } from '../validate'
 import {
   eventoDefaultType,
+  eventoFeedbackCount,
   eventoFollowUp,
   eventoFollowUps,
   eventoIsStale,
@@ -256,5 +257,10 @@ describe('materiales y seguimiento', () => {
     expect(f.playtests.map((p) => p.id)).toEqual(['prueba'])
     expect(f.transactions.map((t) => t.id)).toEqual(['premio', 'viaje', 'stand'])
     expect([f.spent, f.plannedSpend, f.income]).toEqual([12000, 4550, 50000])
+  })
+
+  it('cuenta el feedback de cada evento (también el de sus pruebas)', () => {
+    expect(eventoFeedbackCount(d, d.events[3])).toBe(2)
+    expect(eventoFeedbackCount(d, d.events[0])).toBe(0)
   })
 })

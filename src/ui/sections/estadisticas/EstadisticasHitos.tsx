@@ -109,7 +109,7 @@ export function EstadisticasHitos() {
           )}
         </Card>
       </div>
-      <div className="estadisticas-grid">
+      <div className={m.late.length ? 'estadisticas-grid' : 'estadisticas-col'}>
         <Card title={t('secciones.estadisticas.hitos.plannedTitle')} icon="flag" subtitle={t('secciones.estadisticas.hitos.plannedSubtitle')}>
           {m.planned.length ? (
             <MilestoneRows
