@@ -71,6 +71,10 @@ const PATHS = {
   video: 'M4 6h12v12H4zm12 4 5-3v10l-5-3',
   layers: 'm12 3 9 5-9 5-9-5zm-9 9 9 5 9-5m-18 4 9 5 9-5',
   user: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm-7 9a7 7 0 0 1 14 0',
+  camera: 'M3 8h4l2-3h6l2 3h4v12H3zm9 9a4 4 0 1 0 0-8 4 4 0 0 0 0 8z',
+  code: 'm8 7-5 5 5 5m8-10 5 5-5 5M14 4l-4 16',
+  megaphone: 'M3 10v4h4l8 5V5l-8 5zm4 4 1.5 6H11l-1-5.5M18.5 9a4 4 0 0 1 0 6',
+  sticky: 'M5 4h14v10l-6 6H5zm8 16v-6h6',
 } as const
 
 export type IconName = keyof typeof PATHS
