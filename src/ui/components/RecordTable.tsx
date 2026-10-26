@@ -19,6 +19,7 @@ export function RecordTable<T extends { id: string }>({
   title,
   onOpen,
   empty,
+  nameLabel,
 }: {
   rows: T[]
   columns: Column<T>[]
@@ -28,6 +29,8 @@ export function RecordTable<T extends { id: string }>({
   title: (row: T) => ReactNode
   onOpen?: (row: T) => void
   empty?: ReactNode
+  /** Cabecera de la primera columna (por defecto, «Nombre»): «Concepto», «Presupuesto»… */
+  nameLabel?: string
 }) {
   if (!rows.length) return <Empty icon="list">{empty ?? t('records.empty')}</Empty>
   return (
@@ -36,7 +39,7 @@ export function RecordTable<T extends { id: string }>({
         <caption className="visually-hidden">{caption}</caption>
         <thead>
           <tr>
-            <th scope="col">{t('records.name')}</th>
+            <th scope="col">{nameLabel ?? t('records.name')}</th>
             {columns.map((c) => (
               <th key={c.key} scope="col" className={c.numeric ? 'num' : undefined}>
                 {c.label}

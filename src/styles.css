@@ -3211,7 +3211,11 @@ input[type='color'] {
   .table td.num {
     text-align: left;
   }
+  .table td:empty {
+    display: none;
+  }
   .table td[data-label]::before {
+    margin-right: var(--space-2);
     content: attr(data-label);
     display: inline-block;
     min-width: 96px;
