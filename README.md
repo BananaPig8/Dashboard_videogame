@@ -8,37 +8,50 @@ El primer proyecto es **Indie Dev Tycoon** (Godot), con todo lo hecho desde el 2
 septiembre de 2026 sacado de su repositorio, con fecha y fuente. Cualquier juego nuevo se
 añade desde la propia aplicación, sin tocar el código.
 
-## Qué responde
+## Las secciones
 
-| Pregunta | Dónde |
-|---|---|
-| ¿Qué proyectos tiene el estudio y cuál es su estado real? | Panel → «Proyectos del estudio»; **Proyectos** |
-| ¿Qué tengo pendiente hoy? | Panel → «Hoy»; **Hoy** (planificar el día) |
-| ¿Qué está bloqueado? | Panel → «Bloqueado y en pausa»; **Trabajo** filtrado por estado |
-| ¿Próximos eventos, entregas y fechas límite? | Panel → «Próximas fechas»; **Agenda** |
-| ¿Qué versiones, demos y builds hay? | Panel → «Builds y versiones»; **Builds** |
-| ¿Qué hace falta para publicar o actualizar un juego? | Panel → «Publicar y actualizar»; **Publicación** (listas de pasos) |
-| ¿Qué feedback hay y qué priorizar? | Panel → «Feedback»; **Feedback** |
-| ¿Cómo evoluciona cada proyecto? | Panel → «Evolución»; **Historial** (día a día, commit a commit) |
-| ¿Qué documentación, recursos y decisiones consultar? | **Recursos**, **Decisiones** |
-| ¿Qué falta para Steam, ferias, festivales o presentaciones? | Panel → «Steam, ferias y presentaciones» |
-| ¿Qué proyecto necesita atención inmediata, y por qué? | Panel → «Necesita atención» |
+La barra lateral tiene 15 secciones en grupos. Cada una tiene subsecciones (vistas de la
+misma pantalla, que se combinan: «Mis tareas» en «Tablero Kanban») y todas leen los mismos
+datos: proyectos, tareas, fechas, etiquetas y referencias entre ellos.
+
+| Grupo | Sección | Para qué |
+|---|---|---|
+| Estudio | **Panel** | El resumen del día: lo que pide atención, lo de hoy, las próximas fechas, el estado de los proyectos y las alertas. Cada bloque se puede ver solo (`?ver=`). |
+| | **Proyectos** | Todos los juegos por estado: activos, en planificación, en pausa, lanzados y archivados. |
+| Trabajo | **Tareas** | Plan de hoy, mis tareas, todas, tablero, lista, calendario, bloqueadas y vencidas. |
+| | **Roadmap** | Hitos, fases, objetivos con su progreso, versiones previstas y la línea temporal. |
+| | **Calendario** | Todas las fechas en un sitio: límites, entregas, eventos, festivales, reuniones, publicación y recordatorios; exportable a `.ics`. |
+| Producción | **Builds y versiones** | Builds por canal (desarrollo, pruebas, demos, públicas, candidatas), historial de cambios e incidencias por versión. |
+| | **Publicación** | Preparación de Steam (a mano: no hay conexión con Steamworks), lanzamiento, materiales, descripciones, capturas, logros, actualizaciones y DLC, y estado de revisión. |
+| | **Feedback y pruebas** | Comentarios, bugs, mejoras, informes de pruebas, priorización y lo que ha cambiado gracias al feedback. |
+| | **Eventos** | Ferias, festivales, premios y presentaciones, con inscripciones, materiales y seguimiento. |
+| Conocimiento | **Documentación** | Diseño, técnica, notas, decisiones, actas, guías y enlaces. |
+| | **Recursos** | Capturas, vídeos, imágenes, logos, documentos, enlaces, arte y referencias. |
+| Gestión | **Equipo** | Miembros, responsabilidades, asignaciones, carga de trabajo y colaboradores externos. |
+| | **Finanzas** | Gastos, ingresos, presupuestos, costes por proyecto y de eventos, e informes (CSV). Solo cuenta lo hecho. |
+| | **Estadísticas** | Progreso, tareas, hitos, tiempo, actividad y métricas de lanzamiento y comerciales (solo las verificadas). |
+| | **Ajustes** | Perfil del estudio, preferencias, categorías y etiquetas, estados, integraciones, seguridad y copias. |
 
 Arriba, el selector de ámbito cambia entre **todo el estudio** y **un proyecto**: todas las
 pantallas se filtran y el ámbito va en la URL, así se pasa de lo general al detalle sin
-perder el sitio. La ficha de cada proyecto tiene las mismas secciones en pestañas.
+perder el sitio. La ficha de cada proyecto tiene las mismas secciones en pestañas. Las
+secciones que el estudio no use se pueden ocultar en Ajustes › Preferencias.
 
 ## Cómo se usa
 
 - **Tema oscuro** por defecto (también claro o el del sistema), con color de acento,
   densidad y bloques del panel a tu gusto (Ajustes o «Personalizar» en el panel).
-- `Ctrl K` (o `/`) abre la **paleta**: ir a cualquier pantalla, proyecto, vista o tarea,
-  y crear cosas sin soltar el teclado. `[` contrae la barra lateral.
-- **Nuevo** (arriba a la derecha) crea tareas, decisiones, incidencias, eventos, builds,
-  feedback, recursos, listas de pasos o proyectos.
-- La **campana** avisa de lo vencido, lo que vence hoy, las ferias que se acercan y los
-  bloqueos importantes.
-- **Vistas guardadas**: filtra Tareas o Historial y pulsa «Guardar vista».
+- `Ctrl K` (o `/`) abre la **paleta**: ir a cualquier sección, subsección, proyecto,
+  etiqueta, vista o tarea, y crear cosas sin soltar el teclado. `[` contrae la barra lateral.
+- **Nuevo** (arriba a la derecha) crea tareas, decisiones, incidencias, recordatorios,
+  eventos, builds, versiones, pruebas, feedback, recursos, listas de pasos, horas,
+  personas, gastos o ingresos, datos de plataforma y proyectos.
+- La **campana** avisa de lo vencido, lo que vence hoy, las ferias que se acercan, las
+  inscripciones que cierran, los recordatorios, las versiones que se acercan o se pasaron,
+  los presupuestos superados y los bloqueos importantes.
+- **Etiquetas** comunes a todo: cada una tiene su página con todo lo que la lleva, y
+  cualquier sección se filtra con ella.
+- **Vistas guardadas**: filtra una sección y pulsa «Guardar vista».
 - Zona horaria (`Europe/Madrid` por defecto), formato de fecha y de hora en Ajustes.
 
 Todo el sistema visual (colores de estado, tipografía, componentes, teclado, móvil) está
@@ -53,7 +66,9 @@ npm test           # pruebas (lógica, almacenamiento y datos iniciales contra g
 npm run build      # versión para publicar, en dist/
 ```
 
-Recorrido completo en un navegador (Playwright y Chromium, con la versión compilada servida):
+Recorrido completo en un navegador (Playwright y Chromium, con la versión compilada
+servida): los flujos principales y las 15 secciones con todas sus subsecciones y las
+pestañas de la ficha, a 1280, 820 y 390 px, sin errores ni desbordamiento:
 
 ```bash
 npm run build && npx vite preview --port 4173 &
