@@ -151,7 +151,9 @@ export interface EventoMaterials {
 
 export function eventoMaterials(data: StudioData, event: StudioEvent): EventoMaterials {
   const checklists = data.checklists.filter((c) => c.eventId === event.id).map((c) => checklistProgress(c))
-  const builds = data.builds.filter((b) => b.eventId === event.id).sort((a, b) => (b.date ?? '').localeCompare(a.date ?? '') || a.name.localeCompare(b.name, 'es'))
+  const builds = data.builds
+    .filter((b) => b.eventId === event.id)
+    .sort((a, b) => (b.date ?? '').localeCompare(a.date ?? '') || a.name.localeCompare(b.name, 'es'))
   const resources = data.resources.filter((r) => r.eventId === event.id).sort((a, b) => a.title.localeCompare(b.title, 'es'))
   const pendingSteps = checklists.reduce((n, c) => n + c.total - c.done, 0)
   const missing: EventoMissing[] = []

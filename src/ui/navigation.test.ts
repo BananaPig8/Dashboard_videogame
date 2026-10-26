@@ -76,6 +76,12 @@ describe('enlaces con ámbito', () => {
     expect(scopedHref('/ajustes', { projectSlug: 'idt' })).toBe('/ajustes')
   })
 
+  it('la página de una etiqueta conserva el proyecto, también desde su ficha', () => {
+    expect(scopedHref('/etiquetas/demo', { scope: 'idt' })).toBe('/etiquetas/demo?p=idt')
+    expect(scopedHref('/etiquetas/demo', { projectSlug: 'idt', scope: 'idt' })).toBe('/etiquetas/demo?p=idt')
+    expect(scopedHref('/etiquetas/demo', {})).toBe('/etiquetas/demo')
+  })
+
   it('Proyectos y Ajustes no llevan ámbito', () => {
     expect(scopedHref('/proyectos?estado=activos', { scope: 'idt' })).toBe('/proyectos?estado=activos')
     expect(scopedHref('/ajustes', { scope: 'idt' })).toBe('/ajustes')

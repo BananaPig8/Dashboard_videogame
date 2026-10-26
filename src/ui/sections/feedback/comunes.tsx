@@ -28,7 +28,13 @@ import { useScope, useUI } from '../../context'
 import { useFormat, useToday } from '../../hooks'
 
 export const FEEDBACK_KIND_ICON: Record<FeedbackKind, IconName> = { comment: 'message', bug: 'bug', request: 'star' }
-export const FEEDBACK_STATUS_ICON: Record<FeedbackStatus, IconName> = { new: 'bell', triaged: 'eye', planned: 'calendar', addressed: 'checkCircle', wont_do: 'xCircle' }
+export const FEEDBACK_STATUS_ICON: Record<FeedbackStatus, IconName> = {
+  new: 'bell',
+  triaged: 'eye',
+  planned: 'calendar',
+  addressed: 'checkCircle',
+  wont_do: 'xCircle',
+}
 const IMPACT_ICON: Record<Priority, IconName> = { critical: 'alert', high: 'arrowUp', medium: 'minus', low: 'arrowDown' }
 
 /** Qué es: comentario, bug o mejora; sin poner, «Sin clasificar» (nunca se adivina). */

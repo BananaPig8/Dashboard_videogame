@@ -4,7 +4,16 @@
 import { useState, type ReactNode } from 'react'
 import { FEEDBACK_STATUSES } from '../../../domain/catalog'
 import { yearOf } from '../../../domain/dates'
-import { bugEntryId, bugEntryOpen, feedbackBugs, feedbackByStatus, feedbackFiltered, feedbackList, feedbackTipoDefaults, type BugEntry } from '../../../domain/selectors'
+import {
+  bugEntryId,
+  bugEntryOpen,
+  feedbackBugs,
+  feedbackByStatus,
+  feedbackFiltered,
+  feedbackList,
+  feedbackTipoDefaults,
+  type BugEntry,
+} from '../../../domain/selectors'
 import type { WorkItem } from '../../../domain/types'
 import { useCanEdit, useStudioData } from '../../../data/store'
 import { t } from '../../../i18n'

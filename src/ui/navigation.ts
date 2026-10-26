@@ -475,6 +475,12 @@ export function atSectionRoot(s: NavSection, search: string): boolean {
  */
 export function scopedHref(to: string, here: Here): string {
   const { path, params } = split(to)
+  // La página de una etiqueta no es de ninguna sección: el proyecto va siempre con ?p=.
+  if (path.startsWith('/etiquetas/')) {
+    const scope = here.scope ?? undefined
+    if (scope) params.set('p', scope)
+    return join(path, params)
+  }
   const s = sectionOfPath(path)
   if (here.projectSlug && !path.startsWith('/proyectos')) {
     if (s?.tab) {

@@ -36,7 +36,12 @@ export function FeedbackPriorizacion({ embedded }: SectionPageProps) {
   // El cuadro cuenta todo lo abierto con los demás filtros (sin el de impacto ni el de estado).
   const queue = feedbackQueue(data, query)
   const matrix = feedbackMatrix(feedbackQueue(data, { ...query, impacto: null, estado: null }))
-  const issues = tipo === 'bugs' ? unlinkedIssues(data, scope).filter((i) => issueMatches(i, { ...query, estado: 'abierto' })).sort(byPriority) : []
+  const issues =
+    tipo === 'bugs'
+      ? unlinkedIssues(data, scope)
+          .filter((i) => issueMatches(i, { ...query, estado: 'abierto' }))
+          .sort(byPriority)
+      : []
   const key = tipo ?? 'todo'
 
   /** La casilla del cuadro: filtra por ese impacto y ese estado (o quita el filtro si ya está). */
@@ -87,7 +92,11 @@ export function FeedbackPriorizacion({ embedded }: SectionPageProps) {
                   {FEEDBACK_OPEN_STATUSES.map((s) => {
                     const n = matrix[p][s].length
                     const on = query.impacto === p && query.estado === s
-                    const label = t('secciones.feedback.priorizacion.cell', { n, impact: PRIORITIES[p].label.toLowerCase(), status: FEEDBACK_STATUSES[s].label.toLowerCase() })
+                    const label = t('secciones.feedback.priorizacion.cell', {
+                      n,
+                      impact: PRIORITIES[p].label.toLowerCase(),
+                      status: FEEDBACK_STATUSES[s].label.toLowerCase(),
+                    })
                     return (
                       <td key={s} data-label={FEEDBACK_STATUSES[s].label} className="num">
                         {n > 0 ? (
@@ -143,7 +152,15 @@ export function FeedbackPriorizacion({ embedded }: SectionPageProps) {
           subtitle={t(issues.length === 1 ? 'secciones.feedback.bugs.issues.one' : 'secciones.feedback.bugs.issues.many', { n: issues.length })}
         >
           <p className="muted small">{t('secciones.feedback.priorizacion.issuesHint')}</p>
-          <ItemList items={issues} data={data} showProject={showProject} year={yearOf(today)} today={today} showTags empty={t('secciones.feedback.priorizacion.issuesEmpty')} />
+          <ItemList
+            items={issues}
+            data={data}
+            showProject={showProject}
+            year={yearOf(today)}
+            today={today}
+            showTags
+            empty={t('secciones.feedback.priorizacion.issuesEmpty')}
+          />
         </Card>
       )}
     </FeedbackPage>

@@ -112,11 +112,7 @@ function FollowUp({ followUp: f, showProject }: { followUp: EventoFollowUp; show
 
       <section className="eventos-block">
         <h3 className="subhead">{t('secciones.eventos.seguimiento.followUp')}</h3>
-        {e.followUp ? (
-          <p className="eventos-followup">{e.followUp}</p>
-        ) : (
-          <p className="muted small">{t('secciones.eventos.seguimiento.noFollowUp')}</p>
-        )}
+        {e.followUp ? <p className="eventos-followup">{e.followUp}</p> : <p className="muted small">{t('secciones.eventos.seguimiento.noFollowUp')}</p>}
         {canEdit && !e.followUp && (
           <button type="button" className="btn btn-small btn-ghost" onClick={() => edit({ collection: 'events', id: e.id })}>
             <Icon name="edit" size={14} /> {t('secciones.eventos.seguimiento.writeFollowUp')}
@@ -143,7 +139,11 @@ function FollowUp({ followUp: f, showProject }: { followUp: EventoFollowUp; show
           <p className="muted small">{t('secciones.eventos.seguimiento.noFeedback')}</p>
         )}
         {canEdit && (
-          <button type="button" className="btn btn-small btn-ghost" onClick={() => create('feedback', { ...own, origin: 'event', ...(e.date ? { receivedAt: e.date } : {}) })}>
+          <button
+            type="button"
+            className="btn btn-small btn-ghost"
+            onClick={() => create('feedback', { ...own, origin: 'event', ...(e.date ? { receivedAt: e.date } : {}) })}
+          >
             <Icon name="plus" size={14} /> {t('secciones.eventos.seguimiento.addFeedback')}
           </button>
         )}

@@ -4,7 +4,20 @@
 // selectors.ts, que reexporta este fichero.
 // Regla: lo que se importa de '../selectors' solo se usa dentro de funciones (hay un ciclo de import).
 import { FEEDBACK_ORIGINS, FEEDBACK_STATUSES, PRIORITIES } from '../catalog'
-import type { Build, Feedback, FeedbackKind, FeedbackOrigin, FeedbackStatus, ID, ISODate, Playtest, Priority, StudioData, StudioEvent, WorkItem } from '../types'
+import type {
+  Build,
+  Feedback,
+  FeedbackKind,
+  FeedbackOrigin,
+  FeedbackStatus,
+  ID,
+  ISODate,
+  Playtest,
+  Priority,
+  StudioData,
+  StudioEvent,
+  WorkItem,
+} from '../types'
 import { byPriority, feedbackToPrioritize, isOpen, normalize, type Scope } from '../selectors'
 import { hasTag } from './etiquetas'
 
@@ -80,7 +93,10 @@ export function feedbackFiltered(q: FeedbackQuery): boolean {
   return !!(q.unclassified || q.estado || q.impacto || q.origen || q.evento || q.q?.trim())
 }
 
-const words = (q: string | undefined) => normalize(q ?? '').split(/\s+/).filter(Boolean)
+const words = (q: string | undefined) =>
+  normalize(q ?? '')
+    .split(/\s+/)
+    .filter(Boolean)
 const matchesWords = (text: (string | undefined)[], ws: string[]) => {
   if (!ws.length) return true
   const hay = normalize(text.filter(Boolean).join(' '))
@@ -88,8 +104,7 @@ const matchesWords = (text: (string | undefined)[], ws: string[]) => {
 }
 
 const stateMatches = (estado: FeedbackStateFilter | null | undefined, status: FeedbackStatus) =>
-  !estado ||
-  (estado === 'abierto' ? FEEDBACK_STATUSES[status].open : estado === 'cerrado' ? !FEEDBACK_STATUSES[status].open : status === estado)
+  !estado || (estado === 'abierto' ? FEEDBACK_STATUSES[status].open : estado === 'cerrado' ? !FEEDBACK_STATUSES[status].open : status === estado)
 
 /** ¿Entra este feedback con estos filtros (ámbito, subsección y filtros finos)? */
 export function feedbackMatches(f: Feedback, q: FeedbackQuery): boolean {
@@ -288,9 +303,7 @@ export function feedbackChanges(data: StudioData, q: FeedbackQuery): FeedbackCha
   const all = list.filter((f) => f.linkedItemIds.length > 0).map((f) => feedbackChange(data, f))
   const byImpact = (a: FeedbackChange, b: FeedbackChange) => compareFeedback(a.feedback, b.feedback)
   return {
-    changed: all
-      .filter((c) => c.state === 'changed')
-      .sort((a, b) => (b.changedAt ?? '').localeCompare(a.changedAt ?? '') || byImpact(a, b)),
+    changed: all.filter((c) => c.state === 'changed').sort((a, b) => (b.changedAt ?? '').localeCompare(a.changedAt ?? '') || byImpact(a, b)),
     inProgress: all.filter((c) => c.state === 'in_progress').sort(byImpact),
     none: all.filter((c) => c.state === 'none').sort(byImpact),
     unlinkedOpen: list.filter((f) => f.linkedItemIds.length === 0 && isFeedbackOpen(f)).sort(compareFeedback),

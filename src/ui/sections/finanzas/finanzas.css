@@ -270,6 +270,13 @@
   .finanzas-page .table td[data-label]::before {
     margin-right: var(--space-2);
   }
+  .finanzas-page .stat-value {
+    font-size: 1.05rem;
+  }
+  /* Apiladas, una celda sin nada (una fila sin etiquetas) no deja su etiqueta suelta. */
+  .finanzas-page .table td:empty {
+    display: none;
+  }
   /* Apiladas, las cifras van como el resto de celdas (tras su etiqueta), no pegadas a la derecha. */
   .finanzas-page .table td.num {
     text-align: left;

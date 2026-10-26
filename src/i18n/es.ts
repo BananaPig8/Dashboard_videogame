@@ -325,7 +325,6 @@ export const es = {
     readOnly: 'Solo lectura: puedes ver todo, pero no cambiarlo. Para editar, pide permiso de edición a quien te compartió la página.',
     invalidTitle: 'Hay datos en la base que no se pueden mostrar',
     invalidBody: 'Se enseña lo último que estaba bien. Lo que falla:',
-    dataCardSubtitle: 'Se guardan en la base de datos de esta página de claude.ai, compartida con Claude y con quien la invites',
   },
   errors: {
     title: 'Algo ha fallado en esta pantalla',
@@ -778,14 +777,18 @@ export const es = {
     recent: { title: 'Últimos avances', subtitle: 'Lo último que se ha terminado' },
     resources: { title: 'Documentación y recursos', subtitle: 'Lo que hay que tener a mano' },
   },
+  banners: {
+    seedBring: 'Traerlos',
+    seedWhat: 'Qué significa',
+    localInvalid: 'Los datos guardados en este navegador no eran válidos y se ha arrancado con los iniciales. Si tenías una copia exportada, impórtala en',
+    localInvalidLink: 'Ajustes › Exportación e importación',
+  },
   customize: {
     title: 'Personalizar el panel',
     intro: 'Elige qué bloques ver y en qué orden. Se recuerda en este navegador.',
     onlyStudio: 'Solo en la vista de todo el estudio',
   },
   settings: {
-    title: 'Ajustes',
-    subtitle: 'Aspecto, panel, región, vistas guardadas y datos',
     appearance: 'Aspecto',
     theme: 'Tema',
     themeDark: 'Oscuro',
@@ -807,8 +810,6 @@ export const es = {
     monday: 'Lunes',
     sunday: 'Domingo',
     savedViews: 'Vistas guardadas',
-    savedViewsEmpty: 'Aún no hay vistas guardadas. En «Tareas» o «Historial», filtra y pulsa «Guardar vista».',
-    savedLocally: 'Las preferencias se guardan en este navegador.',
   },
 } as const
 

@@ -120,7 +120,7 @@ export const eventos = {
       'Los eventos pasados o celebrados, del más reciente al más antiguo: qué salió y qué queda por hacer, el feedback recogido, las pruebas que se hicieron allí y lo que costó.',
     staleOne: '{n} evento ya pasó y sigue como previsto: dinos si se celebró.',
     staleMany: '{n} eventos ya pasaron y siguen como previstos: dinos si se celebraron.',
-    empty: 'Ningún evento pasado o celebrado en esta vista.',
+    empty: 'Ningún evento pasado o celebrado en esta vista. Un evento sale aquí cuando su fecha ya ha pasado o cuando se marca como «Celebrado».',
     question: '¿Se celebró? La fecha ya pasó y sigue como previsto.',
     yes: 'Sí, se celebró',
     no: 'No, se canceló',

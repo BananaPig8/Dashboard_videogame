@@ -287,8 +287,22 @@ describe('Cambios por el feedback', () => {
 
 describe('Informes de pruebas', () => {
   const d = data({
-    builds: [{ id: 'demo', projectId: 'p', name: 'Demo', version: '0.9', channel: 'demo', platforms: [], status: 'ready', sources: src, confidence: 'verified' }],
-    events: [{ id: 'feria', projectId: 'p', title: 'Feria', type: 'fair', status: 'done', date: '2026-09-20', dateConfirmed: true, sources: src, confidence: 'verified' }],
+    builds: [
+      { id: 'demo', projectId: 'p', name: 'Demo', version: '0.9', channel: 'demo', platforms: [], status: 'ready', sources: src, confidence: 'verified' },
+    ],
+    events: [
+      {
+        id: 'feria',
+        projectId: 'p',
+        title: 'Feria',
+        type: 'fair',
+        status: 'done',
+        date: '2026-09-20',
+        dateConfirmed: true,
+        sources: src,
+        confidence: 'verified',
+      },
+    ],
     playtests: [
       test('sin-fecha'),
       test('antigua', { date: '2026-08-01' }),
@@ -328,7 +342,19 @@ describe('Informes de pruebas', () => {
 
 describe('feedback de un evento (?evento=)', () => {
   const d = data({
-    events: [{ id: 'feria', projectId: 'p', title: 'Feria', type: 'fair', status: 'done', date: '2026-09-20', dateConfirmed: true, sources: src, confidence: 'verified' }],
+    events: [
+      {
+        id: 'feria',
+        projectId: 'p',
+        title: 'Feria',
+        type: 'fair',
+        status: 'done',
+        date: '2026-09-20',
+        dateConfirmed: true,
+        sources: src,
+        confidence: 'verified',
+      },
+    ],
     playtests: [test('stand', { method: 'event', eventId: 'feria' })],
     items: [item('incidencia')],
     feedback: [
@@ -349,4 +375,3 @@ describe('feedback de un evento (?evento=)', () => {
     expect(feedbackBugs(d, feedbackQueryOf(params('tipo=bugs&evento=feria'), null, d))).toEqual([])
   })
 })
-

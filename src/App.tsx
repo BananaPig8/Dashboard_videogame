@@ -28,10 +28,10 @@ function SeedBanner() {
       <Icon name="download" size={16} />
       <span>{t('notifications.seedUpdate', { version: SEED_VERSION })}</span>
       <button type="button" className="btn btn-small" onClick={() => store.applySeedUpdate()}>
-        Traerlos
+        {t('banners.seedBring')}
       </button>
-      <Link to="/ajustes" className="small">
-        Qué significa
+      <Link to="/ajustes?seccion=datos" className="small">
+        {t('banners.seedWhat')}
       </Link>
     </div>
   )
@@ -57,7 +57,9 @@ function LoadErrors() {
   return (
     <div className="banner banner-danger" role="alert">
       <Icon name="alert" size={16} />
-      <span>Los datos guardados en este navegador no eran válidos y se ha arrancado con los iniciales. Si tenías una copia exportada, impórtala en Ajustes.</span>
+      <span>
+        {t('banners.localInvalid')} <Link to="/ajustes?seccion=datos">{t('banners.localInvalidLink')}</Link>.
+      </span>
     </div>
   )
 }

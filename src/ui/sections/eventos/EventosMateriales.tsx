@@ -81,7 +81,11 @@ function EventMaterials({ materials: m, showProject }: { materials: EventoMateri
             <p className="muted small">{t('secciones.eventos.materiales.noChecklists')}</p>
           )}
           {canEdit && (
-            <button type="button" className="btn btn-small btn-ghost" onClick={() => create('checklists', { ...own, target: 'event', title: t('secciones.eventos.materiales.checklistTitle', { title: e.title }) })}>
+            <button
+              type="button"
+              className="btn btn-small btn-ghost"
+              onClick={() => create('checklists', { ...own, target: 'event', title: t('secciones.eventos.materiales.checklistTitle', { title: e.title }) })}
+            >
               <Icon name="plus" size={14} /> {t('secciones.eventos.materiales.newChecklist')}
             </button>
           )}
@@ -197,7 +201,11 @@ function ChecklistMini({ progress: p }: { progress: ChecklistProgress }) {
           {CHECKLIST_TARGETS[c.target]} · {t('secciones.eventos.materiales.steps', { done: p.done, total: p.total })}
         </span>
       </div>
-      <Progress ratio={p.ratio} tone={p.total && p.done === p.total ? 'success' : 'info'} label={t('secciones.eventos.materiales.stepsOf', { title: c.title, done: p.done, total: p.total })} />
+      <Progress
+        ratio={p.ratio}
+        tone={p.total && p.done === p.total ? 'success' : 'info'}
+        label={t('secciones.eventos.materiales.stepsOf', { title: c.title, done: p.done, total: p.total })}
+      />
       {pending.length > 0 && (
         <details className="eventos-steps">
           <summary>{t('secciones.eventos.materiales.pending', { n: pending.length })}</summary>

@@ -43,12 +43,19 @@ export function FeedbackCambios({ embedded }: SectionPageProps) {
       <div className="stats feedback-stats">
         <Stat label={t('secciones.feedback.cambios.stats.changed')} value={c.changed.length} tone={c.changed.length ? 'info' : 'neutral'} icon="checkCircle" />
         <Stat label={t('secciones.feedback.cambios.stats.inProgress')} value={c.inProgress.length} icon="play" />
-        <Stat label={t('secciones.feedback.cambios.stats.unlinked')} value={c.unlinkedOpen.length} tone={c.unlinkedOpen.length ? 'warning' : 'neutral'} icon="link" />
+        <Stat
+          label={t('secciones.feedback.cambios.stats.unlinked')}
+          value={c.unlinkedOpen.length}
+          tone={c.unlinkedOpen.length ? 'warning' : 'neutral'}
+          icon="link"
+        />
       </div>
       {c.unlinkedOpen.length > 0 && (
         <p className="feedback-note">
           <Icon name="info" size={14} />{' '}
-          {t(c.unlinkedOpen.length === 1 ? 'secciones.feedback.cambios.unlinked.one' : 'secciones.feedback.cambios.unlinked.many', { n: c.unlinkedOpen.length })}{' '}
+          {t(c.unlinkedOpen.length === 1 ? 'secciones.feedback.cambios.unlinked.one' : 'secciones.feedback.cambios.unlinked.many', {
+            n: c.unlinkedOpen.length,
+          })}{' '}
           <Link to={nav.href(prioritize)}>{t('secciones.feedback.cambios.unlinked.link')}</Link>
         </p>
       )}
@@ -106,7 +113,11 @@ function ChangeRow({ change: c, showProject }: { change: FeedbackChange; showPro
     <FeedbackRow feedback={c.feedback} showProject={showProject} compact>
       {c.state === 'in_progress' && (
         <div className="feedback-progress">
-          <Progress ratio={counted ? c.done.length / counted : 0} tone="info" label={t('secciones.feedback.cambios.progress', { done: c.done.length, total: counted })} />
+          <Progress
+            ratio={counted ? c.done.length / counted : 0}
+            tone="info"
+            label={t('secciones.feedback.cambios.progress', { done: c.done.length, total: counted })}
+          />
           <span className="muted small">{t('secciones.feedback.cambios.progress', { done: c.done.length, total: counted })}</span>
         </div>
       )}

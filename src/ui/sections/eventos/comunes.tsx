@@ -110,11 +110,7 @@ export function EventRow({ event: e, showProject, today, children }: { event: St
     <li className="agenda-row eventos-row">
       <div className="agenda-date">
         <strong>{when({ date: e.date, endDate: e.endDate })}</strong>
-        {e.date && (
-          <span className="muted small">
-            {e.dateConfirmed ? fmt.relative(e.date, today) : t('secciones.eventos.unconfirmedShort')}
-          </span>
-        )}
+        {e.date && <span className="muted small">{e.dateConfirmed ? fmt.relative(e.date, today) : t('secciones.eventos.unconfirmedShort')}</span>}
       </div>
       <div className="agenda-main">
         <button type="button" className="item-title" onClick={() => edit({ collection: 'events', id: e.id })}>
