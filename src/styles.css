@@ -743,6 +743,7 @@ kbd {
 }
 
 .section-tabs {
+  position: relative;
   min-width: 0;
   max-width: 100%;
   overflow-x: auto;
@@ -2069,6 +2070,7 @@ input[type='color'] {
 /* ——— Tablero ——————————————————————————————————————————————————————————— */
 
 .board {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(6, minmax(230px, 1fr));
   gap: var(--space-3);
@@ -2313,7 +2315,10 @@ input[type='color'] {
 
 /* ——— Tablas (en móvil, cada fila es una tarjeta) ——————————————————————— */
 
+/* Las cajas que se desplazan llevan position: relative: así el texto oculto para lectores de
+   pantalla (.visually-hidden, en absoluto) no se escapa y hace desplazarse la página entera. */
 .table-wrap {
+  position: relative;
   overflow-x: auto;
 }
 

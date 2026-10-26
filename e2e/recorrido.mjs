@@ -40,8 +40,9 @@ await step('arranca en tema oscuro con Europe/Madrid', async () => {
   await page.getByRole('heading', { name: 'Panel del estudio' }).waitFor()
 })
 
-await step('añadir una tarea para hoy', async () => {
+await step('añadir una tarea para hoy (la ruta antigua /hoy lleva al plan de hoy)', async () => {
   await page.goto(`${base}/#/hoy`)
+  await page.waitForURL(/tareas\?vista=hoy/)
   await page.getByLabel('Nueva tarea para hoy').fill('Probar Studio Hub')
   await page.getByRole('button', { name: 'Añadir', exact: true }).click()
   await page.getByRole('button', { name: 'Probar Studio Hub' }).first().waitFor()
@@ -91,13 +92,24 @@ await step('acciones rápidas: nuevo proyecto y su ficha', async () => {
 })
 
 await step('el ámbito se mantiene al navegar', async () => {
-  await page.getByRole('link', { name: 'Tareas y funcionalidades' }).click()
-  await page.waitForURL(/proyectos\/juego-de-prueba\/trabajo/)
+  await page.getByRole('navigation', { name: 'Secciones del proyecto' }).getByRole('link', { name: /^Tareas/ }).click()
+  await page.waitForURL(/proyectos\/juego-de-prueba\/tareas/)
+  await page.locator('nav.tabs-bar a[aria-current="page"]', { hasText: 'Tareas' }).waitFor()
   await page.getByLabel('Ver todo el estudio o un proyecto').selectOption({ label: 'Indie Dev Tycoon' })
-  await page.waitForURL(/proyectos\/indie-dev-tycoon\/trabajo/)
+  await page.waitForURL(/proyectos\/indie-dev-tycoon\/tareas/)
+  // La ruta antigua /agenda lleva al Calendario conservando el ámbito.
   await page.goto(`${base}/#/agenda?p=indie-dev-tycoon`)
-  await page.getByRole('link', { name: 'Builds y versiones' }).click()
+  await page.waitForURL(/calendario\?p=indie-dev-tycoon/)
+  await page.getByRole('navigation', { name: 'Secciones' }).getByRole('link', { name: 'Builds y versiones', exact: true }).click()
   await page.waitForURL(/builds\?p=indie-dev-tycoon/)
+})
+
+await step('subsecciones que se combinan: «Mis tareas» en «Tablero Kanban»', async () => {
+  await page.goto(`${base}/#/tareas?filtro=mias`)
+  await page.getByRole('navigation', { name: /Subsecciones de Tareas/ }).getByRole('link', { name: 'Tablero Kanban', exact: true }).click()
+  await page.waitForURL(/filtro=mias&vista=tablero|vista=tablero&filtro=mias/)
+  const current = page.getByRole('navigation', { name: /Subsecciones de Tareas/ }).locator('[aria-current]')
+  if ((await current.count()) !== 2) throw new Error(`activas: ${await current.count()}`)
 })
 
 await step('borrar con confirmación propia y deshacer', async () => {
@@ -112,13 +124,13 @@ await step('borrar con confirmación propia y deshacer', async () => {
 })
 
 await step('guardar una vista con filtros', async () => {
-  await page.goto(`${base}/#/trabajo?estado=todos&q=probar`)
+  await page.goto(`${base}/#/tareas?estado=todos&q=probar`)
   await page.getByRole('button', { name: 'Guardar vista' }).click()
-  await dialog().locator('input').fill('Pruebas')
+  await dialog().locator('input').fill('Mis pruebas')
   await dialog().getByRole('button', { name: 'Guardar' }).click()
   await page.goto(`${base}/#/`)
-  await page.getByRole('navigation').getByRole('link', { name: 'Pruebas' }).click()
-  await page.waitForURL(/trabajo\?estado=todos&q=probar/)
+  await page.getByRole('navigation').getByRole('link', { name: 'Mis pruebas', exact: true }).click()
+  await page.waitForURL(/tareas\?estado=todos&q=probar/)
 })
 
 await step('notificaciones', async () => {
@@ -139,7 +151,7 @@ await step('personalizar el panel: ocultar y plegar', async () => {
 })
 
 await step('tema claro, acento verde y densidad compacta', async () => {
-  await page.goto(`${base}/#/ajustes`)
+  await page.goto(`${base}/#/ajustes?seccion=preferencias`)
   await page.getByRole('button', { name: 'Claro' }).click()
   await page.getByRole('button', { name: 'Verde' }).click()
   await page.getByRole('button', { name: 'Compacta' }).click()
@@ -149,7 +161,7 @@ await step('tema claro, acento verde y densidad compacta', async () => {
   if (accent !== '#127443') throw new Error(`acento ${accent}`)
   await page.goto(`${base}/#/`)
   await page.screenshot({ path: `${out}/panel-claro.png`, fullPage: true })
-  await page.goto(`${base}/#/ajustes`)
+  await page.goto(`${base}/#/ajustes?seccion=preferencias`)
   await page.getByRole('button', { name: 'Oscuro' }).click()
   await page.getByRole('button', { name: 'Violeta' }).click()
   await page.getByRole('button', { name: 'Cómoda' }).click()
@@ -158,9 +170,9 @@ await step('tema claro, acento verde y densidad compacta', async () => {
 await step('zona horaria y formato de fecha', async () => {
   await page.getByLabel('Formato de fecha').selectOption('numeric')
   await page.getByLabel('Zona horaria').selectOption('America/New_York')
-  await page.goto(`${base}/#/historial`)
+  await page.goto(`${base}/#/builds?vista=cambios`)
   await page.getByText(/\d{2}\/\d{2}\/\d{4}/).first().waitFor()
-  await page.goto(`${base}/#/ajustes`)
+  await page.goto(`${base}/#/ajustes?seccion=preferencias`)
   await page.getByLabel('Formato de fecha').selectOption('short')
   await page.getByLabel('Zona horaria').selectOption('Europe/Madrid')
 })
@@ -174,10 +186,49 @@ await step('barra lateral contraída', async () => {
 })
 
 await step('exportar copia', async () => {
-  await page.goto(`${base}/#/ajustes`)
+  await page.goto(`${base}/#/ajustes?seccion=datos`)
   const [download] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: /Exportar copia/ }).click()])
   const json = JSON.parse(readFileSync(await download.path(), 'utf8'))
   if (!Array.isArray(json.items)) throw new Error('la copia no trae items')
+})
+
+// Todas las secciones y subsecciones de la barra lateral, en el estudio y en la ficha de un
+// proyecto: cada una abre su página, sin errores ni desbordamiento.
+let allPages = []
+await step('recorrer las 15 secciones y todas sus subsecciones', async () => {
+  await page.setViewportSize({ width: 1280, height: 900 })
+  await page.goto(`${base}/#/`)
+  const nav = page.getByRole('complementary', { name: 'Navegación' })
+  // Despliega todas las secciones.
+  const closed = nav.locator('button.nav-toggle[aria-expanded="false"]')
+  while (await closed.count()) await closed.first().click()
+  const hrefs = [...new Set(await nav.locator('a.nav-sublink').evaluateAll((as) => as.map((a) => a.getAttribute('href'))))]
+  if (hrefs.length < 90) throw new Error(`solo ${hrefs.length} subsecciones en la barra`)
+  const before = errors.length
+  for (const href of hrefs) {
+    await page.goto(`${base}/${href}`)
+    await page.locator('main h1').first().waitFor()
+    await noOverflow(href)
+  }
+  // Las mismas secciones dentro de la ficha de un proyecto.
+  await page.goto(`${base}/#/proyectos/indie-dev-tycoon`)
+  await page.locator('nav.tabs-bar a').first().waitFor()
+  const tabs = await page.locator('nav.tabs-bar a').evaluateAll((as) => as.map((a) => a.getAttribute('href')))
+  const more = page.getByRole('button', { name: 'Más', exact: true })
+  if (await more.count()) {
+    await more.click()
+    tabs.push(...(await page.getByRole('menuitem').evaluateAll((as) => as.map((a) => a.getAttribute('href')))))
+    await page.keyboard.press('Escape')
+  }
+  if (tabs.length < 13) throw new Error(`solo ${tabs.length} pestañas en la ficha`)
+  for (const href of tabs) {
+    await page.goto(`${base}/${href}`)
+    await page.locator('main h1').first().waitFor()
+    await noOverflow(href)
+  }
+  allPages = [...hrefs, ...tabs]
+  if (errors.length > before) throw new Error(`errores al recorrer: ${errors.slice(before).join(' | ')}`)
+  console.log(`      ${hrefs.length} subsecciones y ${tabs.length} pestañas de la ficha`)
 })
 
 for (const [w, h, name] of [
@@ -190,14 +241,26 @@ for (const [w, h, name] of [
     await noOverflow('panel')
     await page.screenshot({ path: `${out}/${name}-panel.png`, fullPage: true })
     await page.getByRole('button', { name: 'Abrir menú' }).click()
-    await page.getByRole('link', { name: 'Builds y versiones' }).click()
+    await page.getByRole('link', { name: 'Builds y versiones', exact: true }).click()
     await page.waitForURL(/builds/)
+    // Elegir algo en el menú lo cierra (también una subsección, que solo cambia la consulta).
+    await page.locator('.app.menu-open').waitFor({ state: 'detached', timeout: 2000 })
+    await page.getByRole('button', { name: 'Abrir menú' }).click()
+    await page.getByRole('complementary', { name: 'Navegación' }).getByRole('link', { name: 'Demos', exact: true }).click()
+    await page.waitForURL(/canal=demos/)
+    await page.locator('.app.menu-open').waitFor({ state: 'detached', timeout: 2000 })
     await noOverflow('builds')
     await page.screenshot({ path: `${out}/${name}-builds.png`, fullPage: true })
     await page.goto(`${base}/#/ajustes`)
     await noOverflow('ajustes')
     await page.goto(`${base}/#/proyectos/indie-dev-tycoon`)
     await noOverflow('ficha')
+    // Y cada sección y subsección a este ancho.
+    for (const href of allPages) {
+      await page.goto(`${base}/${href}`)
+      await page.locator('main h1').first().waitFor()
+      await noOverflow(`${name} ${href}`)
+    }
   })
 }
 
