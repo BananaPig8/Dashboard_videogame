@@ -118,7 +118,14 @@ export interface StatsTasks {
 }
 
 /** Creadas y hechas por semana y lo abierto por estado (tareas, funcionalidades, hitos, decisiones e incidencias). */
-export function statsTasks(data: StudioData, today: ISODate, scope: Scope = null, weekStart: WeekStart = 1, tag: string | null = null, weeks = STATS_WEEKS): StatsTasks {
+export function statsTasks(
+  data: StudioData,
+  today: ISODate,
+  scope: Scope = null,
+  weekStart: WeekStart = 1,
+  tag: string | null = null,
+  weeks = STATS_WEEKS,
+): StatsTasks {
   const items = itemsOf(data, scope).filter((i) => TASK_KINDS.includes(i.kind) && hasTag(i, tag))
   const starts = statsWeekStarts(today, weeks, weekStart)
   const at = weekIndexer(starts, weekStart)
@@ -286,9 +293,21 @@ export function statsTime(data: StudioData, today: ISODate, scope: Scope = null,
     total: entries.reduce((s, e) => s + e.minutes, 0),
     recent: entries.filter((e) => recent(e.date, today)).reduce((s, e) => s + e.minutes, 0),
     weeks: trimLeading(rows, (r) => r.minutes === 0),
-    byProject: groupMinutes(entries.map((e) => ({ ...e, key: e.projectId })), projects, today),
-    byPerson: groupMinutes(entries.map((e) => ({ ...e, key: e.memberId })), members, today),
-    byItem: groupMinutes(entries.map((e) => ({ ...e, key: e.itemId })), items, today),
+    byProject: groupMinutes(
+      entries.map((e) => ({ ...e, key: e.projectId })),
+      projects,
+      today,
+    ),
+    byPerson: groupMinutes(
+      entries.map((e) => ({ ...e, key: e.memberId })),
+      members,
+      today,
+    ),
+    byItem: groupMinutes(
+      entries.map((e) => ({ ...e, key: e.itemId })),
+      items,
+      today,
+    ),
   }
 }
 

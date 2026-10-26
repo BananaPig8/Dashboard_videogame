@@ -80,8 +80,10 @@ export function EquipoCarga() {
             </Pill>
           )}
         </span>
+      ) : p ? (
+        <span className="muted">{t('secciones.equipo.carga.usageNone')}</span>
       ) : (
-        p ? <span className="muted">{t('secciones.equipo.carga.usageNone')}</span> : <NotApplicable />
+        <NotApplicable />
       ),
   })
 

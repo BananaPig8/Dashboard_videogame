@@ -175,7 +175,15 @@ function DataTable({ head, rows }: { head: string[]; rows: string[][] }) {
         <tbody>
           {rows.map((r, k) => (
             <tr key={k}>
-              {r.map((c, i) => (i === 0 ? <th key={i} scope="row">{c}</th> : <td key={i}>{c}</td>))}
+              {r.map((c, i) =>
+                i === 0 ? (
+                  <th key={i} scope="row">
+                    {c}
+                  </th>
+                ) : (
+                  <td key={i}>{c}</td>
+                ),
+              )}
             </tr>
           ))}
         </tbody>

@@ -62,7 +62,11 @@ export function EstadisticasHitos() {
       <Card>
         <Empty
           icon="flag"
-          action={canEdit && !tag ? { label: t('secciones.estadisticas.actions.newMilestone'), onClick: () => create('items', { kind: 'milestone', status: 'planned' }) } : undefined}
+          action={
+            canEdit && !tag
+              ? { label: t('secciones.estadisticas.actions.newMilestone'), onClick: () => create('items', { kind: 'milestone', status: 'planned' }) }
+              : undefined
+          }
         >
           {tag ? t('secciones.estadisticas.hitos.noneTagged') : t('secciones.estadisticas.hitos.none')}
         </Empty>
@@ -75,10 +79,46 @@ export function EstadisticasHitos() {
   const overdueBy = new Map(m.overdue.map((l) => [l.item.id, l]))
   const upcomingBy = new Map(m.upcoming.map((l) => [l.item.id, l]))
   const timing = [
-    { key: 'onTime', label: <Pill tone="success" icon="checkCircle">{H('onTime')}</Pill>, value: m.onTime.length },
-    { key: 'late', label: <Pill tone="danger" icon="clock">{H('late')}</Pill>, value: m.late.length },
-    { key: 'noDue', label: <Pill tone="muted" icon="question">{H('noDue')}</Pill>, value: m.noDue.length },
-    ...(m.noCompleted.length ? [{ key: 'noCompleted', label: <Pill tone="warning" icon="question">{H('noCompleted')}</Pill>, value: m.noCompleted.length }] : []),
+    {
+      key: 'onTime',
+      label: (
+        <Pill tone="success" icon="checkCircle">
+          {H('onTime')}
+        </Pill>
+      ),
+      value: m.onTime.length,
+    },
+    {
+      key: 'late',
+      label: (
+        <Pill tone="danger" icon="clock">
+          {H('late')}
+        </Pill>
+      ),
+      value: m.late.length,
+    },
+    {
+      key: 'noDue',
+      label: (
+        <Pill tone="muted" icon="question">
+          {H('noDue')}
+        </Pill>
+      ),
+      value: m.noDue.length,
+    },
+    ...(m.noCompleted.length
+      ? [
+          {
+            key: 'noCompleted',
+            label: (
+              <Pill tone="warning" icon="question">
+                {H('noCompleted')}
+              </Pill>
+            ),
+            value: m.noCompleted.length,
+          },
+        ]
+      : []),
   ]
 
   return (
@@ -113,7 +153,9 @@ export function EstadisticasHitos() {
         <Card title={t('secciones.estadisticas.hitos.plannedTitle')} icon="flag" subtitle={t('secciones.estadisticas.hitos.plannedSubtitle')}>
           {m.planned.length ? (
             <MilestoneRows
-              rows={[...m.overdue, ...m.upcoming].map((d) => ({ item: d.item, date: d.item.dueDate })).concat(m.undated.map((item) => ({ item, date: undefined })))}
+              rows={[...m.overdue, ...m.upcoming]
+                .map((d) => ({ item: d.item, date: d.item.dueDate }))
+                .concat(m.undated.map((item) => ({ item, date: undefined })))}
               side={(item) => {
                 const o = overdueBy.get(item.id)
                 const u = upcomingBy.get(item.id)

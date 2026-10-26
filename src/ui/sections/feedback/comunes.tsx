@@ -248,7 +248,13 @@ export function FeedbackFiltros({ query, statuses = true }: { query: FeedbackQue
         </button>
       )}
       {query.evento && (
-        <button type="button" className="btn btn-small feedback-toggle active" aria-pressed="true" onClick={() => set('evento', '')}>
+        <button
+          type="button"
+          className="btn btn-small feedback-toggle active"
+          aria-pressed="true"
+          title={t('secciones.feedback.filters.eventClear')}
+          onClick={() => set('evento', '')}
+        >
           <Icon name="ticket" size={14} />{' '}
           {t('secciones.feedback.filters.event', { event: data.events.find((e) => e.id === query.evento)?.title ?? t('secciones.feedback.filters.eventGone') })}
           <Icon name="close" size={12} />

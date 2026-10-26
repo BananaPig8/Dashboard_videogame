@@ -140,7 +140,8 @@ export const estadisticas = {
     byPersonSubtitle: 'Por autor, reconocido por los «Nombres en git» de cada ficha',
     unknownAuthor: '{name} (sin ficha)',
     withoutAuthor: '{n} sin autor no cuentan aquí.',
-    noAuthors: 'Los commits del historial no traen autor: no se pueden repartir por persona. Cuando lo traigan, se atribuyen a cada persona por sus «Nombres en git».',
+    noAuthors:
+      'Los commits del historial no traen autor: no se pueden repartir por persona. Cuando lo traigan, se atribuyen a cada persona por sus «Nombres en git».',
     none: 'No hay commits ni fusiones en el historial.',
   },
   metricas: {
@@ -155,15 +156,18 @@ export const estadisticas = {
     noSources: 'Sin fuente',
     editLatest: 'Editar el último dato',
     launch: {
-      intro: 'Interés antes de salir: wishlists, seguidores, jugadores de la demo y descargas. Lo deducido se marca; lo que está por comprobar va aparte y no entra en las gráficas.',
+      intro:
+        'Interés antes de salir: wishlists, seguidores, jugadores de la demo y descargas. Lo deducido se marca; lo que está por comprobar va aparte y no entra en las gráficas.',
       none: 'Aún no hay datos de lanzamiento. Apunta las wishlists, los seguidores o los jugadores de la demo con la fecha y la fuente (p. ej. «Steamworks › Wishlists»).',
       excludedTitle: 'Por comprobar',
       excludedSubtitle: 'No entran en las gráficas hasta que tengan fuente y se marquen como verificados o deducidos',
     },
     commercial: {
-      intro: 'Ventas, jugadores, reseñas e ingresos según cada plataforma. Solo cuentan los datos verificados con una fuente comprobable (un informe de la tienda, una captura de su panel…).',
+      intro:
+        'Ventas, jugadores, reseñas e ingresos según cada plataforma. Solo cuentan los datos verificados con una fuente comprobable (un informe de la tienda, una captura de su panel…).',
       emptyTitle: 'Sin datos comerciales verificados',
-      empty: 'Las ventas, los jugadores y las reseñas solo cuentan con una fuente comprobable y la fiabilidad «Verificado». Apunta cada dato con su fecha y su fuente; hasta entonces aquí no sale ninguna cifra.',
+      empty:
+        'Las ventas, los jugadores y las reseñas solo cuentan con una fuente comprobable y la fiabilidad «Verificado». Apunta cada dato con su fecha y su fuente; hasta entonces aquí no sale ninguna cifra.',
       excludedTitle: 'Sin verificar',
       excludedSubtitle: 'No cuentan hasta que se verifiquen con una fuente comprobable',
     },

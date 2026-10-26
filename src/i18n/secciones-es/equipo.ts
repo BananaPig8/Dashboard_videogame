@@ -96,7 +96,8 @@ export const equipo = {
     noWork: 'No hay trabajo abierto.',
   },
   carga: {
-    intro: 'Carga: el trabajo abierto de cada persona ponderado por prioridad (crítica ×4, alta ×3, media ×2, baja ×1). Horas: lo apuntado del {from} al {to} frente a lo que caben sus horas a la semana en cuatro semanas. Sin horas a la semana en su ficha no se calcula: no se supone ninguna jornada.',
+    intro:
+      'Carga: el trabajo abierto de cada persona ponderado por prioridad (crítica ×4, alta ×3, media ×2, baja ×1). Horas: lo apuntado del {from} al {to} frente a lo que caben sus horas a la semana en cuatro semanas. Sin horas a la semana en su ficha no se calcula: no se supone ninguna jornada.',
     title: 'Carga de cada persona',
     subtitle: 'Activas, y antiguas solo si aún tienen trabajo u horas',
     person: 'Persona',

@@ -132,7 +132,7 @@ export function EventRow({ event: e, showProject, today, children }: { event: St
           {e.registrationStatus && <RegistrationPill status={e.registrationStatus} />}
           {feedback > 0 && (
             <Link className="meta-date eventos-feedback-link" to={href(`/feedback?${new URLSearchParams({ evento: e.id })}`)}>
-              <Icon name="message" size={12} /> {t('secciones.eventos.feedbackCount', { n: feedback })}
+              <Icon name="message" size={12} /> <span>{t('secciones.eventos.feedbackCount', { n: feedback })}</span>
             </Link>
           )}
           <ConfidenceTag confidence={e.confidence} compact />

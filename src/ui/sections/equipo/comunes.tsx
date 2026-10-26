@@ -116,7 +116,11 @@ export function PeopleTable({ people, columns, caption }: { people: TeamPerson[]
       case 'open':
         return <OpenWork person={p} />
       case 'responsibilities':
-        return m.responsibilities ? <span className="equipo-text">{m.responsibilities}</span> : <span className="muted">{t('secciones.equipo.values.undescribed')}</span>
+        return m.responsibilities ? (
+          <span className="equipo-text">{m.responsibilities}</span>
+        ) : (
+          <span className="muted">{t('secciones.equipo.values.undescribed')}</span>
+        )
       case 'minutes':
         return p.minutes ? fmt.duration(p.minutes) : <span className="muted">{t('secciones.equipo.values.noTime')}</span>
     }

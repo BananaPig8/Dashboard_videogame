@@ -109,9 +109,27 @@ export function EstadisticasProgreso() {
       <Stat label={t('secciones.estadisticas.progreso.tasks')} value={tasks.done} hint={ofTotal(tasks)} icon="checkCircle" />
       <Stat label={t('secciones.estadisticas.progreso.milestones')} value={milestones.done} hint={ofTotal(milestones)} icon="flag" />
       <Stat label={t('secciones.estadisticas.progreso.open')} value={total((r) => r.summary.open)} icon="list" to={href('/tareas')} />
-      <Stat label={t('secciones.estadisticas.progreso.blocked')} value={blocked} icon="lock" tone={blocked ? 'danger' : 'neutral'} to={href('/tareas?filtro=bloqueadas')} />
-      <Stat label={t('secciones.estadisticas.progreso.overdue')} value={overdue} icon="clock" tone={overdue ? 'danger' : 'neutral'} to={href('/tareas?filtro=vencidas')} />
-      <Stat label={t('secciones.estadisticas.progreso.toConfirm')} value={toConfirm} icon="question" tone={toConfirm ? 'warning' : 'neutral'} to={href('/tareas?estado=to_confirm')} />
+      <Stat
+        label={t('secciones.estadisticas.progreso.blocked')}
+        value={blocked}
+        icon="lock"
+        tone={blocked ? 'danger' : 'neutral'}
+        to={href('/tareas?filtro=bloqueadas')}
+      />
+      <Stat
+        label={t('secciones.estadisticas.progreso.overdue')}
+        value={overdue}
+        icon="clock"
+        tone={overdue ? 'danger' : 'neutral'}
+        to={href('/tareas?filtro=vencidas')}
+      />
+      <Stat
+        label={t('secciones.estadisticas.progreso.toConfirm')}
+        value={toConfirm}
+        icon="question"
+        tone={toConfirm ? 'warning' : 'neutral'}
+        to={href('/tareas?estado=to_confirm')}
+      />
     </div>
   )
 

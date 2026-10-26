@@ -6,7 +6,18 @@ import { TEAM_WEEKS, teamAssignments, teamResponsibilities, teamRoster, teamWind
 
 const TODAY = '2026-10-19'
 const src = [{ type: 'manual' as const, ref: 'prueba' }]
-const project = (id: string) => ({ id, slug: id, name: id, description: '', platforms: [], stage: 'production' as const, color: '#000', versions: [], tags: [], links: [] })
+const project = (id: string) => ({
+  id,
+  slug: id,
+  name: id,
+  description: '',
+  platforms: [],
+  stage: 'production' as const,
+  color: '#000',
+  versions: [],
+  tags: [],
+  links: [],
+})
 const item = (id: string, over: Partial<WorkItem> = {}): WorkItem => ({
   id,
   projectId: 'p',
@@ -40,7 +51,13 @@ function data(over: Partial<StudioData> = {}): StudioData {
 describe('equipo: personas', () => {
   it('del estudio antes que externos, por nombre, y las antiguas aparte', () => {
     const d = data({
-      members: [member('zoe'), member('luis', { kind: 'external' }), member('ana'), member('bea', { active: false }), member('carla', { kind: 'external', active: false })],
+      members: [
+        member('zoe'),
+        member('luis', { kind: 'external' }),
+        member('ana'),
+        member('bea', { active: false }),
+        member('carla', { kind: 'external', active: false }),
+      ],
     })
     const r = teamRoster(d)
     expect(r.active.map((m) => m.id)).toEqual(['ana', 'zoe', 'luis'])
@@ -162,7 +179,12 @@ describe('equipo: responsabilidades', () => {
   it('quién responde de cada área y cuáles no tienen a nadie (las de más trabajo primero)', () => {
     const d = data({
       members: [member('ana', { areaIds: ['ux'] }), member('bea', { areaIds: ['arte'], active: false })],
-      items: [item('i1', { areaId: 'steam' }), item('i2', { areaId: 'steam' }), item('i3', { areaId: 'arte' }), item('i4', { areaId: 'ux', status: 'done', completedAt: '2026-10-01' })],
+      items: [
+        item('i1', { areaId: 'steam' }),
+        item('i2', { areaId: 'steam' }),
+        item('i3', { areaId: 'arte' }),
+        item('i4', { areaId: 'ux', status: 'done', completedAt: '2026-10-01' }),
+      ],
     })
     const r = teamResponsibilities(d)
     expect(r.areas.map((a) => [a.area.id, a.owners.map((m) => m.id), a.former.map((m) => m.id), a.open])).toEqual([

@@ -38,7 +38,8 @@ export function EstadisticasTiempo() {
     )
 
   // Lo de las últimas cuatro semanas, solo si no es todo.
-  const recentHint = (r: StatsTimeRow<unknown>) => (r.recent && r.recent !== r.minutes ? t('secciones.estadisticas.tiempo.recentValue', { value: fmt.duration(r.recent) }) : undefined)
+  const recentHint = (r: StatsTimeRow<unknown>) =>
+    r.recent && r.recent !== r.minutes ? t('secciones.estadisticas.tiempo.recentValue', { value: fmt.duration(r.recent) }) : undefined
   const row = <T,>(r: StatsTimeRow<T>, key: string, label: ReactNode): BarRow => ({
     key,
     label,

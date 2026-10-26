@@ -273,6 +273,10 @@
 }
 
 .eventos-feedback-link {
+  text-decoration: none;
+}
+
+.eventos-feedback-link span {
   text-decoration: underline;
   text-underline-offset: 2px;
 }

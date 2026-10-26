@@ -16,8 +16,7 @@ export const TEAM_WEEKS = 4
 const own = (scope: Scope) => (x: { projectId?: ID }) => scope === null || x.projectId === scope
 
 /** Del estudio antes que externos y, dentro de cada grupo, por nombre. */
-export const compareMembers = (a: Member, b: Member): number =>
-  (a.kind === b.kind ? 0 : a.kind === 'core' ? -1 : 1) || a.name.localeCompare(b.name, 'es')
+export const compareMembers = (a: Member, b: Member): number => (a.kind === b.kind ? 0 : a.kind === 'core' ? -1 : 1) || a.name.localeCompare(b.name, 'es')
 
 /** Lo que se cuenta como trabajo de alguien: abierto y de los tipos de Tareas (sin objetivos). */
 function openWork(data: StudioData, scope: Scope, tag: string | null = null): WorkItem[] {

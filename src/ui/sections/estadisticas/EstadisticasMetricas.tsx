@@ -206,7 +206,11 @@ export function EstadisticasMetricas({ group }: { group: MetricGroup }) {
         </Card>
       )}
       {excluded.length > 0 && (
-        <Excluded metrics={excluded} title={t(`secciones.estadisticas.metricas.${k}.excludedTitle`)} subtitle={t(`secciones.estadisticas.metricas.${k}.excludedSubtitle`)} />
+        <Excluded
+          metrics={excluded}
+          title={t(`secciones.estadisticas.metricas.${k}.excludedTitle`)}
+          subtitle={t(`secciones.estadisticas.metricas.${k}.excludedSubtitle`)}
+        />
       )}
     </>
   )

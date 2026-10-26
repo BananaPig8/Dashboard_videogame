@@ -33,7 +33,11 @@ export function EquipoMiembros() {
       <div className="equipo-col">
         <Card title={t('secciones.equipo.miembros.activeTitle')} icon="users" subtitle={t('secciones.equipo.miembros.activeSubtitle')}>
           {active.length ? (
-            <PeopleTable people={active} columns={MEMBER_COLUMNS} caption={t('secciones.equipo.table.caption', { group: t('secciones.equipo.miembros.activeTitle') })} />
+            <PeopleTable
+              people={active}
+              columns={MEMBER_COLUMNS}
+              caption={t('secciones.equipo.table.caption', { group: t('secciones.equipo.miembros.activeTitle') })}
+            />
           ) : (
             <Empty icon="users">{t('secciones.equipo.miembros.activeEmpty')}</Empty>
           )}
@@ -81,7 +85,10 @@ export function EquipoExternos() {
   if (!active.length && !former.length)
     return (
       <Card>
-        <Empty icon="link" action={canEdit ? { label: t('secciones.equipo.externos.create'), onClick: () => create('members', { kind: 'external' }) } : undefined}>
+        <Empty
+          icon="link"
+          action={canEdit ? { label: t('secciones.equipo.externos.create'), onClick: () => create('members', { kind: 'external' }) } : undefined}
+        >
           {t('secciones.equipo.externos.none')}
         </Empty>
       </Card>
@@ -90,7 +97,11 @@ export function EquipoExternos() {
     <>
       <Card title={t('secciones.equipo.externos.title')} icon="link" subtitle={t('secciones.equipo.externos.subtitle')}>
         {active.length ? (
-          <PeopleTable people={active} columns={EXTERNAL_COLUMNS} caption={t('secciones.equipo.table.caption', { group: t('secciones.equipo.externos.title') })} />
+          <PeopleTable
+            people={active}
+            columns={EXTERNAL_COLUMNS}
+            caption={t('secciones.equipo.table.caption', { group: t('secciones.equipo.externos.title') })}
+          />
         ) : (
           <Empty icon="link">{t('secciones.equipo.externos.none')}</Empty>
         )}

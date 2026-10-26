@@ -33,6 +33,7 @@ export const feedback = {
     unclassified: 'Sin clasificar ({n})',
     event: 'Solo de «{event}»',
     eventGone: 'un evento que ya no existe',
+    eventClear: 'Quitar el filtro del evento',
     clear: 'Quitar filtros',
   },
   list: {

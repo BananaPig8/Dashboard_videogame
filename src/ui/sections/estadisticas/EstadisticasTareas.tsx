@@ -42,7 +42,12 @@ export function EstadisticasTareas() {
         <Stat label={t('secciones.estadisticas.tareas.open')} value={s.open} icon="list" to={tagged('/tareas')} />
         <Stat label={t('secciones.estadisticas.tareas.done')} value={s.done} icon="checkCircle" to={tagged('/tareas?estado=done')} />
         <Stat label={t('secciones.estadisticas.tareas.doneRecent')} value={s.doneRecent} icon="check" />
-        <Stat label={t('secciones.estadisticas.tareas.createdRecent')} value={s.createdRecent} icon="plus" hint={t('secciones.estadisticas.tareas.createdHint')} />
+        <Stat
+          label={t('secciones.estadisticas.tareas.createdRecent')}
+          value={s.createdRecent}
+          icon="plus"
+          hint={t('secciones.estadisticas.tareas.createdHint')}
+        />
       </div>
       <Card title={t('secciones.estadisticas.tareas.weeksTitle')} icon="chart" subtitle={t('secciones.estadisticas.tareas.weeksSubtitle')}>
         <ColumnChart
