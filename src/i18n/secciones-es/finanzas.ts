@@ -80,6 +80,7 @@ export const finanzas = {
       clear: 'Quitar filtros',
     },
     columns: {
+      name: 'Concepto',
       category: 'Categoría',
       project: 'Proyecto',
       event: 'Evento',

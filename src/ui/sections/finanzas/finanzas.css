@@ -79,14 +79,6 @@
   gap: var(--space-1) var(--space-2);
 }
 
-/* El nombre de cada fila de las tablas de registros, como el resto del texto (no como cabecera). */
-.finanzas-page .table .record-title {
-  font-size: 0.86rem;
-  color: var(--text);
-  text-transform: none;
-  letter-spacing: normal;
-}
-
 /* Filtros y total del filtro. */
 .finanzas-filters select {
   max-width: 100%;
@@ -267,25 +259,8 @@
 }
 
 @media (max-width: 640px) {
-  .finanzas-page .table td[data-label]::before {
-    margin-right: var(--space-2);
-  }
   .finanzas-page .stat-value {
     font-size: 1.05rem;
-  }
-  /* Apiladas, una celda sin nada (una fila sin etiquetas) no deja su etiqueta suelta. */
-  .finanzas-page .table td:empty {
-    display: none;
-  }
-  /* Apiladas, las cifras van como el resto de celdas (tras su etiqueta), no pegadas a la derecha. */
-  .finanzas-page .table td.num {
-    text-align: left;
-  }
-  .finanzas-page .table .record-title {
-    display: block;
-    width: 100%;
-    padding: 0 0 var(--space-1);
-    border: 0;
   }
   .finanzas-row {
     grid-template-columns: minmax(0, 1fr) auto;

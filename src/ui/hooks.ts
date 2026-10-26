@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import { todayISO } from '../domain/dates'
 import type { ISODate } from '../domain/types'
 import { LOCALES, t } from '../i18n'
@@ -37,4 +37,24 @@ export function useMediaQuery(query: string): boolean {
     () => window.matchMedia(query).matches,
     () => false,
   )
+}
+
+/**
+ * El ancho real de un elemento (para dibujar gráficas a escala 1:1 y que los textos se lean
+ * igual en una tarjeta ancha que en un móvil). `fallback` hasta que se mide.
+ */
+export function useElementWidth<T extends HTMLElement = HTMLDivElement>(fallback: number) {
+  const ref = useRef<T>(null)
+  const [width, setWidth] = useState(fallback)
+  useEffect(() => {
+    const el = ref.current
+    if (!el || typeof ResizeObserver === 'undefined') return
+    const ro = new ResizeObserver(([entry]) => {
+      const w = Math.round(entry.contentRect.width)
+      if (w > 0) setWidth(w)
+    })
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+  return { ref, width }
 }

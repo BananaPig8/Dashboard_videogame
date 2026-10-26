@@ -1,7 +1,7 @@
 // Gráficas en SVG, sin librerías. Colores de la paleta categórica validada
 // (azul = commits, naranja = terminados), con su versión para el tema oscuro en styles.css.
 import { useState } from 'react'
-import { useFormat } from '../hooks'
+import { useElementWidth, useFormat } from '../hooks'
 import type { Bucket } from '../../domain/selectors'
 
 /** Minigráfica de barras: actividad por día. Una sola serie, sin leyenda. */
@@ -38,7 +38,8 @@ export function WeeklyChart({ buckets, year }: { buckets: Bucket[]; year: number
   const fmt = useFormat()
   const formatDate = fmt.date
   const [hover, setHover] = useState<number | null>(null)
-  const W = 640
+  // Se dibuja al ancho real: los textos del eje miden lo mismo en una tarjeta ancha que en un móvil.
+  const { ref, width: W } = useElementWidth(640)
   const H = 200
   const pad = { l: 30, r: 8, t: 10, b: 26 }
   const innerW = W - pad.l - pad.r
@@ -46,10 +47,11 @@ export function WeeklyChart({ buckets, year }: { buckets: Bucket[]; year: number
   const max = Math.max(4, ...buckets.flatMap((b) => [b.commits, b.completed]))
   const niceMax = Math.ceil(max / 5) * 5
   const band = innerW / buckets.length
-  const barW = Math.min(18, (band - 10) / 2)
+  const barW = Math.max(3, Math.min(18, (band - 10) / 2))
   const y = (v: number) => pad.t + innerH - (v / niceMax) * innerH
   const ticks = [0, niceMax / 2, niceMax]
-  const labelEvery = Math.ceil(buckets.length / 8)
+  // Una fecha cada tantas columnas como haga falta para que no se pisen (unos 56 px cada una).
+  const labelEvery = Math.max(1, Math.ceil(buckets.length / Math.max(1, Math.floor(innerW / 56))))
   const totalCommits = buckets.reduce((s, b) => s + b.commits, 0)
   const totalDone = buckets.reduce((s, b) => s + b.completed, 0)
 
@@ -63,7 +65,7 @@ export function WeeklyChart({ buckets, year }: { buckets: Bucket[]; year: number
           <i className="swatch series-2-bg" /> Elementos terminados ({totalDone})
         </span>
       </div>
-      <div className="chart-wrap" onMouseLeave={() => setHover(null)}>
+      <div className="chart-wrap" ref={ref} onMouseLeave={() => setHover(null)}>
         <svg viewBox={`0 0 ${W} ${H}`} className="chart-svg" role="img" aria-label={`Evolución semanal: ${totalCommits} commits y ${totalDone} elementos terminados`}>
           {ticks.map((t) => (
             <g key={t}>

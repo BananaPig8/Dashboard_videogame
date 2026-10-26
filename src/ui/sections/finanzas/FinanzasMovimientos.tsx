@@ -182,6 +182,7 @@ export function FinanzasMovimientos({ kind, embedded }: { kind: TransactionKind;
               rows={rows}
               columns={columns}
               caption={kind === 'income' ? t('secciones.finanzas.movimientos.captionIncome') : t('secciones.finanzas.movimientos.captionExpense')}
+              nameLabel={t('secciones.finanzas.movimientos.columns.name')}
               title={(x) => x.description}
               onOpen={(x) => edit({ collection: 'transactions', id: x.id })}
             />

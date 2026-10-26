@@ -1,32 +1,17 @@
 // Gráficas de Estadísticas, en SVG y sin librerías: columnas por semana o por mes (una o dos
 // series), barras horizontales con su cifra en texto y la evolución de una métrica. Todas
 // llevan nombre accesible, su tabla de datos y los colores de la paleta (--series-1/2).
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import type { ISODate } from '../../../domain/types'
 import { daysBetween } from '../../../domain/dates'
 import { t } from '../../../i18n'
+import { useElementWidth } from '../../hooks'
 
 /**
  * El ancho real de la gráfica, para dibujarla a escala 1:1: así los textos del eje miden lo
  * mismo en el móvil que en una pantalla ancha (sin medir todavía, `fallback`).
  */
-function useWidth(fallback: number) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [width, setWidth] = useState(fallback)
-  useEffect(() => {
-    const el = ref.current
-    if (!el || typeof ResizeObserver === 'undefined') return
-    const ro = new ResizeObserver(([entry]) => {
-      const w = Math.round(entry.contentRect.width)
-      if (w > 0) setWidth(w)
-    })
-    ro.observe(el)
-    return () => ro.disconnect()
-  }, [])
-  return { ref, width }
-}
-
 /** El tope del eje: 4, 6, 8, 10, 20, 40… (la mitad también es entera). `unit` = 60 para minutos (en horas). */
 export function niceMax(max: number, unit = 1): number {
   const x = max / unit
@@ -73,7 +58,7 @@ export function ColumnChart({
   headLabel: string
 }) {
   const [hover, setHover] = useState<number | null>(null)
-  const { ref, width: W } = useWidth(640)
+  const { ref, width: W } = useElementWidth(640)
   const H = 200
   const pad = { l: 46, r: 8, t: 10, b: 26 }
   const innerW = W - pad.l - pad.r
@@ -238,7 +223,7 @@ export function LineChart({
   formatDate: (d: ISODate) => string
 }) {
   const [hover, setHover] = useState<number | null>(null)
-  const { ref, width: W } = useWidth(480)
+  const { ref, width: W } = useElementWidth(480)
   const H = 160
   const pad = { l: 46, r: 14, t: 12, b: 24 }
   const innerW = W - pad.l - pad.r

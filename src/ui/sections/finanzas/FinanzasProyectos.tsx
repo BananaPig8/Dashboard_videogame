@@ -72,7 +72,13 @@ export function FinanzasProyectos({ embedded }: { embedded?: boolean }) {
   return (
     <>
       <Card title={t('secciones.finanzas.proyectos.title')} icon="folder" subtitle={t('secciones.finanzas.proyectos.subtitle')}>
-        <RecordTable rows={rows} columns={figures} caption={t('secciones.finanzas.proyectos.caption')} title={projectTitle} />
+        <RecordTable
+          rows={rows}
+          columns={figures}
+          caption={t('secciones.finanzas.proyectos.caption')}
+          nameLabel={t('secciones.finanzas.proyectos.project')}
+          title={projectTitle}
+        />
         {without.length > 0 && (
           <p className="muted small">{t('secciones.finanzas.proyectos.withoutMovements', { list: without.map((p) => p.name).join(', ') })}</p>
         )}
@@ -84,6 +90,7 @@ export function FinanzasProyectos({ embedded }: { embedded?: boolean }) {
             rows={categories.map((g) => ({ ...g, id: g.key }))}
             columns={categoryFigures}
             caption={t('secciones.finanzas.proyectos.captionCategory')}
+            nameLabel={t('secciones.finanzas.proyectos.category')}
             title={(g) => TRANSACTION_CATEGORIES[g.key]}
           />
         </Card>

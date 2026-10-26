@@ -99,12 +99,25 @@ function PeriodNav({ range }: { range: FinanceRange }) {
 
 type GroupRow<K> = FinanceGroup<K> & { id: string }
 
-function GroupTable<K>({ rows, title, caption, label }: { rows: GroupRow<K>[]; title: (g: GroupRow<K>) => ReactNode; caption: string; label: string }) {
+function GroupTable<K>({
+  rows,
+  title,
+  caption,
+  label,
+  nameLabel,
+}: {
+  rows: GroupRow<K>[]
+  title: (g: GroupRow<K>) => ReactNode
+  caption: string
+  label: string
+  nameLabel: string
+}) {
   if (!rows.length) return <p className="muted small">{I('noMovements')}</p>
   return (
     <RecordTable
       rows={rows}
       caption={caption}
+      nameLabel={nameLabel}
       title={title}
       columns={[
         { key: 'income', label: I('income'), numeric: true, render: (g) => <DoneCell cents={g.income.done} /> },
@@ -127,6 +140,7 @@ function BudgetTable({ list, caption }: { list: BudgetUsage[]; caption: string }
     <RecordTable
       rows={list.map((u) => ({ ...u, id: u.budget.id }))}
       caption={caption}
+      nameLabel={I('budget')}
       title={(u) => u.budget.name}
       onOpen={(u) => edit({ collection: 'budgets', id: u.budget.id })}
       columns={[
@@ -153,6 +167,7 @@ function EventTable({ list, caption }: { list: FinanceEventCost[]; caption: stri
     <RecordTable
       rows={shown.map((c) => ({ ...c, id: c.eventId }))}
       caption={caption}
+      nameLabel={I('event')}
       title={(c) => c.event?.title ?? t('secciones.finanzas.common.eventGone')}
       onOpen={(c) => c.event && edit({ collection: 'events', id: c.eventId })}
       columns={[
@@ -211,6 +226,7 @@ export function FinanzasInformes() {
             rows={categories.map((g) => ({ ...g, id: g.key }))}
             title={(g) => TRANSACTION_CATEGORIES[g.key]}
             caption={I('captionCategory', { period: name })}
+            nameLabel={I('category')}
             label={I('noMovements')}
           />
         </Card>
@@ -220,6 +236,7 @@ export function FinanzasInformes() {
               rows={projects.map((g) => ({ ...g, id: g.key ?? 'sin-proyecto' }))}
               title={(g) => (g.key ? <ProjectChip project={byId.get(g.key)} /> : t('secciones.finanzas.common.noProject'))}
               caption={I('captionProject', { period: name })}
+              nameLabel={I('project')}
               label={I('noMovements')}
             />
           </Card>
