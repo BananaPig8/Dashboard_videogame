@@ -24,6 +24,9 @@ export type Scope = ID | null
 
 const inScope = (scope: Scope) => (x: { projectId?: ID }) => scope === null || x.projectId === scope
 
+/** Los eventos de todo el estudio (sin proyecto) cuentan también en cada proyecto, como en el Calendario. */
+const eventInScope = (scope: Scope) => (e: { projectId?: ID }) => scope === null || !e.projectId || e.projectId === scope
+
 export const isOpen = (i: WorkItem) => STATUSES[i.status].open
 
 /** Abierto y en marcha de verdad: ni idea, ni en pausa, ni por confirmar. */
@@ -89,14 +92,14 @@ export function overdueItems(data: StudioData, today: ISODate, scope: Scope = nu
 /** Eventos previstos que aún no tienen fecha confirmada. */
 export function undatedEvents(data: StudioData, scope: Scope = null): StudioEvent[] {
   return data.events
-    .filter(inScope(scope))
+    .filter(eventInScope(scope))
     .filter((e) => (e.status === 'idea' || e.status === 'planned' || e.status === 'confirmed') && (!e.date || !e.dateConfirmed))
 }
 
 /** Eventos con fecha ya pasada que siguen como previstos: ¿se celebraron? */
 export function staleEvents(data: StudioData, today: ISODate, scope: Scope = null): StudioEvent[] {
   return data.events
-    .filter(inScope(scope))
+    .filter(eventInScope(scope))
     .filter((e) => e.date && (e.endDate ?? e.date) < today && (e.status === 'planned' || e.status === 'confirmed'))
 }
 
