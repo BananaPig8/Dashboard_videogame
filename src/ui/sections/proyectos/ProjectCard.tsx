@@ -40,7 +40,8 @@ export function ProjectCard({ summary, data, today }: { summary: ProjectSummary;
       <dl className="project-counts">
         <div>
           <dt>{t('secciones.proyectos.card.open')}</dt>
-          <dd>{summary.actionable}</dd>
+          {/* Las mismas «abiertas» que la barra lateral, la ficha y Estadísticas. */}
+          <dd>{summary.open}</dd>
         </div>
         <div>
           <dt>{t('secciones.proyectos.card.blocked')}</dt>

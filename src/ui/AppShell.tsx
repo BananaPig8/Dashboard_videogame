@@ -35,16 +35,31 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   const mobile = useMediaQuery('(max-width: 960px)')
   const menuButton = useRef<HTMLButtonElement>(null)
+  // Adónde va el foco al cerrar el menú: al botón (Esc, la X o el fondo) o al contenido (se eligió un destino).
+  const focusAfterMenu = useRef<'button' | 'content' | null>(null)
+  const menuOpenNow = useRef(menuOpen)
+  menuOpenNow.current = menuOpen
+  const closeMenu = (focus: 'button' | 'content') => {
+    focusAfterMenu.current = focus
+    setMenuOpen(false)
+  }
   // Cualquier navegación (también cambiar de subsección, que solo cambia la consulta) cierra el menú.
-  useEffect(() => setMenuOpen(false), [location.key])
-  // Abierto en móvil: el foco entra en el menú y Esc lo cierra (y vuelve al botón).
   useEffect(() => {
-    if (!menuOpen) return
+    if (menuOpenNow.current) closeMenu('content')
+  }, [location.key])
+  // Abierto en móvil: el foco entra en el menú y Esc lo cierra. Cerrado: el foco va a donde toca
+  // (cuando el menú ya no es inerte; si no, se quedaría en <body>).
+  useEffect(() => {
+    if (!menuOpen) {
+      const focus = focusAfterMenu.current
+      focusAfterMenu.current = null
+      if (focus === 'button') menuButton.current?.focus()
+      else if (focus === 'content') document.getElementById('contenido')?.focus()
+      return
+    }
     document.querySelector<HTMLElement>('.sidebar .brand .icon-btn')?.focus()
     const onKey = (e: KeyboardEvent) => {
-      if (e.key !== 'Escape') return
-      setMenuOpen(false)
-      menuButton.current?.focus()
+      if (e.key === 'Escape') closeMenu('button')
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -72,20 +87,26 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className={`app ${menuOpen ? 'menu-open' : ''}`} data-sidebar={collapsed ? 'collapsed' : 'expanded'}>
-      <a className="skip-link" href="#contenido">
+      {/* Con HashRouter, «#contenido» sería una ruta: se enfoca el contenido a mano. */}
+      <a
+        className="skip-link"
+        href="#contenido"
+        onClick={(e) => {
+          e.preventDefault()
+          document.getElementById('contenido')?.focus()
+        }}
+      >
         {t('app.skipToContent')}
       </a>
       <Sidebar
         collapsed={collapsed}
         hiddenOnMobile={mobile && !menuOpen}
-        onClose={() => {
-          setMenuOpen(false)
-          menuButton.current?.focus()
-        }}
+        onClose={() => closeMenu('button')}
       />
-      <div className="sidebar-backdrop" onClick={() => setMenuOpen(false)} aria-hidden="true" />
+      <div className="sidebar-backdrop" onClick={() => closeMenu('button')} aria-hidden="true" />
 
-      <div className="main">
+      {/* Con el menú abierto en móvil, lo de detrás no se alcanza con el teclado. */}
+      <div className="main" inert={mobile && menuOpen}>
         <header className="topbar">
           <button ref={menuButton} type="button" className="icon-btn only-mobile" onClick={() => setMenuOpen(true)} aria-label={t('nav.openMenu')} aria-expanded={menuOpen}>
             <Icon name="menu" />
@@ -114,7 +135,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               <Popover
                 label={t('topbar.quickActions')}
                 trigger={(p) => (
-                  <button type="button" className="btn btn-primary" onClick={p.toggle} aria-expanded={p['aria-expanded']} aria-haspopup="menu">
+                  <button type="button" className="btn btn-primary" onClick={p.toggle} aria-expanded={p['aria-expanded']} aria-haspopup="menu" aria-label={t('topbar.new')}>
                     <Icon name="plus" size={16} /> <span className="hide-narrow">{t('topbar.new')}</span>
                     <Icon name="chevronDown" size={14} />
                   </button>

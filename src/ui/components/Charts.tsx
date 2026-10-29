@@ -1,6 +1,7 @@
 // Gráficas en SVG, sin librerías. Colores de la paleta categórica validada
 // (azul = commits, naranja = terminados), con su versión para el tema oscuro en styles.css.
 import { useState } from 'react'
+import { t } from '../../i18n'
 import { useElementWidth, useFormat } from '../hooks'
 import type { Bucket } from '../../domain/selectors'
 
@@ -13,12 +14,12 @@ export function Sparkline({ values, label, startLabel }: { values: number[]; lab
   const bar = Math.max(1, step - 1)
   const total = values.reduce((a, b) => a + b, 0)
   return (
-    <svg className="sparkline" viewBox={`0 0 ${w} ${h}`} width={w} height={h} role="img" aria-label={`${label}: ${total} en total`}>
+    <svg className="sparkline" viewBox={`0 0 ${w} ${h}`} width={w} height={h} role="img" aria-label={t('charts.total', { label, n: total })}>
       <line x1={0} y1={h - 0.5} x2={w} y2={h - 0.5} className="axis-line" />
       {values.map((v, k) =>
         v === 0 ? null : (
           <rect key={k} x={k * step} y={h - 1 - (v / max) * (h - 3)} width={bar} height={(v / max) * (h - 3)} rx={1} className="series-1">
-            <title>{`${startLabel ? `${startLabel} + ${k} días` : `Día ${k + 1}`}: ${v}`}</title>
+            <title>{startLabel ? t('charts.dayFrom', { start: startLabel, n: k, value: v }) : t('charts.day', { n: k + 1, value: v })}</title>
           </rect>
         ),
       )}
@@ -59,14 +60,14 @@ export function WeeklyChart({ buckets, year }: { buckets: Bucket[]; year: number
     <figure className="chart">
       <div className="chart-legend" aria-hidden="true">
         <span>
-          <i className="swatch series-1-bg" /> Commits ({totalCommits})
+          <i className="swatch series-1-bg" /> {t('charts.legendCommits', { n: totalCommits })}
         </span>
         <span>
-          <i className="swatch series-2-bg" /> Elementos terminados ({totalDone})
+          <i className="swatch series-2-bg" /> {t('charts.legendDone', { n: totalDone })}
         </span>
       </div>
       <div className="chart-wrap" ref={ref} onMouseLeave={() => setHover(null)}>
-        <svg viewBox={`0 0 ${W} ${H}`} className="chart-svg" role="img" aria-label={`Evolución semanal: ${totalCommits} commits y ${totalDone} elementos terminados`}>
+        <svg viewBox={`0 0 ${W} ${H}`} className="chart-svg" role="img" aria-label={t('charts.weeklySummary', { commits: totalCommits, done: totalDone })}>
           {ticks.map((t) => (
             <g key={t}>
               <line x1={pad.l} x2={W - pad.r} y1={y(t)} y2={y(t)} className={t === 0 ? 'axis-line' : 'grid-line'} />
@@ -96,7 +97,7 @@ export function WeeklyChart({ buckets, year }: { buckets: Bucket[]; year: number
                   onMouseEnter={() => setHover(k)}
                   onFocus={() => setHover(k)}
                   tabIndex={0}
-                  aria-label={`Semana del ${formatDate(b.start, year)}: ${b.commits} commits, ${b.completed} terminados`}
+                  aria-label={t('charts.weekPoint', { date: formatDate(b.start, year), commits: b.commits, done: b.completed })}
                 />
               </g>
             )
@@ -104,24 +105,25 @@ export function WeeklyChart({ buckets, year }: { buckets: Bucket[]; year: number
         </svg>
         {hover !== null && (
           <div className="chart-tooltip" style={{ left: `${((pad.l + band * hover + band / 2) / W) * 100}%` }} role="status">
-            <strong>Semana del {formatDate(buckets[hover].start, year)}</strong>
+            <strong>{t('charts.weekOf', { date: formatDate(buckets[hover].start, year) })}</strong>
             <span>
-              <i className="swatch series-1-bg" /> {buckets[hover].commits} commits
+              <i className="swatch series-1-bg" /> {t('charts.commits', { n: buckets[hover].commits })}
             </span>
             <span>
-              <i className="swatch series-2-bg" /> {buckets[hover].completed} terminados
+              <i className="swatch series-2-bg" /> {t('charts.done', { n: buckets[hover].completed })}
             </span>
           </div>
         )}
       </div>
       <details className="chart-table">
-        <summary>Ver como tabla</summary>
+        <summary>{t('charts.asTable')}</summary>
         <table>
+          <caption className="visually-hidden">{t('charts.weeklyCaption')}</caption>
           <thead>
             <tr>
-              <th>Semana</th>
-              <th>Commits</th>
-              <th>Terminados</th>
+              <th scope="col">{t('charts.week')}</th>
+              <th scope="col">{t('charts.commitsCol')}</th>
+              <th scope="col">{t('charts.doneCol')}</th>
             </tr>
           </thead>
           <tbody>

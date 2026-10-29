@@ -112,6 +112,38 @@ await step('subsecciones que se combinan: «Mis tareas» en «Tablero Kanban»',
   if ((await current.count()) !== 2) throw new Error(`activas: ${await current.count()}`)
 })
 
+await step('teclado: saltar al contenido, el foco en las subsecciones y al cerrar el editor', async () => {
+  const focused = () => page.evaluate(() => {
+    const el = document.activeElement
+    return el ? `${el.tagName}#${el.id}|${el.getAttribute('data-sub') ?? ''}|${el.textContent?.trim().slice(0, 40)}` : ''
+  })
+  // «Saltar al contenido» no cambia de pantalla (con HashRouter, «#contenido» sería una ruta).
+  // Cambiar solo el «#» no recarga: se recarga para empezar como al abrir la página.
+  await page.goto(`${base}/#/builds?canal=demos`)
+  await page.reload()
+  await page.getByRole('heading', { level: 1 }).waitFor()
+  await page.keyboard.press('Tab')
+  const first = await focused()
+  if (!first.endsWith('|Saltar al contenido')) throw new Error(`lo primero con Tab no es el salto: ${first}`)
+  await page.keyboard.press('Enter')
+  if (!page.url().includes('/builds?canal=demos')) throw new Error(`el salto cambió la pantalla: ${page.url()}`)
+  if (!(await focused()).startsWith('MAIN#contenido')) throw new Error(`foco tras el salto: ${await focused()}`)
+  // Elegir con el teclado una subsección cuya vista pinta otra cabecera: el foco sigue en su pestaña.
+  await page.goto(`${base}/#/publicacion`)
+  await page.getByRole('heading', { level: 1 }).waitFor()
+  const tab = page.getByRole('navigation', { name: /Subsecciones de Publicación/ }).locator('[data-sub]').nth(2)
+  const sub = await tab.getAttribute('data-sub')
+  await tab.focus()
+  await page.keyboard.press('Enter')
+  await page.waitForFunction((id) => document.activeElement?.getAttribute('data-sub') === id, sub)
+  // Al cerrar el editor con Esc, el foco vuelve al botón que lo abrió.
+  await page.goto(`${base}/#/proyectos/juego-de-prueba`)
+  await page.getByRole('button', { name: 'Editar el proyecto' }).click()
+  await dialog().waitFor()
+  await page.keyboard.press('Escape')
+  await page.waitForFunction(() => document.activeElement?.getAttribute('aria-label') === 'Editar el proyecto')
+})
+
 await step('borrar con confirmación propia y deshacer', async () => {
   await page.goto(`${base}/#/proyectos/juego-de-prueba`)
   await page.getByRole('button', { name: 'Editar el proyecto' }).click()

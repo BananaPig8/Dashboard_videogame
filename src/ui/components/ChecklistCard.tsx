@@ -10,6 +10,7 @@ import { sourceHref } from '../util'
 import { ProjectChip } from './Badges'
 import { Card, ExternalLink, Progress } from './Common'
 import { Icon } from './Icon'
+import { t } from '../../i18n'
 
 export function ChecklistCard({ checklist, data, showProject }: { checklist: Checklist; data: StudioData; showProject: boolean }) {
   const { edit } = useUI()
@@ -31,17 +32,17 @@ export function ChecklistCard({ checklist, data, showProject }: { checklist: Che
             <button
               type="button"
               className="btn btn-small btn-ghost"
-              title="Desmarca todos los pasos para la siguiente versión"
+              title={t('checklist.restartHint')}
               onClick={async () => {
-                if (await confirm({ title: '¿Empezar una versión nueva?', message: 'Se desmarcan todos los pasos de esta lista.', confirmLabel: 'Desmarcar todo' }))
+                if (await confirm({ title: t('checklist.restartTitle'), message: t('checklist.restartMessage'), confirmLabel: t('checklist.restartConfirm') }))
                   save(checklist.items.map((i) => ({ ...i, done: false })))
               }}
             >
-              Empezar de nuevo
+              {t('checklist.restart')}
             </button>
           )}
           {canEdit && (
-            <button type="button" className="icon-btn" aria-label="Editar lista" onClick={() => edit({ collection: 'checklists', id: checklist.id })}>
+            <button type="button" className="icon-btn" aria-label={t('checklist.edit')} onClick={() => edit({ collection: 'checklists', id: checklist.id })}>
               <Icon name="edit" size={16} />
             </button>
           )}
@@ -79,9 +80,9 @@ export function ChecklistCard({ checklist, data, showProject }: { checklist: Che
               <button
                 type="button"
                 className="icon-btn small"
-                aria-label={`Quitar el paso «${it.label}»`}
+                aria-label={t('checklist.removeStep', { label: it.label })}
                 onClick={async () => {
-                  if (await confirm({ title: `¿Quitar el paso «${it.label}»?`, confirmLabel: 'Quitar', danger: true }))
+                  if (await confirm({ title: t('checklist.removeStepTitle', { label: it.label }), confirmLabel: t('checklist.remove'), danger: true }))
                     save(checklist.items.filter((x) => x.id !== it.id))
                 }}
               >
@@ -101,9 +102,9 @@ export function ChecklistCard({ checklist, data, showProject }: { checklist: Che
             setLabel('')
           }}
         >
-          <input value={label} onChange={(e) => setLabel(e.target.value)} placeholder="Añadir un paso…" aria-label="Nuevo paso" />
+          <input value={label} onChange={(e) => setLabel(e.target.value)} placeholder={t('checklist.newStepPlaceholder')} aria-label={t('checklist.newStep')} />
           <button type="submit" className="btn btn-small" disabled={!label.trim()}>
-            Añadir
+            {t('checklist.add')}
           </button>
         </form>
       )}

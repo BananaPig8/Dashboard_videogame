@@ -58,3 +58,12 @@ export function useElementWidth<T extends HTMLElement = HTMLDivElement>(fallback
   }, [])
   return { ref, width }
 }
+
+/**
+ * Lleva a la vista el elemento activo de una tira de pestañas con desplazamiento lateral
+ * (sin mover la página). La tira tiene que ser su contenedor posicionado.
+ */
+export function scrollIntoStrip(strip: HTMLElement | null, item: HTMLElement | null) {
+  if (!strip || !item || strip.scrollWidth <= strip.clientWidth) return
+  strip.scrollLeft = item.offsetLeft - (strip.clientWidth - item.offsetWidth) / 2
+}

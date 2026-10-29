@@ -208,8 +208,8 @@ function SourcesEditor({
   const [draft, setDraft] = useState<SourceRef>({ type: 'manual', ref: '', date: todayISO() })
   return (
     <section className="sources">
-      <h3>Fuentes</h3>
-      {sources.length === 0 && <p className="muted">Sin fuentes.</p>}
+      <h3>{t('sources.title')}</h3>
+      {sources.length === 0 && <p className="muted">{t('sources.none')}</p>}
       <ul>
         {sources.map((s, k) => {
           const href = sourceHref(s, projectRepo)
@@ -219,7 +219,7 @@ function SourcesEditor({
               {href ? <ExternalLink href={href}>{s.ref}</ExternalLink> : <span>{s.ref}</span>}
               {s.date && <span className="muted">{fmt.date(s.date)}</span>}
               {s.note && <span className="muted">· {s.note}</span>}
-              <button type="button" className="icon-btn small" aria-label="Quitar fuente" onClick={() => onChange(sources.filter((_, i) => i !== k))}>
+              <button type="button" className="icon-btn small" aria-label={t('sources.remove')} onClick={() => onChange(sources.filter((_, i) => i !== k))}>
                 <Icon name="close" size={14} />
               </button>
             </li>
@@ -228,15 +228,15 @@ function SourcesEditor({
       </ul>
       {adding ? (
         <div className="source-add">
-          <select value={draft.type} onChange={(e) => setDraft({ ...draft, type: e.target.value as SourceRef['type'] })} aria-label="Tipo de fuente">
+          <select value={draft.type} onChange={(e) => setDraft({ ...draft, type: e.target.value as SourceRef['type'] })} aria-label={t('sources.type')}>
             {Object.entries(SOURCE_TYPES).map(([v, l]) => (
               <option key={v} value={v}>
                 {l}
               </option>
             ))}
           </select>
-          <input placeholder="Hash, #PR, documento o nota" value={draft.ref} onChange={(e) => setDraft({ ...draft, ref: e.target.value })} aria-label="Referencia" />
-          <input type="url" placeholder="Enlace (opcional)" value={draft.url ?? ''} onChange={(e) => setDraft({ ...draft, url: e.target.value || undefined })} aria-label="Enlace" />
+          <input placeholder={t('sources.refPlaceholder')} value={draft.ref} onChange={(e) => setDraft({ ...draft, ref: e.target.value })} aria-label={t('sources.ref')} />
+          <input type="url" placeholder={t('sources.urlPlaceholder')} value={draft.url ?? ''} onChange={(e) => setDraft({ ...draft, url: e.target.value || undefined })} aria-label={t('sources.url')} />
           <button
             type="button"
             className="btn btn-small"
@@ -247,12 +247,12 @@ function SourcesEditor({
               setAdding(false)
             }}
           >
-            Añadir
+            {t('sources.add')}
           </button>
         </div>
       ) : (
         <button type="button" className="btn btn-small btn-ghost" onClick={() => setAdding(true)}>
-          <Icon name="plus" size={14} /> Añadir fuente
+          <Icon name="plus" size={14} /> {t('sources.addSource')}
         </button>
       )}
     </section>

@@ -64,7 +64,7 @@ export function SaveViewButton({ suggestedName }: { suggestedName: string }) {
             save()
           }}
         >
-          <Field label="Nombre de la vista" hint="Sale en la barra lateral y en la paleta (Ctrl K).">
+          <Field label={t('saveView.name')} hint={t('saveView.nameHint')}>
             <input autoFocus value={name} onChange={(e) => setName(e.target.value)} />
           </Field>
         </form>

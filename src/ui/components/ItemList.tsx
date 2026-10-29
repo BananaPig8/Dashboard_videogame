@@ -67,7 +67,7 @@ export function DueTag({ item, today, year }: { item: WorkItem; today?: ISODate;
 export function ItemList({ items, data, showProject, empty, aside, detail, limit, hideStatus, year, showAssignee, showTags, today }: ItemListProps) {
   const { openItem } = useUI()
   const fmt = useFormat()
-  if (items.length === 0) return <Empty>{empty ?? 'Nada por aquí.'}</Empty>
+  if (items.length === 0) return <Empty>{empty ?? t('itemList.empty')}</Empty>
   const shown = limit ? items.slice(0, limit) : items
   const areas = new Map(data.areas.map((a) => [a.id, a]))
   const projects = new Map(data.projects.map((p) => [p.id, p]))
@@ -111,7 +111,7 @@ export function ItemList({ items, data, showProject, empty, aside, detail, limit
           )
         })}
       </ul>
-      {limit && items.length > limit && <p className="list-more">y {items.length - limit} más</p>}
+      {limit && items.length > limit && <p className="list-more">{t('itemList.more', { n: items.length - limit })}</p>}
     </>
   )
 }

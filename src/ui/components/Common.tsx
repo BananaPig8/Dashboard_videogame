@@ -182,9 +182,17 @@ export function Modal({
   const titleId = useId()
   useEffect(() => {
     const d = ref.current
-    if (!d) return
-    if (open && !d.open) d.showModal()
-    if (!open && d.open) d.close()
+    if (!open || !d) return
+    // Quien lo abrió recupera el foco al cerrarse (el diálogo se desmonta sin close() y el
+    // navegador no lo devuelve). Si ya no existe (se borró), el foco va al contenido.
+    const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null
+    if (!d.open) d.showModal()
+    return () => {
+      if (d.open) d.close()
+      if (document.activeElement && document.activeElement !== document.body) return
+      if (opener?.isConnected) opener.focus({ preventScroll: true })
+      else document.getElementById('contenido')?.focus({ preventScroll: true })
+    }
   }, [open])
   if (!open) return null
   const classes = ['modal', wide && 'modal-wide', side && 'modal-side', small && 'modal-small', className].filter(Boolean).join(' ')

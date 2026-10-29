@@ -2,10 +2,11 @@
 // subsecciones como pestañas-enlace (cambian la URL, así se pueden guardar y compartir).
 // Dentro de la ficha de un proyecto solo se pintan las subsecciones, que llevan a la misma
 // pestaña del proyecto.
-import { useEffect, type ReactNode } from 'react'
+import { useEffect, useRef, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { t, tr } from '../../i18n'
 import { useScope } from '../context'
+import { scrollIntoStrip } from '../hooks'
 import { activeChildren, atSectionRoot, childHref, sectionById, sectionHref, type NavChild, type NavSection, type SectionId } from '../navigation'
 
 export interface SectionNav {
@@ -43,6 +44,12 @@ export function useDocumentTitle(parts: (string | undefined)[]) {
   }, [title])
 }
 
+/**
+ * La subsección que se acaba de elegir. Si su vista pinta otra cabecera, la pestaña que
+ * tenía el foco se desmonta y el foco caería a <body>: la nueva cabecera se lo devuelve.
+ */
+let refocusTab: string | null = null
+
 export function SectionHeader({
   id,
   embedded,
@@ -65,14 +72,31 @@ export function SectionHeader({
   const chosen = active.filter((c) => c.value !== null)
   const here = chosen.map((c) => c.label).join(' · ')
   useDocumentTitle([here, section.label, embedded ? project?.name : undefined])
+  const location = useLocation()
+  const strip = useRef<HTMLElement>(null)
+  useEffect(() => {
+    const nav = strip.current
+    if (!nav) return
+    scrollIntoStrip(nav, nav.querySelector<HTMLElement>('[aria-current]'))
+    if (refocusTab && document.activeElement === document.body) nav.querySelector<HTMLElement>(`[data-sub="${refocusTab}"]`)?.focus()
+    refocusTab = null
+  }, [location.pathname, location.search])
   const tabs = (
-    <nav className="section-tabs" aria-label={t('section.subsections', { name: section.label })}>
+    <nav ref={strip} className="section-tabs" aria-label={t('section.subsections', { name: section.label })}>
       <ul>
         {section.children.map((c) => {
           const on = active.includes(c)
           return (
             <li key={c.id}>
-              <Link to={href(c)} className={on ? 'section-tab active' : 'section-tab'} aria-current={on ? (active.length === 1 ? 'page' : 'true') : undefined}>
+              <Link
+                to={href(c)}
+                data-sub={c.id}
+                className={on ? 'section-tab active' : 'section-tab'}
+                aria-current={on ? (active.length === 1 ? 'page' : 'true') : undefined}
+                onClick={() => {
+                  refocusTab = c.id
+                }}
+              >
                 {c.label}
               </Link>
             </li>

@@ -48,9 +48,11 @@ export function monthGrid(month: ISODate, weekStart: 0 | 1): ISODate[] {
 export function CalendarChip({ entry, onOpen, compact }: { entry: CalendarEntry; onOpen?: (e: CalendarEntry) => void; compact?: boolean }) {
   const kind = CALENDAR_KINDS[entry.kind]
   const unconfirmed = t('calendarUi.unconfirmed')
+  const done = t('calendarUi.done')
   const body = (
     <>
-      <Icon name={CALENDAR_ICON[entry.kind]} size={12} />
+      <Icon name={entry.done ? 'checkCircle' : CALENDAR_ICON[entry.kind]} size={12} />
+      {entry.done && <span className="visually-hidden">({done})</span>}
       <span className={compact ? 'visually-hidden' : 'cal-kind'}>{kind.label}:</span> {entry.time && <span className="cal-time">{entry.time}</span>}{' '}
       <span className="cal-title">{entry.title}</span>
       {!entry.confirmed &&
@@ -64,7 +66,7 @@ export function CalendarChip({ entry, onOpen, compact }: { entry: CalendarEntry;
         ))}
     </>
   )
-  const hint = `${kind.label}: ${entry.time ? `${entry.time} ` : ''}${entry.title}${entry.confirmed ? '' : ` (${unconfirmed})`}`
+  const hint = `${kind.label}: ${entry.time ? `${entry.time} ` : ''}${entry.title}${entry.done ? ` (${done})` : ''}${entry.confirmed ? '' : ` (${unconfirmed})`}`
   const cls = `cal-chip tone-${kind.tone} ${entry.done ? 'done' : ''}`
   return onOpen ? (
     <button type="button" className={cls} onClick={() => onOpen(entry)} title={compact ? hint : undefined}>

@@ -34,6 +34,8 @@
   --success: #5cd18b;
   --warning: #f2b84b;
   --danger: #ff7f7f;
+  /* Texto sobre un fondo de peligro lleno (el contador de la campana). */
+  --on-danger: #0b0d12;
   --info: #6aa8ff;
   --special: #b69cff;
   --neutral: #c3cad6;
@@ -94,6 +96,7 @@
   --success: #146c39;
   --warning: #7d5200;
   --danger: #b0222a;
+  --on-danger: #ffffff;
   --info: #1a58b8;
   --special: #5d3cc8;
   --neutral: #3b4454;
@@ -647,15 +650,11 @@ kbd {
   padding: 0 4px;
   border-radius: 999px;
   background: var(--danger);
-  color: #fff;
+  color: var(--on-danger);
   font-size: 0.66rem;
   font-weight: 700;
   line-height: 17px;
   text-align: center;
-}
-
-:root[data-theme='light'] .badge-count {
-  background: #c22a33;
 }
 
 .content {
@@ -1080,6 +1079,31 @@ a.stat:hover {
 .tone-muted {
   color: var(--muted);
   background: color-mix(in srgb, var(--muted) 10%, transparent);
+}
+
+/* Las etiquetas de estado parten siempre de la superficie: sobre un fondo teñido (fases del
+   Roadmap, la etapa actual en Proyectos, lo que falta en Eventos) la transparencia les quitaba
+   contraste. Sobre una tarjeta se ven igual. */
+.pill.tone-neutral {
+  background: color-mix(in srgb, var(--neutral) 10%, var(--surface));
+}
+.pill.tone-info {
+  background: color-mix(in srgb, var(--info) var(--tone-alpha), var(--surface));
+}
+.pill.tone-success {
+  background: color-mix(in srgb, var(--success) var(--tone-alpha), var(--surface));
+}
+.pill.tone-warning {
+  background: color-mix(in srgb, var(--warning) var(--tone-alpha), var(--surface));
+}
+.pill.tone-danger {
+  background: color-mix(in srgb, var(--danger) var(--tone-alpha), var(--surface));
+}
+.pill.tone-special {
+  background: color-mix(in srgb, var(--special) var(--tone-alpha), var(--surface));
+}
+.pill.tone-muted {
+  background: color-mix(in srgb, var(--muted) 10%, var(--surface));
 }
 
 .priority {
@@ -2226,10 +2250,13 @@ input[type='color'] {
   gap: var(--space-2);
 }
 
-.project-hero h1 {
+.project-title {
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+.project-hero h1 {
   font-size: 1.65rem;
   font-weight: 680;
 }
@@ -2691,7 +2718,12 @@ input[type='color'] {
 .menu-item:hover,
 .menu-item:focus-visible {
   background: var(--surface-2);
-  outline: none;
+}
+
+/* El fondo solo no basta para ver qué opción tiene el foco: el contorno se queda. */
+.menu-item:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
 }
 
 .menu-item .icon {
@@ -3417,8 +3449,10 @@ span.cal-chip {
   min-width: 0;
 }
 
+/* Hecho: tachado, con su icono y su texto oculto; sin transparencia, que deja el texto ilegible. */
 .cal-chip.done {
-  opacity: 0.6;
+  background: var(--surface-2);
+  color: var(--text-2);
 }
 
 .cal-chip.done .cal-title {
@@ -3472,6 +3506,11 @@ span.cal-chip {
 
   .month-list .cal-chip {
     font-size: 0.85rem;
+  }
+
+  /* En la lista sobra sitio en vertical: los títulos largos se leen enteros. */
+  .month-list .cal-chip .cal-title {
+    white-space: normal;
   }
 }
 

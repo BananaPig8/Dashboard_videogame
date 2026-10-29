@@ -137,17 +137,18 @@ export function ColumnChart({
           </div>
         )}
       </div>
-      <DataTable head={[headLabel, ...series.map((s) => s.label)]} rows={longLabels.map((l, k) => [l, ...series.map((s) => format(s.values[k]))])} />
+      <DataTable caption={title} head={[headLabel, ...series.map((s) => s.label)]} rows={longLabels.map((l, k) => [l, ...series.map((s) => format(s.values[k]))])} />
     </figure>
   )
 }
 
 /** «Ver como tabla»: los mismos datos que la gráfica, en una tabla. */
-function DataTable({ head, rows }: { head: string[]; rows: string[][] }) {
+function DataTable({ caption, head, rows }: { caption: string; head: string[]; rows: string[][] }) {
   return (
     <details className="chart-table">
       <summary>{t('secciones.estadisticas.chart.asTable')}</summary>
       <table>
+        <caption className="visually-hidden">{caption}</caption>
         <thead>
           <tr>
             {head.map((h) => (
@@ -288,6 +289,7 @@ export function LineChart({
         )}
       </div>
       <DataTable
+        caption={title}
         head={[t('secciones.estadisticas.chart.date'), t('secciones.estadisticas.chart.value')]}
         rows={points.map((p) => [formatDate(p.date), format(p.value)])}
       />

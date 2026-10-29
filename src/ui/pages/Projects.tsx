@@ -1,10 +1,10 @@
 // La ficha de cada proyecto (la lista es la sección Proyectos). Reutiliza las mismas pantallas
 // del estudio con el proyecto como ámbito: se pasa de lo general al detalle sin cambiar
 // de herramienta ni perder el sitio.
-import { Suspense } from 'react'
+import { Suspense, useEffect, useRef } from 'react'
 import { Link, Navigate, useLocation, useParams } from 'react-router-dom'
 import { yearOf } from '../../domain/dates'
-import { useFormat, useToday } from '../hooks'
+import { scrollIntoStrip, useFormat, useToday } from '../hooks'
 import { projectSummary } from '../../domain/selectors'
 import { useStudioData } from '../../data/store'
 import { HealthPill, StagePill } from '../components/Badges'
@@ -26,6 +26,9 @@ export function ProjectPage() {
   const { edit } = useUI()
   const today = useToday()
   const fmt = useFormat()
+  // En móvil la tira se desplaza: la pestaña activa, siempre a la vista.
+  const tabStrip = useRef<HTMLDivElement>(null)
+  useEffect(() => scrollIntoStrip(tabStrip.current, tabStrip.current?.querySelector<HTMLElement>('[aria-current]') ?? null), [slug, tab])
   const year = yearOf(today)
   const project = data.projects.find((p) => p.slug === slug)
   const tabs = projectTabs(prefs.hiddenSections)
@@ -54,12 +57,12 @@ export function ProjectPage() {
           <nav className="breadcrumb" aria-label={t('nav.breadcrumb')}>
             <Link to="/">{t('projectPage.studio')}</Link> <Icon name="chevronRight" size={12} /> <Link to="/proyectos">{t('nav.sections.proyectos')}</Link>
           </nav>
-          <h1>
-            {project.name}
+          <div className="project-title">
+            <h1>{project.name}</h1>
             <button type="button" className="icon-btn" aria-label={t('projectPage.edit')} onClick={() => edit({ collection: 'projects', id: project.id })}>
               <Icon name="edit" size={16} />
             </button>
-          </h1>
+          </div>
           {isSummary && project.tagline && <p className="project-tagline">{project.tagline}</p>}
           <div className="pills">
             <StagePill stage={project.stage} />
@@ -114,7 +117,7 @@ export function ProjectPage() {
       </header>
 
       <nav className="tabs-bar" aria-label={t('projectPage.tabs')}>
-        <div className="tabs">
+        <div className="tabs" ref={tabStrip}>
           {shown.map((s) => (
             <Link key={s.id} to={tabHref(s)} className={s === current ? 'tab active' : 'tab'} aria-current={s === current ? 'page' : undefined}>
               {s.tabLabel}
