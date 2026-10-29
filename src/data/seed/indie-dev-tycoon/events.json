@@ -1,0 +1,50 @@
+[
+  {
+    "id": "idt-feria-valladolid",
+    "projectId": "indie-dev-tycoon",
+    "title": "Feria en Valladolid con la Demo Valladolid (nombre por confirmar)",
+    "type": "fair",
+    "status": "planned",
+    "dateConfirmed": false,
+    "location": "Valladolid",
+    "notes": "Consta en el repo: la Demo Valladolid 1.0 «la de la feria», el modo stand, el roll-up, el QR de Discord y su ranking en Talo (feria_valladolid), hechos el 12 y el 13-10-2026. No constan el nombre exacto de la feria, la fecha ni si ya se ha celebrado: por confirmar.",
+    "tags": [
+      "feria"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "d04d37b",
+        "date": "2026-10-12",
+        "note": "«Demo Valladolid 1.0 (la de la feria)»"
+      },
+      {
+        "type": "commit",
+        "ref": "d172df3",
+        "date": "2026-10-12",
+        "note": "Roll-up del stand"
+      },
+      {
+        "type": "commit",
+        "ref": "bec8f65",
+        "date": "2026-10-13",
+        "note": "Modo stand"
+      },
+      {
+        "type": "readme",
+        "ref": "La demo › Demo Valladolid"
+      },
+      {
+        "type": "pr",
+        "ref": "#33",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/33"
+      },
+      {
+        "type": "pr",
+        "ref": "#35",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/35"
+      }
+    ],
+    "confidence": "inferred"
+  }
+]

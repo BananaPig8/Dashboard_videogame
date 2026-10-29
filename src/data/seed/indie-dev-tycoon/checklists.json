@@ -1,0 +1,695 @@
+[
+  {
+    "id": "idt-checklist-steam",
+    "projectId": "indie-dev-tycoon",
+    "title": "Publicar en Steam",
+    "target": "steam",
+    "description": "Los pasos del README para Steam y lo que ya está hecho en el repositorio. Lo que depende de Steamworks no se puede comprobar desde el repo.",
+    "items": [
+      {
+        "id": "idt-steam-ck-version",
+        "label": "Decidir qué versión va a Steam: la de Godot",
+        "done": true,
+        "note": "Lo dice CLAUDE.md; Electron sigue de puente hasta que Godot tenga Steam y el README aún describe la de Electron.",
+        "sources": [
+          {
+            "type": "commit",
+            "ref": "2082e45",
+            "date": "2026-09-30"
+          },
+          {
+            "type": "commit",
+            "ref": "27cb2fe",
+            "date": "2026-10-04"
+          }
+        ]
+      },
+      {
+        "id": "idt-steam-ck-cuenta",
+        "label": "Cuenta de Steamworks y Steam Direct (100 $ por juego)",
+        "done": false,
+        "note": "Por confirmar.",
+        "sources": [
+          {
+            "type": "readme",
+            "ref": "README.md#pasos-para-publicarlo-en-steam"
+          }
+        ]
+      },
+      {
+        "id": "idt-steam-ck-app-id",
+        "label": "App ID guardado en el juego",
+        "done": false,
+        "note": "No existe desktop/steam/steam_appid.txt (comprobado el 2026-10-18).",
+        "sources": [
+          {
+            "type": "doc",
+            "ref": "desktop/steam/"
+          }
+        ]
+      },
+      {
+        "id": "idt-steam-ck-godot",
+        "label": "Conexión con Steam en la versión de Godot",
+        "done": false,
+        "note": "Solo la tiene la de Electron (steamworks.js).",
+        "sources": [
+          {
+            "type": "doc",
+            "ref": "desktop/main.js"
+          }
+        ]
+      },
+      {
+        "id": "idt-steam-ck-logros-juego",
+        "label": "Logros definidos en el juego con su nombre de API",
+        "done": true,
+        "note": "56 logros en js/engine.js y sim.gd; 23 en la demo.",
+        "sources": [
+          {
+            "type": "readme",
+            "ref": "README.md#qué-hay-en-el-juego"
+          }
+        ]
+      },
+      {
+        "id": "idt-steam-ck-logros-lista",
+        "label": "Lista de nombres de API del README al día",
+        "done": false,
+        "note": "Tiene 47 de los 56.",
+        "sources": [
+          {
+            "type": "readme",
+            "ref": "README.md#pasos-para-publicarlo-en-steam"
+          }
+        ]
+      },
+      {
+        "id": "idt-steam-ck-logros-steamworks",
+        "label": "Logros creados en Steamworks",
+        "done": false,
+        "note": "Por confirmar.",
+        "sources": [
+          {
+            "type": "readme",
+            "ref": "README.md#pasos-para-publicarlo-en-steam"
+          }
+        ]
+      },
+      {
+        "id": "idt-steam-ck-capsulas",
+        "label": "Cápsulas, fondo e imágenes de la biblioteca",
+        "done": true,
+        "note": "Con keyart.gd, cada una a su tamaño.",
+        "sources": [
+          {
+            "type": "commit",
+            "ref": "3a4216c",
+            "date": "2026-10-01"
+          },
+          {
+            "type": "commit",
+            "ref": "a0c0c23",
+            "date": "2026-10-13"
+          },
+          {
+            "type": "pr",
+            "ref": "#37",
+            "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/37"
+          }
+        ]
+      },
+      {
+        "id": "idt-steam-ck-capturas",
+        "label": "Capturas 1920×1080 hechas con el juego",
+        "done": true,
+        "note": "Once capturas con tests/steam.gd.",
+        "sources": [
+          {
+            "type": "commit",
+            "ref": "3a4216c",
+            "date": "2026-10-01"
+          }
+        ]
+      },
+      {
+        "id": "idt-steam-ck-trailer",
+        "label": "Tráiler de 44 s grabado desde el juego",
+        "done": true,
+        "note": "tools/trailer.sh; el vídeo no está en el repositorio.",
+        "sources": [
+          {
+            "type": "commit",
+            "ref": "992035b",
+            "date": "2026-10-04"
+          }
+        ]
+      },
+      {
+        "id": "idt-steam-ck-keyart",
+        "label": "Key art horizontal, vertical 9:16 y 2:3",
+        "done": true,
+        "sources": [
+          {
+            "type": "commit",
+            "ref": "0a8d9ae",
+            "date": "2026-09-30"
+          }
+        ]
+      },
+      {
+        "id": "idt-steam-ck-icono",
+        "label": "Icono del juego y del .exe",
+        "done": true,
+        "note": "El icono nuevo aún no está en las descargas (Actions no arranca desde el 13-10).",
+        "sources": [
+          {
+            "type": "commit",
+            "ref": "1dee4da",
+            "date": "2026-10-13"
+          },
+          {
+            "type": "pr",
+            "ref": "#37",
+            "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/37"
+          }
+        ]
+      },
+      {
+        "id": "idt-steam-ck-descripcion",
+        "label": "Descripción de la tienda",
+        "done": false,
+        "note": "No hay texto de la tienda en el repositorio."
+      },
+      {
+        "id": "idt-steam-ck-demo",
+        "label": "Elegir la demo para Steam",
+        "done": true,
+        "note": "La 1.3 V2, ahora Demo 1.4: en main desde el 28-10 (PR #40).",
+        "sources": [
+          {
+            "type": "commit",
+            "ref": "d8eca50",
+            "date": "2026-10-14"
+          },
+          {
+            "type": "pr",
+            "ref": "#40",
+            "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/40",
+            "date": "2026-10-28"
+          },
+          {
+            "type": "readme",
+            "ref": "La demo",
+            "note": "«desde la 1.4, la demo es la que fue la «1.3 V2» (la que irá a Steam)»"
+          }
+        ]
+      },
+      {
+        "id": "idt-steam-ck-fusionar-demo",
+        "label": "Fusionar la Demo 1.4 en main",
+        "done": true,
+        "note": "En main desde el 28-10 (PR #40), fusionada sin las comprobaciones de Actions, que no arranca. Aún sin compilar en la release «descargas».",
+        "sources": [
+          {
+            "type": "commit",
+            "ref": "d8eca50",
+            "date": "2026-10-14"
+          },
+          {
+            "type": "pr",
+            "ref": "#40",
+            "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/40",
+            "date": "2026-10-28"
+          }
+        ]
+      },
+      {
+        "id": "idt-steam-ck-build",
+        "label": "Subir la build con SteamPipe (steamcmd)",
+        "done": false,
+        "note": "Por confirmar.",
+        "sources": [
+          {
+            "type": "readme",
+            "ref": "README.md#pasos-para-publicarlo-en-steam"
+          }
+        ]
+      },
+      {
+        "id": "idt-steam-ck-pagina",
+        "label": "Página visible como «Próximamente» dos semanas antes",
+        "done": false,
+        "note": "Por confirmar.",
+        "sources": [
+          {
+            "type": "readme",
+            "ref": "README.md#pasos-para-publicarlo-en-steam"
+          }
+        ]
+      },
+      {
+        "id": "idt-steam-ck-url",
+        "label": "STEAM_URL con la página del juego",
+        "done": false,
+        "note": "Aún es una búsqueda en la tienda.",
+        "sources": [
+          {
+            "type": "doc",
+            "ref": "godot/scripts/game.gd (STEAM_URL)"
+          }
+        ]
+      },
+      {
+        "id": "idt-steam-ck-qr",
+        "label": "QR de Steam en el roll-up y en la despedida de la feria",
+        "done": false,
+        "note": "Espera a la página.",
+        "sources": [
+          {
+            "type": "commit",
+            "ref": "bec8f65",
+            "date": "2026-10-13"
+          }
+        ]
+      },
+      {
+        "id": "idt-steam-ck-revision",
+        "label": "Revisión de Valve de la página y de la build",
+        "done": false,
+        "note": "Por confirmar.",
+        "sources": [
+          {
+            "type": "readme",
+            "ref": "README.md#pasos-para-publicarlo-en-steam"
+          }
+        ]
+      }
+    ],
+    "listingId": "idt-ficha-steam-juego",
+    "tags": [
+      "steam"
+    ]
+  },
+  {
+    "id": "idt-checklist-version-nueva",
+    "projectId": "indie-dev-tycoon",
+    "title": "Sacar una versión nueva (demo o juego completo)",
+    "target": "update",
+    "description": "El proceso que sigue el repositorio para cada versión. Es una plantilla: se marca en cada versión.",
+    "items": [
+      {
+        "id": "idt-ver-ck-rama",
+        "label": "Trabajar en una rama claude/… y abrir una PR a main",
+        "done": false,
+        "sources": [
+          {
+            "type": "doc",
+            "ref": "CLAUDE.md",
+            "note": "Version Control"
+          }
+        ]
+      },
+      {
+        "id": "idt-ver-ck-dos-motores",
+        "label": "Si cambia una regla, cambiarla en engine.js y en sim.gd",
+        "done": false,
+        "sources": [
+          {
+            "type": "doc",
+            "ref": "CLAUDE.md"
+          }
+        ]
+      },
+      {
+        "id": "idt-ver-ck-datos",
+        "label": "Si cambia js/data.js, regenerar game_data.json con tools/export_data.js",
+        "done": false,
+        "sources": [
+          {
+            "type": "doc",
+            "ref": "CLAUDE.md"
+          }
+        ]
+      },
+      {
+        "id": "idt-ver-ck-node",
+        "label": "Pasar las pruebas de Node (engine y audio)",
+        "done": false,
+        "note": "node --test test/engine.test.js test/audio.test.js",
+        "sources": [
+          {
+            "type": "doc",
+            "ref": "CLAUDE.md"
+          }
+        ]
+      },
+      {
+        "id": "idt-ver-ck-rapida",
+        "label": "En la PR, comprobación rápida de Godot y CI",
+        "done": false,
+        "note": "La rápida tarda unos 10 min; no corre si la PR solo toca .md.",
+        "sources": [
+          {
+            "type": "commit",
+            "ref": "d46b1c3",
+            "date": "2026-10-13"
+          },
+          {
+            "type": "pr",
+            "ref": "#39",
+            "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/39"
+          }
+        ]
+      },
+      {
+        "id": "idt-ver-ck-completa",
+        "label": "Comprobación completa si toca el motor o antes de sacar versión",
+        "done": false,
+        "note": "Etiqueta «comprobación completa» en la PR o Actions → Godot → Run workflow (unos 40 min).",
+        "sources": [
+          {
+            "type": "commit",
+            "ref": "d46b1c3",
+            "date": "2026-10-13"
+          }
+        ]
+      },
+      {
+        "id": "idt-ver-ck-subir-version",
+        "label": "Subir la versión en game.gd y en el .exe",
+        "done": false,
+        "note": "VERSION, DEMO_VERSION o FERIA_VERSION y file_version de export_presets.cfg; en el juego completo, también project.godot, js/ui.js y desktop/package.json.",
+        "sources": [
+          {
+            "type": "commit",
+            "ref": "85bad40",
+            "date": "2026-10-06"
+          },
+          {
+            "type": "commit",
+            "ref": "ba1f4c4",
+            "date": "2026-10-11"
+          }
+        ]
+      },
+      {
+        "id": "idt-ver-ck-readme",
+        "label": "README al día: tabla de Descargar y sección de la demo",
+        "done": false,
+        "sources": [
+          {
+            "type": "readme",
+            "ref": "README.md#descargar"
+          }
+        ]
+      },
+      {
+        "id": "idt-ver-ck-fusionar",
+        "label": "Fusionar la PR en main",
+        "done": false,
+        "sources": [
+          {
+            "type": "doc",
+            "ref": "CLAUDE.md"
+          }
+        ]
+      },
+      {
+        "id": "idt-ver-ck-descargas",
+        "label": "El flujo «Descargas» compila, firma y actualiza la release",
+        "done": false,
+        "note": "Windows, Linux y Mac; los enlaces no cambian. Desde el 13-10 no arranca: ver «GitHub Actions no arranca desde el 13-10».",
+        "sources": [
+          {
+            "type": "commit",
+            "ref": "51c8135",
+            "date": "2026-10-06"
+          },
+          {
+            "type": "pr",
+            "ref": "#20",
+            "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/20"
+          }
+        ]
+      },
+      {
+        "id": "idt-ver-ck-ranking",
+        "label": "Ver en el registro de «Descargas» que sale «Con ranking mundial»",
+        "done": false,
+        "note": "Si dice «Sin el secreto TALO_ACCESS_KEY», sale sin ranking mundial.",
+        "sources": [
+          {
+            "type": "doc",
+            "ref": ".github/workflows/descargas.yml"
+          }
+        ]
+      },
+      {
+        "id": "idt-ver-ck-release",
+        "label": "Comprobar que la release lleva la versión y el commit nuevos",
+        "done": false,
+        "sources": [
+          {
+            "type": "release",
+            "ref": "descargas",
+            "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/releases/tag/descargas"
+          }
+        ]
+      },
+      {
+        "id": "idt-ver-ck-limpiar",
+        "label": "Si se llena el espacio de Actions, lanzar «Limpiar descargas antiguas»",
+        "done": false,
+        "note": "Solo si hace falta.",
+        "sources": [
+          {
+            "type": "commit",
+            "ref": "293d72a",
+            "date": "2026-09-30"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "idt-checklist-feria",
+    "projectId": "indie-dev-tycoon",
+    "title": "Llevar el juego a una feria",
+    "target": "event",
+    "description": "Lo que se preparó para la feria de Valladolid y lo que falta. Sirve de plantilla para la próxima feria.",
+    "items": [
+      {
+        "id": "idt-feria-ck-demo",
+        "label": "Demo de feria con su propia versión (Demo Valladolid 1.0)",
+        "done": true,
+        "note": "Barras de antes, seis juegos y seis encargos.",
+        "sources": [
+          {
+            "type": "commit",
+            "ref": "d04d37b",
+            "date": "2026-10-12"
+          },
+          {
+            "type": "pr",
+            "ref": "#33",
+            "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/33"
+          }
+        ]
+      },
+      {
+        "id": "idt-feria-ck-descarga",
+        "label": "Descarga de la demo de feria para Windows, Linux y Mac",
+        "done": true,
+        "note": "Compilada del commit 8845556, con el modo stand.",
+        "sources": [
+          {
+            "type": "release",
+            "ref": "descargas",
+            "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/releases/tag/descargas",
+            "date": "2026-10-13"
+          }
+        ]
+      },
+      {
+        "id": "idt-feria-ck-modo-stand",
+        "label": "Modo stand: partida nueva para cada visitante y vuelta sola a la portada",
+        "done": true,
+        "note": "Se cierra con Ctrl+Mayús+Q.",
+        "sources": [
+          {
+            "type": "commit",
+            "ref": "bec8f65",
+            "date": "2026-10-13"
+          },
+          {
+            "type": "pr",
+            "ref": "#35",
+            "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/35"
+          }
+        ]
+      },
+      {
+        "id": "idt-feria-ck-qr-discord",
+        "label": "QR de Discord en la despedida y en la portada",
+        "done": true,
+        "sources": [
+          {
+            "type": "commit",
+            "ref": "00ed965",
+            "date": "2026-10-11",
+            "note": "Enlace nuevo de Discord"
+          },
+          {
+            "type": "commit",
+            "ref": "bec8f65",
+            "date": "2026-10-13"
+          }
+        ]
+      },
+      {
+        "id": "idt-feria-ck-ranking",
+        "label": "Ranking propio de la feria que sube todas las partidas",
+        "done": true,
+        "note": "Tabla de Talo feria_valladolid.",
+        "sources": [
+          {
+            "type": "commit",
+            "ref": "d04d37b",
+            "date": "2026-10-12"
+          },
+          {
+            "type": "commit",
+            "ref": "d2a53c3",
+            "date": "2026-10-13"
+          },
+          {
+            "type": "pr",
+            "ref": "#34",
+            "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/34"
+          }
+        ]
+      },
+      {
+        "id": "idt-feria-ck-palabrotas",
+        "label": "Filtro de palabrotas en los nombres del ranking",
+        "done": true,
+        "sources": [
+          {
+            "type": "commit",
+            "ref": "bec8f65",
+            "date": "2026-10-13"
+          }
+        ]
+      },
+      {
+        "id": "idt-feria-ck-rollup",
+        "label": "Roll-up del stand (85×200 cm) con «¡Juega la demo aquí!»",
+        "done": true,
+        "note": "Con el QR de Discord y el hueco de Steam.",
+        "sources": [
+          {
+            "type": "commit",
+            "ref": "d172df3",
+            "date": "2026-10-12"
+          },
+          {
+            "type": "commit",
+            "ref": "a0c0c23",
+            "date": "2026-10-13"
+          },
+          {
+            "type": "pr",
+            "ref": "#32",
+            "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/32"
+          }
+        ]
+      },
+      {
+        "id": "idt-feria-ck-pruebas",
+        "label": "Pruebas de la feria dentro de godot_check",
+        "done": true,
+        "note": "tests/feria.gd: QR, despedida, modo stand y palabrotas.",
+        "sources": [
+          {
+            "type": "commit",
+            "ref": "bec8f65",
+            "date": "2026-10-13"
+          }
+        ]
+      },
+      {
+        "id": "idt-feria-ck-fecha",
+        "label": "Confirmar nombre y fecha de la feria",
+        "done": false,
+        "note": "Por confirmar: el repo no los da."
+      },
+      {
+        "id": "idt-feria-ck-talo-secreto",
+        "label": "Secreto TALO_ACCESS_KEY puesto en el repositorio",
+        "done": true,
+        "note": "La compilación del 13-10 salió «Con ranking mundial».",
+        "sources": [
+          {
+            "type": "doc",
+            "ref": "GitHub Actions: registro de «Descargas» (run 38322963557)",
+            "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/actions/runs/38322963557",
+            "date": "2026-10-13"
+          }
+        ]
+      },
+      {
+        "id": "idt-feria-ck-talo",
+        "label": "Confirmar en Talo la tabla feria_valladolid",
+        "done": false,
+        "note": "Por confirmar.",
+        "sources": [
+          {
+            "type": "readme",
+            "ref": "README.md#el-ranking-demo-y-juego-completo"
+          }
+        ]
+      },
+      {
+        "id": "idt-feria-ck-imprimir",
+        "label": "Imprimir el roll-up",
+        "done": false,
+        "note": "Por confirmar."
+      },
+      {
+        "id": "idt-feria-ck-ordenador",
+        "label": "Instalar la demo de feria en el ordenador del stand",
+        "done": false,
+        "note": "Por confirmar."
+      },
+      {
+        "id": "idt-feria-ck-qr-steam",
+        "label": "QR de Steam en el roll-up y en la despedida",
+        "done": false,
+        "note": "Cuando haya página de Steam.",
+        "sources": [
+          {
+            "type": "doc",
+            "ref": "godot/scripts/game.gd (STEAM_URL)"
+          }
+        ]
+      },
+      {
+        "id": "idt-feria-ck-trampas",
+        "label": "Después, revisar en Talo las puntuaciones que no cuadren",
+        "done": false,
+        "sources": [
+          {
+            "type": "readme",
+            "ref": "README.md#el-ranking-demo-y-juego-completo",
+            "note": "Trampas"
+          }
+        ]
+      }
+    ],
+    "eventId": "idt-feria-valladolid",
+    "tags": [
+      "feria"
+    ]
+  }
+]

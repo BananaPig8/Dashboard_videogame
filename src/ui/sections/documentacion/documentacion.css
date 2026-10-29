@@ -1,0 +1,191 @@
+/* Documentación: decisiones (abiertas y registro), actas con sus decisiones y reuniones sin
+   acta. Las listas de documentos usan las piezas de Recursos (recursos.css). */
+
+.documentacion-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.documentacion-intro {
+  margin: 0;
+  max-width: 72ch;
+  color: var(--text-2);
+  font-size: 0.9rem;
+}
+
+.documentacion-event {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-align: left;
+}
+
+/* Decisiones abiertas. */
+.documentacion-decisions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.documentacion-decision {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.documentacion-decision:first-child {
+  padding-top: 0;
+}
+
+.documentacion-decision:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.documentacion-decision-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+}
+
+.documentacion-decision-title {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.documentacion-decision .item-detail {
+  margin: 0;
+}
+
+.documentacion-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.documentacion-missing {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--text-2);
+}
+
+/* Registro: por meses. */
+.documentacion-month + .documentacion-month {
+  margin-top: var(--space-4);
+}
+
+.documentacion-timeline {
+  margin-top: var(--space-1);
+}
+
+.documentacion-outcome {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--text-2);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Actas. */
+.documentacion-minutes-list,
+.documentacion-meetings,
+.documentacion-minutes-decision-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.documentacion-minutes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.documentacion-minutes:first-child {
+  padding-top: 0;
+}
+
+.documentacion-minutes:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.documentacion-minutes .item-detail,
+.documentacion-minutes p {
+  margin: 0;
+}
+
+.documentacion-minutes-decisions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.documentacion-minutes-decisions .subhead {
+  margin: 0;
+}
+
+.documentacion-minutes-decision-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.documentacion-minutes-decision-list .item-detail {
+  margin: 2px 0 0;
+}
+
+/* Reuniones sin acta. */
+.documentacion-meeting {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--row-y) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.documentacion-meeting:last-child {
+  border-bottom: 0;
+}
+
+.documentacion-meeting-main {
+  flex: 1 1 200px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* Resumen de «todo». */
+.documentacion-summary-line {
+  margin: 0 0 var(--space-2);
+  font-weight: 600;
+}
+
+.documentacion-last {
+  margin: var(--space-1) 0 0;
+}
+
+/* La reunión de la que sale algo: botón con aspecto de dato (la regla de .link-btn hereda la letra). */
+.link-btn.documentacion-event {
+  font-size: 0.76rem;
+  color: var(--text-3);
+}
+
+.link-btn.documentacion-event:hover {
+  color: var(--accent);
+}

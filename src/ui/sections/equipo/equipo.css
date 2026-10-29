@@ -1,0 +1,202 @@
+/* Sección «Equipo»: personas, responsabilidades, asignaciones, carga y externos. Solo variables de styles.css. */
+
+.equipo-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  min-width: 0;
+}
+
+.equipo-note {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin: 0;
+  color: var(--text-3);
+  font-size: 0.84rem;
+}
+
+.equipo-note .icon {
+  flex: none;
+  align-self: flex-start;
+  margin-top: 3px;
+}
+
+/* Dos columnas (lo principal | lo de al lado); en tableta y móvil, una. */
+.equipo-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: var(--gap);
+  align-items: start;
+}
+
+.equipo-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  min-width: 0;
+}
+
+.equipo-name,
+.equipo-open,
+.equipo-areas,
+.equipo-owners {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px var(--space-2);
+}
+
+.equipo-owners {
+  margin: 0;
+}
+
+.equipo-role {
+  display: block;
+  font-weight: 400;
+}
+
+.equipo-text {
+  margin: 0;
+  color: var(--text-2);
+  white-space: pre-line;
+}
+
+.equipo-weekly {
+  margin: 0;
+}
+
+.equipo-warning {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+  color: var(--warning);
+}
+
+.equipo-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.equipo-list > li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px var(--space-3);
+  padding: var(--row-y) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.equipo-list > li:last-child {
+  border-bottom: 0;
+}
+
+.equipo-people > li {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.equipo-person-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px var(--space-2);
+}
+
+.equipo-person-head .icon {
+  color: var(--text-3);
+}
+
+/* El nombre en el título de una tarjeta: botón con el aspecto del título. */
+.equipo-card-name {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.equipo-card-name:hover {
+  color: var(--accent);
+}
+
+/* Carga: barra de magnitud (el número va al lado, en texto). */
+.equipo-load,
+.equipo-usage {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px var(--space-2);
+}
+
+.equipo-load {
+  flex-wrap: nowrap;
+}
+
+.equipo-bar {
+  display: inline-block;
+  width: 72px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--surface-3);
+  overflow: hidden;
+  flex: none;
+}
+
+.equipo-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--series-1);
+}
+
+.equipo-usage .progress {
+  width: 72px;
+  flex: none;
+}
+
+.equipo-nobody th,
+.equipo-nobody td {
+  background: var(--surface-2);
+}
+
+/* La primera celda de cada fila es un encabezado de fila: sin el estilo de los de columna. */
+.equipo-table tbody th {
+  font-weight: 560;
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: inherit;
+  color: var(--text);
+}
+
+.equipo-table .area-tag {
+  font-size: 0.86rem;
+  color: var(--text);
+}
+
+@media (max-width: 960px) {
+  .equipo-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  /* Las etiquetas largas («Horas apuntadas») no se pegan al valor. */
+  .equipo-table td[data-label]::before {
+    min-width: 128px;
+    margin-right: var(--space-2);
+  }
+  .equipo-table tbody th {
+    display: block;
+    width: 100%;
+    border: 0;
+    padding: 0 0 var(--space-1);
+  }
+}

@@ -1,0 +1,435 @@
+[
+  {
+    "id": "idt-build-demo-1-1",
+    "projectId": "indie-dev-tycoon",
+    "name": "Demo 1.1",
+    "version": "1.1",
+    "channel": "demo",
+    "platforms": [
+      "Windows",
+      "Linux",
+      "macOS"
+    ],
+    "status": "superseded",
+    "date": "2026-10-06",
+    "distribution": "GitHub Releases (descargas)",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/releases/tag/descargas",
+    "notes": "Primera demo con versión propia (.exe 1.1.0.0). El README de 51c8135 ya enlazaba la «Demo (v1.1)» en la tabla «Descargar». Que se publicara se infiere: el flujo publica en cada push a main y la release se publicó por primera vez el 2026-10-06, pero no guarda versiones anteriores. La sustituyó la 1.2 el mismo día.",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "484a518",
+        "date": "2026-10-06"
+      },
+      {
+        "type": "commit",
+        "ref": "51c8135",
+        "date": "2026-10-06"
+      },
+      {
+        "type": "pr",
+        "ref": "#20",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/20",
+        "date": "2026-10-06"
+      }
+    ],
+    "confidence": "inferred"
+  },
+  {
+    "id": "idt-build-juego-0-0-6",
+    "projectId": "indie-dev-tycoon",
+    "name": "Juego completo 0.0.6",
+    "version": "0.0.6",
+    "channel": "full",
+    "platforms": [
+      "Windows",
+      "Linux",
+      "macOS"
+    ],
+    "status": "superseded",
+    "date": "2026-10-06",
+    "distribution": "GitHub Releases (descargas)",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/releases/tag/descargas",
+    "notes": "El README de 51c8135 ya enlazaba el «Juego completo (v0.0.6)» en la tabla «Descargar». Se infiere que fue la primera versión del juego completo en la release «descargas» (PR #20); la release no guarda versiones anteriores. La sustituyó la 0.0.7 el mismo día.",
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "484a518",
+        "date": "2026-10-06"
+      },
+      {
+        "type": "commit",
+        "ref": "51c8135",
+        "date": "2026-10-06"
+      },
+      {
+        "type": "pr",
+        "ref": "#20",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/20",
+        "date": "2026-10-06"
+      }
+    ],
+    "confidence": "inferred"
+  },
+  {
+    "id": "idt-build-demo-1-2",
+    "projectId": "indie-dev-tycoon",
+    "name": "Demo 1.2",
+    "version": "1.2",
+    "channel": "demo",
+    "platforms": [
+      "Windows",
+      "Linux",
+      "macOS"
+    ],
+    "status": "superseded",
+    "date": "2026-10-06",
+    "distribution": "GitHub Releases (descargas)",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/releases/tag/descargas",
+    "notes": "Ejecutables 1.2.0.0; el README de 85bad40 pasa la tabla «Descargar» a la v1.2. Se infiere que la publicó el flujo «Descargas» al fusionar la PR #22. La sustituyó la 1.3 el 2026-10-11.",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "85bad40",
+        "date": "2026-10-06"
+      },
+      {
+        "type": "pr",
+        "ref": "#22",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/22",
+        "date": "2026-10-06"
+      }
+    ],
+    "confidence": "inferred"
+  },
+  {
+    "id": "idt-build-juego-0-0-7",
+    "projectId": "indie-dev-tycoon",
+    "name": "Juego completo 0.0.7",
+    "version": "0.0.7",
+    "channel": "full",
+    "platforms": [
+      "Windows",
+      "Linux",
+      "macOS"
+    ],
+    "status": "superseded",
+    "date": "2026-10-06",
+    "distribution": "GitHub Releases (descargas)",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/releases/tag/descargas",
+    "notes": "El README de 85bad40 pasa la tabla «Descargar» a la v0.0.7. Se infiere que la publicó el flujo «Descargas» al fusionar la PR #22. La sustituyó la 0.0.8 el 2026-10-11.",
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "85bad40",
+        "date": "2026-10-06"
+      },
+      {
+        "type": "pr",
+        "ref": "#22",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/22",
+        "date": "2026-10-06"
+      }
+    ],
+    "confidence": "inferred"
+  },
+  {
+    "id": "idt-build-demo-1-3",
+    "projectId": "indie-dev-tycoon",
+    "name": "Demo 1.3",
+    "version": "1.3",
+    "channel": "demo",
+    "platforms": [
+      "Windows",
+      "Linux",
+      "macOS"
+    ],
+    "status": "published",
+    "date": "2026-10-11",
+    "distribution": "GitHub Releases (descargas)",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/releases/tag/descargas",
+    "notes": "Siete años (hasta 1991) o hasta la primera oficina; .exe 1.3.0.0. En la release desde el 11-10 (PR #31); lo de ahora se compiló del commit 8845556 (13-10, hora local). La sustituye la Demo 1.4 (en main desde el 28-10) cuando se compile.",
+    "releaseId": "idt-release-demo-1-3",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "ba1f4c4",
+        "date": "2026-10-11",
+        "note": "La demo pasa a la 1.3"
+      },
+      {
+        "type": "pr",
+        "ref": "#31",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/31",
+        "date": "2026-10-11"
+      },
+      {
+        "type": "release",
+        "ref": "descargas",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/releases/tag/descargas",
+        "date": "2026-10-13",
+        "note": "«Descargas (juego v0.0.8 · demo v1.3)»"
+      },
+      {
+        "type": "pr",
+        "ref": "#35",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/35"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-build-juego-0-0-8",
+    "projectId": "indie-dev-tycoon",
+    "name": "Juego completo 0.0.8",
+    "version": "0.0.8",
+    "channel": "full",
+    "platforms": [
+      "Windows",
+      "Linux",
+      "macOS"
+    ],
+    "status": "published",
+    "date": "2026-10-11",
+    "distribution": "GitHub Releases (descargas)",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/releases/tag/descargas",
+    "notes": "En la release «descargas» desde el 11-10 (PR #31). Lo que hay ahora se compiló del commit 8845556 (fusión de la PR #35) y se subió el 13-10 a la 01:39, hora local (la release pone 2026-10-12, en UTC). Lo fusionado después (PR #36 a #39, con el icono nuevo) no está: Actions no arranca desde el 13-10. Repositorio privado: solo descarga quien tiene acceso. Los .exe van firmados con un certificado creado en la propia compilación (los secretos de firma estaban vacíos) y el Mac, ad hoc.",
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "ba1f4c4",
+        "date": "2026-10-11",
+        "note": "El juego completo pasa a la 0.0.8"
+      },
+      {
+        "type": "pr",
+        "ref": "#31",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/31",
+        "date": "2026-10-11"
+      },
+      {
+        "type": "release",
+        "ref": "descargas",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/releases/tag/descargas",
+        "date": "2026-10-13",
+        "note": "«Descargas (juego v0.0.8 · demo v1.3)»"
+      },
+      {
+        "type": "doc",
+        "ref": "GitHub Actions: registro de «Descargas» (run 38322963557)",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/actions/runs/38322963557",
+        "date": "2026-10-13",
+        "note": "«Certificado nuevo» al firmar"
+      },
+      {
+        "type": "pr",
+        "ref": "#35",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/35",
+        "note": "Su fusión (8845556) es lo que se compiló"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-build-demo-1-3-v2",
+    "projectId": "indie-dev-tycoon",
+    "name": "Demo 1.3 V2 (barras de las fases de antes)",
+    "version": "1.3 V2",
+    "channel": "demo",
+    "platforms": [
+      "Windows",
+      "Linux",
+      "macOS"
+    ],
+    "status": "published",
+    "date": "2026-10-12",
+    "distribution": "GitHub Releases (descargas)",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/releases/tag/descargas",
+    "notes": "La misma demo con las barras de las fases de antes; .exe 1.3.0.2. En la release desde el 12-10 (PR #32); lo de ahora se compiló del commit 8845556 (13-10, hora local). Desde el 28-10 (PR #40) es la Demo 1.4, la que irá a Steam. Con la 1.4 deja de compilarse, pero sus zips no se borran solos de la release.",
+    "releaseId": "idt-release-demo-1-3-v2",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "d172df3",
+        "date": "2026-10-12",
+        "note": "Demo «1.3 V2»"
+      },
+      {
+        "type": "pr",
+        "ref": "#32",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/32",
+        "date": "2026-10-12"
+      },
+      {
+        "type": "release",
+        "ref": "descargas",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/releases/tag/descargas",
+        "date": "2026-10-13",
+        "note": "«demo v1.3 V2 (con las barras de las fases de antes)»"
+      },
+      {
+        "type": "pr",
+        "ref": "#35",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/35"
+      },
+      {
+        "type": "commit",
+        "ref": "d8eca50",
+        "date": "2026-10-14",
+        "note": "Demo 1.4; en main con la PR #40"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-build-demo-valladolid-1-0",
+    "projectId": "indie-dev-tycoon",
+    "name": "Demo Valladolid 1.0 (la de la feria)",
+    "version": "1.0",
+    "channel": "event",
+    "platforms": [
+      "Windows",
+      "Linux",
+      "macOS"
+    ],
+    "status": "published",
+    "date": "2026-10-12",
+    "distribution": "GitHub Releases (descargas)",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/releases/tag/descargas",
+    "notes": "Para el stand: modo stand, seis juegos, seis encargos, QR de Discord y ranking feria_valladolid; .exe 1.0.0.0, portada «v1.0» y cartel «DEMO VALLADOLID». En la release desde el 12-10 (PR #33); lo de ahora, con el modo stand y el filtro de palabrotas, se compiló del commit 8845556 (13-10, hora local).",
+    "releaseId": "idt-release-demo-valladolid-1-0",
+    "eventId": "idt-feria-valladolid",
+    "tags": [
+      "demo",
+      "feria"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "d04d37b",
+        "date": "2026-10-12",
+        "note": "Demo Valladolid 1.0"
+      },
+      {
+        "type": "pr",
+        "ref": "#33",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/33",
+        "date": "2026-10-12"
+      },
+      {
+        "type": "commit",
+        "ref": "bec8f65",
+        "date": "2026-10-13",
+        "note": "Modo stand, QR de Discord y palabrotas"
+      },
+      {
+        "type": "pr",
+        "ref": "#35",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/35",
+        "date": "2026-10-13",
+        "note": "Su fusión (8845556) es el commit del que se compiló la release"
+      },
+      {
+        "type": "release",
+        "ref": "descargas",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/releases/tag/descargas",
+        "date": "2026-10-13",
+        "note": "«Demo Valladolid v1.0 (la de la feria)»; compilado de 8845556"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-build-web-html",
+    "projectId": "indie-dev-tycoon",
+    "name": "Versión web en un solo HTML",
+    "version": "0.0.8",
+    "channel": "internal",
+    "platforms": [
+      "Web"
+    ],
+    "status": "withdrawn",
+    "date": "2026-10-13",
+    "distribution": "Artefacto «indie-dev-tycoon» del flujo CI (caducó el 20-10)",
+    "notes": "El CI la empaqueta con node build.js en cada PR y en cada cambio en main. El último artefacto, del commit 8845556 (13-10), caducaba el 2026-10-20 (hora local) y desde el 13-10 el CI no arranca (sigue igual el 29-10), así que ya no hay ninguno: se da por retirada porque GitHub borra los artefactos al caducar, no porque se haya vuelto a mirar. No es una descarga pública; se puede generar a mano con node build.js.",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "GitHub Actions: artefactos del repositorio",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/actions",
+        "date": "2026-10-13",
+        "note": "indie-dev-tycoon de 8845556, caduca el 2026-10-19 23:36 UTC; consultado el 2026-10-18"
+      },
+      {
+        "type": "doc",
+        "ref": "GitHub Actions: CI de la fusión de la PR #42 (run 40801650492)",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/actions/runs/40801650492",
+        "date": "2026-10-29",
+        "note": "Acaba en 4 s sin empezar: no hay artefacto nuevo"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#cómo-jugar"
+      },
+      {
+        "type": "doc",
+        "ref": ".github/workflows/ci.yml"
+      }
+    ],
+    "confidence": "inferred"
+  },
+  {
+    "id": "idt-build-demo-1-4",
+    "projectId": "indie-dev-tycoon",
+    "name": "Demo 1.4",
+    "version": "1.4",
+    "channel": "demo",
+    "platforms": [
+      "Windows",
+      "Linux",
+      "macOS"
+    ],
+    "status": "in_progress",
+    "date": "2026-10-14",
+    "distribution": "Sin publicar (en main, sin compilar)",
+    "notes": "La demo con las barras de antes, la que fue la 1.3 V2 y la que irá a Steam; .exe 1.4.0.0 y Mac 1.4. En main desde el 28-10 (PR #40), pero no está en la release «descargas»: el flujo «Descargas» de la fusión no llegó a arrancar. Se compilará cuando Actions vuelva a funcionar.",
+    "releaseId": "idt-release-demo-1-4",
+    "tags": [
+      "demo",
+      "steam"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "d8eca50",
+        "date": "2026-10-14"
+      },
+      {
+        "type": "pr",
+        "ref": "#40",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/40",
+        "date": "2026-10-28"
+      },
+      {
+        "type": "doc",
+        "ref": "GitHub Actions: «Descargas» de la fusión de la PR #40 (run 40626934192)",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/actions/runs/40626934192",
+        "date": "2026-10-28",
+        "note": "Acaba en 4 s sin empezar"
+      }
+    ],
+    "confidence": "verified"
+  }
+]

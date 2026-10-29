@@ -1,0 +1,416 @@
+/* Sección «Roadmap»: hitos, fases, objetivos, versiones y línea temporal. Solo variables de styles.css. */
+
+.roadmap-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  min-width: 0;
+}
+
+.roadmap-note {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin: 0;
+  color: var(--text-3);
+  font-size: 0.84rem;
+}
+
+.roadmap-note .icon {
+  flex: none;
+  align-self: flex-start;
+  margin-top: 3px;
+}
+
+.roadmap-more {
+  align-self: flex-start;
+}
+
+/* ——— Hitos: dos columnas (con fecha y hechos | sin fecha); en móvil, una en ese orden. */
+
+.roadmap-hitos {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: var(--gap);
+  align-items: start;
+}
+
+.roadmap-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  min-width: 0;
+}
+
+/* Si no cabe en una línea (la columna estrecha), el estado baja debajo del título. */
+.roadmap-row {
+  flex-wrap: wrap;
+}
+
+.roadmap-row > .agenda-main {
+  flex: 1 1 220px;
+}
+
+.roadmap-row .item-side {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
+.roadmap-progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-width: 320px;
+  margin-top: 2px;
+}
+
+/* ——— Fases: las etapas en orden, como pasos. */
+
+.roadmap-stages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.roadmap-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+  min-width: 0;
+  padding: var(--space-2);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+}
+
+.roadmap-stage-name {
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+.roadmap-stage.state-current {
+  border-color: var(--info);
+  border-top-width: 3px;
+  background: color-mix(in srgb, var(--info) var(--tone-alpha), var(--surface));
+}
+
+.roadmap-stage.state-done {
+  border-top-color: var(--success);
+}
+
+.roadmap-stage.state-planned {
+  border-top-color: var(--info);
+}
+
+.roadmap-stage.state-past,
+.roadmap-stage.state-ahead,
+.roadmap-stage.state-unknown {
+  color: var(--text-2);
+}
+
+.roadmap-phases {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+  margin: var(--space-1) 0 0;
+  padding: var(--space-2) 0 0;
+  list-style: none;
+  border-top: 1px dashed var(--border-strong);
+}
+
+.roadmap-phase {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.roadmap-phase .item-title {
+  font-size: 0.86rem;
+  overflow-wrap: anywhere;
+}
+
+.roadmap-phase-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+/* ——— Objetivos. */
+
+.roadmap-goals {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.roadmap-goal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.roadmap-goal:first-child {
+  padding-top: 0;
+}
+
+.roadmap-goal:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.roadmap-goal-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.roadmap-goal-head h3 {
+  font-size: 1rem;
+  min-width: 0;
+}
+
+.roadmap-steps > summary {
+  font-size: 0.84rem;
+  color: var(--text-2);
+  width: fit-content;
+}
+
+.roadmap-steps[open] > summary {
+  margin-bottom: var(--space-2);
+}
+
+.roadmap-step-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.roadmap-step-list > li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  min-width: 0;
+}
+
+.roadmap-step-list .item-title {
+  font-weight: 500;
+  font-size: 0.88rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.roadmap-step-list > li.closed .item-title {
+  color: var(--text-3);
+}
+
+/* ——— Versiones previstas. */
+
+.roadmap-releases {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.roadmap-release {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  min-width: 0;
+}
+
+.roadmap-release-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.roadmap-release-head h3 {
+  font-size: 1rem;
+  min-width: 0;
+}
+
+.roadmap-release-body {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-3) var(--space-5);
+}
+
+.roadmap-release-body > section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.roadmap-release-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* ——— Línea temporal: una lista ordenada con un raíl a la izquierda y la marca de hoy. */
+
+.roadmap-line {
+  margin: 0;
+  padding: 0 0 0 var(--space-4);
+  list-style: none;
+  border-left: 2px solid var(--border-strong);
+}
+
+.roadmap-line > li {
+  position: relative;
+}
+
+.roadmap-line-entry {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr);
+  gap: var(--space-1) var(--space-3);
+  padding: var(--space-2) 0;
+}
+
+/* El punto del raíl (decoración: el tipo y el estado van en texto). */
+.roadmap-line-entry::before {
+  content: '';
+  position: absolute;
+  left: calc(-1 * var(--space-4) - 6px);
+  top: calc(var(--space-2) + 5px);
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 2px solid var(--neutral);
+  background: var(--surface);
+}
+
+.roadmap-line-entry.roadmap-kind-phase::before {
+  border-color: var(--info);
+}
+
+.roadmap-line-entry.roadmap-kind-milestone::before {
+  border-color: var(--special);
+}
+
+.roadmap-line-entry.roadmap-kind-release::before {
+  border-color: var(--success);
+}
+
+.roadmap-line-entry.done.roadmap-kind-phase::before {
+  background: var(--info);
+}
+
+.roadmap-line-entry.done.roadmap-kind-milestone::before {
+  background: var(--special);
+}
+
+.roadmap-line-entry.done.roadmap-kind-release::before {
+  background: var(--success);
+}
+
+.roadmap-line-entry.done.roadmap-kind-event::before {
+  background: var(--neutral);
+}
+
+.roadmap-line-date {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.roadmap-line-entry.past .roadmap-line-date,
+.roadmap-line-entry.past .item-title {
+  color: var(--text-3);
+}
+
+.roadmap-line-main {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.roadmap-line-today {
+  margin: var(--space-2) 0;
+  padding: var(--space-1) 0;
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 650;
+  border-top: 2px solid var(--accent);
+}
+
+.roadmap-line-today::before {
+  content: '';
+  position: absolute;
+  left: calc(-1 * var(--space-4) - 7px);
+  top: -7px;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.roadmap-line-none {
+  padding: var(--space-2) 0;
+}
+
+.roadmap-line-undated {
+  border-left-style: dashed;
+}
+
+@media (max-width: 960px) {
+  .roadmap-hitos {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* En una columna: con fecha, sin fecha y hechos, en ese orden. */
+  .roadmap-col {
+    display: contents;
+  }
+
+  .roadmap-area-dated {
+    order: 1;
+  }
+
+  .roadmap-area-undated {
+    order: 2;
+  }
+
+  .roadmap-area-closed {
+    order: 3;
+  }
+}
+
+@media (max-width: 640px) {
+  .roadmap-stages {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .roadmap-line-entry {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

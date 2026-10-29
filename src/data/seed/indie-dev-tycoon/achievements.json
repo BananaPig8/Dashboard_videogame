@@ -1,0 +1,2190 @@
+[
+  {
+    "id": "idt-logro-primer-juego",
+    "projectId": "indie-dev-tycoon",
+    "name": "Hola, mundo",
+    "description": "Publica tu primer juego.",
+    "apiName": "primer_juego",
+    "status": "implemented",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/game.gd (DEMO_ACHIEVEMENTS)",
+        "note": "También se puede conseguir en la demo"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-notable",
+    "projectId": "indie-dev-tycoon",
+    "name": "Notable",
+    "description": "Saca una nota media de 7 o más.",
+    "apiName": "notable",
+    "status": "implemented",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/game.gd (DEMO_ACHIEVEMENTS)",
+        "note": "También se puede conseguir en la demo"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-sobresaliente",
+    "projectId": "indie-dev-tycoon",
+    "name": "Sobresaliente",
+    "description": "Saca una nota media de 9 o más.",
+    "apiName": "sobresaliente",
+    "status": "implemented",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/game.gd (DEMO_ACHIEVEMENTS)",
+        "note": "También se puede conseguir en la demo"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-perfecto",
+    "projectId": "indie-dev-tycoon",
+    "name": "Matrícula de honor",
+    "description": "Cuatro dieces en un mismo juego.",
+    "apiName": "perfecto",
+    "status": "implemented",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/game.gd (DEMO_ACHIEVEMENTS)",
+        "note": "También se puede conseguir en la demo"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-desastre",
+    "projectId": "indie-dev-tycoon",
+    "name": "Todos empezamos así",
+    "description": "Saca una nota por debajo de 3.",
+    "apiName": "desastre",
+    "status": "implemented",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/game.gd (DEMO_ACHIEVEMENTS)",
+        "note": "También se puede conseguir en la demo"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-combo",
+    "projectId": "indie-dev-tycoon",
+    "name": "Olfato",
+    "description": "Descubre una combinación genial de tema y género.",
+    "apiName": "combo",
+    "status": "implemented",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/game.gd (DEMO_ACHIEVEMENTS)",
+        "note": "También se puede conseguir en la demo"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-informe",
+    "projectId": "indie-dev-tycoon",
+    "name": "Lección aprendida",
+    "description": "Lee el informe de un juego.",
+    "apiName": "informe",
+    "status": "implemented",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/game.gd (DEMO_ACHIEVEMENTS)",
+        "note": "También se puede conseguir en la demo"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-motor",
+    "projectId": "indie-dev-tycoon",
+    "name": "Bajo el capó",
+    "description": "Construye tu primer motor.",
+    "apiName": "motor",
+    "status": "implemented",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/game.gd (DEMO_ACHIEVEMENTS)",
+        "note": "También se puede conseguir en la demo"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-contratar",
+    "projectId": "indie-dev-tycoon",
+    "name": "Ya somos dos",
+    "description": "Contrata a tu primera persona.",
+    "apiName": "contratar",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-oficina",
+    "projectId": "indie-dev-tycoon",
+    "name": "Me independizo",
+    "description": "Sal de tu cuarto y múdate a una oficina.",
+    "apiName": "oficina",
+    "status": "implemented",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/game.gd (DEMO_ACHIEVEMENTS)",
+        "note": "También se puede conseguir en la demo"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-estudio",
+    "projectId": "indie-dev-tycoon",
+    "name": "Ladrillo visto",
+    "description": "Múdate al estudio.",
+    "apiName": "estudio",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-sede",
+    "projectId": "indie-dev-tycoon",
+    "name": "Rascacielos",
+    "description": "Múdate a la sede central.",
+    "apiName": "sede",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-equipo",
+    "projectId": "indie-dev-tycoon",
+    "name": "Casa llena",
+    "description": "Forma un equipo de diez personas.",
+    "apiName": "equipo",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-millon",
+    "projectId": "indie-dev-tycoon",
+    "name": "Primer millón",
+    "description": "Ten 1 M€ en caja.",
+    "apiName": "millon",
+    "status": "implemented",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/game.gd (DEMO_ACHIEVEMENTS)",
+        "note": "También se puede conseguir en la demo"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-cien-millones",
+    "projectId": "indie-dev-tycoon",
+    "name": "Cien kilos",
+    "description": "Ten 100 M€ en caja.",
+    "apiName": "cien_millones",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-mil-millones",
+    "projectId": "indie-dev-tycoon",
+    "name": "Piscina de monedas",
+    "description": "Ten 1.000 M€ en caja.",
+    "apiName": "mil_millones",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-fans",
+    "projectId": "indie-dev-tycoon",
+    "name": "Club de fans",
+    "description": "Llega a 10.000 fans.",
+    "apiName": "fans",
+    "status": "implemented",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/game.gd (DEMO_ACHIEVEMENTS)",
+        "note": "También se puede conseguir en la demo"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-fans-millon",
+    "projectId": "indie-dev-tycoon",
+    "name": "Fenómeno de masas",
+    "description": "Llega a un millón de fans.",
+    "apiName": "fans_millon",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-superventas",
+    "projectId": "indie-dev-tycoon",
+    "name": "Superventas",
+    "description": "Vende un millón de copias de un juego.",
+    "apiName": "superventas",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-leyenda",
+    "projectId": "indie-dev-tycoon",
+    "name": "Leyenda",
+    "description": "Vende diez millones de copias de un juego.",
+    "apiName": "leyenda",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-secuela",
+    "projectId": "indie-dev-tycoon",
+    "name": "Segundas partes",
+    "description": "Publica una secuela.",
+    "apiName": "secuela",
+    "status": "implemented",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/game.gd (DEMO_ACHIEVEMENTS)",
+        "note": "También se puede conseguir en la demo"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-multi",
+    "projectId": "indie-dev-tycoon",
+    "name": "En todas partes",
+    "description": "Publica un juego en tres plataformas.",
+    "apiName": "multi",
+    "status": "implemented",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/game.gd (DEMO_ACHIEVEMENTS)",
+        "note": "También se puede conseguir en la demo"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-aaa",
+    "projectId": "indie-dev-tycoon",
+    "name": "Superproducción",
+    "description": "Publica un juego AAA.",
+    "apiName": "aaa",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-premio",
+    "projectId": "indie-dev-tycoon",
+    "name": "Vitrina",
+    "description": "Gana un premio de fin de año.",
+    "apiName": "premio",
+    "status": "implemented",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/game.gd (DEMO_ACHIEVEMENTS)",
+        "note": "También se puede conseguir en la demo"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-goty",
+    "projectId": "indie-dev-tycoon",
+    "name": "Juego del año",
+    "description": "Gana el premio al juego del año.",
+    "apiName": "goty",
+    "status": "implemented",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/game.gd (DEMO_ACHIEVEMENTS)",
+        "note": "También se puede conseguir en la demo"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-encargos",
+    "projectId": "indie-dev-tycoon",
+    "name": "Manitas",
+    "description": "Entrega diez encargos.",
+    "apiName": "encargos",
+    "status": "implemented",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/game.gd (DEMO_ACHIEVEMENTS)",
+        "note": "También se puede conseguir en la demo"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-temas",
+    "projectId": "indie-dev-tycoon",
+    "name": "Enciclopedia",
+    "description": "Investiga todos los temas.",
+    "apiName": "temas",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-supermercado",
+    "projectId": "indie-dev-tycoon",
+    "name": "Comparando precios",
+    "description": "Publica un juego sobre supermercados.",
+    "apiName": "supermercado",
+    "status": "implemented",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/game.gd (DEMO_ACHIEVEMENTS)",
+        "note": "También se puede conseguir en la demo"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-web",
+    "projectId": "indie-dev-tycoon",
+    "name": "Punto com",
+    "description": "Lanza tu primera web.",
+    "apiName": "web",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "35979bf",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-web-millon",
+    "projectId": "indie-dev-tycoon",
+    "name": "Viral",
+    "description": "Consigue un millón de usuarios en una web.",
+    "apiName": "web_millon",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "35979bf",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-web-top",
+    "projectId": "indie-dev-tycoon",
+    "name": "La más visitada",
+    "description": "Lidera una categoría de webs.",
+    "apiName": "web_top",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "35979bf",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-top-ventas",
+    "projectId": "indie-dev-tycoon",
+    "name": "Número uno",
+    "description": "Ten el juego más vendido de los últimos doce meses.",
+    "apiName": "top_ventas",
+    "status": "implemented",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "35979bf",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/game.gd (DEMO_ACHIEVEMENTS)",
+        "note": "También se puede conseguir en la demo"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-tienda-top",
+    "projectId": "indie-dev-tycoon",
+    "name": "En casa se juega mejor",
+    "description": "Que tu juego sea el más vendido de tu propia tienda.",
+    "apiName": "tienda_top",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "35979bf",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-sala",
+    "projectId": "indie-dev-tycoon",
+    "name": "Hogar, dulce hogar",
+    "description": "Construye tu primera sala en el edificio.",
+    "apiName": "sala",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "6f949dc",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-ronda",
+    "projectId": "indie-dev-tycoon",
+    "name": "Ronda de financiación",
+    "description": "Consigue dinero de inversores.",
+    "apiName": "ronda",
+    "status": "implemented",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "6f949dc",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/game.gd (DEMO_ACHIEVEMENTS)",
+        "note": "También se puede conseguir en la demo"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-unicornio",
+    "projectId": "indie-dev-tycoon",
+    "name": "Unicornio",
+    "description": "Que tu empresa valga 1.000 M€.",
+    "apiName": "unicornio",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "6f949dc",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-bolsa",
+    "projectId": "indie-dev-tycoon",
+    "name": "Toque de campana",
+    "description": "Saca tu empresa a bolsa.",
+    "apiName": "bolsa",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "6f949dc",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-hacker",
+    "projectId": "indie-dev-tycoon",
+    "name": "Sombrero negro",
+    "description": "Hackea con éxito una web rival.",
+    "apiName": "hacker",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "6f949dc",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-juego-mes",
+    "projectId": "indie-dev-tycoon",
+    "name": "Portada del mes",
+    "description": "Consigue el premio al juego del mes.",
+    "apiName": "juego_mes",
+    "status": "implemented",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "438b9fe",
+        "date": "2026-09-28",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/game.gd (DEMO_ACHIEVEMENTS)",
+        "note": "También se puede conseguir en la demo"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-web-mes",
+    "projectId": "indie-dev-tycoon",
+    "name": "Tendencia",
+    "description": "Una web tuya es la web del mes.",
+    "apiName": "web_mes",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "438b9fe",
+        "date": "2026-09-28",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-decorador",
+    "projectId": "indie-dev-tycoon",
+    "name": "Interiorista",
+    "description": "Compra 5 objetos para tu estudio.",
+    "apiName": "decorador",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "438b9fe",
+        "date": "2026-09-28",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-distribuidora",
+    "projectId": "indie-dev-tycoon",
+    "name": "Tenemos trato",
+    "description": "Publica un juego con una distribuidora.",
+    "apiName": "distribuidora",
+    "status": "implemented",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "b455fd8",
+        "date": "2026-09-28",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/game.gd (DEMO_ACHIEVEMENTS)",
+        "note": "También se puede conseguir en la demo"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-distribuidora-ok",
+    "projectId": "indie-dev-tycoon",
+    "name": "Socio de confianza",
+    "description": "Cumple la nota que pide una distribuidora en un juego grande o AAA.",
+    "apiName": "distribuidora_ok",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "b455fd8",
+        "date": "2026-09-28",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-consola",
+    "projectId": "indie-dev-tycoon",
+    "name": "Hardware propio",
+    "description": "Lanza tu propia consola.",
+    "apiName": "consola",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "b455fd8",
+        "date": "2026-09-28",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-consola-exito",
+    "projectId": "indie-dev-tycoon",
+    "name": "Guerra de consolas",
+    "description": "Vende diez millones de unidades de una consola tuya.",
+    "apiName": "consola_exito",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "b455fd8",
+        "date": "2026-09-28",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-dificil",
+    "projectId": "indie-dev-tycoon",
+    "name": "Contra viento y marea",
+    "description": "Llega al año 2000 jugando en difícil.",
+    "apiName": "dificil",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "b455fd8",
+        "date": "2026-09-28",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-comunidad",
+    "projectId": "indie-dev-tycoon",
+    "name": "Tu gente",
+    "description": "Llega a 10.000 personas en el servidor de tu comunidad.",
+    "apiName": "comunidad",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "e25d7c0",
+        "date": "2026-09-30",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "4bfea0c",
+        "date": "2026-09-30",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "doc",
+        "ref": "desktop/main.js (logro)",
+        "note": "Activa en Steam el logro con el id del juego; falta en la lista del README"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-encuesta",
+    "projectId": "indie-dev-tycoon",
+    "name": "Palabra cumplida",
+    "description": "Cumple lo que votó tu comunidad en una encuesta.",
+    "apiName": "encuesta",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "e25d7c0",
+        "date": "2026-09-30",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "4bfea0c",
+        "date": "2026-09-30",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "doc",
+        "ref": "desktop/main.js (logro)",
+        "note": "Activa en Steam el logro con el id del juego; falta en la lista del README"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-rebajas",
+    "projectId": "indie-dev-tycoon",
+    "name": "Todo al 50 %",
+    "description": "Rebaja un juego en unas rebajas.",
+    "apiName": "rebajas",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "e25d7c0",
+        "date": "2026-09-30",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "4bfea0c",
+        "date": "2026-09-30",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "doc",
+        "ref": "desktop/main.js (logro)",
+        "note": "Activa en Steam el logro con el id del juego; falta en la lista del README"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-jam",
+    "projectId": "indie-dev-tycoon",
+    "name": "48 horas",
+    "description": "Queda entre los tres primeros de una game jam.",
+    "apiName": "jam",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "e25d7c0",
+        "date": "2026-09-30",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "4bfea0c",
+        "date": "2026-09-30",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "doc",
+        "ref": "desktop/main.js (logro)",
+        "note": "Activa en Steam el logro con el id del juego; falta en la lista del README"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-secretos",
+    "projectId": "indie-dev-tycoon",
+    "name": "Escondite",
+    "description": "Que los jugadores encuentren cinco secretos en tus juegos.",
+    "apiName": "secretos",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "e25d7c0",
+        "date": "2026-09-30",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "4bfea0c",
+        "date": "2026-09-30",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "doc",
+        "ref": "desktop/main.js (logro)",
+        "note": "Activa en Steam el logro con el id del juego; falta en la lista del README"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-universo",
+    "projectId": "indie-dev-tycoon",
+    "name": "Universo compartido",
+    "description": "Une dos de tus sagas en el mismo universo.",
+    "apiName": "universo",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "e25d7c0",
+        "date": "2026-09-30",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "4bfea0c",
+        "date": "2026-09-30",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "doc",
+        "ref": "desktop/main.js (logro)",
+        "note": "Activa en Steam el logro con el id del juego; falta en la lista del README"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-guardian",
+    "projectId": "indie-dev-tycoon",
+    "name": "Guardián de la historia",
+    "description": "Libera gratis uno de tus juegos antiguos.",
+    "apiName": "guardian",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "e25d7c0",
+        "date": "2026-09-30",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "4bfea0c",
+        "date": "2026-09-30",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "doc",
+        "ref": "desktop/main.js (logro)",
+        "note": "Activa en Steam el logro con el id del juego; falta en la lista del README"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-mascota",
+    "projectId": "indie-dev-tycoon",
+    "name": "Uno más de la familia",
+    "description": "Adopta una mascota para el estudio.",
+    "apiName": "mascota",
+    "status": "implemented",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "40d2688",
+        "date": "2026-10-06",
+        "note": "Lo añade a la web y a Godot"
+      },
+      {
+        "type": "doc",
+        "ref": "desktop/main.js (logro)",
+        "note": "Activa en Steam el logro con el id del juego; falta en la lista del README"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/game.gd (DEMO_ACHIEVEMENTS)",
+        "note": "También se puede conseguir en la demo"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-cinco-horas",
+    "projectId": "indie-dev-tycoon",
+    "name": "Una partidita más",
+    "description": "Juega cinco horas en total, sumando todas tus partidas.",
+    "apiName": "cinco_horas",
+    "status": "implemented",
+    "tags": [
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "bfc993c",
+        "date": "2026-10-05",
+        "note": "Lo añade a la web y a Godot"
+      },
+      {
+        "type": "doc",
+        "ref": "desktop/main.js (logro)",
+        "note": "Activa en Steam el logro con el id del juego; falta en la lista del README"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/game.gd (DEMO_ACHIEVEMENTS)",
+        "note": "También se puede conseguir en la demo"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-logro-fin",
+    "projectId": "indie-dev-tycoon",
+    "name": "Toda una vida",
+    "description": "Llega a 2051.",
+    "apiName": "fin",
+    "status": "implemented",
+    "sources": [
+      {
+        "type": "doc",
+        "ref": "js/engine.js (ACHIEVEMENTS)"
+      },
+      {
+        "type": "doc",
+        "ref": "godot/scripts/sim.gd (ACHIEVEMENTS)"
+      },
+      {
+        "type": "commit",
+        "ref": "1644a59",
+        "date": "2026-09-27",
+        "note": "Lo añade a la web"
+      },
+      {
+        "type": "commit",
+        "ref": "7f89fed",
+        "date": "2026-09-28",
+        "note": "Llega a Godot"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#pasos-para-publicarlo-en-steam",
+        "note": "Paso 3: nombre de API para Steamworks"
+      }
+    ],
+    "confidence": "verified"
+  }
+]

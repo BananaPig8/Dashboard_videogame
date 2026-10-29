@@ -1,0 +1,308 @@
+/* Recursos (y las listas de recursos de Documentación): rejilla de fichas con el icono de su
+   tipo, filas, tabla y el texto escrito aquí. */
+
+.recursos-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.recursos-intro {
+  margin: 0;
+  max-width: 72ch;
+  color: var(--text-2);
+  font-size: 0.9rem;
+}
+
+.recursos-manual {
+  margin: 0;
+  max-width: none;
+}
+
+.recursos-manual span {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+/* Barra de la vista: cuántos hay y rejilla o lista. */
+.recursos-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-3);
+}
+
+.recursos-toolbar .segmented button[aria-pressed='true'] {
+  background: var(--accent-soft);
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Resumen por tipo (en «todo»). */
+.recursos-summary {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--space-2);
+}
+
+.recursos-summary a {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.86rem;
+}
+
+.recursos-summary a:hover {
+  border-color: var(--border-strong);
+}
+
+.recursos-summary .icon {
+  color: var(--text-3);
+  flex: none;
+}
+
+.recursos-summary-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.recursos-summary-label {
+  font-weight: 600;
+}
+
+.recursos-summary-count {
+  font-size: 0.78rem;
+  color: var(--text-2);
+}
+
+.recursos-summary-count.none {
+  color: var(--text-3);
+}
+
+/* Rejilla de fichas. */
+.recursos-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: var(--space-3);
+}
+
+.recursos-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  min-width: 0;
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+
+.recursos-tile-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-3);
+  color: var(--text-2);
+}
+
+.recursos-tile-head,
+.recursos-row-head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  width: 100%;
+  min-width: 0;
+}
+
+.recursos-row-head {
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.recursos-title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.recursos-tile-head .recursos-title {
+  flex: 1;
+  min-width: 0;
+}
+
+.recursos-tile .item-detail {
+  margin: 0;
+}
+
+.recursos-tile-where {
+  margin-top: auto;
+  font-size: 0.84rem;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.recursos-path {
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.recursos-path-only {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.recursos-studio {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Filas (Documentación). */
+.recursos-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.recursos-row {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--row-y) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.recursos-row:last-child {
+  border-bottom: 0;
+}
+
+.recursos-row-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--text-2);
+}
+
+.recursos-row-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.recursos-row-main .item-detail {
+  margin: 0;
+}
+
+/* Texto escrito aquí (notas, actas): tal cual, con sus saltos de línea. */
+.recursos-body-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+}
+
+.recursos-body {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--text);
+  max-width: 80ch;
+  padding: var(--space-2) var(--space-3);
+  border-left: 3px solid var(--border-strong);
+  background: var(--surface-2);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.recursos-body.clamped {
+  max-height: 15em;
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, var(--text) 70%, transparent);
+}
+
+/* Tabla (vista de lista): las mismas columnas en todos los grupos. */
+.recursos-table {
+  table-layout: fixed;
+}
+
+.recursos-table thead th:first-child {
+  width: 36%;
+}
+
+.recursos-table .recursos-table-name {
+  text-align: left;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: inherit;
+  color: inherit;
+  min-width: 220px;
+  padding: var(--cell-y) 10px var(--cell-y) 0;
+  vertical-align: top;
+}
+
+.recursos-table .item-detail,
+.recursos-table .item-meta {
+  margin: var(--space-1) 0 0;
+}
+
+.recursos-table-where {
+  max-width: 280px;
+}
+
+.recursos-group-note {
+  margin: var(--space-2) 0 0;
+}
+
+@media (max-width: 640px) {
+  .recursos-table {
+    table-layout: auto;
+  }
+
+  .recursos-table .recursos-table-name {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    padding: 0 0 var(--space-1);
+    border: 0;
+  }
+
+  .recursos-table td[data-label]::before {
+    margin-right: var(--space-2);
+  }
+
+  .recursos-table-where {
+    max-width: none;
+  }
+
+  .recursos-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

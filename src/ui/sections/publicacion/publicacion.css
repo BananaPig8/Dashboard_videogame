@@ -1,0 +1,304 @@
+/* Publicación: fichas de tienda, lo que falta para Steam, versiones, textos, logros y material. */
+
+.publicacion-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.publicacion-manual {
+  margin: 0;
+  max-width: none;
+}
+
+.publicacion-intro {
+  margin: 0;
+  max-width: 80ch;
+  color: var(--text-2);
+  font-size: 0.9rem;
+}
+
+/* Listas de fichas y de versiones: una fila por elemento, separadas por una raya. */
+.publicacion-list,
+.publicacion-releases,
+.publicacion-texts,
+.publicacion-gap-list,
+.publicacion-mini,
+.publicacion-kit {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.publicacion-list,
+.publicacion-releases {
+  display: flex;
+  flex-direction: column;
+}
+
+.publicacion-list > li,
+.publicacion-releases > li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border);
+}
+
+.publicacion-list > li:first-child,
+.publicacion-releases > li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.publicacion-row-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+}
+
+.publicacion-row-head h3,
+.publicacion-row-head h4 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.publicacion-sources {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-2);
+}
+
+.publicacion-source {
+  font-size: 0.8rem;
+  color: var(--text-2);
+}
+
+.publicacion-release .item-detail,
+.publicacion-listing .item-detail {
+  margin: 0;
+}
+
+/* Lo que falta para Steam. */
+.publicacion-gaps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.publicacion-gaps-title {
+  margin: 0 0 var(--space-2);
+  font-size: 0.9rem;
+}
+
+.publicacion-gap-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.publicacion-gap-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.publicacion-gap {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--text-2);
+}
+
+.publicacion-gap .icon {
+  color: var(--warning);
+}
+
+.publicacion-ok {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.publicacion-ok .icon {
+  color: var(--success);
+}
+
+/* Una versión: sus builds y fichas, lo que entra y los botones para añadir. */
+.publicacion-release-parts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.publicacion-release .subhead {
+  margin: var(--space-2) 0 var(--space-1);
+}
+
+.publicacion-mini {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: 0.88rem;
+}
+
+.publicacion-mini li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+}
+
+.publicacion-release-actions {
+  margin-top: var(--space-2);
+}
+
+/* Kit de prensa. */
+.publicacion-kit {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.publicacion-kit li {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.publicacion-kit .icon {
+  color: var(--text-3);
+}
+
+.publicacion-kit-label {
+  flex: 1 1 auto;
+}
+
+.publicacion-resources {
+  margin-bottom: var(--space-3);
+}
+
+/* Textos de las fichas. */
+.publicacion-card-meta {
+  margin-bottom: var(--space-2);
+}
+
+.publicacion-lang + .publicacion-lang {
+  margin-top: var(--space-4);
+}
+
+.publicacion-lang .subhead {
+  margin: var(--space-2) 0;
+}
+
+.publicacion-texts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.publicacion-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.publicacion-text-body {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 16em;
+  overflow-y: auto;
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.publicacion-text-body:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Logros. */
+.publicacion-how {
+  display: block;
+  max-width: 48ch;
+}
+
+.publicacion-counts {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+}
+
+.publicacion-count {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* Recorrido de una ficha: hecho (verde), ahora (azul, o ámbar con cambios pedidos), pendiente. */
+.publicacion-flow {
+  list-style: none;
+  margin: var(--space-1) 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  font-size: 0.8rem;
+}
+
+.publicacion-step {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--text-3);
+}
+
+.publicacion-step.done .icon {
+  color: var(--success);
+}
+
+.publicacion-step.done {
+  color: var(--text-2);
+}
+
+.publicacion-step.current {
+  color: var(--info);
+  font-weight: 600;
+}
+
+.publicacion-step.current.changes {
+  color: var(--warning);
+}
+
+/* El nombre de cada fila de las tablas de registros, como el resto del texto (no como cabecera). */
+.publicacion-page .table .record-title {
+  font-size: 0.86rem;
+  color: var(--text);
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+@media (max-width: 640px) {
+  .publicacion-page .table td[data-label]::before {
+    margin-right: var(--space-2);
+  }
+
+  .publicacion-page .table .record-title {
+    display: block;
+    width: 100%;
+    padding: 0 0 var(--space-1);
+    border: 0;
+  }
+}
