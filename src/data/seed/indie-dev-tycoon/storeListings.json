@@ -42,7 +42,7 @@
     "kind": "demo",
     "releaseId": "idt-release-demo-1-4",
     "status": "not_started",
-    "notes": "Se lleva a mano. La Demo 1.4 es la que irá a Steam según la rama sin fusionar (en main sigue sin decidir). No hay App ID ni página en el repositorio: lo tiene que confirmar el estudio.",
+    "notes": "Se lleva a mano. La Demo 1.4 es la que irá a Steam (en main desde el 28-10, PR #40). No hay App ID ni página en el repositorio: lo tiene que confirmar el estudio.",
     "tags": [
       "steam",
       "demo"
@@ -52,12 +52,18 @@
         "type": "commit",
         "ref": "d8eca50",
         "date": "2026-10-14",
-        "note": "«la 1.3 V2, que es la que irá a Steam»; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+        "note": "«la 1.3 V2, que es la que irá a Steam»"
+      },
+      {
+        "type": "pr",
+        "ref": "#40",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/40",
+        "date": "2026-10-28"
       },
       {
         "type": "readme",
         "ref": "La demo",
-        "note": "En main: «Aún no está decidido si a Steam irá la 1.3 o la 1.3 V2»"
+        "note": "«desde la 1.4, la demo es la que fue la «1.3 V2» (la que irá a Steam)»"
       }
     ],
     "confidence": "to_confirm"

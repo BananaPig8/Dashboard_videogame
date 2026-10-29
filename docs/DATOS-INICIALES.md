@@ -38,9 +38,10 @@ fecha de los datos (`SEED_VERSION` en `src/data/seed/index.ts`).
    commit hecho después de medianoche cuenta para el día siguiente. Lo terminado lleva la
    fecha de su último commit; lo empezado, la del primero.
 5. **Lo que solo está en una rama sin fusionar no está hecho** (está «en revisión» o «en
-   marcha», también las decisiones). Así están la Demo 1.4 y la base de Idiomas del 14 de
-   octubre, las traducciones de la demo del 18 y el 20 de octubre, y el cartel A3 y las
-   pegatinas del 20 de octubre, en `claude/lucid-lamport-fl6em4` sin PR.
+   marcha», también las decisiones). Así estuvieron la Demo 1.4, los idiomas, el cartel A3 y
+   las pegatinas del 14 al 20 de octubre, en `claude/lucid-lamport-fl6em4` sin PR, hasta que
+   llegaron a main con la PR #40 (28 de octubre): entonces pasan a hechos, con la fecha de su
+   último commit y la PR como fuente.
 6. **Lo de fuera se lleva a mano.** No hay ninguna integración: el estado de Steam (fichas,
    App ID, logros dados de alta) no se puede comprobar desde el repositorio, así que las
    fichas están «sin empezar» y «sin confirmar», y los logros, «en el juego», nunca «en la
@@ -76,6 +77,12 @@ logros salieron de la lista del código (con `git log -S` para el commit de cada
 pruebas con jugadores de los commits que las citan, y el historial se regeneró con el autor
 y con lo nuevo de la rama hasta el 20 de octubre (traducciones, cartel A3 y pegatinas), que
 tiene sus elementos.
+
+Desde el 29 de octubre (`SEED_VERSION` 2026-10-29.1) el Studio Hub se pone al día con cada
+cambio del juego, como pide su `CLAUDE.md`: historial regenerado, lo hecho y lo pendiente en
+`items.json` y las versiones, builds, fichas y el objetivo del proyecto al día. Esa primera
+puesta al día recoge las PR #40 a #42 (Demo 1.4, idiomas, cartel y pegatinas en main; nombres de
+juegos y juegos de palabras en cada idioma) y la validación de las traducciones, pendiente.
 
 ## Actualizar el historial
 

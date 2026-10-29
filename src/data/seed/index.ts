@@ -20,7 +20,7 @@ import idtResources from './indie-dev-tycoon/resources.json'
 import idtStoreListings from './indie-dev-tycoon/storeListings.json'
 
 /** Súbelo cada vez que cambien los datos iniciales: el panel ofrecerá traer lo nuevo. */
-export const SEED_VERSION = '2026-10-25.1'
+export const SEED_VERSION = '2026-10-29.1'
 
 /**
  * Lo que estaba en unos datos iniciales anteriores y ya no está («colección:id»), para que

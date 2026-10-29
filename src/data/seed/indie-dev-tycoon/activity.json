@@ -1677,8 +1677,7 @@
     "title": "Demo 1.4: la demo juega como la 1.3 V2 y se quita la descarga aparte",
     "ref": "d8eca50",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/d8eca50f42dbfc5bbce571180996160b3633576e",
-    "author": "Claude",
-    "note": "En la rama claude/lucid-lamport-fl6em4, sin fusionar en main."
+    "author": "Claude"
   },
   {
     "id": "indie-dev-tycoon-c-b5aa4f2",
@@ -1688,8 +1687,7 @@
     "title": "Idiomas (base): traducir al enseñar, selector de idioma y letras de chino, japonés y coreano",
     "ref": "b5aa4f2",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/b5aa4f23ce7ab0f34db7a4272e0555c953fd901e",
-    "author": "Claude",
-    "note": "En la rama claude/lucid-lamport-fl6em4, sin fusionar en main."
+    "author": "Claude"
   },
   {
     "id": "indie-dev-tycoon-c-3665de9",
@@ -1699,8 +1697,7 @@
     "title": "Idiomas: primeras 546 frases de la demo en 6 idiomas (y castellano de Latinoamérica)",
     "ref": "3665de9",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/3665de9a0422fbc159db6f8534910fd55ef2a240",
-    "author": "Claude",
-    "note": "En la rama claude/lucid-lamport-fl6em4, sin fusionar en main."
+    "author": "Claude"
   },
   {
     "id": "indie-dev-tycoon-c-33a3632",
@@ -1710,8 +1707,7 @@
     "title": "Idiomas: 816 frases de la demo traducidas y plurales que se pueden traducir",
     "ref": "33a3632",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/33a3632b2114cd6143bbc8c0dd41d5633729268b",
-    "author": "Claude",
-    "note": "En la rama claude/lucid-lamport-fl6em4, sin fusionar en main."
+    "author": "Claude"
   },
   {
     "id": "indie-dev-tycoon-c-912976f",
@@ -1721,8 +1717,7 @@
     "title": "Idiomas: las 1.142 frases de la demo traducidas a 6 idiomas (y 37 cambios para Latinoamérica)",
     "ref": "912976f",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/912976f63aadb34597b0964762cdb7218a217bf7",
-    "author": "Claude",
-    "note": "En la rama claude/lucid-lamport-fl6em4, sin fusionar en main."
+    "author": "Claude"
   },
   {
     "id": "indie-dev-tycoon-c-bb690a6",
@@ -1732,8 +1727,7 @@
     "title": "Key art: cartel A3 (solo arte y con hueco para textos), a 307 ppp con 3 mm de sangrado",
     "ref": "bb690a6",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/bb690a6f1ca56a4aab8c985459935b84b1baf51e",
-    "author": "Claude",
-    "note": "En la rama claude/lucid-lamport-fl6em4, sin fusionar en main."
+    "author": "Claude"
   },
   {
     "id": "indie-dev-tycoon-c-6c58818",
@@ -1743,8 +1737,7 @@
     "title": "Pegatinas: cuatro diseños troquelados (logo, cuarto 1984, sede 2050 y «Juego del año»)",
     "ref": "6c58818",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/6c5881867889f7c3fa9b9fd84b529e962cbae462",
-    "author": "Claude",
-    "note": "En la rama claude/lucid-lamport-fl6em4, sin fusionar en main."
+    "author": "Claude"
   },
   {
     "id": "indie-dev-tycoon-c-22a179b",
@@ -1754,8 +1747,7 @@
     "title": "Pegatinas: sin los años y con fondo transparente, cada una por separado",
     "ref": "22a179b",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/22a179b20a89f49baaf2b1fc175826659ad441ce",
-    "author": "Claude",
-    "note": "En la rama claude/lucid-lamport-fl6em4, sin fusionar en main."
+    "author": "Claude"
   },
   {
     "id": "indie-dev-tycoon-c-d5e2364",
@@ -1765,8 +1757,7 @@
     "title": "Pegatinas en plan meme: «Oficinas centrales», «Solo queda un bug» y «Según mi madre»",
     "ref": "d5e2364",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/d5e2364a9c5795db00ee62d189f431f6fc0b8df5",
-    "author": "Claude",
-    "note": "En la rama claude/lucid-lamport-fl6em4, sin fusionar en main."
+    "author": "Claude"
   },
   {
     "id": "indie-dev-tycoon-c-c2c91a0",
@@ -1776,8 +1767,7 @@
     "title": "Pegatinas: tres memes conocidos con las piezas del juego («Esto está bien», «Stonks» y Drake)",
     "ref": "c2c91a0",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/c2c91a0378f7cbb332987c3f30f768f741f49710",
-    "author": "Claude",
-    "note": "En la rama claude/lucid-lamport-fl6em4, sin fusionar en main."
+    "author": "Claude"
   },
   {
     "id": "indie-dev-tycoon-c-ac614ee",
@@ -1787,7 +1777,176 @@
     "title": "Pegatinas: cuarto meme (los dos botones), sin frases de arriba y archivos para la imprenta",
     "ref": "ac614ee",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/ac614eeed85421f2656305f2e0f1e781f2ac6533",
-    "author": "Claude",
-    "note": "En la rama claude/lucid-lamport-fl6em4, sin fusionar en main."
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-c-19c5146",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-28T02:55",
+    "type": "commit",
+    "title": "Idiomas: traductor más fino y frases enteras en la interfaz",
+    "ref": "19c5146",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/19c51464ccb980aa4b920171da4cf491411ec7f2",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-c-054e00d",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-28T02:57",
+    "type": "commit",
+    "title": "Idiomas: frases nuevas traducidas (ramas que la captura no veía, premios, biografía, ficha del juego…)",
+    "ref": "054e00d",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/054e00d193a26124d384bc327b3565d2fc5b4f4f",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-c-917e861",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-28T03:20",
+    "type": "commit",
+    "title": "Idiomas: nombres propios nuevos, palabras enteras en equipo y web, miles en francés con espacio fijo",
+    "ref": "917e861",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/917e8612cec8fa9cd9522ca29a448eba654967ad",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-c-9dee3c5",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-28T03:25",
+    "type": "commit",
+    "title": "Idiomas: las 649 frases de la demo que faltaban, en los seis idiomas",
+    "ref": "9dee3c5",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/9dee3c598e531cc265e95f85eb083889f0006094",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-c-effe286",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-28T03:36",
+    "type": "commit",
+    "title": "Idiomas: frases enteras en El mundo, la gala, los eventos y la tienda de la oficina",
+    "ref": "effe286",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/effe2864330903a452562dd106a903cfc651c639",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-c-a2b0fdf",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-28T03:47",
+    "type": "commit",
+    "title": "Idiomas: más frases enteras y un hueco ya no cruza un « · »",
+    "ref": "a2b0fdf",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/a2b0fdf35455fdbc2bf239a47fdde36696d19b2e",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-c-8e9fa5c",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-28T03:50",
+    "type": "commit",
+    "title": "Idiomas: README al día (un hueco no cruza un « · », frases enteras también en el motor)",
+    "ref": "8e9fa5c",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/8e9fa5cfb3f8202775c35374dae4bed9537243a3",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-c-62ed7c7",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-28T04:01",
+    "type": "commit",
+    "title": "Idiomas: la regla del « · » solo para el hueco del principio o del final, y la leyenda de estrellas",
+    "ref": "62ed7c7",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/62ed7c794ec8fb4836c40ac15f2ae2d1c8a9cf2d",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-c-cbd3f39",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-28T04:06",
+    "type": "commit",
+    "title": "Idiomas: la cifra de delante de una lista con « · » va con su primer trozo",
+    "ref": "cbd3f39",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/cbd3f396be6bbaa81706858212333b90fd7de1b7",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-c-7e53a92",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-28T04:28",
+    "type": "commit",
+    "title": "Comprobación de Godot en castellano aunque el sistema esté en otro idioma",
+    "ref": "7e53a92",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/7e53a92dff892e58523fe26650f9fdf399891de0",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-pr-40",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-28T04:28",
+    "type": "merge",
+    "title": "PR #40 fusionada: Demo 1.4, la demo en seis idiomas más (traducida y revisada), cartel y pegatinas",
+    "ref": "#40",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/40",
+    "author": "BananaPig8"
+  },
+  {
+    "id": "indie-dev-tycoon-c-08911c4",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-28T08:07",
+    "type": "commit",
+    "title": "Idiomas: nombres de juegos inventados en cada idioma, y arreglos de chino, japonés y coreano",
+    "ref": "08911c4",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/08911c4d4092e307dbf7882cb5f214e5a2823923",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-c-df0dea1",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-28T08:10",
+    "type": "commit",
+    "title": "Idiomas: estudios, consolas, revistas y licencias con su propio juego de palabras en cada idioma",
+    "ref": "df0dea1",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/df0dea1188176c4688c7e6089e4bb9e18ce0e412",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-c-43791e4",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-28T08:27",
+    "type": "commit",
+    "title": "Idiomas: README al día (nombres inventados, juegos de palabras, fechas y comillas)",
+    "ref": "43791e4",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/43791e48e4c3690b0fc513a427d0b17f6b3a3b60",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-pr-41",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-28T08:28",
+    "type": "merge",
+    "title": "PR #41 fusionada: Idiomas: nombres de juegos inventados y juegos de palabras en cada idioma, y arreglos de chino, japonés y coreano",
+    "ref": "#41",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/41",
+    "author": "BananaPig8"
+  },
+  {
+    "id": "indie-dev-tycoon-c-0260682",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-29T02:38",
+    "type": "commit",
+    "title": "CLAUDE.md: todo cambio se apunta también en el Studio Hub",
+    "ref": "0260682",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/02606828f9e319cedceda467eba3db5414374881",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-pr-42",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-29T02:38",
+    "type": "merge",
+    "title": "PR #42 fusionada: CLAUDE.md: todo cambio se apunta también en el Studio Hub",
+    "ref": "#42",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/42",
+    "author": "BananaPig8"
   }
 ]
