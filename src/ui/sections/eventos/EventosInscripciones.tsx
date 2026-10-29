@@ -3,7 +3,7 @@
 // llevan a mano: Studio Hub no se conecta con las webs de los eventos.
 import { REGISTRATION_STATUSES } from '../../../domain/catalog'
 import { yearOf } from '../../../domain/dates'
-import { REGISTRATION_GROUPS, eventoRegistrations, sectorEvents, type RegistrationGroup } from '../../../domain/selectors'
+import { REGISTRATION_GROUPS, REGISTRATION_SOON_DAYS, eventoRegistrations, sectorEvents, type RegistrationGroup } from '../../../domain/selectors'
 import type { RegistrationStatus, StudioEvent } from '../../../domain/types'
 import { store, useCanEdit, useStudioData } from '../../../data/store'
 import { t } from '../../../i18n'
@@ -17,8 +17,8 @@ import { useFormat, useToday } from '../../hooks'
 import type { SectionPageProps } from '../registry'
 import { EventProject, EventTypePill, EventosPage, RegistrationPill, Unconfirmed, useEventDate, useEventosQuery, useNewEvent } from './comunes'
 
-/** Días que cuentan como «cierra pronto». */
-const SOON_DAYS = 14
+/** Días que cuentan como «cierra pronto» (los mismos que la barra lateral y la campana). */
+const SOON_DAYS = REGISTRATION_SOON_DAYS
 
 const GROUP_ICON: Record<RegistrationGroup, IconName> = {
   soon: 'alert',

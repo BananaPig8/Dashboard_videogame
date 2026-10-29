@@ -3,7 +3,7 @@
 // Regla: lo que se importa de '../selectors' solo se usa dentro de funciones.
 import { tr } from '../../i18n'
 import { CONFIDENCES, SECTOR_EVENT_TYPES, TRANSACTION_CATEGORIES, TRANSACTION_KINDS, TRANSACTION_STATUSES } from '../catalog'
-import { daysBetween, isValidISODate, toISODate } from '../dates'
+import { isValidISODate, toISODate } from '../dates'
 import type { Scope } from '../selectors'
 import type {
   Budget,
@@ -400,11 +400,6 @@ export function financeNextMonthCopy(t: Transaction, sources: SourceRef[]): Omit
   const copy: Partial<Transaction> = { ...t, date: financeAddMonths(t.date, 1), status: 'planned', confidence: 'to_confirm', sources }
   delete copy.id
   return copy as Omit<Transaction, 'id'>
-}
-
-/** Los días que faltan para la fecha de un movimiento previsto (negativo: ya pasó). */
-export function financeDaysTo(t: Transaction, today: ISODate): number {
-  return daysBetween(today, t.date)
 }
 
 /** ¿Previsto o pendiente con la fecha ya pasada? (hay que marcarlo hecho o cancelarlo). */

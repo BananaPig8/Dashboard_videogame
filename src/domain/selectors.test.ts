@@ -7,6 +7,7 @@ import {
   currentBuilds,
   decisions,
   matchesQuery,
+  overdueItems,
   projectSummary,
   staleEvents,
   todayItems,
@@ -120,6 +121,19 @@ describe('bloqueos y confirmaciones', () => {
     const d = decisions(fixture())
     expect(d.open.map((i) => i.id)).toEqual(['abierta'])
     expect(d.taken.map((i) => i.id)).toEqual(['decidida'])
+  })
+})
+
+describe('objetivos', () => {
+  it('no vencen ni se bloquean como una tarea: ni en Hoy, ni en los avisos, ni en los contadores', () => {
+    const d = fixture()
+    const goal = item({ id: 'objetivo', kind: 'goal', dueDate: '2026-10-01', status: 'blocked', priority: 'critical' })
+    const withGoal = { ...d, items: [...d.items, goal] }
+    expect(overdueItems(withGoal, TODAY).map((i) => i.id)).not.toContain('objetivo')
+    expect(blockedItems(withGoal).map((i) => i.id)).not.toContain('objetivo')
+    expect(todayItems(withGoal, TODAY).map((e) => e.item.id)).not.toContain('objetivo')
+    expect(notificationsFor(withGoal, TODAY).filter((n) => n.target?.id === 'objetivo')).toEqual([])
+    expect(projectSummary(withGoal, d.projects[0], TODAY)).toEqual(projectSummary(d, d.projects[0], TODAY))
   })
 })
 

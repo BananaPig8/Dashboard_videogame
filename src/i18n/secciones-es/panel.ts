@@ -53,7 +53,6 @@ export const panel = {
     alerts: 'Avisos',
     alertsAll: 'Todos los avisos de hoy ({n})',
     alertsNone: 'Nada vencido, bloqueado ni a punto de llegar: no hay avisos hoy.',
-    open: 'Abrir: {title}',
   },
   today: {
     plan: 'Planificar el día',

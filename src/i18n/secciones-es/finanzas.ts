@@ -1,7 +1,6 @@
 // Textos de la sección «Finanzas». Cada sección tiene su fichero para poder trabajar en
 // ellas por separado; es.ts los junta bajo `secciones.finanzas`.
 export const finanzas = {
-  title: 'Finanzas',
   subtitle: 'Gastos, ingresos y presupuestos, anotados a mano por el estudio',
   actions: {
     newExpense: 'Nuevo gasto',
@@ -31,7 +30,6 @@ export const finanzas = {
     late: 'Fecha pasada',
     lateHint: 'Sigue previsto o pendiente y su fecha ya pasó: márcalo como hecho o cancélalo',
     paidIn: 'Pagado: {amount}',
-    duplicate: 'Duplicar al mes siguiente',
     duplicateOf: 'Duplicar «{name}» al mes siguiente',
     duplicated: 'Duplicado como previsto para el {date}',
     duplicateSource: 'Duplicado en Studio Hub',

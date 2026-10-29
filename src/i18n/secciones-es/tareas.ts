@@ -54,7 +54,6 @@ export const tareas = {
     overdue: 'Vencida: {date}',
   },
   list: {
-    title: 'Lista de tareas',
     emptyStudio: 'Todavía no hay tareas. Crea la primera y saldrá aquí.',
     emptyFiltered: 'Ninguna tarea con estos filtros.',
     emptyOpen: 'No hay nada abierto. Para ver lo terminado, elige «Todas, también las cerradas» en el estado.',

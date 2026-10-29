@@ -1,7 +1,6 @@
 // Textos de la sección «Estadísticas». Cada sección tiene su fichero para poder trabajar en
 // ellas por separado; es.ts los junta bajo `secciones.estadisticas`.
 export const estadisticas = {
-  title: 'Estadísticas',
   subtitle: 'Progreso, tareas, hitos, tiempo y métricas con fuente',
   subtitleIn: 'Progreso, tareas, hitos, tiempo y métricas de {project}',
   actions: {
@@ -19,19 +18,15 @@ export const estadisticas = {
     value: 'Valor',
     total: '{label}: {value} en total',
     asTable: 'Ver como tabla',
-    summary: '{label}: {value}',
   },
   common: {
     of: '{done} de {total}',
     ofTotal: 'de {total} · {pct}',
     pct: '{n} %',
     nothingYet: 'Sin elementos todavía',
-    recent: 'Últimas 4 semanas',
     noArea: 'Sin área',
     nobody: 'Sin indicar',
     general: 'En general (sin elemento)',
-    gone: 'Ya no existe',
-    seeTasks: 'Ver en Tareas',
   },
   progreso: {
     projects: 'Proyectos',
@@ -146,7 +141,6 @@ export const estadisticas = {
   },
   metricas: {
     manual: 'Studio Hub no está conectado a Steam ni a ninguna tienda: cada dato se apunta a mano, con su fecha y su fuente.',
-    latest: 'Último dato',
     on: 'el {date}',
     change: '{sign}{n} desde el {date}',
     noChange: 'Igual que el {date}',

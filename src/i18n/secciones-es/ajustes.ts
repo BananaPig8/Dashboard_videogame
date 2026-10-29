@@ -2,7 +2,6 @@
 // Cada sección tiene su fichero para poder trabajar en ellas por separado; es.ts los junta
 // bajo `secciones.ajustes`.
 export const ajustes = {
-  title: 'Ajustes',
   subtitle: 'El estudio, tus preferencias, categorías, estados, integraciones, seguridad y datos',
   estudio: {
     profile: 'Perfil del estudio',
@@ -140,7 +139,6 @@ export const ajustes = {
       'La única integración activa es la base de datos de esta página de claude.ai. Studio Hub no lee ni escribe solo en GitHub, Steam, itch.io, Discord ni Talo: lo de fuera se apunta a mano, con su fuente.',
     card: 'Servicios',
     cardHint: 'Qué hay conectado y qué se lleva a mano',
-    caption: 'Integraciones: estado y dónde se lleva cada cosa',
     states: {
       active: 'Activa',
       local: 'En este navegador',

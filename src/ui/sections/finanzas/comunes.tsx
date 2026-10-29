@@ -5,7 +5,7 @@ import type { ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
 import { TRANSACTION_CATEGORIES, TRANSACTION_STATUSES } from '../../../domain/catalog'
 import { budgetRatio, financeIsLate, financeNextMonthCopy, type BudgetUsage, type FinanceTotals } from '../../../domain/selectors'
-import type { Transaction, TransactionKind, TransactionStatus } from '../../../domain/types'
+import type { Transaction, TransactionStatus } from '../../../domain/types'
 import { t } from '../../../i18n'
 import { useStudioData } from '../../../data/store'
 import { Pill, ProjectChip } from '../../components/Badges'
@@ -46,14 +46,6 @@ const STATUS_ICON: Record<TransactionStatus, IconName> = { planned: 'calendar', 
 export const TransactionStatusPill = ({ status }: { status: TransactionStatus }) => (
   <Pill tone={TRANSACTION_STATUSES[status].tone} icon={STATUS_ICON[status]}>
     {TRANSACTION_STATUSES[status].label}
-  </Pill>
-)
-
-const KIND_ICON: Record<TransactionKind, IconName> = { expense: 'arrowDown', income: 'arrowUp' }
-
-export const TransactionKindPill = ({ kind }: { kind: TransactionKind }) => (
-  <Pill tone={kind === 'income' ? 'success' : 'neutral'} icon={KIND_ICON[kind]}>
-    {t(`secciones.finanzas.kind.${kind}`)}
   </Pill>
 )
 

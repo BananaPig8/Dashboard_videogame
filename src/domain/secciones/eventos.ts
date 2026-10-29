@@ -8,8 +8,11 @@ import type { Build, Cents, EventType, Feedback, ID, ISODate, Playtest, Registra
 import { checklistProgress, type ChecklistProgress, type Scope } from '../selectors'
 import { hasTag } from './etiquetas'
 
+/** Cuántos días antes avisan de una inscripción que cierra la barra, la campana y Eventos. */
+export const REGISTRATION_SOON_DAYS = 14
+
 /** Inscripciones abiertas (o por abrir) cuyo plazo cierra entre hoy y dentro de `days` días. */
-export function registrationsClosingSoon(data: StudioData, today: ISODate, days: number, scope: Scope = null): StudioEvent[] {
+export function registrationsClosingSoon(data: StudioData, today: ISODate, days = REGISTRATION_SOON_DAYS, scope: Scope = null): StudioEvent[] {
   const until = addDays(today, days)
   return data.events
     .filter((e) => scope === null || !e.projectId || e.projectId === scope)

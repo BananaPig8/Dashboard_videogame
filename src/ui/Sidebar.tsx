@@ -37,7 +37,7 @@ function navBadges(data: StudioData, today: string, scope: string | null): Parti
   }
   const fresh = data.feedback.filter((f) => f.status === 'new' && (!scope || f.projectId === scope)).length
   if (fresh > 0) out.feedback = { count: fresh, tone: 'warning', label: counted(fresh, 'feedback') }
-  const closing = registrationsClosingSoon(data, today, 14, scope).length
+  const closing = registrationsClosingSoon(data, today, undefined, scope).length
   if (closing > 0) out.eventos = { count: closing, tone: 'warning', label: counted(closing, 'registrations') }
   return out
 }

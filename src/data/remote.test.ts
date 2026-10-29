@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { emptyCollections } from '../domain/collections'
 import type { Activity, StudioData, WorkItem } from '../domain/types'
 import { SCHEMA_VERSION } from '../domain/types'
@@ -117,7 +117,12 @@ const task = (id: string, title: string): WorkItem => ({
 })
 const commit = (id: string, at: string): Activity => ({ id, projectId: 'p', at, type: 'commit', title: id })
 
-const tick = (ms = 30) => new Promise((r) => setTimeout(r, ms))
+/**
+ * Avanza el reloj falso: la carga va en temporizadores encadenados (aviso de la base →
+ * aviso del almacén) y con el reloj de verdad una espera fija podía vencer antes que el
+ * último si el bucle se atascaba (pasaba con varias pruebas a la vez).
+ */
+const tick = (ms = 30) => vi.advanceTimersByTimeAsync(ms)
 
 function setup(db: FakeDb | null, canWrite: boolean | null = true) {
   const user: UserInfo = { can: async () => canWrite }
@@ -137,6 +142,9 @@ function filled(): FakeDb {
 }
 
 describe('almacén remoto (base de datos de la página)', () => {
+  beforeEach(() => vi.useFakeTimers())
+  afterEach(() => vi.useRealTimers())
+
   it('espera a la base y carga lo que hay, en su orden', async () => {
     const { store } = setup(filled())
     expect(store.getStatus().state).toBe('connecting')

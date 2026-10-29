@@ -456,12 +456,6 @@ export function activeChildren(s: NavSection, search: string): NavChild[] {
   return s.children.filter((c) => facetKey(s, childParams(s, c, search)) === now)
 }
 
-/** La subsección principal activa (la primera de las activas que lleva parámetro, o la de por defecto). */
-export function activeChild(s: NavSection, search: string): NavChild | undefined {
-  const active = activeChildren(s, search)
-  return active.find((c) => c.value !== null) ?? active[0]
-}
-
 /** ¿Estoy en la raíz de la sección (sin ninguna faceta)? */
 export function atSectionRoot(s: NavSection, search: string): boolean {
   const params = new URLSearchParams(search)
@@ -516,14 +510,6 @@ export function normalizePath(to: string): string {
   const { path, params } = split(to)
   params.sort()
   return join(path, params)
-}
-
-/** Parámetros de la URL que no eligen subsección (el ámbito, la búsqueda, la etiqueta y cómo se pinta). */
-const NOT_A_VIEW = new Set(['p', 'q', 'etiqueta', 'mostrar', 'evento'])
-
-/** ¿Hay en la URL algún parámetro que elija vista? (para saber si una vista guardada es solo un filtro). */
-export function viewParams(search: string): string[] {
-  return [...new URLSearchParams(search).keys()].filter((k) => !NOT_A_VIEW.has(k))
 }
 
 // ——— Rutas antiguas —————————————————————————————————————————————————————————

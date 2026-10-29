@@ -426,8 +426,6 @@ export const METRIC_KINDS = entries<MetricKind, { tone: Tone; group: MetricGroup
   other: { tone: 'neutral', group: 'launch' },
 })
 
-export const METRIC_GROUPS = names<MetricGroup>('metricGroup', ['launch', 'commercial'])
-
 export function label<K extends string>(table: Record<K, string | Entry>, key: K | undefined): string {
   if (key === undefined) return ''
   const v = table[key]

@@ -1,7 +1,6 @@
 // Textos de la sección «Documentación». Cada sección tiene su fichero para poder trabajar en
 // ellas por separado; es.ts los junta bajo `secciones.documentacion`.
 export const documentacion = {
-  title: 'Documentación',
   subtitle: 'Diseño, documentación técnica, notas, decisiones, actas y guías',
   subtitleIn: 'Diseño, documentación técnica, notas, decisiones, actas y guías de {project}',
   actions: {
@@ -51,13 +50,11 @@ export const documentacion = {
     count: { one: '{n} acta', many: '{n} actas' },
     meetingsCount: { one: '{n} reunión', many: '{n} reuniones' },
     titleOf: 'Acta de «{name}»',
-    meeting: 'Reunión',
     noMeeting: 'Sin reunión enlazada',
     missingMeeting: 'La reunión enlazada ya no existe',
     decisions: 'Decisiones de esta reunión',
     noDecisions: 'No hay decisiones apuntadas de esta reunión.',
     noText: 'El acta no tiene texto escrito aquí.',
-    noDate: 'Sin fecha',
     without: 'Reuniones sin acta',
     withoutSub: 'Reuniones del calendario que todavía no tienen acta',
     withoutEmpty: 'Todas las reuniones apuntadas tienen su acta.',
@@ -68,7 +65,6 @@ export const documentacion = {
   },
   decisions: {
     open: 'Por decidir',
-    openSub: 'Abiertas, con sus opciones',
     openEmpty: 'Nada pendiente de decidir.',
     openCount: { one: '{n} abierta', many: '{n} abiertas' },
     logCount: { one: '{n} cerrada', many: '{n} cerradas' },

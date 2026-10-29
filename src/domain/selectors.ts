@@ -1,6 +1,6 @@
 // Las preguntas del panel, como funciones puras sobre los datos. Ninguna conoce a un
 // proyecto concreto: reciben los datos, la fecha de hoy y, si acaso, el proyecto.
-import { FEEDBACK_STATUSES, PRIORITIES, STATUSES } from './catalog'
+import { FEEDBACK_STATUSES, PRIORITIES, STATUSES, TASK_KINDS } from './catalog'
 import type { CollectionKey } from './collections'
 import { addDays, daysBetween, startOfWeek, type WeekStart } from './dates'
 import { registrationsClosingSoon } from './secciones/eventos'
@@ -42,9 +42,9 @@ export function itemsOf(data: StudioData, scope: Scope): WorkItem[] {
   return data.items.filter(inScope(scope))
 }
 
-export function projectById(data: StudioData, id: ID | undefined): Project | undefined {
-  return id ? data.projects.find((p) => p.id === id) : undefined
-}
+/** Trabajo (no objetivos): lo que cuentan Tareas, Hoy, los avisos y los contadores. */
+const isWork = (i: WorkItem) => TASK_KINDS.includes(i.kind)
+const workOf = (data: StudioData, scope: Scope) => itemsOf(data, scope).filter(isWork)
 
 // ——— Hoy ———————————————————————————————————————————————————————————————
 
@@ -62,7 +62,7 @@ export interface TodayEntry {
 export function todayItems(data: StudioData, today: ISODate, scope: Scope = null): TodayEntry[] {
   const order: Record<TodayReason, number> = { overdue: 0, due: 1, focus: 2, in_progress: 3, review: 4 }
   const out: TodayEntry[] = []
-  for (const item of itemsOf(data, scope)) {
+  for (const item of workOf(data, scope)) {
     if (!isOpen(item)) continue
     let reason: TodayReason | null = null
     if (item.dueDate && item.dueDate < today) reason = 'overdue'
@@ -76,15 +76,15 @@ export function todayItems(data: StudioData, today: ISODate, scope: Scope = null
 }
 
 export function blockedItems(data: StudioData, scope: Scope = null): WorkItem[] {
-  return itemsOf(data, scope).filter((i) => i.status === 'blocked').sort(byPriority)
+  return workOf(data, scope).filter((i) => i.status === 'blocked').sort(byPriority)
 }
 
 export function pausedItems(data: StudioData, scope: Scope = null): WorkItem[] {
-  return itemsOf(data, scope).filter((i) => i.status === 'paused').sort(byPriority)
+  return workOf(data, scope).filter((i) => i.status === 'paused').sort(byPriority)
 }
 
 export function overdueItems(data: StudioData, today: ISODate, scope: Scope = null): WorkItem[] {
-  return itemsOf(data, scope).filter((i) => isOpen(i) && !!i.dueDate && i.dueDate < today)
+  return workOf(data, scope).filter((i) => isOpen(i) && !!i.dueDate && i.dueDate < today)
 }
 
 // ——— Agenda —————————————————————————————————————————————————————————————
@@ -246,7 +246,7 @@ const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one :
  * orientativos: sirven para ordenar los proyectos, no para juzgarlos.
  */
 export function projectSummary(data: StudioData, project: Project, today: ISODate): ProjectSummary {
-  const items = itemsOf(data, project.id)
+  const items = workOf(data, project.id)
   const open = items.filter(isOpen)
   const blocked = open.filter((i) => i.status === 'blocked')
   const paused = open.filter((i) => i.status === 'paused')
@@ -333,11 +333,6 @@ export function projectSummaries(data: StudioData, today: ISODate): ProjectSumma
     .sort((a, b) => b.health.score - a.health.score || a.project.name.localeCompare(b.project.name))
 }
 
-/** Proyectos que piden atención ya (nivel «atención» o «urgente»). */
-export function needsAttention(data: StudioData, today: ISODate): ProjectSummary[] {
-  return projectSummaries(data, today).filter((s) => s.health.level === 'urgent' || s.health.level === 'attention')
-}
-
 // ——— Decisiones ————————————————————————————————————————————————————————
 
 export function decisions(data: StudioData, scope: Scope = null): { open: WorkItem[]; taken: WorkItem[] } {
@@ -408,7 +403,7 @@ export interface StudioNotification {
 export function notificationsFor(data: StudioData, today: ISODate): StudioNotification[] {
   const out: StudioNotification[] = []
   for (const i of data.items) {
-    if (!isOpen(i)) continue
+    if (!isOpen(i) || !isWork(i)) continue
     if (i.dueDate && i.dueDate < today)
       out.push({ id: `overdue:${i.id}:${i.dueDate}`, kind: 'overdue', tone: 'danger', title: i.title, date: i.dueDate, projectId: i.projectId, target: { collection: 'items', id: i.id } })
     else if (i.dueDate === today)
@@ -424,7 +419,7 @@ export function notificationsFor(data: StudioData, today: ISODate): StudioNotifi
     else if ((e.endDate ?? e.date) < today && (e.status === 'planned' || e.status === 'confirmed'))
       out.push({ id: `stale:${e.id}:${e.date}`, kind: 'eventStale', tone: 'warning', title: e.title, date: e.date, projectId: e.projectId, target: { collection: 'events', id: e.id } })
   }
-  for (const e of registrationsClosingSoon(data, today, 7)) {
+  for (const e of registrationsClosingSoon(data, today)) {
     const days = daysBetween(today, e.registrationDeadline!)
     out.push({
       id: `registration:${e.id}:${e.registrationDeadline}`,

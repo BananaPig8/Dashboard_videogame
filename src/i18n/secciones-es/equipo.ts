@@ -1,7 +1,6 @@
 // Textos de la sección «Equipo». Cada sección tiene su fichero para poder trabajar en
 // ellas por separado; es.ts los junta bajo `secciones.equipo`.
 export const equipo = {
-  title: 'Equipo',
   subtitle: 'Quién hace qué, cuánta carga lleva cada uno y quién colabora desde fuera',
   subtitleIn: 'Quién hace qué en {project} y cuánta carga lleva cada uno',
   scopeNote: 'Las personas son del estudio; el trabajo abierto y las horas que se cuentan aquí son solo de {project}.',
@@ -9,7 +8,6 @@ export const equipo = {
     newMember: 'Nueva persona',
     newExternal: 'Nuevo colaborador externo',
     logTime: 'Apuntar horas',
-    edit: 'Editar a {name}',
   },
   empty: {
     title: 'Todavía no hay nadie en el equipo',

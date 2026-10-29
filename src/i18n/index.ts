@@ -16,10 +16,6 @@ export function setLocale(locale: Locale): void {
   current = locale in LOCALES ? locale : DEFAULT_LOCALE
 }
 
-export function getLocale(): Locale {
-  return current
-}
-
 /** Etiqueta BCP 47 para Intl (fechas, números, orden alfabético). */
 export function intlLocale(): string {
   return LOCALES[current].intl

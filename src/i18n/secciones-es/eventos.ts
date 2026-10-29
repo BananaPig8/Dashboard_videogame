@@ -1,7 +1,6 @@
 // Textos de la sección «Eventos». Cada sección tiene su fichero para poder trabajar en
 // ellas por separado; es.ts los junta bajo `secciones.eventos`.
 export const eventos = {
-  title: 'Eventos',
   subtitle: 'Ferias, festivales, premios y presentaciones: inscripción, preparación y seguimiento',
   subtitleIn: 'Ferias, festivales, premios y presentaciones de {project}: inscripción, preparación y seguimiento',
   unconfirmedDate: 'Fecha sin confirmar',

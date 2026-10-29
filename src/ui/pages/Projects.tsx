@@ -1,15 +1,14 @@
-// La lista de proyectos y la ficha de cada uno. La ficha reutiliza las mismas pantallas
+// La ficha de cada proyecto (la lista es la sección Proyectos). Reutiliza las mismas pantallas
 // del estudio con el proyecto como ámbito: se pasa de lo general al detalle sin cambiar
 // de herramienta ni perder el sitio.
 import { Suspense } from 'react'
 import { Link, Navigate, useLocation, useParams } from 'react-router-dom'
-import { STAGES } from '../../domain/catalog'
 import { yearOf } from '../../domain/dates'
 import { useFormat, useToday } from '../hooks'
-import { projectSummaries, projectSummary } from '../../domain/selectors'
-import { useCanEdit, useStudioData } from '../../data/store'
+import { projectSummary } from '../../domain/selectors'
+import { useStudioData } from '../../data/store'
 import { HealthPill, StagePill } from '../components/Badges'
-import { Card, ExternalLink, PageHeader } from '../components/Common'
+import { ExternalLink } from '../components/Common'
 import { Icon } from '../components/Icon'
 import { useUI } from '../context'
 import { PageSkeleton } from '../feedback'
@@ -18,47 +17,6 @@ import { Popover } from '../components/Popover'
 import { usePreferences } from '../prefs'
 import { t } from '../../i18n'
 import { SECTION_PAGES } from '../sections/registry'
-import { ProjectCard } from '../sections/proyectos/ProjectCard'
-
-export function ProjectsPage() {
-  const data = useStudioData()
-  const { create } = useUI()
-  const canEdit = useCanEdit()
-  const today = useToday()
-  const summaries = projectSummaries(data, today).sort(
-    (a, b) => STAGES[a.project.stage].order - STAGES[b.project.stage].order || a.project.name.localeCompare(b.project.name),
-  )
-  return (
-    <div className="page">
-      <PageHeader
-        title="Proyectos"
-        subtitle="Todos los videojuegos del estudio, de la idea a la publicación"
-        actions={
-          canEdit && (
-            <button type="button" className="btn btn-primary" onClick={() => create('projects')}>
-              <Icon name="plus" size={16} /> Nuevo proyecto
-            </button>
-          )
-        }
-      />
-      <div className="project-grid">
-        {summaries.map((s) => (
-          <ProjectCard key={s.project.id} summary={s} data={data} today={today} />
-        ))}
-      </div>
-      <Card title="Etapas" icon="flag" subtitle="Cómo avanza un proyecto">
-        <ol className="stage-line">
-          {Object.keys(STAGES).map((id) => (
-            <li key={id}>
-              <StagePill stage={id as keyof typeof STAGES} />
-              <span className="muted small">{summaries.filter((x) => x.project.stage === id).length || ''}</span>
-            </li>
-          ))}
-        </ol>
-      </Card>
-    </div>
-  )
-}
 
 export function ProjectPage() {
   const { slug, tab = 'resumen' } = useParams()

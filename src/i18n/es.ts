@@ -750,10 +750,6 @@ export const es = {
       revenue_reported: 'Ingresos según la plataforma',
       other: 'Otra métrica',
     },
-    metricGroup: {
-      launch: 'Lanzamiento',
-      commercial: 'Comercial',
-    },
     health: {
       on_track: 'Al día',
       attention: 'Pide atención',

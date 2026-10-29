@@ -244,10 +244,6 @@ export function updatePreferences(change: Partial<Preferences> | ((p: Preference
   emit()
 }
 
-export function resetPreferences(keys?: (keyof Preferences)[]): void {
-  updatePreferences(keys ? Object.fromEntries(keys.map((k) => [k, DEFAULT_PREFERENCES[k]])) : DEFAULT_PREFERENCES)
-}
-
 const subscribe = (fn: () => void) => {
   listeners.add(fn)
   return () => listeners.delete(fn)

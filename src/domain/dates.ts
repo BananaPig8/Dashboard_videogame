@@ -23,10 +23,6 @@ export function setClockTimeZone(tz: string): void {
   clockZone = isValidTimeZone(tz) ? tz : DEFAULT_TIME_ZONE
 }
 
-export function getClockTimeZone(): string {
-  return clockZone
-}
-
 const pad = (n: number) => String(n).padStart(2, '0')
 
 /** La fecha y la hora de un instante en una zona horaria. */

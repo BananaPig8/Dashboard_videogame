@@ -106,7 +106,8 @@ describe('estadísticas: progreso', () => {
     expect(p.tasks).toMatchObject({ done: 2, total: 4 })
     expect(p.milestones).toMatchObject({ done: 1, total: 2 })
     expect(p.byKind.find((k) => k.kind === 'task')!.count).toMatchObject({ done: 1, total: 2 })
-    expect(p.summary.open).toBe(3)
+    // t2 y m1: el objetivo tampoco cuenta en el resumen (como en Tareas).
+    expect(p.summary.open).toBe(2)
     expect(statsProgress(d, TODAY, 'q').map((r) => r.project.id)).toEqual(['q'])
     expect(statsProgress(d, TODAY, null, 'demo').find((r) => r.project.id === 'p')!.tasks.ratio).toBeNull()
   })
