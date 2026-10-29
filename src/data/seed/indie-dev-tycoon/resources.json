@@ -18,7 +18,7 @@
     "title": "Rama claude/lucid-lamport-fl6em4",
     "type": "link",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/tree/claude/lucid-lamport-fl6em4",
-    "description": "Rama de trabajo; hoy lleva la Demo 1.4 y la base de Idiomas sin PR.",
+    "description": "Rama de trabajo; todo lo suyo está en main (PR #40, #41 y #42, del 28 y el 29-10).",
     "tags": [
       "rama",
       "demo",
@@ -429,6 +429,18 @@
     "tags": [
       "steam",
       "steamworks"
+    ]
+  },
+  {
+    "id": "idt-res-titulos-json",
+    "projectId": "indie-dev-tycoon",
+    "title": "godot/idiomas/titulos.json: nombres de juegos inventados en cada idioma",
+    "type": "link",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/blob/main/godot/idiomas/titulos.json",
+    "description": "Las piezas con las que el juego monta los títulos (prefijos, palabras de los temas, sufijos, adaptaciones y remakes) y los estudios inventados, en inglés, francés, alemán, chino, japonés y coreano.",
+    "tags": [
+      "idiomas",
+      "godot"
     ]
   }
 ]

@@ -154,7 +154,7 @@
     "date": "2026-10-11",
     "distribution": "GitHub Releases (descargas)",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/releases/tag/descargas",
-    "notes": "Siete años (hasta 1991) o hasta la primera oficina; .exe 1.3.0.0. En la release desde el 11-10 (PR #31); lo de ahora se compiló del commit 8845556 (13-10, hora local). La sustituye la Demo 1.4 cuando se fusione la rama.",
+    "notes": "Siete años (hasta 1991) o hasta la primera oficina; .exe 1.3.0.0. En la release desde el 11-10 (PR #31); lo de ahora se compiló del commit 8845556 (13-10, hora local). La sustituye la Demo 1.4 (en main desde el 28-10) cuando se compile.",
     "releaseId": "idt-release-demo-1-3",
     "tags": [
       "demo"
@@ -254,7 +254,7 @@
     "date": "2026-10-12",
     "distribution": "GitHub Releases (descargas)",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/releases/tag/descargas",
-    "notes": "La misma demo con las barras de las fases de antes; .exe 1.3.0.2. En la release desde el 12-10 (PR #32); lo de ahora se compiló del commit 8845556 (13-10, hora local). En la rama sin fusionar (d8eca50) se elige para Steam como Demo 1.4; en main el README aún dice que no está decidido. Con la 1.4 deja de compilarse, pero sus zips no se borran solos de la release.",
+    "notes": "La misma demo con las barras de las fases de antes; .exe 1.3.0.2. En la release desde el 12-10 (PR #32); lo de ahora se compiló del commit 8845556 (13-10, hora local). Desde el 28-10 (PR #40) es la Demo 1.4, la que irá a Steam. Con la 1.4 deja de compilarse, pero sus zips no se borran solos de la release.",
     "releaseId": "idt-release-demo-1-3-v2",
     "tags": [
       "demo"
@@ -288,12 +288,7 @@
         "type": "commit",
         "ref": "d8eca50",
         "date": "2026-10-14",
-        "note": "Rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
-      },
-      {
-        "type": "readme",
-        "ref": "La demo",
-        "note": "En main: «Aún no está decidido si a Steam irá la 1.3 o la 1.3 V2»"
+        "note": "Demo 1.4; en main con la PR #40"
       }
     ],
     "confidence": "verified"
@@ -401,8 +396,8 @@
     ],
     "status": "in_progress",
     "date": "2026-10-14",
-    "distribution": "Sin publicar (rama claude/lucid-lamport-fl6em4)",
-    "notes": "La demo con las barras de antes, la que fue la 1.3 V2 y la que irá a Steam según la rama (en main sigue sin decidir); .exe 1.4.0.0 y Mac 1.4. Solo en la rama, sin PR: no está en la release «descargas». El flujo «Descargas» la compilará al fusionar la rama en main, cuando Actions vuelva a arrancar.",
+    "distribution": "Sin publicar (en main, sin compilar)",
+    "notes": "La demo con las barras de antes, la que fue la 1.3 V2 y la que irá a Steam; .exe 1.4.0.0 y Mac 1.4. En main desde el 28-10 (PR #40), pero no está en la release «descargas»: el flujo «Descargas» de la fusión no llegó a arrancar. Se compilará cuando Actions vuelva a funcionar.",
     "releaseId": "idt-release-demo-1-4",
     "tags": [
       "demo",
@@ -412,8 +407,20 @@
       {
         "type": "commit",
         "ref": "d8eca50",
-        "date": "2026-10-14",
-        "note": "En la rama, sin fusionar"
+        "date": "2026-10-14"
+      },
+      {
+        "type": "pr",
+        "ref": "#40",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/40",
+        "date": "2026-10-28"
+      },
+      {
+        "type": "doc",
+        "ref": "GitHub Actions: «Descargas» de la fusión de la PR #40 (run 40626934192)",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/actions/runs/40626934192",
+        "date": "2026-10-28",
+        "note": "Acaba en 4 s sin empezar"
       }
     ],
     "confidence": "verified"

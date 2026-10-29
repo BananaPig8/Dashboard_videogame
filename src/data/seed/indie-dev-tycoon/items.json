@@ -4546,9 +4546,9 @@
     "status": "done",
     "priority": "medium",
     "areaId": "tech",
-    "createdAt": "2026-09-28",
     "startedAt": "2026-09-28",
     "completedAt": "2026-09-29",
+    "createdAt": "2026-09-28",
     "decisionOutcome": "El flujo «Godot» corre en cada push y pull request (y a mano), para que Godot juegue exactamente igual que la web. Desde el 13-10, solo en las PR (a0c0c23); en ellas, la rápida, y la completa a mano o con la etiqueta «comprobación completa» (d46b1c3).",
     "tags": [
       "ci",
@@ -4606,9 +4606,9 @@
     "status": "done",
     "priority": "high",
     "areaId": "tech",
-    "createdAt": "2026-09-28",
     "startedAt": "2026-09-28",
     "completedAt": "2026-09-29",
+    "createdAt": "2026-09-28",
     "tags": [
       "godot",
       "web",
@@ -10634,16 +10634,16 @@
     "projectId": "indie-dev-tycoon",
     "kind": "decision",
     "title": "Qué demo va a Steam: la 1.3 V2, ahora Demo 1.4",
-    "description": "El 12-10 quedan publicadas la 1.3 y la 1.3 V2 porque aún no está decidido cuál irá a Steam; main y su README siguen así. El 14-10 se decide en la rama claude/lucid-lamport-fl6em4, todavía sin PR ni fusionar.",
-    "status": "review",
+    "description": "El 12-10 quedan publicadas la 1.3 y la 1.3 V2 porque aún no está decidido cuál irá a Steam. El 14-10 se decide en la rama claude/lucid-lamport-fl6em4 y el 28-10 llega a main con la PR #40.",
+    "status": "done",
     "priority": "high",
     "areaId": "demo",
     "startedAt": "2026-10-12",
-    "decisionOutcome": "En la rama (d8eca50), sin fusionar: irá a Steam la que fue la 1.3 V2, ahora Demo 1.4, y se quita la descarga aparte de la V2. En main sigue sin decidir.",
+    "completedAt": "2026-10-14",
+    "decisionOutcome": "Irá a Steam la que fue la 1.3 V2, ahora Demo 1.4, y se quita la descarga aparte de la V2. En main desde el 28-10 (PR #40; el README lo dice en «La demo»).",
     "tags": [
       "demo",
-      "steam",
-      "rama"
+      "steam"
     ],
     "sources": [
       {
@@ -10662,12 +10662,19 @@
         "type": "commit",
         "ref": "d8eca50",
         "date": "2026-10-14",
-        "note": "«la 1.3 V2, que es la que irá a Steam»; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+        "note": "«la 1.3 V2, que es la que irá a Steam»"
       },
       {
         "type": "readme",
         "ref": "La demo",
         "note": "En main: «Aún no está decidido si a Steam irá la 1.3 o la 1.3 V2»"
+      },
+      {
+        "type": "pr",
+        "ref": "#40",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/40",
+        "date": "2026-10-28",
+        "note": "Llegó a main con la PR #40 (fusionada el 2026-10-28, sin comprobaciones: Actions no arranca)"
       }
     ],
     "confidence": "verified"
@@ -10677,23 +10684,29 @@
     "projectId": "indie-dev-tycoon",
     "kind": "milestone",
     "title": "Demo 1.4: una sola demo con las barras de antes",
-    "description": "La demo y la Demo Valladolid usan las barras de las fases de antes (Game.old_bars()), como la 1.3 V2; portada v1.4, .exe 1.4.0.0 y Mac 1.4. Fuera Game.demo_v2, los presets Demo V2 y su compilación en «Descargas» y «Godot». Está en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar.",
-    "status": "review",
+    "description": "La demo y la Demo Valladolid usan las barras de las fases de antes (Game.old_bars()), como la 1.3 V2; portada v1.4, .exe 1.4.0.0 y Mac 1.4. Fuera Game.demo_v2, los presets Demo V2 y su compilación en «Descargas» y «Godot». En main desde el 28-10 (PR #40); aún sin compilar en la release «descargas» porque Actions no arranca.",
+    "status": "done",
     "priority": "high",
     "areaId": "demo",
     "startedAt": "2026-10-14",
+    "completedAt": "2026-10-14",
     "tags": [
       "demo",
       "godot",
-      "steam",
-      "rama"
+      "steam"
     ],
     "sources": [
       {
         "type": "commit",
         "ref": "d8eca50",
-        "date": "2026-10-14",
-        "note": "En la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+        "date": "2026-10-14"
+      },
+      {
+        "type": "pr",
+        "ref": "#40",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/40",
+        "date": "2026-10-28",
+        "note": "Llegó a main con la PR #40 (fusionada el 2026-10-28, sin comprobaciones: Actions no arranca)"
       }
     ],
     "confidence": "verified",
@@ -10704,23 +10717,29 @@
     "projectId": "indie-dev-tycoon",
     "kind": "feature",
     "title": "Idiomas (base): traductor, selector y letras de chino, japonés y coreano",
-    "description": "godot/scripts/idiomas.gd traduce cada texto al enseñarlo (frase entera o plantilla con huecos) y el motor sigue en castellano. Ocho idiomas en Ajustes (castellano de España y de Latinoamérica, inglés, francés, alemán, chino, japonés y coreano), con letras Fusion Pixel para los tres últimos; tools/idiomas.py saca las 1.284 frases de la demo. Está en la rama, sin PR ni fusionar.",
-    "status": "review",
+    "description": "godot/scripts/idiomas.gd traduce cada texto al enseñarlo (frase entera o plantilla con huecos) y el motor sigue en castellano. Ocho idiomas en Ajustes (castellano de España y de Latinoamérica, inglés, francés, alemán, chino, japonés y coreano), con letras Fusion Pixel para los tres últimos; tools/idiomas.py saca las 1.284 frases de la demo. En main desde el 28-10 (PR #40).",
+    "status": "done",
     "priority": "medium",
     "areaId": "localization",
     "startedAt": "2026-10-14",
+    "completedAt": "2026-10-14",
     "tags": [
       "idiomas",
       "godot",
-      "demo",
-      "rama"
+      "demo"
     ],
     "sources": [
       {
         "type": "commit",
         "ref": "b5aa4f2",
-        "date": "2026-10-14",
-        "note": "En la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+        "date": "2026-10-14"
+      },
+      {
+        "type": "pr",
+        "ref": "#40",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/40",
+        "date": "2026-10-28",
+        "note": "Llegó a main con la PR #40 (fusionada el 2026-10-28, sin comprobaciones: Actions no arranca)"
       }
     ],
     "confidence": "verified"
@@ -10730,24 +10749,31 @@
     "projectId": "indie-dev-tycoon",
     "kind": "decision",
     "title": "Traducir los textos al enseñarlos, sin tocar el motor",
-    "description": "Para los idiomas, todo se sigue escribiendo en castellano y Godot traduce cada texto al ponerlo en pantalla. Decidido en la rama, sin PR ni fusionar.",
-    "status": "review",
+    "description": "Para los idiomas, todo se sigue escribiendo en castellano y Godot traduce cada texto al ponerlo en pantalla. En main desde el 28-10 (PR #40).",
+    "status": "done",
     "priority": "medium",
     "areaId": "localization",
     "startedAt": "2026-10-14",
+    "completedAt": "2026-10-14",
     "decisionOutcome": "Un Traductor (Translation) en godot/scripts/idiomas.gd traduce al enseñar; el motor sigue en castellano, juega igual que la web y las partidas guardadas también se ven traducidas.",
     "tags": [
       "idiomas",
       "godot",
-      "motor",
-      "rama"
+      "motor"
     ],
     "sources": [
       {
         "type": "commit",
         "ref": "b5aa4f2",
         "date": "2026-10-14",
-        "note": "«El motor sigue escribiendo en castellano (igual que la web) y las partidas guardadas se ven traducidas»; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+        "note": "«El motor sigue escribiendo en castellano (igual que la web) y las partidas guardadas se ven traducidas»"
+      },
+      {
+        "type": "pr",
+        "ref": "#40",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/40",
+        "date": "2026-10-28",
+        "note": "Llegó a main con la PR #40 (fusionada el 2026-10-28, sin comprobaciones: Actions no arranca)"
       }
     ],
     "confidence": "verified"
@@ -10757,24 +10783,31 @@
     "projectId": "indie-dev-tycoon",
     "kind": "decision",
     "title": "Idiomas, de momento solo en la demo",
-    "description": "Idiomas.enabled() solo se enciende en la demo y en la Demo Valladolid. Decidido en la rama sin fusionar.",
-    "status": "review",
+    "description": "Idiomas.enabled() solo se enciende en la demo y en la Demo Valladolid. En main desde el 28-10 (PR #40).",
+    "status": "done",
     "priority": "medium",
     "areaId": "localization",
     "startedAt": "2026-10-14",
+    "completedAt": "2026-10-14",
     "decisionOutcome": "Solo la demo (y la Demo Valladolid) se traduce; el juego completo sigue en castellano de momento.",
     "tags": [
       "idiomas",
       "demo",
-      "godot",
-      "rama"
+      "godot"
     ],
     "sources": [
       {
         "type": "commit",
         "ref": "b5aa4f2",
         "date": "2026-10-14",
-        "note": "«De momento, solo en la demo»; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+        "note": "«De momento, solo en la demo»"
+      },
+      {
+        "type": "pr",
+        "ref": "#40",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/40",
+        "date": "2026-10-28",
+        "note": "Llegó a main con la PR #40 (fusionada el 2026-10-28, sin comprobaciones: Actions no arranca)"
       }
     ],
     "confidence": "verified"
@@ -10784,16 +10817,16 @@
     "projectId": "indie-dev-tycoon",
     "kind": "task",
     "title": "Abrir PR y fusionar la Demo 1.4 y los idiomas",
-    "description": "La rama claude/lucid-lamport-fl6em4 tiene once commits sin PR: la Demo 1.4 y la base de Idiomas (14-10), las traducciones de la demo (18 y 20-10), el cartel A3 del key art y las pegatinas (20-10); hasta fusionarlos, main y la release siguen con la demo 1.3 y la 1.3 V2. Como toca sim.gd, la PR necesita la etiqueta «comprobación completa». Mientras GitHub Actions no arranque, no pasará las comprobaciones ni se compilarán las descargas.",
-    "status": "review",
+    "description": "La rama claude/lucid-lamport-fl6em4 llevaba sin PR la Demo 1.4 y la base de Idiomas (14-10), las traducciones de la demo (18 y 20-10), el cartel A3 y las pegatinas (20-10). El 28-10 se abre y se fusiona la PR #40 con todo eso y la revisión de las traducciones. Se fusionó sin las comprobaciones de Actions, que no arranca; la comprobación rápida de Godot se pasó a mano y salió bien.",
+    "status": "done",
     "priority": "high",
     "areaId": "release",
     "startedAt": "2026-10-14",
+    "completedAt": "2026-10-28",
     "tags": [
       "demo",
       "idiomas",
       "godot",
-      "rama",
       "github"
     ],
     "sources": [
@@ -10801,36 +10834,36 @@
         "type": "commit",
         "ref": "d8eca50",
         "date": "2026-10-14",
-        "note": "Demo 1.4; en la rama, sin fusionar"
+        "note": "Demo 1.4"
       },
       {
         "type": "commit",
         "ref": "b5aa4f2",
         "date": "2026-10-14",
-        "note": "Idiomas (base); en la rama, sin fusionar"
+        "note": "Idiomas (base)"
       },
       {
         "type": "commit",
         "ref": "3665de9",
         "date": "2026-10-18",
-        "note": "Traducciones; en la rama, sin fusionar"
+        "note": "Traducciones"
       },
       {
         "type": "commit",
         "ref": "33a3632",
         "date": "2026-10-18",
-        "note": "Traducciones; toca godot/scripts/sim.gd; en la rama, sin fusionar"
+        "note": "Traducciones; toca godot/scripts/sim.gd"
       },
       {
         "type": "commit",
         "ref": "912976f",
         "date": "2026-10-20",
-        "note": "Traducciones; toca godot/scripts/sim.gd; en la rama, sin fusionar"
+        "note": "Traducciones; toca godot/scripts/sim.gd"
       },
       {
         "type": "doc",
         "ref": "GitHub: pull requests del repositorio",
-        "note": "39 PR, todas fusionadas; ninguna más en el remoto (refs/pull) a 2026-10-25"
+        "note": "39 PR, todas fusionadas, a 2026-10-25; la #40 se abre y se fusiona el 2026-10-28"
       },
       {
         "type": "release",
@@ -10842,6 +10875,19 @@
         "type": "doc",
         "ref": "CLAUDE.md del juego",
         "note": "«a una PR que toque el motor ponle la etiqueta «comprobación completa»»"
+      },
+      {
+        "type": "commit",
+        "ref": "7e53a92",
+        "date": "2026-10-28",
+        "note": "Último commit de la PR #40"
+      },
+      {
+        "type": "pr",
+        "ref": "#40",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/40",
+        "date": "2026-10-28",
+        "note": "Fusionada el 2026-10-28; la comprobación rápida de Godot, pasada a mano («todo bien»)"
       }
     ],
     "confidence": "verified"
@@ -10851,7 +10897,7 @@
     "projectId": "indie-dev-tycoon",
     "kind": "issue",
     "title": "GitHub Actions dejó de arrancar el 13-10",
-    "description": "Desde el 13-10 a las 08:44 ningún flujo (CI, Godot, Descargas) llega a empezar: GitHub dice que han fallado pagos recientes de la cuenta o que hay que subir el límite de gasto. Las PR #36 a #39 se fusionaron sin comprobaciones y la release «descargas» sigue con lo compilado de la PR #35 (sin el icono nuevo). No ha habido ejecuciones desde el 13-10 a las 11:07 (hora local): falta comprobar si sigue.",
+    "description": "Desde el 13-10 a las 08:44 ningún flujo (CI, Godot, Descargas) llega a empezar: GitHub dice que han fallado pagos recientes de la cuenta o que hay que subir el límite de gasto. Sigue igual el 28 y el 29-10: las ejecuciones de las fusiones de las PR #40, #41 y #42 acaban en unos segundos sin máquina asignada. Las PR #36 a #42 se fusionaron sin comprobaciones y la release «descargas» sigue con lo compilado de la PR #35: sin la Demo 1.4 ni los idiomas.",
     "status": "blocked",
     "priority": "critical",
     "areaId": "release",
@@ -10881,6 +10927,20 @@
         "ref": "#39",
         "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/39",
         "note": "Última PR fusionada; sus comprobaciones no llegaron a arrancar"
+      },
+      {
+        "type": "doc",
+        "ref": "GitHub Actions: «Descargas» de la fusión de la PR #40 (run 40626934192)",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/actions/runs/40626934192",
+        "date": "2026-10-28",
+        "note": "Acaba en 4 s sin empezar; igual la de la PR #41 (run 40650261420)"
+      },
+      {
+        "type": "doc",
+        "ref": "GitHub Actions: CI de la fusión de la PR #42 (run 40801650492)",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/actions/runs/40801650492",
+        "date": "2026-10-29",
+        "note": "Acaba en 4 s sin empezar (consultado el 2026-10-29)"
       }
     ],
     "confidence": "verified"
@@ -11154,7 +11214,7 @@
     "projectId": "indie-dev-tycoon",
     "kind": "task",
     "title": "Publicar la Demo 1.4 en Steam",
-    "description": "El commit de la Demo 1.4 dice que es la que irá a Steam. Antes hay que fusionarla y tener la página y el App ID.",
+    "description": "La Demo 1.4 es la que irá a Steam y está en main desde el 28-10 (PR #40). Falta compilarla (Actions no arranca), la página de Steam y el App ID, y que se validen las traducciones.",
     "status": "planned",
     "priority": "high",
     "areaId": "demo",
@@ -11167,7 +11227,14 @@
         "type": "commit",
         "ref": "d8eca50",
         "date": "2026-10-14",
-        "note": "«la que irá a Steam»; rama sin fusionar"
+        "note": "«la que irá a Steam»"
+      },
+      {
+        "type": "pr",
+        "ref": "#40",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/40",
+        "date": "2026-10-28",
+        "note": "La Demo 1.4 llega a main"
       }
     ],
     "confidence": "inferred",
@@ -11307,7 +11374,7 @@
     "projectId": "indie-dev-tycoon",
     "kind": "feature",
     "title": "Llevar los idiomas al juego completo",
-    "description": "La base de Idiomas solo se enciende en la demo y en la Demo Valladolid; el juego completo sigue en castellano «de momento». Está en la rama sin fusionar.",
+    "description": "La base de Idiomas solo se enciende en la demo y en la Demo Valladolid; el juego completo sigue en castellano «de momento». En main desde el 28-10 (PR #40).",
     "status": "to_confirm",
     "priority": "medium",
     "areaId": "localization",
@@ -11325,7 +11392,7 @@
       },
       {
         "type": "doc",
-        "ref": "godot/scripts/idiomas.gd (rama claude/lucid-lamport-fl6em4)",
+        "ref": "godot/scripts/idiomas.gd",
         "note": "«De momento solo la demo (y la Demo Valladolid) está traducida»"
       }
     ],
@@ -11529,17 +11596,17 @@
     "id": "idt-idiomas-traducciones",
     "projectId": "indie-dev-tycoon",
     "kind": "task",
-    "title": "Traducir las frases de la demo (las 1.142, en la rama)",
-    "description": "En la rama, sin PR: las 1.142 frases de la demo traducidas al inglés, francés, alemán, chino, japonés y coreano (godot/idiomas/<idioma>.json); el castellano de Latinoamérica lleva las 37 frases que cambian. nombres.txt guarda lo que no se traduce. Falta revisarlas en pantalla (capturas por idioma) y ver las frases que se queden sin traducir.",
-    "status": "review",
+    "title": "Traducir las frases de la demo a seis idiomas",
+    "description": "Las frases de la demo traducidas al inglés, francés, alemán, chino, japonés y coreano (godot/idiomas/<idioma>.json), con los cambios del castellano de Latinoamérica. Tras revisarlas con todo lo que se enseña al jugar la demo (14.462 textos capturados) y con capturas de pantalla por idioma, la PR #40 lleva las 2.052 frases (45 cambios para Latinoamérica); con los nombres de la PR #41, 2.100. Falta que las validen hablantes nativos.",
+    "status": "done",
     "priority": "medium",
     "areaId": "localization",
     "startedAt": "2026-10-14",
+    "completedAt": "2026-10-28",
     "tags": [
       "idiomas",
       "demo",
-      "godot",
-      "rama"
+      "godot"
     ],
     "sources": [
       {
@@ -11552,24 +11619,49 @@
         "type": "commit",
         "ref": "3665de9",
         "date": "2026-10-18",
-        "note": "Primeras 546 frases en 6 idiomas y castellano de Latinoamérica; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+        "note": "Primeras 546 frases en 6 idiomas y castellano de Latinoamérica"
       },
       {
         "type": "commit",
         "ref": "33a3632",
         "date": "2026-10-18",
-        "note": "816 frases y plurales que se pueden traducir; toca godot/scripts/sim.gd; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+        "note": "816 frases y plurales que se pueden traducir; toca godot/scripts/sim.gd"
       },
       {
         "type": "commit",
         "ref": "912976f",
         "date": "2026-10-20",
-        "note": "«las 1.142 frases de la demo traducidas a 6 idiomas (y 37 cambios para Latinoamérica)»; «Faltan por revisar en pantalla (capturas por idioma)»; toca godot/scripts/sim.gd; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+        "note": "«las 1.142 frases de la demo traducidas a 6 idiomas (y 37 cambios para Latinoamérica)»; «Faltan por revisar en pantalla (capturas por idioma)»; toca godot/scripts/sim.gd"
       },
       {
         "type": "doc",
         "ref": "godot/idiomas/ (rama claude/lucid-lamport-fl6em4, ac614ee)",
         "note": "Contado con tools/idiomas.py estado el 2026-10-25: 1.142 de 1.142 en en, fr, de, zh_CN, ja y ko; es_419 con 37 frases que cambian (173 nombres no se traducen)"
+      },
+      {
+        "type": "commit",
+        "ref": "054e00d",
+        "date": "2026-10-28",
+        "note": "Frases nuevas: ramas que la captura no veía, premios, biografía, ficha del juego"
+      },
+      {
+        "type": "commit",
+        "ref": "917e861",
+        "date": "2026-10-28",
+        "note": "Nombres propios nuevos, palabras enteras en Equipo y webs, miles en francés con espacio fijo"
+      },
+      {
+        "type": "commit",
+        "ref": "9dee3c5",
+        "date": "2026-10-28",
+        "note": "«las 649 frases de la demo que faltaban, en los seis idiomas»"
+      },
+      {
+        "type": "pr",
+        "ref": "#40",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/40",
+        "date": "2026-10-28",
+        "note": "Llegó a main con la PR #40 (fusionada el 2026-10-28, sin comprobaciones: Actions no arranca)"
       }
     ],
     "confidence": "verified"
@@ -11579,35 +11671,42 @@
     "projectId": "indie-dev-tycoon",
     "kind": "feature",
     "title": "Plurales y frases enteras, y títulos de juegos sin traducir a trozos",
-    "description": "Los plurales hechos pegando una «s» pasan a frases enteras; en castellano se ven igual. El traductor no traduce a trozos los títulos de los juegos ni usa plantillas muy cortas si no sabe traducir sus huecos. El 20-10, más frases del motor y de la interfaz que se montaban a trozos pasan a frases enteras (resumen del año, biografía, investigar, «empieza/empiezan»…). Está en la rama, sin PR ni fusionar.",
-    "status": "review",
+    "description": "Los plurales hechos pegando una «s» pasan a frases enteras; en castellano se ven igual. El traductor no traduce a trozos los títulos de los juegos ni usa plantillas muy cortas si no sabe traducir sus huecos. El 20-10, más frases del motor y de la interfaz que se montaban a trozos pasan a frases enteras (resumen del año, biografía, investigar, «empieza/empiezan»…). En main desde el 28-10 (PR #40).",
+    "status": "done",
     "priority": "medium",
     "areaId": "localization",
     "startedAt": "2026-10-18",
+    "completedAt": "2026-10-20",
     "tags": [
       "idiomas",
       "godot",
-      "demo",
-      "rama"
+      "demo"
     ],
     "sources": [
       {
         "type": "commit",
         "ref": "3665de9",
         "date": "2026-10-18",
-        "note": "«El traductor no usa las plantillas con muy poco texto fijo … si sus huecos no se saben traducir»; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+        "note": "«El traductor no usa las plantillas con muy poco texto fijo … si sus huecos no se saben traducir»"
       },
       {
         "type": "commit",
         "ref": "33a3632",
         "date": "2026-10-18",
-        "note": "«Los plurales hechos pegando una «s» … pasan a frases enteras»; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+        "note": "«Los plurales hechos pegando una «s» … pasan a frases enteras»"
       },
       {
         "type": "commit",
         "ref": "912976f",
         "date": "2026-10-20",
-        "note": "«Frases del motor y de la interfaz que se montaban a trozos pasan a frases enteras»; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+        "note": "«Frases del motor y de la interfaz que se montaban a trozos pasan a frases enteras»"
+      },
+      {
+        "type": "pr",
+        "ref": "#40",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/40",
+        "date": "2026-10-28",
+        "note": "Llegó a main con la PR #40 (fusionada el 2026-10-28, sin comprobaciones: Actions no arranca)"
       }
     ],
     "confidence": "verified"
@@ -11617,29 +11716,36 @@
     "projectId": "indie-dev-tycoon",
     "kind": "feature",
     "title": "Cartel A3 con el key art",
-    "description": "keyart.gd saca un cartel A3 con 3 mm de sangrado (303×426 mm) en dos versiones: con el logo, las tres oficinas y hueco para los textos y el QR, que se ponen encima al montar el PDF, y otra solo con el arte, con las oficinas más grandes. Está en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar; no consta para qué se va a usar.",
-    "status": "review",
+    "description": "keyart.gd saca un cartel A3 con 3 mm de sangrado (303×426 mm) en dos versiones: con el logo, las tres oficinas y hueco para los textos y el QR, que se ponen encima al montar el PDF, y otra solo con el arte, con las oficinas más grandes. En main desde el 28-10 (PR #40); no consta para qué se va a usar.",
+    "status": "done",
     "priority": "medium",
     "areaId": "marketing",
     "startedAt": "2026-10-20",
+    "completedAt": "2026-10-20",
     "tags": [
       "keyart",
       "arte",
       "marketing",
-      "godot",
-      "rama"
+      "godot"
     ],
     "sources": [
       {
         "type": "commit",
         "ref": "bb690a6",
         "date": "2026-10-20",
-        "note": "«cartel A3 (solo arte y con hueco para textos), a 307 ppp con 3 mm de sangrado»; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+        "note": "«cartel A3 (solo arte y con hueco para textos), a 307 ppp con 3 mm de sangrado»"
       },
       {
         "type": "doc",
         "ref": "godot/tests/keyart.gd (rama claude/lucid-lamport-fl6em4)",
         "note": "Diseños «a3» y «a3_arte»"
+      },
+      {
+        "type": "pr",
+        "ref": "#40",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/40",
+        "date": "2026-10-28",
+        "note": "Llegó a main con la PR #40 (fusionada el 2026-10-28, sin comprobaciones: Actions no arranca)"
       }
     ],
     "confidence": "verified"
@@ -11649,52 +11755,59 @@
     "projectId": "indie-dev-tycoon",
     "kind": "feature",
     "title": "Pegatinas troqueladas con las piezas del juego",
-    "description": "godot/tests/pegatinas.gd dibuja con las piezas del juego, sobre fondo transparente, cuatro pegatinas (el logo, el cuarto, la sede y la insignia «Juego del año») y, con «memes», cuatro memes conocidos con los personajes del juego («Esto está bien», «Stonks», el de Drake y el de los dos botones). tools/pegatinas/troquel.py deja cada una como la piden las empresas de pegatinas: PNG transparente, PNG con fondo blanco y PDF troquelado con borde blanco de 3 mm y la línea de corte «CutContour». Está en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar; no consta para qué se van a usar ni si se han encargado.",
-    "status": "review",
+    "description": "godot/tests/pegatinas.gd dibuja con las piezas del juego, sobre fondo transparente, cuatro pegatinas (el logo, el cuarto, la sede y la insignia «Juego del año») y, con «memes», cuatro memes conocidos con los personajes del juego («Esto está bien», «Stonks», el de Drake y el de los dos botones). tools/pegatinas/troquel.py deja cada una como la piden las empresas de pegatinas: PNG transparente, PNG con fondo blanco y PDF troquelado con borde blanco de 3 mm y la línea de corte «CutContour». En main desde el 28-10 (PR #40); no consta para qué se van a usar ni si se han encargado.",
+    "status": "done",
     "priority": "medium",
     "areaId": "marketing",
     "startedAt": "2026-10-20",
+    "completedAt": "2026-10-20",
     "tags": [
       "pegatinas",
       "marketing",
       "arte",
-      "godot",
-      "rama"
+      "godot"
     ],
     "sources": [
       {
         "type": "commit",
         "ref": "6c58818",
         "date": "2026-10-20",
-        "note": "Cuatro diseños troquelados (logo, cuarto 1984, sede 2050 y «Juego del año»); en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+        "note": "Cuatro diseños troquelados (logo, cuarto 1984, sede 2050 y «Juego del año»)"
       },
       {
         "type": "commit",
         "ref": "22a179b",
         "date": "2026-10-20",
-        "note": "Sin los años y con fondo transparente, cada una por separado; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+        "note": "Sin los años y con fondo transparente, cada una por separado"
       },
       {
         "type": "commit",
         "ref": "d5e2364",
         "date": "2026-10-20",
-        "note": "Primera tanda de memes con textos; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+        "note": "Primera tanda de memes con textos"
       },
       {
         "type": "commit",
         "ref": "c2c91a0",
         "date": "2026-10-20",
-        "note": "«Esto está bien», «Stonks» y Drake; sustituye a la tanda anterior; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+        "note": "«Esto está bien», «Stonks» y Drake; sustituye a la tanda anterior"
       },
       {
         "type": "commit",
         "ref": "ac614ee",
         "date": "2026-10-20",
-        "note": "Meme de los dos botones y archivos para la imprenta (PNG y PDF con «CutContour»); en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+        "note": "Meme de los dos botones y archivos para la imprenta (PNG y PDF con «CutContour»)"
       },
       {
         "type": "doc",
         "ref": "godot/tests/pegatinas.gd (rama claude/lucid-lamport-fl6em4)"
+      },
+      {
+        "type": "pr",
+        "ref": "#40",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/40",
+        "date": "2026-10-28",
+        "note": "Llegó a main con la PR #40 (fusionada el 2026-10-28, sin comprobaciones: Actions no arranca)"
       }
     ],
     "confidence": "verified"
@@ -11704,28 +11817,35 @@
     "projectId": "indie-dev-tycoon",
     "kind": "decision",
     "title": "Memes de las pegatinas: solo el formato, con los personajes del juego",
-    "description": "Las pegatinas en plan meme copian solo el formato de memes conocidos. Decidido en la rama, sin PR ni fusionar.",
-    "status": "review",
+    "description": "Las pegatinas en plan meme copian solo el formato de memes conocidos. En main desde el 28-10 (PR #40).",
+    "status": "done",
     "priority": "medium",
     "areaId": "marketing",
     "startedAt": "2026-10-20",
+    "completedAt": "2026-10-20",
     "decisionOutcome": "Los memes se redibujan con las piezas del juego: ni caras de gente real ni personajes de otros. Sustituyen a la primera tanda de textos de meme.",
     "tags": [
       "pegatinas",
-      "marketing",
-      "rama"
+      "marketing"
     ],
     "sources": [
       {
         "type": "commit",
         "ref": "c2c91a0",
         "date": "2026-10-20",
-        "note": "«Solo el formato: los personajes son los del juego. Sustituye a la tanda anterior de textos de meme»; en la rama claude/lucid-lamport-fl6em4, sin PR ni fusionar"
+        "note": "«Solo el formato: los personajes son los del juego. Sustituye a la tanda anterior de textos de meme»"
       },
       {
         "type": "doc",
         "ref": "godot/tests/pegatinas.gd (rama claude/lucid-lamport-fl6em4)",
         "note": "«solo el formato: ni caras de gente real ni personajes de otros»"
+      },
+      {
+        "type": "pr",
+        "ref": "#40",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/40",
+        "date": "2026-10-28",
+        "note": "Llegó a main con la PR #40 (fusionada el 2026-10-28, sin comprobaciones: Actions no arranca)"
       }
     ],
     "confidence": "verified"
@@ -11904,6 +12024,13 @@
         "type": "doc",
         "ref": ".github/workflows/descargas.yml",
         "note": "Sube con --clobber; no borra lo que ya no se compila"
+      },
+      {
+        "type": "pr",
+        "ref": "#40",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/40",
+        "date": "2026-10-28",
+        "note": "Con la Demo 1.4 en main, el flujo «Descargas» ya no compila la V2"
       }
     ],
     "confidence": "inferred"
@@ -12061,5 +12188,289 @@
       }
     ],
     "confidence": "to_confirm"
+  },
+  {
+    "id": "idt-idiomas-frases-enteras-28-10",
+    "projectId": "indie-dev-tycoon",
+    "kind": "feature",
+    "title": "Frases enteras para poder traducirlas: El mundo, la gala, la biografía y los eventos",
+    "description": "Lo que el código montaba a trozos se escribe entero, una frase por caso (en castellano se ve igual y el motor saca el mismo texto que la web): fichas de estudios, nota media de la competencia, la gala en la historia de un rival, «Construye la/el…», el sitio de los eventos, cuando un juego deja las tiendas (el punto de los miles partía la cifra en chino y japonés), premios y ferias de la biografía y los últimos lanzamientos. «· de moda» en vez de «· moda», que es también un tema.",
+    "status": "done",
+    "priority": "medium",
+    "areaId": "localization",
+    "startedAt": "2026-10-28",
+    "completedAt": "2026-10-28",
+    "tags": [
+      "idiomas",
+      "demo",
+      "godot"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "19c5146",
+        "date": "2026-10-28",
+        "note": "Ficha del juego, El mundo y el estreno de una adaptación"
+      },
+      {
+        "type": "commit",
+        "ref": "effe286",
+        "date": "2026-10-28"
+      },
+      {
+        "type": "commit",
+        "ref": "a2b0fdf",
+        "date": "2026-10-28"
+      },
+      {
+        "type": "commit",
+        "ref": "8e9fa5c",
+        "date": "2026-10-28",
+        "note": "README: frases enteras también en el motor"
+      },
+      {
+        "type": "pr",
+        "ref": "#40",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/40",
+        "date": "2026-10-28",
+        "note": "Llegó a main con la PR #40 (fusionada el 2026-10-28, sin comprobaciones: Actions no arranca)"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-idiomas-traductor-reglas",
+    "projectId": "indie-dev-tycoon",
+    "kind": "feature",
+    "title": "Traductor más fino: primero la frase entera, listas, « · » y cifras",
+    "description": "El traductor busca primero una traducción completa (sin trozos en castellano) y solo si no la hay se queda con lo que pueda; plantillas con dos huecos seguidos, listas con comas y frases que empiezan por un hueco. El hueco del principio o del final ya no se traga lo que va detrás de un « · », y la cifra de delante de una lista va con su primer trozo («9 juegos · 17 personas»). tools/idiomas.py reconoce las frases igual.",
+    "status": "done",
+    "priority": "medium",
+    "areaId": "localization",
+    "startedAt": "2026-10-28",
+    "completedAt": "2026-10-28",
+    "tags": [
+      "idiomas",
+      "godot",
+      "herramientas"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "19c5146",
+        "date": "2026-10-28"
+      },
+      {
+        "type": "commit",
+        "ref": "a2b0fdf",
+        "date": "2026-10-28"
+      },
+      {
+        "type": "commit",
+        "ref": "62ed7c7",
+        "date": "2026-10-28"
+      },
+      {
+        "type": "commit",
+        "ref": "cbd3f39",
+        "date": "2026-10-28"
+      },
+      {
+        "type": "pr",
+        "ref": "#40",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/40",
+        "date": "2026-10-28",
+        "note": "Llegó a main con la PR #40 (fusionada el 2026-10-28, sin comprobaciones: Actions no arranca)"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-godot-check-en-castellano",
+    "projectId": "indie-dev-tycoon",
+    "kind": "issue",
+    "title": "La comprobación de Godot fallaba con el sistema en otro idioma",
+    "description": "Desde los idiomas, la demo arranca en el idioma del sistema (inglés en Actions y en casi cualquier máquina) y la prueba de la demo buscaba sus textos en castellano. tools/godot_check.sh fija ahora INDIE_IDIOMA=es.",
+    "status": "done",
+    "priority": "high",
+    "areaId": "tech",
+    "startedAt": "2026-10-28",
+    "completedAt": "2026-10-28",
+    "tags": [
+      "pruebas",
+      "ci",
+      "idiomas",
+      "godot"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "7e53a92",
+        "date": "2026-10-28"
+      },
+      {
+        "type": "pr",
+        "ref": "#40",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/40",
+        "date": "2026-10-28",
+        "note": "Llegó a main con la PR #40 (fusionada el 2026-10-28, sin comprobaciones: Actions no arranca)"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-idiomas-titulos-inventados",
+    "projectId": "indie-dev-tycoon",
+    "kind": "feature",
+    "title": "Nombres de juegos inventados en cada idioma",
+    "description": "godot/idiomas/titulos.json lleva las piezas de los títulos que se inventa el juego (13 prefijos, las 168 palabras de los temas, 15 sufijos, adaptaciones y remakes) y de los estudios inventados, en los seis idiomas; idiomas.gd los monta como Sim.random_name pero a la manera de cada idioma, con artículos y contracciones en francés y alemán y el orden propio del chino, el japonés y el coreano, con sus secuelas y los juegos con licencia. Los juegos de palabras de los títulos van adaptados («la Liga Justa» → «the Just-Enough League», «la Ligue Juste», «正好联盟»). Los nombres que pone el jugador se quedan como son.",
+    "status": "done",
+    "priority": "medium",
+    "areaId": "localization",
+    "startedAt": "2026-10-28",
+    "completedAt": "2026-10-28",
+    "tags": [
+      "idiomas",
+      "demo",
+      "godot"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "08911c4",
+        "date": "2026-10-28"
+      },
+      {
+        "type": "commit",
+        "ref": "43791e4",
+        "date": "2026-10-28",
+        "note": "README al día"
+      },
+      {
+        "type": "pr",
+        "ref": "#41",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/41",
+        "date": "2026-10-28"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-idiomas-juegos-de-palabras",
+    "projectId": "indie-dev-tycoon",
+    "kind": "feature",
+    "title": "Estudios, consolas, revistas y licencias con su juego de palabras en cada idioma",
+    "description": "Las parodias en castellano (Artes Eléctricas, Cuadrado Fénix, Perro Travieso, Ninvento, Saga Mega, Pantalla Total, la LMF…) tienen la suya en cada idioma («Electric Arts», «Cheeky Dog», «Ninvention», «カプコーン», «万代南梦菇», «코나무»…) en vez de quedarse en castellano. De paso, la marca «Saga» ya no sale traducida como «saga» (serie).",
+    "status": "done",
+    "priority": "medium",
+    "areaId": "localization",
+    "startedAt": "2026-10-28",
+    "completedAt": "2026-10-28",
+    "tags": [
+      "idiomas",
+      "demo",
+      "godot"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "df0dea1",
+        "date": "2026-10-28"
+      },
+      {
+        "type": "pr",
+        "ref": "#41",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/41",
+        "date": "2026-10-28"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-idiomas-cjk-fechas-comillas",
+    "projectId": "indie-dev-tycoon",
+    "kind": "feature",
+    "title": "Chino, japonés y coreano: fechas, espacios y comillas dentro de comillas",
+    "description": "En chino y japonés, sin espacio entre frases y la fecha como 1990年11月 (en coreano, 1990년 11월); en todos los idiomas, las comillas dentro de comillas a su manera (“‘…’”, „‚…‘“, « “…” », 「『…』」, ‘“…”’).",
+    "status": "done",
+    "priority": "low",
+    "areaId": "localization",
+    "startedAt": "2026-10-28",
+    "completedAt": "2026-10-28",
+    "tags": [
+      "idiomas",
+      "demo",
+      "godot"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "08911c4",
+        "date": "2026-10-28"
+      },
+      {
+        "type": "pr",
+        "ref": "#41",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/41",
+        "date": "2026-10-28"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-idiomas-validacion-nativos",
+    "projectId": "indie-dev-tycoon",
+    "kind": "task",
+    "title": "Validar las traducciones con hablantes nativos",
+    "description": "Las traducciones de la demo no las ha revisado nadie que hable esos idiomas. Hay una hoja de validación (Excel, fuera del repositorio) con una pestaña por idioma: los juegos de palabras con a qué parodian, las piezas de los títulos, títulos de ejemplo y todas las frases con cómo salen en pantalla, más otra para el castellano de Latinoamérica. Con lo que devuelvan se meten las correcciones.",
+    "status": "blocked",
+    "priority": "high",
+    "areaId": "localization",
+    "blockedReason": "A la espera de quien valide cada idioma.",
+    "tags": [
+      "idiomas",
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "pr",
+        "ref": "#41",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/41",
+        "date": "2026-10-28",
+        "note": "«Hay un libro Excel para quien valide, fuera del repositorio»"
+      }
+    ],
+    "confidence": "inferred"
+  },
+  {
+    "id": "idt-decision-studio-hub",
+    "projectId": "indie-dev-tycoon",
+    "kind": "decision",
+    "title": "Todo cambio del juego se apunta también en el Studio Hub",
+    "description": "El CLAUDE.md del juego lo pide desde el 29-10: al fusionar algo en el juego, el Studio Hub se pone al día.",
+    "status": "done",
+    "priority": "medium",
+    "areaId": "tech",
+    "startedAt": "2026-10-29",
+    "completedAt": "2026-10-29",
+    "decisionOutcome": "Se regenera el historial (npm run historial), se añade a items.json lo hecho y lo pendiente con su fuente, se ponen al día builds, versiones y objetivos y se sube SEED_VERSION.",
+    "tags": [
+      "studio-hub",
+      "documentacion"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "0260682",
+        "date": "2026-10-29"
+      },
+      {
+        "type": "pr",
+        "ref": "#42",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/42",
+        "date": "2026-10-29"
+      }
+    ],
+    "confidence": "verified"
   }
 ]

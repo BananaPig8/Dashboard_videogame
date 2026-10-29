@@ -184,8 +184,8 @@
       {
         "id": "idt-steam-ck-demo",
         "label": "Elegir la demo para Steam",
-        "done": false,
-        "note": "Elegida la 1.3 V2 (Demo 1.4) en la rama sin fusionar; en main sigue sin decidir.",
+        "done": true,
+        "note": "La 1.3 V2, ahora Demo 1.4: en main desde el 28-10 (PR #40).",
         "sources": [
           {
             "type": "commit",
@@ -193,9 +193,15 @@
             "date": "2026-10-14"
           },
           {
+            "type": "pr",
+            "ref": "#40",
+            "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/40",
+            "date": "2026-10-28"
+          },
+          {
             "type": "readme",
             "ref": "La demo",
-            "note": "En main: «Aún no está decidido si a Steam irá la 1.3 o la 1.3 V2»"
+            "note": "«desde la 1.4, la demo es la que fue la «1.3 V2» (la que irá a Steam)»"
           }
         ]
       },
