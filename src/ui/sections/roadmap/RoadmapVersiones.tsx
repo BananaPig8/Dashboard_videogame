@@ -77,6 +77,7 @@ function ReleaseBlock({ r, data, today, showProject }: { r: RoadmapRelease; data
                   </button>
                   <span className="version-tag">v{b.version}</span>
                   <BuildStatusPill status={b.status} />
+                  <ConfidenceTag confidence={b.confidence} compact />
                 </li>
               ))}
             </ul>

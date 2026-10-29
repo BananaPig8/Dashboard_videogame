@@ -217,7 +217,8 @@ export function dailyCommits(data: StudioData, today: ISODate, days: number, pro
 
 // ——— Estado de cada proyecto ——————————————————————————————————————————
 
-export type HealthLevel = 'on_track' | 'attention' | 'urgent' | 'idle'
+/** no_data: no tiene nada apuntado (ni trabajo ni historial): no se puede decir que vaya «al día». */
+export type HealthLevel = 'on_track' | 'attention' | 'urgent' | 'idle' | 'no_data'
 
 export interface ProjectHealth {
   level: HealthLevel
@@ -310,6 +311,8 @@ export function projectSummary(data: StudioData, project: Project, today: ISODat
   }
 
   let level: HealthLevel = score >= 7 ? 'urgent' : score >= 3 ? 'attention' : 'on_track'
+  // Sin nada apuntado no hay de qué deducir que va bien.
+  if (level === 'on_track' && !reasons.length && !items.length && !lastActivity) level = 'no_data'
   if (project.stage === 'paused' || project.stage === 'archived') level = 'idle'
 
   return {
@@ -390,6 +393,12 @@ export interface StudioNotification {
   tone: 'danger' | 'warning' | 'info'
   title: string
   date?: ISODate
+  /**
+   * false si la fecha del aviso es prevista y nadie la ha confirmado (evento, plazo de
+   * inscripción o versión): el aviso no la da por cierta. Las fechas propias (fechas límite,
+   * recordatorios) siempre lo están.
+   */
+  confirmed: boolean
   projectId?: ID
   target: { collection: CollectionKey; id: ID }
 }
@@ -405,19 +414,19 @@ export function notificationsFor(data: StudioData, today: ISODate): StudioNotifi
   for (const i of data.items) {
     if (!isOpen(i) || !isWork(i)) continue
     if (i.dueDate && i.dueDate < today)
-      out.push({ id: `overdue:${i.id}:${i.dueDate}`, kind: 'overdue', tone: 'danger', title: i.title, date: i.dueDate, projectId: i.projectId, target: { collection: 'items', id: i.id } })
+      out.push({ id: `overdue:${i.id}:${i.dueDate}`, kind: 'overdue', tone: 'danger', title: i.title, date: i.dueDate, confirmed: true, projectId: i.projectId, target: { collection: 'items', id: i.id } })
     else if (i.dueDate === today)
-      out.push({ id: `due:${i.id}:${today}`, kind: 'dueToday', tone: 'warning', title: i.title, date: today, projectId: i.projectId, target: { collection: 'items', id: i.id } })
+      out.push({ id: `due:${i.id}:${today}`, kind: 'dueToday', tone: 'warning', title: i.title, date: today, confirmed: true, projectId: i.projectId, target: { collection: 'items', id: i.id } })
     if (i.status === 'blocked' && PRIORITIES[i.priority].weight >= 3)
-      out.push({ id: `blocked:${i.id}`, kind: 'blocked', tone: 'danger', title: i.title, projectId: i.projectId, target: { collection: 'items', id: i.id } })
+      out.push({ id: `blocked:${i.id}`, kind: 'blocked', tone: 'danger', title: i.title, confirmed: true, projectId: i.projectId, target: { collection: 'items', id: i.id } })
   }
   for (const e of data.events) {
     if (!e.date || e.status === 'cancelled' || e.status === 'done') continue
     const days = daysBetween(today, e.date)
     if (days >= 0 && days <= 14)
-      out.push({ id: `event:${e.id}:${e.date}`, kind: 'eventSoon', tone: days <= 3 ? 'warning' : 'info', title: e.title, date: e.date, projectId: e.projectId, target: { collection: 'events', id: e.id } })
+      out.push({ id: `event:${e.id}:${e.date}`, kind: 'eventSoon', tone: days <= 3 ? 'warning' : 'info', title: e.title, date: e.date, confirmed: e.dateConfirmed, projectId: e.projectId, target: { collection: 'events', id: e.id } })
     else if ((e.endDate ?? e.date) < today && (e.status === 'planned' || e.status === 'confirmed'))
-      out.push({ id: `stale:${e.id}:${e.date}`, kind: 'eventStale', tone: 'warning', title: e.title, date: e.date, projectId: e.projectId, target: { collection: 'events', id: e.id } })
+      out.push({ id: `stale:${e.id}:${e.date}`, kind: 'eventStale', tone: 'warning', title: e.title, date: e.date, confirmed: e.dateConfirmed, projectId: e.projectId, target: { collection: 'events', id: e.id } })
   }
   for (const e of registrationsClosingSoon(data, today)) {
     const days = daysBetween(today, e.registrationDeadline!)
@@ -427,28 +436,29 @@ export function notificationsFor(data: StudioData, today: ISODate): StudioNotifi
       tone: days <= 3 ? 'warning' : 'info',
       title: e.title,
       date: e.registrationDeadline,
+      confirmed: !!e.registrationDeadlineConfirmed,
       projectId: e.projectId,
       target: { collection: 'events', id: e.id },
     })
   }
   for (const f of data.feedback)
     if (f.status === 'new')
-      out.push({ id: `feedback:${f.id}`, kind: 'newFeedback', tone: 'info', title: f.title, date: f.receivedAt, projectId: f.projectId, target: { collection: 'feedback', id: f.id } })
+      out.push({ id: `feedback:${f.id}`, kind: 'newFeedback', tone: 'info', title: f.title, date: f.receivedAt, confirmed: true, projectId: f.projectId, target: { collection: 'feedback', id: f.id } })
   for (const r of data.reminders)
     if (!r.done && r.date <= today)
-      out.push({ id: `reminder:${r.id}:${r.date}`, kind: 'reminder', tone: r.date < today ? 'warning' : 'info', title: r.title, date: r.date, projectId: r.projectId, target: { collection: 'reminders', id: r.id } })
+      out.push({ id: `reminder:${r.id}:${r.date}`, kind: 'reminder', tone: r.date < today ? 'warning' : 'info', title: r.title, date: r.date, confirmed: true, projectId: r.projectId, target: { collection: 'reminders', id: r.id } })
   for (const r of data.releases) {
     if (r.releasedAt || !r.targetDate || r.status === 'released' || r.status === 'cancelled') continue
     const days = daysBetween(today, r.targetDate)
     if (days < 0)
-      out.push({ id: `releaseLate:${r.id}:${r.targetDate}`, kind: 'releaseLate', tone: 'warning', title: r.name, date: r.targetDate, projectId: r.projectId, target: { collection: 'releases', id: r.id } })
+      out.push({ id: `releaseLate:${r.id}:${r.targetDate}`, kind: 'releaseLate', tone: 'warning', title: r.name, date: r.targetDate, confirmed: !!r.targetConfirmed, projectId: r.projectId, target: { collection: 'releases', id: r.id } })
     else if (days <= 14)
-      out.push({ id: `release:${r.id}:${r.targetDate}`, kind: 'releaseSoon', tone: days <= 3 ? 'warning' : 'info', title: r.name, date: r.targetDate, projectId: r.projectId, target: { collection: 'releases', id: r.id } })
+      out.push({ id: `release:${r.id}:${r.targetDate}`, kind: 'releaseSoon', tone: days <= 3 ? 'warning' : 'info', title: r.name, date: r.targetDate, confirmed: !!r.targetConfirmed, projectId: r.projectId, target: { collection: 'releases', id: r.id } })
   }
   for (const b of data.budgets) {
     const u = budgetUsage(data, b)
     if (u.over && b.from <= today)
-      out.push({ id: `budget:${b.id}:${u.spent}`, kind: 'budgetOver', tone: 'warning', title: b.name, projectId: b.projectId, target: { collection: 'budgets', id: b.id } })
+      out.push({ id: `budget:${b.id}:${u.spent}`, kind: 'budgetOver', tone: 'warning', title: b.name, confirmed: true, projectId: b.projectId, target: { collection: 'budgets', id: b.id } })
   }
   const rank = { danger: 0, warning: 1, info: 2 }
   return out.sort((a, b) => rank[a.tone] - rank[b.tone] || (a.date ?? '9999').localeCompare(b.date ?? '9999'))

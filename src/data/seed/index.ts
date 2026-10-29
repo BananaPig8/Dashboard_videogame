@@ -20,7 +20,7 @@ import idtResources from './indie-dev-tycoon/resources.json'
 import idtStoreListings from './indie-dev-tycoon/storeListings.json'
 
 /** Súbelo cada vez que cambien los datos iniciales: el panel ofrecerá traer lo nuevo. */
-export const SEED_VERSION = '2026-10-29.1'
+export const SEED_VERSION = '2026-10-29.2'
 
 /**
  * Lo que estaba en unos datos iniciales anteriores y ya no está («colección:id»), para que
@@ -64,20 +64,32 @@ function seedList<K extends SeedList>(k: K): StudioData[K] {
 }
 
 /**
- * La actividad (commits y PR) no trae área: se la pone el primer elemento de trabajo que
- * cita ese commit o esa PR como fuente, para poder ver la evolución por áreas.
+ * La actividad (commits y PR) no trae área: se la ponen los elementos de trabajo que citan
+ * ese commit o esa PR como fuente, para poder ver la evolución por áreas. Si lo citan
+ * elementos de varias áreas, gana la de más elementos; si empatan, la del elemento más
+ * concreto (el que cita menos commits y PR: «Traducir las frases» y no «Abrir la PR de todo»),
+ * y después el primero. Así no depende del orden de items.json.
  */
-function withAreas(activity: Activity[], items: WorkItem[]): Activity[] {
-  const areaByRef = new Map<string, string>()
-  for (const item of items) {
-    if (!item.areaId) continue
-    for (const s of item.sources) {
-      if ((s.type === 'commit' || s.type === 'pr') && !areaByRef.has(`${item.projectId}:${s.ref}`))
-        areaByRef.set(`${item.projectId}:${s.ref}`, item.areaId)
+export function withAreas(activity: Activity[], items: WorkItem[]): Activity[] {
+  const votes = new Map<string, Map<string, { count: number; specific: number; first: number }>>()
+  items.forEach((item, order) => {
+    if (!item.areaId) return
+    const refs = item.sources.filter((s) => s.type === 'commit' || s.type === 'pr')
+    for (const s of refs) {
+      const key = `${item.projectId}:${s.ref}`
+      const byArea = votes.get(key) ?? new Map()
+      const v = byArea.get(item.areaId) ?? { count: 0, specific: Infinity, first: order }
+      byArea.set(item.areaId, { count: v.count + 1, specific: Math.min(v.specific, refs.length), first: Math.min(v.first, order) })
+      votes.set(key, byArea)
     }
+  })
+  const areaOf = (key: string) => {
+    const byArea = votes.get(key)
+    if (!byArea) return undefined
+    return [...byArea.entries()].sort(([, a], [, b]) => b.count - a.count || a.specific - b.specific || a.first - b.first)[0][0]
   }
   return activity.map((a) => {
-    const areaId = a.areaId ?? (a.ref ? areaByRef.get(`${a.projectId}:${a.ref}`) : undefined)
+    const areaId = a.areaId ?? (a.ref ? areaOf(`${a.projectId}:${a.ref}`) : undefined)
     return areaId ? { ...a, areaId } : a
   })
 }

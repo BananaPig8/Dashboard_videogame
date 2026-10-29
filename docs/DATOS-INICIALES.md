@@ -84,6 +84,14 @@ cambio del juego, como pide su `CLAUDE.md`: historial regenerado, lo hecho y lo 
 puesta al día recoge las PR #40 a #42 (Demo 1.4, idiomas, cartel y pegatinas en main; nombres de
 juegos y juegos de palabras en cada idioma) y la validación de las traducciones, pendiente.
 
+En la 2026-10-29.2 se corrigió lo que la revisión de «nada inventado» encontró desfasado: el
+paso «Fusionar la Demo 1.4 en main» ya está hecho (PR #40), y la versión web en un solo HTML
+pasa a «Retirada» y «Deducido». Su artefacto caducaba el 20-10 y Actions no arranca, así que
+ya no existe; se deduce de la fecha de caducidad, no se ha vuelto a comprobar. Además, el
+área de cada commit (`withAreas()` en `seed/index.ts`) ya no es la del primer elemento de
+`items.json` que lo cita, sino la de la mayoría de los que lo citan. Si empatan, gana la del
+más concreto. Así, las traducciones cuentan como Idiomas y no como Lanzamientos.
+
 ## Actualizar el historial
 
 ```bash

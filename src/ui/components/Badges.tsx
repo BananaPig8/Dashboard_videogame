@@ -189,6 +189,7 @@ export const HEALTH: Record<HealthLevel, { readonly label: string; tone: Tone; i
   attention: { get label() { return tr('catalog.health.attention') }, tone: 'warning', icon: 'alert' },
   urgent: { get label() { return tr('catalog.health.urgent') }, tone: 'danger', icon: 'alert' },
   idle: { get label() { return tr('catalog.health.idle') }, tone: 'muted', icon: 'pause' },
+  no_data: { get label() { return tr('catalog.health.no_data') }, tone: 'muted', icon: 'circleDashed' },
 }
 
 export const HealthPill = ({ level }: { level: HealthLevel }) => (

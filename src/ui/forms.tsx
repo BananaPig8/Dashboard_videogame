@@ -33,6 +33,7 @@ export function toEditable(spec: FieldSpec[], entity: Draft): Draft {
     else if (f.type === 'money') out[f.key] = centsToText(v)
     else if (f.type === 'number') out[f.key] = typeof v === 'number' ? String(v) : String(v ?? '')
     else if (f.type === 'list') out[f.key] = Array.isArray(v) ? (v as Draft[]).map((r) => ({ ...r })) : []
+    else if (f.type === 'yesno') out[f.key] = v === true ? 'true' : v === false ? 'false' : ''
   }
   return out
 }
@@ -50,6 +51,11 @@ export function normalizeDraft(spec: FieldSpec[], draft: Draft): Draft {
       out[f.key] = list.map((s) => String(s).trim()).filter(Boolean)
     } else if (f.type === 'checkbox') {
       out[f.key] = !!v
+    } else if (f.type === 'yesno') {
+      // Sin decidir no es «no»: la clave se queda sin valor.
+      if (v === true || v === 'true') out[f.key] = true
+      else if (v === false || v === 'false') out[f.key] = false
+      else delete out[f.key]
     } else if (f.type === 'multi') {
       out[f.key] = Array.isArray(v) ? v : []
     } else if (f.type === 'money') {
@@ -248,6 +254,7 @@ export function EntityForm({
             control = <textarea {...common} rows={3} value={String(value ?? '')} onChange={(e) => set(f.key, e.target.value)} />
             break
           case 'select':
+          case 'yesno':
             control = (
               <select {...common} value={String(value ?? '')} onChange={(e) => set(f.key, e.target.value || undefined)}>
                 {(f.empty !== undefined || !value) && <option value="">{f.empty ?? t('forms.choose')}</option>}

@@ -2,7 +2,8 @@
 // historial de git importado (activity.json, generado con scripts/importar-historial-git.mjs).
 import { describe, expect, it } from 'vitest'
 import { validateStudioData } from '../domain/validate'
-import { createSeedData } from './seed'
+import type { Activity, WorkItem } from '../domain/types'
+import { createSeedData, withAreas } from './seed'
 
 const data = createSeedData()
 const IDT = 'indie-dev-tycoon'
@@ -76,6 +77,35 @@ describe('datos iniciales', () => {
     const cited = new Set(items.flatMap((i) => i.sources.filter((s) => s.type === 'commit').map((s) => s.ref.slice(0, 7))))
     const missing = activity.filter((a) => a.type === 'commit' && !cited.has(a.ref!)).map((a) => `${a.ref} ${a.title}`)
     expect(missing).toEqual([])
+  })
+
+  it('el área de cada commit es la de lo que lo cita, no la del primero que sale en items.json', () => {
+    const area = (ref: string) => activity.find((a) => a.ref === ref)?.areaId
+    // Las traducciones las cita también la tarea de abrir la PR (área de lanzamientos).
+    for (const ref of ['3665de9', '33a3632', '912976f']) expect(area(ref), ref).toBe('localization')
+    expect(area('7e53a92')).toBe('tech')
+  })
+
+  it('withAreas: gana el área de más elementos; si empatan, la del más concreto', () => {
+    const item = (id: string, areaId: string, refs: string[]): WorkItem => ({
+      id,
+      projectId: 'p',
+      kind: 'task',
+      title: id,
+      status: 'done',
+      priority: 'medium',
+      areaId,
+      completedAt: '2026-10-01',
+      tags: [],
+      sources: refs.map((ref) => ({ type: 'commit' as const, ref })),
+      confidence: 'verified',
+    })
+    const act = (ref: string): Activity => ({ id: ref, projectId: 'p', at: '2026-10-01T10:00', type: 'commit', title: ref, ref })
+    const out = withAreas(
+      [act('aaa'), act('bbb'), act('ccc')],
+      [item('pr', 'release', ['aaa', 'bbb', 'ccc']), item('trad', 'localization', ['aaa']), item('mas', 'localization', ['aaa', 'bbb']), item('ui', 'ui-ux', ['bbb', 'ccc'])],
+    )
+    expect(out.map((a) => a.areaId)).toEqual(['localization', 'localization', 'ui-ux'])
   })
 
   it('cubren todas las líneas de trabajo del estudio', () => {

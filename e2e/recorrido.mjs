@@ -167,7 +167,7 @@ await step('guardar una vista con filtros', async () => {
 
 await step('notificaciones', async () => {
   await page.getByRole('button', { name: /^Notificaciones/ }).click()
-  await page.getByRole('menu', { name: 'Notificaciones' }).waitFor()
+  await page.getByRole('dialog', { name: 'Notificaciones' }).waitFor()
   await page.keyboard.press('Escape')
 })
 

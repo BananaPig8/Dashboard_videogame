@@ -4,6 +4,7 @@ import { SCHEMA_VERSION, type Activity, type Build, type Feedback, type StudioDa
 import { validateStudioData } from '../validate'
 import {
   buildGroupDefaults,
+  buildLabel,
   buildGroupOf,
   buildStretches,
   buildsInChannelGroup,
@@ -127,6 +128,17 @@ describe('subsecciones de Builds', () => {
   it('ordena por fecha y, a igual fecha, por nombre', () => {
     const list = [build('b', { date: '2026-10-01' }), build('a', { date: '2026-10-01' }), build('c')]
     expect(list.sort(compareBuilds).map((b) => b.id)).toEqual(['a', 'b', 'c'])
+  })
+})
+
+describe('nombre de una build', () => {
+  it('lleva la versión solo si el nombre no la lleva ya', () => {
+    expect(buildLabel({ name: 'Demo 1.3', version: '1.3' })).toBe('Demo 1.3')
+    expect(buildLabel({ name: 'Demo 1.3 V2 (barras de las fases de antes)', version: '1.3 V2' })).toBe('Demo 1.3 V2 (barras de las fases de antes)')
+    expect(buildLabel({ name: 'Demo v1.0', version: '1.0' })).toBe('Demo v1.0')
+    expect(buildLabel({ name: 'Versión web en un solo HTML', version: '0.0.8' })).toBe('Versión web en un solo HTML 0.0.8')
+    expect(buildLabel({ name: 'Demo 1.10', version: '1.1' })).toBe('Demo 1.10 1.1')
+    expect(buildLabel({ name: 'Demo', version: '' })).toBe('Demo')
   })
 })
 

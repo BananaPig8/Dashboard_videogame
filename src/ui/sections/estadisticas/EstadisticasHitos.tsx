@@ -56,6 +56,8 @@ export function EstadisticasHitos() {
   const year = yearOf(today)
   const tag = useTagFilter()
   const m = statsMilestones(data, today, scope, tag)
+  // Con hitos hechos pero ninguno con fecha límite y de fin, «a tiempo» y «tarde» no se han medido.
+  const measured = m.onTime.length + m.late.length > 0 || m.done.length === 0
 
   if (m.done.length + m.planned.length + m.cancelled === 0)
     return (
@@ -126,8 +128,14 @@ export function EstadisticasHitos() {
       <div className="stats">
         <Stat label={H('done')} value={m.done.length} icon="checkCircle" />
         <Stat label={H('planned')} value={m.planned.length} icon="flag" tone={m.overdue.length ? 'danger' : 'neutral'} />
-        <Stat label={H('onTime')} value={m.onTime.length} icon="check" />
-        <Stat label={H('late')} value={m.late.length} icon="clock" tone={m.late.length ? 'danger' : 'neutral'} />
+        <Stat label={H('onTime')} value={measured ? m.onTime.length : '—'} hint={measured ? undefined : t('secciones.estadisticas.hitos.notMeasured')} icon="check" />
+        <Stat
+          label={H('late')}
+          value={measured ? m.late.length : '—'}
+          hint={measured ? undefined : t('secciones.estadisticas.hitos.notMeasured')}
+          icon="clock"
+          tone={m.late.length ? 'danger' : 'neutral'}
+        />
         <Stat label={H('noDue')} value={m.noDue.length} icon="question" hint={t('secciones.estadisticas.hitos.noDueHint')} />
       </div>
       <div className="estadisticas-grid">
@@ -206,8 +214,10 @@ export function EstadisticasHitos() {
 }
 
 function ByProject({ rows }: { rows: ReturnType<typeof statsMilestones>['byProject'] }) {
-  const H = (k: 'done' | 'planned' | 'onTime' | 'late') => t(`secciones.estadisticas.hitos.${k}`)
-  const cols = ['done', 'planned', 'onTime', 'late'] as const
+  const H = (k: 'done' | 'planned' | 'onTime' | 'late' | 'noDue') => t(`secciones.estadisticas.hitos.${k}`)
+  const cols = ['done', 'planned', 'onTime', 'late', 'noDue'] as const
+  // A tiempo y tarde, sin ningún hito medido (sin fecha límite), no son un 0: no se sabe.
+  const unmeasured = (r: (typeof rows)[number], c: (typeof cols)[number]) => (c === 'onTime' || c === 'late') && r.measured === 0 && r.done > 0
   return (
     <Card title={t('secciones.estadisticas.hitos.byProjectTitle')} icon="folder">
       <div className="table-wrap">
@@ -231,7 +241,14 @@ function ByProject({ rows }: { rows: ReturnType<typeof statsMilestones>['byProje
                 </th>
                 {cols.map((c) => (
                   <td key={c} data-label={H(c)} className="num">
-                    {r[c]}
+                    {unmeasured(r, c) ? (
+                      <span className="muted" title={t('secciones.estadisticas.hitos.notMeasured')}>
+                        <span aria-hidden="true">—</span>
+                        <span className="visually-hidden">{t('secciones.estadisticas.hitos.notMeasured')}</span>
+                      </span>
+                    ) : (
+                      r[c]
+                    )}
                   </td>
                 ))}
               </tr>

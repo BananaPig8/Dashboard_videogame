@@ -189,9 +189,9 @@ describe('estadísticas: hitos', () => {
       { month: '2026-09', done: 1 },
       { month: '2026-10', done: 1 },
     ])
-    expect(s.byProject.map((r) => [r.project.id, r.done, r.planned, r.onTime, r.late])).toEqual([
-      ['q', 0, 1, 0, 0],
-      ['p', 3, 3, 1, 1],
+    expect(s.byProject.map((r) => [r.project.id, r.done, r.planned, r.onTime, r.late, r.noDue, r.measured])).toEqual([
+      ['q', 0, 1, 0, 0, 0, 0],
+      ['p', 3, 3, 1, 1, 1, 2],
     ])
     expect(statsMilestones(d, TODAY, null, 'feria').planned.map((i) => i.id)).toEqual(['otro'])
     expect(statsMilestones(data(), TODAY).byMonth).toEqual([])
@@ -324,6 +324,16 @@ describe('estadísticas: métricas de plataformas', () => {
     expect(s.series.map((x) => x.points.map((m) => m.id))).toEqual([['ventas']])
     expect(s.excluded.map((m) => m.id)).toEqual(['ventas-deducidas'])
     expect(statsMetrics(data(), 'commercial')).toEqual({ series: [], excluded: [] })
+  })
+
+  it('comerciales: lo anotado a mano solo cuenta con el enlace de dónde sale, no con una nota', () => {
+    const conNota = metric('nota', { kind: 'units', sources: [{ type: 'manual', ref: 'Informe', note: 'captura' }] })
+    const conEnlace = metric('enlace', { kind: 'units', sources: [{ type: 'manual', ref: 'Informe', url: 'https://partner.steamgames.com/informe' }] })
+    expect(statsMetricCounts(conNota)).toBe(false)
+    expect(statsMetricCounts(conEnlace)).toBe(true)
+    const s = statsMetrics(data({ metrics: [conNota, conEnlace] }), 'commercial')
+    expect(s.series.map((x) => x.latest.id)).toEqual(['enlace'])
+    expect(s.excluded.map((m) => m.id)).toEqual(['nota'])
   })
 
   it('con un proyecto elegido, solo lo suyo', () => {

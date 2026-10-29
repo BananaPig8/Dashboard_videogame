@@ -83,6 +83,7 @@ export const estadisticas = {
     late: 'Tarde',
     noDue: 'Sin fecha límite',
     noDueHint: 'Hechos sin fecha límite: no se sabe si llegaron a tiempo',
+    notMeasured: 'Sin medir: ningún hito hecho tenía fecha límite y fecha de fin',
     timingTitle: 'A tiempo o tarde',
     timingSubtitle: 'Los hechos, por su fecha de fin frente a su fecha límite',
     noCompleted: 'Sin fecha de fin',
@@ -130,7 +131,7 @@ export const estadisticas = {
     weeksTitle: 'Commits y fusiones por semana',
     weeksSubtitle: 'Del historial de git de cada proyecto',
     byAreaTitle: 'Por área',
-    byAreaSubtitle: 'El área de cada commit sale del trabajo que lo cita; los que no cita nadie van a «Sin área»',
+    byAreaSubtitle: 'El área de cada commit sale del trabajo que lo cita (si lo citan varias áreas, la de la mayoría); los que no cita nadie van a «Sin área»',
     byPersonTitle: 'Por persona',
     byPersonSubtitle: 'Por autor, reconocido por los «Nombres en git» de cada ficha',
     unknownAuthor: '{name} (sin ficha)',
@@ -158,12 +159,12 @@ export const estadisticas = {
     },
     commercial: {
       intro:
-        'Ventas, jugadores, reseñas e ingresos según cada plataforma. Solo cuentan los datos verificados con una fuente comprobable (un informe de la tienda, una captura de su panel…).',
+        'Ventas, jugadores, reseñas e ingresos según cada plataforma. Solo cuentan los datos verificados con una fuente comprobable: el enlace a un informe de la tienda, a una captura de su panel… (una nota sin enlace no basta).',
       emptyTitle: 'Sin datos comerciales verificados',
       empty:
         'Las ventas, los jugadores y las reseñas solo cuentan con una fuente comprobable y la fiabilidad «Verificado». Apunta cada dato con su fecha y su fuente; hasta entonces aquí no sale ninguna cifra.',
-      excludedTitle: 'Sin verificar',
-      excludedSubtitle: 'No cuentan hasta que se verifiquen con una fuente comprobable',
+      excludedTitle: 'Sin verificar o sin fuente comprobable',
+      excludedSubtitle: 'No cuentan hasta que estén verificados y su fuente se pueda comprobar (un enlace, no solo una nota)',
     },
     table: {
       what: 'Dato',

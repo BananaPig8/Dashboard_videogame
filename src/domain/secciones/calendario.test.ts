@@ -125,6 +125,30 @@ describe('calendario: las fechas del estudio', () => {
     expect(calendarKindsFor(null)).toBeUndefined()
   })
 
+  it('una build sale el día que se hizo, sin repetir la versión; en preparación o retirada, no', () => {
+    const d = data()
+    const b = d.builds[0]
+    d.builds = [
+      b,
+      { ...b, id: 'lista', name: 'Demo 1.3', version: '1.3', status: 'ready', date: '2026-10-11', confidence: 'inferred' },
+      { ...b, id: 'web', name: 'Versión web', version: '0.0.8', status: 'published', date: '2026-10-12' },
+      { ...b, id: 'retirada', status: 'withdrawn', date: '2026-10-13' },
+      { ...b, id: 'dudosa', status: 'to_confirm', date: '2026-10-15', confidence: 'to_confirm' },
+    ]
+    const builds = allCalendarEntries(d, 'p').filter((e) => e.kind === 'build')
+    expect(builds.map((e) => [e.target.id, e.title, e.confirmed, e.confidence])).toEqual([
+      ['lista', 'Demo 1.3', true, 'inferred'],
+      ['web', 'Versión web 0.0.8', true, 'verified'],
+      ['dudosa', 'Demo 1.4', false, 'to_confirm'],
+    ])
+  })
+
+  it('cada fecha dice cuánto fiarse del dato del que sale (los recordatorios, no)', () => {
+    const all = allCalendarEntries(data(), 'p')
+    expect(all.find((e) => e.id === 'releases:r-tarde:target')!.confidence).toBe('to_confirm')
+    expect(all.find((e) => e.id === 'reminders:rec:date')!.confidence).toBeUndefined()
+  })
+
   it('lo próximo empieza hoy y deja fuera lo hecho', () => {
     const ids = upcomingEntries(data(), TODAY, 14, 'p').map((e) => e.id)
     expect(ids).toEqual(['events:reunion:date', 'items:proxima:due', 'events:del-estudio:date'])

@@ -8,6 +8,7 @@ import { METRIC_KINDS, STATUSES, STATUS_ORDER, TASK_KINDS, type MetricGroup } fr
 import { addDays, daysBetween, startOfWeek, type WeekStart } from '../dates'
 import type { Area, ID, ISODate, ItemKind, ItemStatus, Member, Metric, MetricKind, Project, StudioData, WorkItem } from '../types'
 import { isOpen, itemsOf, normalize, projectSummary, type ProjectSummary, type Scope } from '../selectors'
+import { hasCheckableSource } from '../validate'
 import { hasTag } from './etiquetas'
 import { projectsByStage } from './proyectos'
 
@@ -183,7 +184,11 @@ export interface StatsMilestones {
   undated: WorkItem[]
   /** Hechos por mes (AAAA-MM), del primero con alguno a este (sin contar los que no tienen fecha). */
   byMonth: { month: string; done: number }[]
-  byProject: { project: Project; done: number; planned: number; onTime: number; late: number }[]
+  /**
+   * Por proyecto. A tiempo y tarde solo cuentan los hechos con fecha límite y de fin; si no
+   * hay ninguno (measured 0), no se ha medido nada: no es «0 a tiempo».
+   */
+  byProject: { project: Project; done: number; planned: number; onTime: number; late: number; noDue: number; measured: number }[]
 }
 
 const monthsBetween = (from: string, to: string): string[] => {
@@ -211,6 +216,7 @@ export function statsMilestones(data: StudioData, today: ISODate, scope: Scope =
     .filter((i) => i.dueDate && i.completedAt && i.completedAt > i.dueDate)
     .map((item) => ({ item, days: daysBetween(item.dueDate!, item.completedAt!) }))
     .sort((a, b) => b.days - a.days)
+  const noDue = done.filter((i) => !i.dueDate)
   const dated = planned.filter((i) => i.dueDate)
   const months = done.map((i) => i.completedAt?.slice(0, 7)).filter((m): m is string => !!m)
   const first = months.length ? months.reduce((a, b) => (a < b ? a : b)) : null
@@ -221,7 +227,7 @@ export function statsMilestones(data: StudioData, today: ISODate, scope: Scope =
     cancelled: all.filter((i) => i.status === 'cancelled').length,
     onTime,
     late,
-    noDue: done.filter((i) => !i.dueDate),
+    noDue,
     noCompleted: done.filter((i) => i.dueDate && !i.completedAt),
     overdue: dated
       .filter((i) => i.dueDate! < today)
@@ -235,7 +241,16 @@ export function statsMilestones(data: StudioData, today: ISODate, scope: Scope =
     byMonth: first ? monthsBetween(first, today.slice(0, 7)).map((month) => ({ month, done: months.filter((m) => m === month).length })) : [],
     byProject: projects.map((project) => {
       const n = (list: WorkItem[]) => list.filter((i) => i.projectId === project.id).length
-      return { project, done: n(done), planned: n(planned), onTime: n(onTime), late: n(late.map((l) => l.item)) }
+      const lateItems = late.map((l) => l.item)
+      return {
+        project,
+        done: n(done),
+        planned: n(planned),
+        onTime: n(onTime),
+        late: n(lateItems),
+        noDue: n(noDue),
+        measured: n(onTime) + n(lateItems),
+      }
     }),
   }
 }
@@ -383,9 +398,12 @@ export function statsActivity(data: StudioData, today: ISODate, scope: Scope = n
 
 // ——— Métricas de plataformas ————————————————————————————————————————————————
 
-/** ¿Entra en las gráficas? Lanzamiento: lo que no está por comprobar. Comerciales: solo lo verificado. */
+/**
+ * ¿Entra en las gráficas? Lanzamiento: lo que no está por comprobar. Comerciales: solo lo
+ * verificado y con una fuente que se pueda comprobar (no basta una nota sin enlace).
+ */
 export function statsMetricCounts(m: Metric): boolean {
-  return METRIC_KINDS[m.kind].group === 'commercial' ? m.confidence === 'verified' : m.confidence !== 'to_confirm'
+  return METRIC_KINDS[m.kind].group === 'commercial' ? m.confidence === 'verified' && hasCheckableSource(m.sources) : m.confidence !== 'to_confirm'
 }
 
 export interface StatsMetricSeries {

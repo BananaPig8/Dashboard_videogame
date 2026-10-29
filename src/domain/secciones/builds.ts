@@ -20,6 +20,18 @@ export const BUILD_GROUPS: Record<BuildGroup, { channels: BuildChannel[]; status
   candidatas: { channels: [], statuses: ['candidate'] },
 }
 
+/**
+ * El nombre de una build con su versión, si el nombre no la lleva ya: «Versión web 0.0.8»,
+ * pero «Demo 1.3» (y no «Demo 1.3 1.3»). La versión tiene que ir suelta en el nombre: «1.1»
+ * no está en «Demo 1.10», y «Demo v1.0» ya la lleva.
+ */
+export function buildLabel(b: Pick<Build, 'name' | 'version'>): string {
+  const v = b.version?.trim()
+  if (!v) return b.name
+  const escaped = v.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  return new RegExp(`(^|[^\\w.])v?${escaped}(?![\\w.])`, 'i').test(b.name) ? b.name : `${b.name} ${v}`
+}
+
 /** El valor de ?canal= si es una subsección; si no, null (todas). */
 export function buildGroupOf(value: string | null): BuildGroup | null {
   return value && value in BUILD_GROUPS ? (value as BuildGroup) : null

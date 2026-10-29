@@ -136,6 +136,7 @@ export const publicacion = {
     },
     hidden: 'Oculto',
     visible: 'Visible',
+    visibilityUndecided: 'Sin decidir',
     noApi: 'Sin nombre interno',
     noHow: 'Sin describir',
     noTags: 'Sin etiquetas',

@@ -208,13 +208,19 @@
       {
         "id": "idt-steam-ck-fusionar-demo",
         "label": "Fusionar la Demo 1.4 en main",
-        "done": false,
-        "note": "Rama sin PR a 2026-10-18.",
+        "done": true,
+        "note": "En main desde el 28-10 (PR #40), fusionada sin las comprobaciones de Actions, que no arranca. Aún sin compilar en la release «descargas».",
         "sources": [
           {
             "type": "commit",
             "ref": "d8eca50",
             "date": "2026-10-14"
+          },
+          {
+            "type": "pr",
+            "ref": "#40",
+            "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/40",
+            "date": "2026-10-28"
           }
         ]
       },

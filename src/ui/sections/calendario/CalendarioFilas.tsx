@@ -8,7 +8,7 @@ import type { CalendarEntry, CalendarUndated } from '../../../domain/selectors'
 import type { StudioData } from '../../../domain/types'
 import { t } from '../../../i18n'
 import { useCanEdit } from '../../../data/store'
-import { Pill, ProjectChip } from '../../components/Badges'
+import { ConfidenceTag, Pill, ProjectChip } from '../../components/Badges'
 import { Icon } from '../../components/Icon'
 import { CALENDAR_ICON } from '../../components/MonthCalendar'
 import { useUI } from '../../context'
@@ -53,6 +53,8 @@ export function EntryRow({ entry, data, showProject }: { entry: CalendarEntry; d
               {t('secciones.calendario.row.unconfirmed')}
             </Pill>
           )}
+          {/* Cuánto fiarse del dato (lo verificado no se marca; si la fecha ya sale sin confirmar, no se repite). */}
+          {entry.confidence && (entry.confirmed || entry.confidence !== 'to_confirm') && <ConfidenceTag confidence={entry.confidence} compact />}
           {showProject && <ProjectChip project={data.projects.find((p) => p.id === entry.projectId)} />}
         </div>
       </div>

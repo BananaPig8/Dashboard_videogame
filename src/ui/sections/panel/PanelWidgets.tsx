@@ -42,7 +42,7 @@ import type { Activity, StudioData, StudioEvent } from '../../../domain/types'
 import { t, tr } from '../../../i18n'
 import type { Formatter } from '../../../i18n/format'
 import { useCanEdit, useStudioData } from '../../../data/store'
-import { BuildChannelPill, BuildStatusPill, EventStatusPill, FeedbackStatusPill, HealthPill, Pill, ProjectChip } from '../../components/Badges'
+import { BuildChannelPill, BuildStatusPill, ConfidenceTag, EventStatusPill, FeedbackStatusPill, HealthPill, Pill, ProjectChip } from '../../components/Badges'
 import { Card, Empty, ExternalLink, Modal, Progress, Stat } from '../../components/Common'
 import { WeeklyChart } from '../../components/Charts'
 import { Icon, type IconName } from '../../components/Icon'
@@ -50,6 +50,7 @@ import { ItemList } from '../../components/ItemList'
 import { CALENDAR_ICON } from '../../components/MonthCalendar'
 import { useScope, useUI } from '../../context'
 import { useFormat, useToday } from '../../hooks'
+import { notificationText } from '../../Notifications'
 import { DEFAULT_WIDGET_ORDER, updatePreferences, usePreferences, type WidgetId } from '../../prefs'
 import { ProjectCard } from '../proyectos/ProjectCard'
 import { StageLine } from '../proyectos/StageLine'
@@ -418,7 +419,7 @@ function AlertList({
           </span>
           <div className="panel-alert-main">
             <button type="button" className="item-title" onClick={() => edit({ collection: n.target.collection, id: n.target.id })}>
-              {t(`notifications.${n.kind}`, { title: n.title, when: n.date ? fmt.relative(n.date, today) : '' })}
+              {notificationText(n, n.date ? fmt.relative(n.date, today) : '')}
             </button>
             {(n.date || (showProject && n.projectId)) && (
               <div className="item-meta">
@@ -438,7 +439,8 @@ function AttentionBody({ data, scope, today, year, focus }: WidgetProps) {
   const summaries = scope ? (project ? [projectSummary(data, project, today)] : []) : projectSummaries(data, today)
   // En todo el estudio, un proyecto en pausa o archivado no pide atención (está parado a propósito).
   const flagged = summaries.filter((s) => s.health.reasons.length > 0 && (scope || s.health.level !== 'idle'))
-  const upToDate = summaries.filter((s) => s.health.reasons.length === 0 && s.health.level !== 'idle')
+  // «Al día» solo lo que va bien con datos: lo parado y lo que no tiene nada apuntado, no.
+  const upToDate = summaries.filter((s) => s.health.reasons.length === 0 && s.health.level === 'on_track')
   // Fuera del modo foco, solo los avisos que no salen ya en otro bloque.
   const alerts = panelAlerts(data, today, scope, focus ? undefined : PANEL_ALERT_KINDS)
   return (
@@ -656,6 +658,7 @@ function UpcomingRow({ entry, data, today, year, showProject }: { entry: Calenda
               {t('secciones.panel.agenda.unconfirmed')}
             </Pill>
           )}
+          {entry.confidence && (entry.confirmed || entry.confidence !== 'to_confirm') && <ConfidenceTag confidence={entry.confidence} compact />}
           {entry.time && <span className="meta-date">{entry.time}</span>}
           {showProject && <ProjectChip project={data.projects.find((p) => p.id === entry.projectId)} />}
         </div>
@@ -743,6 +746,7 @@ function BuildsBody({ data, scope, year, fmt }: WidgetProps) {
           </div>
           <div className="item-side">
             <BuildStatusPill status={b.status} />
+            <ConfidenceTag confidence={b.confidence} compact />
             {b.url && (
               <a href={b.url} target="_blank" rel="noreferrer noopener" className="icon-btn" aria-label={t('secciones.panel.builds.open', { name: b.name })}>
                 <Icon name="external" size={16} />

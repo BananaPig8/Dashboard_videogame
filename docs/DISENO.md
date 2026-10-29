@@ -27,7 +27,7 @@ Contraste medido sobre la superficie de tarjetas; todo cumple WCAG AA (4,5:1).
 | `danger` | rojo | error, bloqueo, retraso | Bloqueado, Vencida, Crítica, Atención inmediata |
 | `info` | azul | información, trabajo en curso | En curso, Previsto, Deducido |
 | `special` | violeta | en revisión, hitos | En revisión, Hito, Pulido |
-| `neutral` / `muted` | gris | el resto | Pendiente, En pausa, Descartado |
+| `neutral` / `muted` | gris | el resto, y lo que no tiene datos | Pendiente, En pausa, Descartado, Sin datos, Sin decidir |
 
 Los tonos están en `src/domain/catalog.ts` (un sitio para cada estado) y **nunca van
 solos**: cada etiqueta lleva icono y texto (`src/ui/components/Badges.tsx`), así se

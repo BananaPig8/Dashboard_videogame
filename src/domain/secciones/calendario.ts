@@ -6,8 +6,8 @@
 import { CALENDAR_SECTION_KINDS, type CalendarKind } from '../catalog'
 import type { CollectionKey } from '../collections'
 import { addDays, DEFAULT_TIME_ZONE, isValidTimeZone, yearOf } from '../dates'
-import type { ClockTime, ID, ISODate, StudioData, StudioEvent } from '../types'
-import { isOpen, type Scope } from '../selectors'
+import type { ClockTime, Confidence, ID, ISODate, StudioData, StudioEvent } from '../types'
+import { buildLabel, isOpen, type Scope } from '../selectors'
 import { hasTag } from './etiquetas'
 
 export interface CalendarEntry {
@@ -23,6 +23,8 @@ export interface CalendarEntry {
   confirmed: boolean
   /** Ya pasó o ya está hecho (tarea terminada, evento celebrado, versión publicada…). */
   done: boolean
+  /** Cuánto fiarse del dato del que sale la fecha (los recordatorios no lo dicen). */
+  confidence?: Confidence
   target: { collection: CollectionKey; id: ID }
 }
 
@@ -61,6 +63,7 @@ export function allCalendarEntries(data: StudioData, scope: Scope = null): Calen
         projectId: i.projectId,
         confirmed: true,
         done: !isOpen(i),
+        confidence: i.confidence,
         target: { collection: 'items', id: i.id },
       })
   // Los eventos de todo el estudio salen también en cada proyecto.
@@ -77,6 +80,7 @@ export function allCalendarEntries(data: StudioData, scope: Scope = null): Calen
         projectId: e.projectId,
         confirmed: e.dateConfirmed,
         done: e.status === 'done',
+        confidence: e.confidence,
         target: { collection: 'events', id: e.id },
       })
     if (e.registrationDeadline && e.registrationStatus !== 'not_needed')
@@ -88,13 +92,24 @@ export function allCalendarEntries(data: StudioData, scope: Scope = null): Calen
         projectId: e.projectId,
         confirmed: !!e.registrationDeadlineConfirmed,
         done: e.registrationStatus !== 'open' && e.registrationStatus !== 'not_open',
+        confidence: e.confidence,
         target: { collection: 'events', id: e.id },
       })
   }
   for (const r of data.releases.filter(own)) {
     if (r.status === 'cancelled') continue
     if (r.releasedAt)
-      out.push({ id: `releases:${r.id}:released`, kind: 'release', date: r.releasedAt, title: r.name, projectId: r.projectId, confirmed: true, done: true, target: { collection: 'releases', id: r.id } })
+      out.push({
+        id: `releases:${r.id}:released`,
+        kind: 'release',
+        date: r.releasedAt,
+        title: r.name,
+        projectId: r.projectId,
+        confirmed: true,
+        done: true,
+        confidence: r.confidence,
+        target: { collection: 'releases', id: r.id },
+      })
     else if (r.targetDate)
       out.push({
         id: `releases:${r.id}:target`,
@@ -104,19 +119,23 @@ export function allCalendarEntries(data: StudioData, scope: Scope = null): Calen
         projectId: r.projectId,
         confirmed: !!r.targetConfirmed,
         done: false,
+        confidence: r.confidence,
         target: { collection: 'releases', id: r.id },
       })
   }
+  // Una build sale el día que se hizo. Las que están en preparación aún no se han entregado
+  // (su fecha es la de cuando se empezó) y las retiradas ya no están: fuera las dos.
   for (const b of data.builds.filter(own))
-    if (b.date && b.status !== 'withdrawn')
+    if (b.date && b.status !== 'withdrawn' && b.status !== 'in_progress')
       out.push({
         id: `builds:${b.id}:date`,
         kind: 'build',
         date: b.date,
-        title: `${b.name} ${b.version}`,
+        title: buildLabel(b),
         projectId: b.projectId,
-        confirmed: true,
-        done: b.status !== 'in_progress',
+        confirmed: b.status !== 'to_confirm',
+        done: true,
+        confidence: b.confidence,
         target: { collection: 'builds', id: b.id },
       })
   for (const r of data.reminders.filter(inScope(scope)))

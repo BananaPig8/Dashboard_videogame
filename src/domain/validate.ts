@@ -340,12 +340,40 @@ function checks(ctx: Ctx) {
   return by
 }
 
-/** Un estado externo «verificado» necesita una fuente comprobable, no solo «anotado a mano». */
-function externalFactCheck(k: CollectionKey, e: Row, err: Ctx['err'], where: string) {
+/**
+ * ¿Se puede comprobar alguna de estas fuentes? Un commit, una PR, una release, el README o
+ * un documento sí; lo «anotado a mano», solo si lleva el enlace (al informe de la tienda, a
+ * la captura de su panel…). Una nota sin enlace no se puede comprobar.
+ */
+export function hasCheckableSource(sources: readonly SourceRef[] | undefined): boolean {
+  return (sources ?? []).some((s) => s.type !== 'manual' || !!s.url?.trim())
+}
+
+/**
+ * Un estado externo «verificado» necesita una fuente comprobable, no solo «anotado a mano».
+ * Al guardar (strict) la nota sola no basta; al cargar unos datos ya guardados se acepta la
+ * nota, como antes, para no dejar de ver unos datos enteros por esto (Estadísticas no cuenta
+ * esas métricas igualmente: statsMetricCounts).
+ */
+function externalFactCheck(k: CollectionKey, e: Row, err: Ctx['err'], where: string, strict: boolean) {
   if (!EXTERNAL_FACTS.includes(k) || e.confidence !== 'verified') return
   const list = (e.sources as SourceRef[] | undefined) ?? []
+  if (strict) {
+    if (!hasCheckableSource(list)) err(where, 'está como verificado, pero su única fuente es «anotado a mano» sin enlace: añade el enlace de dónde sale o cambia la fiabilidad')
+    return
+  }
   const checkable = list.some((s) => s.type !== 'manual' || !!s.url || !!s.note)
   if (!checkable) err(where, 'está como verificado, pero su única fuente es «anotado a mano» sin enlace ni nota de dónde sale')
+}
+
+/**
+ * «Verificado» quiere decir que sale de una fuente: sin ninguna, no se guarda (en todas las
+ * colecciones con fiabilidad). Los elementos de trabajo ya lo comprueban también al cargar;
+ * en las demás solo se comprueba al guardar, para no rechazar unos datos guardados antes.
+ */
+function verifiedNeedsSource(k: CollectionKey, e: Row, err: Ctx['err'], where: string) {
+  if (k === 'items' || e.confidence !== 'verified' || !Array.isArray(e.sources) || e.sources.length) return
+  err(where, 'está como verificado pero no tiene ninguna fuente')
 }
 
 function whereOf(k: CollectionKey, e: Row): string {
@@ -401,14 +429,15 @@ export function validateStudioData(raw: unknown): string[] {
     for (const e of data[k] as unknown as Row[]) {
       const where = whereOf(k, e)
       by[k](e, where)
-      externalFactCheck(k, e, err, where)
+      externalFactCheck(k, e, err, where, false)
     }
   return errors
 }
 
 /**
  * Comprueba un solo elemento antes de guardarlo (formularios): las mismas reglas que al
- * cargar, con los ids de los datos actuales.
+ * cargar, con los ids de los datos actuales, y además que lo «verificado» tenga fuente (y,
+ * si afirma un estado de fuera, una que se pueda comprobar).
  */
 export function validateEntity(k: CollectionKey, entity: Record<string, unknown>, data: StudioData): string[] {
   const errors: string[] = []
@@ -417,7 +446,8 @@ export function validateEntity(k: CollectionKey, entity: Record<string, unknown>
   ids[k] = new Set([...ids[k], entity.id as string])
   const by = checks({ ids, err })
   by[k](entity, '')
-  externalFactCheck(k, entity, err, '')
+  externalFactCheck(k, entity, err, '', true)
+  verifiedNeedsSource(k, entity, err, '')
   if (k === 'projects' && data.projects.some((p) => p.slug === entity.slug && p.id !== entity.id)) errors.push(`el slug «${String(entity.slug)}» ya existe`)
   void COLLECTION_BY_KEY
   return errors

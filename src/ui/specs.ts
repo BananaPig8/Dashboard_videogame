@@ -39,6 +39,7 @@ import {
   label,
 } from '../domain/catalog'
 import type { CollectionKey } from '../domain/collections'
+import { buildLabel } from '../domain/selectors'
 import type { StudioData } from '../domain/types'
 
 export type Draft = Record<string, unknown>
@@ -54,7 +55,8 @@ export interface ListField {
 export interface FieldSpec {
   key: string
   label: string
-  type: 'text' | 'textarea' | 'select' | 'date' | 'time' | 'checkbox' | 'tags' | 'url' | 'color' | 'multi' | 'number' | 'money' | 'list'
+  /** «yesno»: sí, no o sin decidir (un desplegable con «empty» como «sin decidir»; las opciones, «true» y «false»). */
+  type: 'text' | 'textarea' | 'select' | 'date' | 'time' | 'checkbox' | 'yesno' | 'tags' | 'url' | 'color' | 'multi' | 'number' | 'money' | 'list'
   required?: boolean
   hint?: string
   /** Opciones de los desplegables; se calculan con los datos (proyectos, áreas…). */
@@ -82,7 +84,7 @@ const projectOptions = (data: StudioData) => data.projects.map((p) => ({ value: 
 const areaOptions = (data: StudioData) => data.areas.map((a) => ({ value: a.id, label: a.name }))
 const memberOptions = (data: StudioData, d: Draft, key = 'assigneeId') =>
   data.members.filter((m) => m.active || m.id === d[key]).map((m) => ({ value: m.id, label: m.kind === 'external' ? `${m.name} (externo)` : m.name }))
-const buildOptions = (data: StudioData, d: Draft) => byProject(data.builds, d).map((b) => ({ value: b.id, label: `${b.name} ${b.version}` }))
+const buildOptions = (data: StudioData, d: Draft) => byProject(data.builds, d).map((b) => ({ value: b.id, label: buildLabel(b) }))
 const releaseOptions = (data: StudioData, d: Draft) => byProject(data.releases, d).map((r) => ({ value: r.id, label: r.version ? `${r.name} (${r.version})` : r.name }))
 const eventOptions = (data: StudioData, d: Draft) =>
   data.events.filter((e) => !d.projectId || !e.projectId || e.projectId === d.projectId).map((e) => ({ value: e.id, label: e.date ? `${e.title} (${e.date})` : e.title }))
@@ -350,7 +352,17 @@ export const SPECS: Record<CollectionKey, FieldSpec[]> = {
     project(),
     { key: 'status', label: 'Estado', type: 'select', required: true, options: fromTable(ACHIEVEMENT_STATUSES) },
     { key: 'apiName', label: 'Nombre interno (API)', type: 'text' },
-    { key: 'hidden', label: 'Oculto hasta conseguirlo', type: 'checkbox' },
+    {
+      key: 'hidden',
+      label: 'Visibilidad en la tienda',
+      type: 'yesno',
+      empty: 'Sin decidir',
+      hint: 'Si se enseña antes de conseguirlo. Se decide al darlo de alta en la tienda.',
+      options: () => [
+        { value: 'false', label: 'Visible' },
+        { value: 'true', label: 'Oculto hasta conseguirlo' },
+      ],
+    },
     { key: 'description', label: 'Cómo se consigue', type: 'textarea', wide: true },
     confidence,
     tags,

@@ -121,6 +121,13 @@ describe('equipo: carga de trabajo', () => {
     expect(luis.ratio).toBeNull()
   })
 
+  it('sin horas apuntadas no hay porcentaje: no se inventa un 0 %', () => {
+    const ana = teamWorkload({ ...d, timeEntries: [] }, TODAY).people.find((p) => p.member.id === 'ana')!
+    expect(ana.capacity).toBe(10 * TEAM_WEEKS * 60)
+    expect(ana.minutes).toBe(0)
+    expect(ana.ratio).toBeNull()
+  })
+
   it('lo de nadie (o de alguien que ya no existe) va aparte', () => {
     const w = teamWorkload(d, TODAY)
     expect(w.nobody).toMatchObject({ open: 2, load: 3 + 2, overdue: 1, minutes: 45 })
@@ -131,7 +138,7 @@ describe('equipo: carga de trabajo', () => {
   it('con un proyecto elegido solo cuenta lo suyo', () => {
     const w = teamWorkload(d, TODAY, 'q')
     expect(w.people.find((p) => p.member.id === 'luis')).toMatchObject({ open: 1, minutes: 90 })
-    expect(w.people.find((p) => p.member.id === 'ana')).toMatchObject({ open: 0, minutes: 0, ratio: 0 })
+    expect(w.people.find((p) => p.member.id === 'ana')).toMatchObject({ open: 0, minutes: 0, ratio: null })
     expect(w.nobody.open).toBe(0)
     expect(teamWorkload(data(), TODAY).anyTime).toBe(false)
   })

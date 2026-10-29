@@ -360,10 +360,10 @@
     "platforms": [
       "Web"
     ],
-    "status": "ready",
+    "status": "withdrawn",
     "date": "2026-10-13",
-    "distribution": "Artefacto «indie-dev-tycoon» del flujo CI (se borra a los 7 días)",
-    "notes": "El CI la empaqueta con node build.js en cada PR y en cada cambio en main. El último artefacto es del commit 8845556 (13-10) y caduca el 2026-10-20 (hora local); desde el 13-10 el CI no arranca. No es una descarga pública; también se puede generar a mano.",
+    "distribution": "Artefacto «indie-dev-tycoon» del flujo CI (caducó el 20-10)",
+    "notes": "El CI la empaqueta con node build.js en cada PR y en cada cambio en main. El último artefacto, del commit 8845556 (13-10), caducaba el 2026-10-20 (hora local) y desde el 13-10 el CI no arranca (sigue igual el 29-10), así que ya no hay ninguno: se da por retirada porque GitHub borra los artefactos al caducar, no porque se haya vuelto a mirar. No es una descarga pública; se puede generar a mano con node build.js.",
     "sources": [
       {
         "type": "doc",
@@ -371,6 +371,13 @@
         "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/actions",
         "date": "2026-10-13",
         "note": "indie-dev-tycoon de 8845556, caduca el 2026-10-19 23:36 UTC; consultado el 2026-10-18"
+      },
+      {
+        "type": "doc",
+        "ref": "GitHub Actions: CI de la fusión de la PR #42 (run 40801650492)",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/actions/runs/40801650492",
+        "date": "2026-10-29",
+        "note": "Acaba en 4 s sin empezar: no hay artefacto nuevo"
       },
       {
         "type": "readme",
@@ -381,7 +388,7 @@
         "ref": ".github/workflows/ci.yml"
       }
     ],
-    "confidence": "verified"
+    "confidence": "inferred"
   },
   {
     "id": "idt-build-demo-1-4",

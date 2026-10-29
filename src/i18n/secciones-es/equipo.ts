@@ -110,6 +110,7 @@ export const equipo = {
     noCapacity: 'Sin horas a la semana',
     usage: 'Apuntado / disponible',
     usageNone: 'No se calcula',
+    usageNoTime: 'Sin horas apuntadas',
     notApplicable: 'No aplica',
     over: 'Por encima',
     none: 'Ninguno',

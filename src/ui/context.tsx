@@ -128,7 +128,7 @@ export function newDefaults(collection: CollectionKey, data: StudioData, scope: 
       return { projectId, listingId: listings.length === 1 ? listings[0].id : undefined, kind: 'short', language: 'es', status: 'draft', text: '' }
     }
     case 'achievements':
-      return { projectId, status: 'idea', hidden: false, tags: [], ...sourced('to_confirm') }
+      return { projectId, status: 'idea', tags: [], ...sourced('to_confirm') }
     case 'playtests':
       return { projectId, method: 'friends', date: today, tags: [], ...sourced('verified') }
     case 'reminders':

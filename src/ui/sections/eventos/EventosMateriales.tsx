@@ -5,7 +5,7 @@ import { CHECKLIST_TARGETS, RESOURCE_TYPES } from '../../../domain/catalog'
 import { sectorEvents, upcomingEventoMaterials, type ChecklistProgress, type EventoMaterials, type EventoMissing } from '../../../domain/selectors'
 import { store, useCanEdit, useStudioData } from '../../../data/store'
 import { t } from '../../../i18n'
-import { BuildChannelPill, BuildStatusPill, EventStatusPill } from '../../components/Badges'
+import { BuildChannelPill, BuildStatusPill, ConfidenceTag, EventStatusPill } from '../../components/Badges'
 import { Card, Empty, ExternalLink, Progress } from '../../components/Common'
 import { Icon } from '../../components/Icon'
 import { useScope, useUI } from '../../context'
@@ -103,6 +103,7 @@ function EventMaterials({ materials: m, showProject }: { materials: EventoMateri
                   <div className="item-meta">
                     <BuildChannelPill channel={b.channel} />
                     <BuildStatusPill status={b.status} />
+                    <ConfidenceTag confidence={b.confidence} compact />
                   </div>
                 </li>
               ))}

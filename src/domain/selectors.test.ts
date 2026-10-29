@@ -16,7 +16,7 @@ import {
 } from './selectors'
 import type { StudioData, WorkItem } from './types'
 import { SCHEMA_VERSION } from './types'
-import { validateStudioData } from './validate'
+import { validateEntity, validateStudioData } from './validate'
 
 const TODAY = '2026-10-18'
 
@@ -164,6 +164,13 @@ describe('estado del proyecto', () => {
     const data = fixture()
     expect(projectSummary(data, data.projects[1], TODAY).health.level).toBe('idle')
   })
+  it('sin nada apuntado no sale «al día», sino «sin datos»', () => {
+    const data = fixture()
+    data.projects.push({ id: 'nuevo', slug: 'nuevo', name: 'Nuevo', description: '', platforms: [], stage: 'prototype', color: '#00f', versions: [], tags: [], links: [] })
+    expect(projectSummary(data, data.projects[2], TODAY).health.level).toBe('no_data')
+    data.items.push(item({ id: 'primera', projectId: 'nuevo' }))
+    expect(projectSummary(data, data.projects[2], TODAY).health.level).toBe('on_track')
+  })
   it('avisa cuando un proyecto activo lleva tiempo sin moverse', () => {
     const data = fixture()
     data.items = []
@@ -230,6 +237,24 @@ describe('validación', () => {
     expect(errors).toContain('Elemento y: está hecho pero no tiene completedAt')
     expect(errors).toContain('Elemento z: tiene completedAt pero no está hecho')
   })
+  it('al guardar, nada «verificado» sin fuente, en ninguna colección', () => {
+    const data = fixture()
+    const build = { id: 'nb', projectId: 'a', name: 'Demo', version: '2.0', channel: 'demo', platforms: [], status: 'ready', confidence: 'verified' }
+    expect(validateEntity('builds', { ...build, sources: [] }, data)).toContain('está como verificado pero no tiene ninguna fuente')
+    expect(validateEntity('builds', { ...build, sources: [{ type: 'manual', ref: 'Anotado en Studio Hub' }] }, data)).toEqual([])
+    expect(validateEntity('builds', { ...build, sources: [], confidence: 'to_confirm' }, data)).toEqual([])
+    const tx = { id: 't', kind: 'expense', category: 'other', description: 'Licencia', amount: 100, date: TODAY, status: 'done', tags: [], confidence: 'verified' }
+    expect(validateEntity('transactions', { ...tx, sources: [] }, data)).toContain('está como verificado pero no tiene ninguna fuente')
+    // Al cargar unos datos ya guardados no se rechazan por esto (se dejarían de ver enteros).
+    expect(validateStudioData({ ...data, builds: [...data.builds, { ...build, sources: [] }] })).toEqual([])
+  })
+  it('al guardar, un estado de fuera «verificado» necesita un enlace si solo se anotó a mano', () => {
+    const data = fixture()
+    const m = { id: 'm', projectId: 'a', kind: 'units', value: 5, date: TODAY, confidence: 'verified' }
+    expect(validateEntity('metrics', { ...m, sources: [{ type: 'manual', ref: 'Informe', note: 'captura' }] }, data).some((e) => e.includes('sin enlace'))).toBe(true)
+    expect(validateEntity('metrics', { ...m, sources: [{ type: 'manual', ref: 'Informe', url: 'https://example.com/informe' }] }, data)).toEqual([])
+    expect(validateEntity('metrics', { ...m, sources: [{ type: 'doc', ref: 'Informe de ventas de octubre' }] }, data)).toEqual([])
+  })
 })
 
 describe('notificaciones', () => {
@@ -241,6 +266,35 @@ describe('notificaciones', () => {
     expect(kinds).toContain('eventSoon:e1')
     expect(kinds).toContain('eventStale:e3')
     expect(kinds).not.toContain('eventSoon:e4') // a meses vista
+  })
+  it('dice si la fecha del aviso está confirmada: lo previsto sin confirmar no se da por cierto', () => {
+    const data = fixture()
+    data.events.push(
+      { id: 'e5', projectId: 'a', title: 'Prevista', type: 'festival', status: 'planned', date: '2026-10-22', dateConfirmed: false, sources: [], confidence: 'to_confirm' },
+      {
+        id: 'e6',
+        projectId: 'a',
+        title: 'Con plazo',
+        type: 'fair',
+        status: 'planned',
+        dateConfirmed: false,
+        registrationStatus: 'open',
+        registrationDeadline: '2026-10-21',
+        sources: [],
+        confidence: 'to_confirm',
+      },
+    )
+    data.releases.push(
+      { id: 'r1', projectId: 'a', kind: 'update', name: 'Sin confirmar', status: 'planned', targetDate: '2026-10-25', sources: [], confidence: 'to_confirm' },
+      { id: 'r2', projectId: 'a', kind: 'patch', name: 'Confirmada', status: 'planned', targetDate: '2026-10-26', targetConfirmed: true, sources: [], confidence: 'verified' },
+    )
+    const by = new Map(notificationsFor(data, TODAY).map((n) => [`${n.kind}:${n.target.id}`, n.confirmed]))
+    expect(by.get('eventSoon:e1')).toBe(true)
+    expect(by.get('eventSoon:e5')).toBe(false)
+    expect(by.get('registrationSoon:e6')).toBe(false)
+    expect(by.get('releaseSoon:r1')).toBe(false)
+    expect(by.get('releaseSoon:r2')).toBe(true)
+    expect(by.get('overdue:vencida')).toBe(true)
   })
   it('lo urgente va primero', () => {
     const tones = notificationsFor(fixture(), TODAY).map((n) => n.tone)

@@ -58,7 +58,10 @@ export interface TeamPerson extends TeamLoad {
   areas: Area[]
   /** Minutos que caben en TEAM_WEEKS semanas según sus horas semanales; null si no las tiene apuntadas. */
   capacity: number | null
-  /** Apuntado / capacidad; null sin capacidad (no se inventa). */
+  /**
+   * Apuntado / capacidad; null sin capacidad o sin ninguna hora apuntada en el periodo (sin
+   * horas no se sabe cuánto trabajó: no se inventa un 0 %).
+   */
   ratio: number | null
 }
 
@@ -107,7 +110,7 @@ export function teamWorkload(data: StudioData, today: ISODate, scope: Scope = nu
   const people = [...data.members].sort(compareMembers).map((member): TeamPerson => {
     const l = byId.get(member.id)!
     const capacity = member.weeklyHours !== undefined && member.weeklyHours > 0 ? member.weeklyHours * TEAM_WEEKS * 60 : null
-    return { member, areas: teamAreasOf(data, member), ...l, capacity, ratio: capacity ? l.minutes / capacity : null }
+    return { member, areas: teamAreasOf(data, member), ...l, capacity, ratio: capacity && l.minutes > 0 ? l.minutes / capacity : null }
   })
   return { from, to, people, nobody, anyTime }
 }

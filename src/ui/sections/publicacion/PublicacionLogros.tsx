@@ -33,14 +33,19 @@ export function PublicacionLogros({ embedded }: SectionPageProps) {
     {
       key: 'hidden',
       label: L('hidden'),
+      // Sin poner no es «visible»: es un ajuste de la tienda que aún no se ha decidido.
       render: (a) =>
-        a.hidden ? (
+        a.hidden === true ? (
           <Pill tone="special" icon="lock">
             {t('secciones.publicacion.logros.hidden')}
           </Pill>
-        ) : (
+        ) : a.hidden === false ? (
           <Pill tone="neutral" icon="eye">
             {t('secciones.publicacion.logros.visible')}
+          </Pill>
+        ) : (
+          <Pill tone="muted" icon="question">
+            {t('secciones.publicacion.logros.visibilityUndecided')}
           </Pill>
         ),
     },

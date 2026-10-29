@@ -50,6 +50,17 @@ describe('campos nuevos', () => {
     expect(toEditable(tx, { amount: 1250 }).amount).toBe('12,50')
   })
 
+  it('sí, no o sin decidir: la visibilidad de un logro no se da por «visible» si nadie la ha decidido', () => {
+    const ach = SPECS.achievements
+    const base = { name: 'Hola, mundo', projectId: 'p', status: 'implemented', confidence: 'verified' }
+    expect(toEditable(ach, { ...base }).hidden).toBe('')
+    expect(toEditable(ach, { ...base, hidden: false }).hidden).toBe('false')
+    expect(toEditable(ach, { ...base, hidden: true }).hidden).toBe('true')
+    expect('hidden' in normalizeDraft(ach, { ...base, hidden: '' })).toBe(false)
+    expect(normalizeDraft(ach, { ...base, hidden: 'false' }).hidden).toBe(false)
+    expect(normalizeDraft(ach, { ...base, hidden: 'true' }).hidden).toBe(true)
+  })
+
   it('los números respetan mínimo, máximo y enteros', () => {
     const te = SPECS.timeEntries
     const ok = { projectId: 'p', date: '2026-10-01' }

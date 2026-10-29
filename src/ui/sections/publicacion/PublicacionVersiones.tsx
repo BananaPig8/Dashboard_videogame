@@ -123,6 +123,7 @@ export function ReleaseBlock({ content: c, showProject, as = 'li' }: { content: 
                   <span className="version-tag">v{b.version}</span>
                   <BuildChannelPill channel={b.channel} />
                   <BuildStatusPill status={b.status} />
+                  <ConfidenceTag confidence={b.confidence} compact />
                 </li>
               ))}
             </ul>
@@ -140,6 +141,7 @@ export function ReleaseBlock({ content: c, showProject, as = 'li' }: { content: 
                     {listingName(l)}
                   </button>
                   <ListingStatusPill status={l.status} />
+                  <ConfidenceTag confidence={l.confidence} compact />
                 </li>
               ))}
             </ul>

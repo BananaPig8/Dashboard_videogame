@@ -520,6 +520,14 @@ export const es = {
     registrationSoon: 'Cierra la inscripción de «{title}», {when}',
     releaseSoon: 'Se acerca «{title}», {when}',
     releaseLate: '¿Salió «{title}»? Su fecha prevista ya pasó.',
+    // Lo mismo cuando la fecha es prevista y nadie la ha confirmado: no se da por cierta.
+    unconfirmed: {
+      eventSoon: '{title}, {when} (fecha sin confirmar)',
+      eventStale: '¿Se celebró «{title}»? Su fecha prevista, sin confirmar, ya pasó.',
+      registrationSoon: 'La inscripción de «{title}» cerraría {when} (plazo sin confirmar)',
+      releaseSoon: 'Fecha prevista de «{title}»: {when} (sin confirmar)',
+      releaseLate: '¿Salió «{title}»? Su fecha prevista, sin confirmar, ya pasó.',
+    },
     budgetOver: 'Presupuesto superado: {title}',
     seedUpdate: 'Hay datos iniciales nuevos (versión {version}).',
     unread: 'Sin leer',
@@ -807,6 +815,7 @@ export const es = {
       attention: 'Pide atención',
       urgent: 'Atención inmediata',
       idle: 'Parado',
+      no_data: 'Sin datos',
     },
   },
   widgets: {

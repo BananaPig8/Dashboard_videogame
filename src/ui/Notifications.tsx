@@ -41,6 +41,21 @@ const TITLE: Record<StudioNotification['kind'], MessageKey> = {
   budgetOver: 'notifications.budgetOver',
 }
 
+/** Los avisos que hablan de una fecha prevista: sin confirmar, cambian de texto (no la dan por cierta). */
+const UNCONFIRMED: Partial<Record<StudioNotification['kind'], MessageKey>> = {
+  eventSoon: 'notifications.unconfirmed.eventSoon',
+  eventStale: 'notifications.unconfirmed.eventStale',
+  registrationSoon: 'notifications.unconfirmed.registrationSoon',
+  releaseSoon: 'notifications.unconfirmed.releaseSoon',
+  releaseLate: 'notifications.unconfirmed.releaseLate',
+}
+
+/** El texto de un aviso (campana y Panel): «{title}, {when}», o su versión sin confirmar. */
+export function notificationText(n: StudioNotification, when: string): string {
+  const key = (!n.confirmed && UNCONFIRMED[n.kind]) || TITLE[n.kind]
+  return t(key, { title: n.title, when })
+}
+
 export function NotificationsMenu() {
   const data = useStudioData()
   const meta = useStoreMeta()
@@ -58,6 +73,7 @@ export function NotificationsMenu() {
 
   return (
     <Popover
+      kind="dialog"
       label={t('notifications.title')}
       className="notif-panel"
       trigger={(p) => (
@@ -85,13 +101,12 @@ export function NotificationsMenu() {
               </button>
             )}
           </div>
-          <ul className="notif-list" role="none">
+          <ul className="notif-list">
             {seedUpdate && (
-              <li role="none">
+              <li>
                 <button
                   type="button"
                   className="notif-item unread"
-                  role="menuitem"
                   onClick={() => {
                     store.applySeedUpdate()
                     toast(t('feedbackMsg.saved'))
@@ -104,7 +119,7 @@ export function NotificationsMenu() {
               </li>
             )}
             {list.length === 0 && !seedUpdate && (
-              <li role="none" className="empty">
+              <li className="empty">
                 {t('notifications.empty')}
               </li>
             )}
@@ -112,10 +127,9 @@ export function NotificationsMenu() {
               const unreadItem = !read.has(n.id)
               const when = n.date ? fmt.relative(n.date, today) : ''
               return (
-                <li key={n.id} role="none">
+                <li key={n.id}>
                   <button
                     type="button"
-                    role="menuitem"
                     className={`notif-item ${unreadItem ? 'unread' : ''}`}
                     onClick={() => {
                       updatePreferences((p) => ({ readNotifications: [...p.readNotifications, n.id] }))
@@ -127,7 +141,7 @@ export function NotificationsMenu() {
                       <Icon name={ICON[n.kind]} size={16} />
                     </span>
                     <span>
-                      <span className="notif-title">{t(TITLE[n.kind], { title: n.title, when })}</span>
+                      <span className="notif-title">{notificationText(n, when)}</span>
                       {n.date && (
                         <span className="meta-date">
                           {' '}

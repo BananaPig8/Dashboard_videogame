@@ -5,7 +5,7 @@ import { listingsOf, storeTextsByListing, textLength, type ListingTexts } from '
 import type { StoreText } from '../../../domain/types'
 import { useCanEdit, useStudioData } from '../../../data/store'
 import { t } from '../../../i18n'
-import { ProjectChip } from '../../components/Badges'
+import { ConfidenceTag, ProjectChip } from '../../components/Badges'
 import { Card, Empty } from '../../components/Common'
 import { Icon } from '../../components/Icon'
 import { useScope, useUI } from '../../context'
@@ -73,7 +73,14 @@ function ListingTextsCard({ group: g, showProject }: { group: ListingTexts; show
     >
       <div className="item-meta publicacion-card-meta">
         {showProject && <ProjectChip project={project} />}
-        {l ? <ListingStatusPill status={l.status} /> : <span className="muted small">{t('secciones.publicacion.descripciones.orphansHint')}</span>}
+        {l ? (
+          <>
+            <ListingStatusPill status={l.status} />
+            <ConfidenceTag confidence={l.confidence} compact />
+          </>
+        ) : (
+          <span className="muted small">{t('secciones.publicacion.descripciones.orphansHint')}</span>
+        )}
       </div>
       {g.languages.length === 0 ? (
         <Empty

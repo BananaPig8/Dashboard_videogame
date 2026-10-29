@@ -81,7 +81,7 @@ export function EquipoCarga() {
           )}
         </span>
       ) : p ? (
-        <span className="muted">{t('secciones.equipo.carga.usageNone')}</span>
+        <span className="muted">{t(p.capacity != null ? 'secciones.equipo.carga.usageNoTime' : 'secciones.equipo.carga.usageNone')}</span>
       ) : (
         <NotApplicable />
       ),

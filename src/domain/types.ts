@@ -479,6 +479,7 @@ export interface Achievement {
   projectId: ID
   name: string
   description?: string
+  /** Oculto en la tienda hasta conseguirlo. Sin poner: aún no se ha decidido (no es «visible»). */
   hidden?: boolean
   /** Nombre interno (API) del logro. */
   apiName?: string
