@@ -92,6 +92,13 @@ ya no existe; se deduce de la fecha de caducidad, no se ha vuelto a comprobar. A
 `items.json` que lo cita, sino la de la mayoría de los que lo citan. Si empatan, gana la del
 más concreto. Así, las traducciones cuentan como Idiomas y no como Lanzamientos.
 
+En la 2026-11-02.1 entra la PR #43, solo de la demo de Steam: el botón de la lista de deseos
+en la portada, el mando y la Steam Deck, tu opinión (a Talo), la postal del estudio y el reto
+semanal, con sus decisiones (solo en la demo de Steam; el mando maneja un cursor). Quedan
+pendientes crear en Talo el ranking `reto_semanal` y la categoría de opiniones, y el mando en
+Steamworks con la prueba en una Steam Deck de verdad; también como dos pasos nuevos de la lista
+de Steam.
+
 ## Actualizar el historial
 
 ```bash

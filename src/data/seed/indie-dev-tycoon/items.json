@@ -11214,7 +11214,7 @@
     "projectId": "indie-dev-tycoon",
     "kind": "task",
     "title": "Publicar la Demo 1.4 en Steam",
-    "description": "La Demo 1.4 es la que irá a Steam y está en main desde el 28-10 (PR #40). Falta compilarla (Actions no arranca), la página de Steam y el App ID, y que se validen las traducciones.",
+    "description": "La Demo 1.4 es la que irá a Steam y está en main desde el 28-10 (PR #40). Falta compilarla (Actions no arranca), la página de Steam y el App ID, y que se validen las traducciones. Desde el 02-11 (PR #43) lleva además lo que es solo de la demo de Steam: lista de deseos en la portada, mando y Steam Deck, tu opinión, la postal y el reto semanal.",
     "status": "planned",
     "priority": "high",
     "areaId": "demo",
@@ -11235,6 +11235,13 @@
         "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/40",
         "date": "2026-10-28",
         "note": "La Demo 1.4 llega a main"
+      },
+      {
+        "type": "pr",
+        "ref": "#43",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/43",
+        "date": "2026-11-02",
+        "note": "Fusionada el 2026-11-02 sin las comprobaciones de Actions (no arranca); la comprobación rápida de Godot, pasada a mano"
       }
     ],
     "confidence": "inferred",
@@ -11271,8 +11278,8 @@
     "id": "idt-talo-tablas-ranking",
     "projectId": "indie-dev-tycoon",
     "kind": "task",
-    "title": "Confirmar en Talo las tablas demo, feria_valladolid y Jueguito",
-    "description": "El ranking mundial necesita en Talo los rankings con nombre interno «demo», «Jueguito» (juego completo) y «feria_valladolid», escritos así. El secreto TALO_ACCESS_KEY sí está: la compilación del 13-10 salió «Con ranking mundial». Desde el repositorio no se ve si las tablas existen.",
+    "title": "Confirmar en Talo las tablas demo, feria_valladolid, Jueguito y reto_semanal, y las opiniones",
+    "description": "El ranking mundial necesita en Talo los rankings con nombre interno «demo», «Jueguito» (juego completo) y «feria_valladolid», escritos así. El secreto TALO_ACCESS_KEY sí está: la compilación del 13-10 salió «Con ranking mundial». Desde el repositorio no se ve si las tablas existen. Desde el 02-11 (PR #43), la demo de Steam usa además el ranking «reto_semanal» (de mayor a menor, sin modo único ni reinicio automático: la semana va en la propiedad «semana») y la categoría «demo» de Game feedback para las opiniones; la clave tiene que poder escribir «game feedback». Nada de eso se ve desde el repositorio: lo tiene que confirmar el estudio en el panel de Talo.",
     "status": "to_confirm",
     "priority": "high",
     "areaId": "ranking-integrity",
@@ -11312,6 +11319,18 @@
         "type": "readme",
         "ref": "README.md#el-ranking-demo-y-juego-completo",
         "note": "Las tres tablas y su nombre interno"
+      },
+      {
+        "type": "pr",
+        "ref": "#43",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/43",
+        "date": "2026-11-02",
+        "note": "Fusionada el 2026-11-02 sin las comprobaciones de Actions (no arranca); la comprobación rápida de Godot, pasada a mano"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#el-ranking-demo-y-juego-completo",
+        "note": "Pasos 2 a 4: reto_semanal, la categoría demo y los permisos de la clave"
       }
     ],
     "confidence": "to_confirm"
@@ -12472,5 +12491,363 @@
       }
     ],
     "confidence": "verified"
+  },
+  {
+    "id": "idt-decision-solo-demo-steam",
+    "projectId": "indie-dev-tycoon",
+    "kind": "decision",
+    "title": "Lo nuevo de la demo, solo en la demo de Steam",
+    "description": "De la lista de mejoras para la demo, el estudio pide hacer el botón de la lista de deseos, el mando y la Steam Deck (lo principal), la opinión, la postal y el reto semanal, y tocar solo la demo de Steam: ni la Demo Valladolid ni el juego completo cambian.",
+    "status": "done",
+    "priority": "high",
+    "areaId": "demo",
+    "startedAt": "2026-10-29",
+    "completedAt": "2026-10-29",
+    "decisionOutcome": "Todo va con Game.demo y sin Game.feria (Opinion.available(), Postal.available(), Reto.available() y el mando solo se crea en esa demo); tests/demo_steam.gd comprueba que la Demo Valladolid y el juego completo no lo tienen.",
+    "tags": [
+      "demo",
+      "steam"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "0247bd0",
+        "date": "2026-10-29"
+      },
+      {
+        "type": "pr",
+        "ref": "#43",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/43",
+        "date": "2026-11-02",
+        "note": "Fusionada el 2026-11-02 sin las comprobaciones de Actions (no arranca); la comprobación rápida de Godot, pasada a mano"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#lo-de-la-demo-de-steam"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-demo-lista-deseos-portada",
+    "projectId": "indie-dev-tycoon",
+    "kind": "feature",
+    "title": "Botón de la lista de deseos de Steam en la portada de la demo",
+    "description": "En la portada de la demo de Steam, al lado del botón de Discord, «Lista de deseos» con el icono de Steam abre la página del juego (Game.STEAM_URL; mientras no haya página, la búsqueda en la tienda).",
+    "status": "done",
+    "priority": "medium",
+    "areaId": "marketing",
+    "startedAt": "2026-10-29",
+    "completedAt": "2026-10-29",
+    "tags": [
+      "demo",
+      "steam",
+      "portada"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "465f449",
+        "date": "2026-10-29"
+      },
+      {
+        "type": "pr",
+        "ref": "#43",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/43",
+        "date": "2026-11-02",
+        "note": "Fusionada el 2026-11-02 sin las comprobaciones de Actions (no arranca); la comprobación rápida de Godot, pasada a mano"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#lo-de-la-demo-de-steam"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-demo-mando-steam-deck",
+    "projectId": "indie-dev-tycoon",
+    "kind": "feature",
+    "title": "Mando y Steam Deck en la demo",
+    "description": "Toda la demo se juega con mando con un cursor como el del ratón (godot/scripts/ui/mando.gd): el stick lo mueve (más despacio encima de lo que se puede pulsar), la cruceta salta al botón más cercano (y mueve deslizadores y desplegables), A pulsa y arrastra, B vuelve atrás o cierra, Start abre el menú, Y pausa, LB/RB cambian la velocidad y el stick derecho desplaza o hace zoom. Al abrir una ventana el cursor va a su botón principal y al cerrarla vuelve. Abajo sale la ayuda con los botones del mando que se usa (Xbox, PlayStation, Nintendo o Steam Deck) y, para escribir, un teclado en pantalla. Al mover el ratón vuelve el ratón. En la Steam Deck empieza con el cursor y a pantalla completa (1280×800); el texto más pequeño se ve a 9,35 px.",
+    "status": "done",
+    "priority": "high",
+    "areaId": "steam",
+    "startedAt": "2026-10-29",
+    "completedAt": "2026-10-29",
+    "tags": [
+      "demo",
+      "steam",
+      "mando",
+      "steam-deck",
+      "godot"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "9316b95",
+        "date": "2026-10-29"
+      },
+      {
+        "type": "commit",
+        "ref": "74bf06b",
+        "date": "2026-10-29",
+        "note": "Desplegables, a qué salta el cursor en cada ventana, pantalla completa en la Deck y la prueba en godot_check"
+      },
+      {
+        "type": "pr",
+        "ref": "#43",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/43",
+        "date": "2026-11-02",
+        "note": "Fusionada el 2026-11-02 sin las comprobaciones de Actions (no arranca); la comprobación rápida de Godot, pasada a mano"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#lo-de-la-demo-de-steam"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-decision-mando-cursor",
+    "projectId": "indie-dev-tycoon",
+    "kind": "decision",
+    "title": "El mando maneja un cursor en vez de moverse por el foco",
+    "description": "La interfaz está hecha para el ratón (tarjetas que se pulsan, la oficina con zoom y arrastre, deslizadores). En vez de preparar cada ventana para moverse con el foco, el mando mueve un cursor que se inventa los mismos eventos que el ratón, con la cruceta para saltar de botón en botón.",
+    "status": "done",
+    "priority": "medium",
+    "areaId": "ui-ux",
+    "startedAt": "2026-10-29",
+    "completedAt": "2026-10-29",
+    "decisionOutcome": "Todo lo que se hace con el ratón se hace igual con el mando sin tocar las ventanas; lo de Godot con el mando (moverse por el foco) no se usa.",
+    "tags": [
+      "mando",
+      "steam-deck",
+      "godot"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "9316b95",
+        "date": "2026-10-29"
+      },
+      {
+        "type": "pr",
+        "ref": "#43",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/43",
+        "date": "2026-11-02",
+        "note": "Fusionada el 2026-11-02 sin las comprobaciones de Actions (no arranca); la comprobación rápida de Godot, pasada a mano"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#lo-de-la-demo-de-steam"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-demo-opinion-talo",
+    "projectId": "indie-dev-tycoon",
+    "kind": "feature",
+    "title": "Enviar tu opinión desde la demo (Talo)",
+    "description": "Desde el menú y la despedida, «Tu opinión»: de qué va (algo que te gusta, un error, una idea u otra cosa), una nota de una a cinco estrellas y el comentario. Va a Talo (Game feedback, categoría «demo») con la versión, el idioma, el año de la partida y si se juega con mando; nada más de quien la manda. Sin conexión se guarda y se envía sola al volver a la portada; sin la clave de Talo el botón no sale.",
+    "status": "done",
+    "priority": "medium",
+    "areaId": "demo",
+    "startedAt": "2026-10-29",
+    "completedAt": "2026-10-29",
+    "tags": [
+      "demo",
+      "steam",
+      "talo",
+      "feedback"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "0247bd0",
+        "date": "2026-10-29"
+      },
+      {
+        "type": "pr",
+        "ref": "#43",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/43",
+        "date": "2026-11-02",
+        "note": "Fusionada el 2026-11-02 sin las comprobaciones de Actions (no arranca); la comprobación rápida de Godot, pasada a mano"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#lo-de-la-demo-de-steam"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-demo-postal-estudio",
+    "projectId": "indie-dev-tycoon",
+    "kind": "feature",
+    "title": "Postal del estudio para compartir",
+    "description": "Desde el menú y la despedida de la demo de Steam: una imagen de 1200×675 con la habitación tal como está, tu personaje, el estudio, la puntuación, las cifras, los logros, tu mejor juego y la invitación a la lista de deseos. La pinta el propio juego, se guarda en Imágenes › Indie Dev Tycoon y se enseña con el botón para abrir la carpeta.",
+    "status": "done",
+    "priority": "low",
+    "areaId": "marketing",
+    "startedAt": "2026-10-29",
+    "completedAt": "2026-10-29",
+    "tags": [
+      "demo",
+      "steam",
+      "comunidad"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "0247bd0",
+        "date": "2026-10-29"
+      },
+      {
+        "type": "pr",
+        "ref": "#43",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/43",
+        "date": "2026-11-02",
+        "note": "Fusionada el 2026-11-02 sin las comprobaciones de Actions (no arranca); la comprobación rápida de Godot, pasada a mano"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#lo-de-la-demo-de-steam"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-demo-reto-semanal",
+    "projectId": "indie-dev-tycoon",
+    "kind": "feature",
+    "title": "Reto semanal con tres intentos",
+    "description": "Desde «Reto semanal» en la portada de la demo de Steam: cada semana (de lunes a domingo, en UTC) todo el mundo juega la misma partida (la misma semilla, en normal y con el perfil «De todo»). Tres intentos por semana en cada ordenador, que se gastan al empezar (la partida a medias se sigue sin gastar otro) y vuelven el lunes. Va en su ranura (la 5), acaba como la demo y cuenta el mejor intento: entra en el ranking de la demo y en la tabla de la semana en Talo («reto_semanal», con el mejor de cada estudio).",
+    "status": "done",
+    "priority": "medium",
+    "areaId": "demo",
+    "startedAt": "2026-10-29",
+    "completedAt": "2026-11-02",
+    "tags": [
+      "demo",
+      "steam",
+      "talo",
+      "ranking"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "0247bd0",
+        "date": "2026-10-29"
+      },
+      {
+        "type": "commit",
+        "ref": "67c809c",
+        "date": "2026-11-02",
+        "note": "La prueba empieza sin el reto de antes en las preferencias del ordenador"
+      },
+      {
+        "type": "pr",
+        "ref": "#43",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/43",
+        "date": "2026-11-02",
+        "note": "Fusionada el 2026-11-02 sin las comprobaciones de Actions (no arranca); la comprobación rápida de Godot, pasada a mano"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#lo-de-la-demo-de-steam"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-demo-steam-traducciones",
+    "projectId": "indie-dev-tycoon",
+    "kind": "feature",
+    "title": "Lo nuevo de la demo de Steam, en los seis idiomas",
+    "description": "Las 76 frases nuevas (la ayuda del mando, el teclado en pantalla, la opinión, la postal, el reto y la lista de deseos) traducidas al inglés, francés, alemán, chino, japonés y coreano; godot/idiomas/demo.json pasa a 2.172 frases, todas traducidas. El «Espacio» del teclado se llama «Barra espaciadora» para no confundirse con el tema «Espacio».",
+    "status": "done",
+    "priority": "medium",
+    "areaId": "localization",
+    "startedAt": "2026-10-29",
+    "completedAt": "2026-10-29",
+    "tags": [
+      "idiomas",
+      "demo"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "56d0140",
+        "date": "2026-10-29"
+      },
+      {
+        "type": "pr",
+        "ref": "#43",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/43",
+        "date": "2026-11-02",
+        "note": "Fusionada el 2026-11-02 sin las comprobaciones de Actions (no arranca); la comprobación rápida de Godot, pasada a mano"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-talo-crear-reto-y-opiniones",
+    "projectId": "indie-dev-tycoon",
+    "kind": "task",
+    "title": "Crear en Talo el ranking reto_semanal y la categoría de opiniones",
+    "description": "Para que funcionen el reto semanal y las opiniones de la demo de Steam: en Talo, un ranking con nombre interno «reto_semanal» (de mayor a menor, sin modo único ni reinicio automático), una categoría «demo» en Game feedback y permiso de escribir «game feedback» en la clave (README, «El ranking», pasos 2 a 4). Mientras no estén, el reto se juega igual y la tabla de la semana no sale, y las opiniones esperan guardadas en cada ordenador.",
+    "status": "backlog",
+    "priority": "high",
+    "areaId": "tech",
+    "tags": [
+      "talo",
+      "demo",
+      "steam"
+    ],
+    "sources": [
+      {
+        "type": "pr",
+        "ref": "#43",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/43",
+        "date": "2026-11-02",
+        "note": "Fusionada el 2026-11-02 sin las comprobaciones de Actions (no arranca); la comprobación rápida de Godot, pasada a mano"
+      },
+      {
+        "type": "readme",
+        "ref": "README.md#el-ranking-demo-y-juego-completo"
+      }
+    ],
+    "confidence": "inferred"
+  },
+  {
+    "id": "idt-steamworks-mando-deck",
+    "projectId": "indie-dev-tycoon",
+    "kind": "task",
+    "title": "Configurar el mando en Steamworks y pedir la revisión de Steam Deck",
+    "description": "En Steamworks, poner la plantilla «Mando» (gamepad) como configuración de mando por defecto de la demo, y pedir la revisión de compatibilidad con Steam Deck cuando haya página. Conviene probar antes la demo en una Steam Deck de verdad: en el repositorio solo está probado con eventos de mando de mentira y capturas a 1280×800.",
+    "status": "backlog",
+    "priority": "medium",
+    "areaId": "steam",
+    "tags": [
+      "steam",
+      "steam-deck",
+      "mando"
+    ],
+    "sources": [
+      {
+        "type": "readme",
+        "ref": "README.md#lo-de-la-demo-de-steam"
+      },
+      {
+        "type": "pr",
+        "ref": "#43",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/43",
+        "date": "2026-11-02",
+        "note": "Fusionada el 2026-11-02 sin las comprobaciones de Actions (no arranca); la comprobación rápida de Godot, pasada a mano"
+      }
+    ],
+    "confidence": "inferred"
   }
 ]

@@ -42,7 +42,7 @@
     "kind": "demo",
     "releaseId": "idt-release-demo-1-4",
     "status": "not_started",
-    "notes": "Se lleva a mano. La Demo 1.4 es la que irá a Steam (en main desde el 28-10, PR #40). No hay App ID ni página en el repositorio: lo tiene que confirmar el estudio.",
+    "notes": "Se lleva a mano. La Demo 1.4 es la que irá a Steam (en main desde el 28-10, PR #40). No hay App ID ni página en el repositorio: lo tiene que confirmar el estudio. Desde el 02-11 (PR #43) la demo se juega entera con mando y en Steam Deck (la ficha puede decir «Compatible con mando»), y trae el reto semanal con su tabla.",
     "tags": [
       "steam",
       "demo"
@@ -64,6 +64,13 @@
         "type": "readme",
         "ref": "La demo",
         "note": "«desde la 1.4, la demo es la que fue la «1.3 V2» (la que irá a Steam)»"
+      },
+      {
+        "type": "pr",
+        "ref": "#43",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/43",
+        "date": "2026-11-02",
+        "note": "Fusionada el 2026-11-02 sin las comprobaciones de Actions (no arranca); la comprobación rápida de Godot, pasada a mano"
       }
     ],
     "confidence": "to_confirm"
