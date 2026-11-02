@@ -18,7 +18,7 @@
     "title": "Rama claude/lucid-lamport-fl6em4",
     "type": "link",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/tree/claude/lucid-lamport-fl6em4",
-    "description": "Rama de trabajo; todo lo suyo está en main (PR #40, #41 y #42, del 28 y el 29-10).",
+    "description": "Rama de trabajo; todo lo suyo está en main (PR #40 a #43, del 28-10 al 02-11).",
     "tags": [
       "rama",
       "demo",
@@ -440,6 +440,19 @@
     "description": "Las piezas con las que el juego monta los títulos (prefijos, palabras de los temas, sufijos, adaptaciones y remakes) y los estudios inventados, en inglés, francés, alemán, chino, japonés y coreano.",
     "tags": [
       "idiomas",
+      "godot"
+    ]
+  },
+  {
+    "id": "idt-res-mando-gd",
+    "projectId": "indie-dev-tycoon",
+    "title": "godot/scripts/ui/mando.gd: el mando y la Steam Deck",
+    "type": "link",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/blob/main/godot/scripts/ui/mando.gd",
+    "description": "El cursor del mando, la cruceta, la ayuda de los botones de cada mando y el teclado en pantalla de la demo de Steam.",
+    "tags": [
+      "mando",
+      "steam-deck",
       "godot"
     ]
   }

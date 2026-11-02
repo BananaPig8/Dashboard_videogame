@@ -284,6 +284,44 @@
             "ref": "README.md#pasos-para-publicarlo-en-steam"
           }
         ]
+      },
+      {
+        "id": "idt-steam-ck-mando",
+        "label": "Mando por defecto en Steamworks (plantilla «Mando») y la demo probada en una Steam Deck",
+        "done": false,
+        "note": "El juego ya lo admite (PR #43); falta Steamworks y probarlo en una Deck de verdad.",
+        "sources": [
+          {
+            "type": "pr",
+            "ref": "#43",
+            "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/43",
+            "date": "2026-11-02",
+            "note": "Fusionada el 2026-11-02 sin las comprobaciones de Actions (no arranca); la comprobación rápida de Godot, pasada a mano"
+          },
+          {
+            "type": "readme",
+            "ref": "README.md#lo-de-la-demo-de-steam"
+          }
+        ]
+      },
+      {
+        "id": "idt-steam-ck-talo-reto",
+        "label": "En Talo, el ranking reto_semanal y la categoría de opiniones «demo»",
+        "done": false,
+        "note": "Con la clave que pueda escribir «game feedback» (README, «El ranking»).",
+        "sources": [
+          {
+            "type": "pr",
+            "ref": "#43",
+            "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/43",
+            "date": "2026-11-02",
+            "note": "Fusionada el 2026-11-02 sin las comprobaciones de Actions (no arranca); la comprobación rápida de Godot, pasada a mano"
+          },
+          {
+            "type": "readme",
+            "ref": "README.md#el-ranking-demo-y-juego-completo"
+          }
+        ]
       }
     ],
     "listingId": "idt-ficha-steam-juego",

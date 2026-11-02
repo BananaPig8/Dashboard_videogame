@@ -16,7 +16,7 @@ export const INDIE_DEV_TYCOON: Project = {
   genre: 'Tycoon / gestión',
   platforms: ['Windows', 'Linux', 'macOS', 'Web'],
   stage: 'production',
-  nextGoal: 'Llevar la Demo 1.4 a Steam: compilarla cuando Actions vuelva a arrancar, validar las traducciones con hablantes nativos y completar los pasos de Steamworks.',
+  nextGoal: 'Llevar la Demo 1.4 a Steam: compilarla cuando Actions vuelva a arrancar, validar las traducciones con hablantes nativos, crear en Talo el reto semanal y las opiniones y completar los pasos de Steamworks (mando incluido).',
   startedAt: '2026-09-27',
   color: '#f59e0b',
   repoUrl: 'https://github.com/BananaPig8/Indie-Dev-Tycoon',
