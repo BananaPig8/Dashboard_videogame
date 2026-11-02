@@ -92,6 +92,7 @@ export function EditorModal({ request, onClose }: { request: EditorRequest; onCl
     setProblems(found)
     if (found.length) return
     store.upsert(k, entity as never)
+    if (!existing) request.onCreated?.(entity)
     onClose()
     toast(existing ? t('feedbackMsg.saved') : t('feedbackMsg.created'))
     if (k === 'projects' && !existing) navigate(`/proyectos/${String(entity.slug)}`)

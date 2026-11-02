@@ -1,6 +1,16 @@
 // Textos de la sección «Panel del estudio». Cada sección tiene su fichero para poder trabajar en
-// ellas por separado; es.ts los junta bajo `secciones.panel`.
+// ellas por separado; es.ts los junta bajo `secciones.panel`. Los bloques del Dashboard tienen
+// además los suyos (panel-*.ts), bajo `secciones.panel.<parte>`.
+import { panel_actividad } from './panel-actividad'
+import { panel_cabecera } from './panel-cabecera'
+import { panel_prioridades } from './panel-prioridades'
+import { panel_tarjetas } from './panel-tarjetas'
+
 export const panel = {
+  cabecera: panel_cabecera,
+  prioridades: panel_prioridades,
+  tarjetas: panel_tarjetas,
+  actividad: panel_actividad,
   title: 'Panel del estudio',
   subtitle: 'Lo importante de todos los juegos, de un vistazo',
   titleProject: 'Panel · {project}',

@@ -142,7 +142,11 @@ function filled(): FakeDb {
 }
 
 describe('almacén remoto (base de datos de la página)', () => {
-  beforeEach(() => vi.useFakeTimers())
+  beforeEach(() => {
+    vi.useFakeTimers()
+    // El registro de cambios apunta la hora: una fija para que las rutas no dependan del día.
+    vi.setSystemTime(new Date('2026-11-02T09:00:00Z'))
+  })
   afterEach(() => vi.useRealTimers())
 
   it('espera a la base y carga lo que hay, en su orden', async () => {
@@ -165,8 +169,10 @@ describe('almacén remoto (base de datos de la página)', () => {
     store.patch('items', 'b', { status: 'done', completedAt: '2026-10-18' })
     const after = store.getData()
     await tick()
-    expect(db.writes.map((w) => w.path)).toEqual(['items/b'])
-    expect(db.writes[0].body).toMatchObject({ status: 'done', _orden: 1 })
+    // El elemento y su línea en el registro de cambios (un documento por mes y persona).
+    expect(db.writes.map((w) => w.path).sort()).toEqual(['changes/2026-11~sin-nombre', 'items/b'])
+    expect(db.writes.find((w) => w.path === 'items/b')!.body).toMatchObject({ status: 'done', _orden: 1 })
+    expect(db.writes.find((w) => w.path.startsWith('changes/'))!.body).toMatchObject({ entries: [{ action: 'completed', entityId: 'b', from: 'backlog', to: 'done' }] })
     // El eco de la base no cambia el estado: «Deshacer» sigue funcionando.
     expect(store.getData()).toBe(after)
   })
@@ -177,9 +183,10 @@ describe('almacén remoto (base de datos de la página)', () => {
     await tick()
     store.remove('projects', 'p')
     await tick()
-    expect(db.writes.map((w) => w.path).sort()).toEqual(['activity/p~2026-10', 'items/a', 'items/b', 'projects/p'])
-    expect(db.writes.every((w) => w.body === null)).toBe(true)
-    expect([...db.docs.keys()]).toEqual([STUDIO_DOC])
+    expect(db.writes.map((w) => w.path).sort()).toEqual(['activity/p~2026-10', 'changes/2026-11~sin-nombre', 'items/a', 'items/b', 'projects/p'])
+    expect(db.writes.filter((w) => !w.path.startsWith('changes/')).every((w) => w.body === null)).toBe(true)
+    // Queda el registro: «se borró el proyecto P».
+    expect([...db.docs.keys()].sort()).toEqual(['changes/2026-11~sin-nombre', STUDIO_DOC].sort())
   })
 
   it('agrupa la actividad nueva en el documento de su mes', async () => {

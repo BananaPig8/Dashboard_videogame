@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
 import { setCatalogLabels } from '../domain/catalog'
 import { t } from '../i18n'
-import { useCanEdit, useStudioData } from '../data/store'
+import { store, useCanEdit, useStudioData } from '../data/store'
 import { CommandPalette } from './CommandPalette'
 import { Icon } from './components/Icon'
 import { Popover } from './components/Popover'
@@ -32,6 +32,8 @@ export function AppShell({ children }: { children: ReactNode }) {
   const collapsed = prefs.sidebarCollapsed
   // Los nombres de estado que el estudio ha cambiado (Ajustes) valen en todas las pantallas.
   setCatalogLabels('status', data.studio.statusLabels)
+  // Lo que se cambie desde aquí se apunta en el registro a nombre de «Quién soy» (si existe).
+  store.setActor(prefs.meId && data.members.some((m) => m.id === prefs.meId) ? prefs.meId : undefined)
 
   const mobile = useMediaQuery('(max-width: 960px)')
   const menuButton = useRef<HTMLButtonElement>(null)

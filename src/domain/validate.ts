@@ -49,6 +49,9 @@ interface Ctx {
 
 const CLOCK = /^([01]\d|2[0-3]):[0-5]\d$/
 
+const PROGRESS_METHODS = { tasks: true, milestones: true }
+const CHANGE_ACTIONS = { created: true, updated: true, status: true, completed: true, deleted: true }
+
 /** Colecciones que afirman estados externos: «verificado» necesita una fuente que se pueda comprobar. */
 const EXTERNAL_FACTS: CollectionKey[] = ['metrics', 'storeListings', 'achievements', 'releases']
 
@@ -113,6 +116,8 @@ function checks(ctx: Ctx) {
       if (typeof p.slug !== 'string' || !/^[a-z0-9-]+$/.test(p.slug)) err(w, `slug no válido («${String(p.slug)}»)`)
       oneOf(w, 'stage', p.stage, STAGES)
       date(w, 'startedAt', p.startedAt)
+      oneOf(w, 'progressMethod', p.progressMethod, PROGRESS_METHODS, true)
+      if (p.coverUrl !== undefined && typeof p.coverUrl !== 'string') err(w, 'coverUrl no es un enlace')
       if (!Array.isArray(p.platforms) || !Array.isArray(p.versions) || !Array.isArray(p.tags) || !Array.isArray(p.links))
         err(w, 'platforms, versions, tags y links tienen que ser listas')
     },
@@ -130,6 +135,8 @@ function checks(ctx: Ctx) {
       if (i.status !== 'done' && i.status !== 'cancelled' && i.completedAt) err(w, 'tiene completedAt pero no está hecho')
       ref(w, 'parentId', i.parentId, 'items')
       if (i.parentId !== undefined && i.parentId === i.id) err(w, 'cuelga de sí mismo')
+      refs(w, 'dependsOnIds', i.dependsOnIds, 'items')
+      if (Array.isArray(i.dependsOnIds) && i.dependsOnIds.includes(i.id)) err(w, 'depende de sí mismo')
       ref(w, 'assigneeId', i.assigneeId, 'members')
       ref(w, 'buildId', i.buildId, 'builds')
       ref(w, 'releaseId', i.releaseId, 'releases')
@@ -179,6 +186,7 @@ function checks(ctx: Ctx) {
       oneOf(w, 'kind', f.kind, FEEDBACK_KINDS, true)
       confidence(w, f)
       date(w, 'receivedAt', f.receivedAt)
+      if (f.resolution !== undefined && typeof f.resolution !== 'string') err(w, 'resolution no es un texto')
       for (const id of (f.linkedItemIds as unknown[]) ?? []) if (!ctx.ids.items.has(id as string)) err(w, `enlaza un elemento que no existe («${String(id)}»)`)
       ref(w, 'eventId', f.eventId, 'events')
       ref(w, 'playtestId', f.playtestId, 'playtests')
@@ -335,6 +343,15 @@ function checks(ctx: Ctx) {
       if (!isValidISODate(m.date)) err(w, `date no es una fecha AAAA-MM-DD («${String(m.date)}»)`)
       sources(w, m.sources, true)
       if (!(m.sources as unknown[] | undefined)?.length) err(w, 'una métrica necesita su fuente')
+    },
+    changes: (c, w) => {
+      if (!isValidISODateTime(c.at)) err(w, `at no es AAAA-MM-DDTHH:mm («${String(c.at)}»)`)
+      oneOf(w, 'action', c.action, CHANGE_ACTIONS)
+      if (typeof c.collection !== 'string' || typeof c.entityId !== 'string') err(w, 'falta qué cambió (collection y entityId)')
+      if (typeof c.title !== 'string') err(w, 'falta el título')
+      project(w, c.projectId, true)
+      ref(w, 'memberId', c.memberId, 'members')
+      list(w, 'fields', c.fields, true)
     },
   }
   return by

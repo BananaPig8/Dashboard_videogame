@@ -140,6 +140,18 @@ export const SPECS: Record<CollectionKey, FieldSpec[]> = {
     { key: 'startedAt', label: 'Empezado', type: 'date' },
     { key: 'completedAt', label: 'Terminado', type: 'date', show: (d) => d.status === 'done' || d.status === 'cancelled' || !!d.completedAt },
     { key: 'parentId', label: 'Cuelga de', type: 'select', empty: 'De nada', hint: 'El objetivo, hito o funcionalidad del que forma parte.', options: itemOptions, sameProject: true, wide: true },
+    {
+      key: 'dependsOnIds',
+      label: 'Depende de',
+      type: 'multi',
+      wide: true,
+      hint: 'Lo que tiene que estar hecho antes. Ctrl o Cmd + clic para elegir varios.',
+      sameProject: true,
+      options: (data, d) =>
+        byProject(data.items, d)
+          .filter((i) => i.id !== d.id && i.kind !== 'goal' && (STATUSES[i.status].open || (d.dependsOnIds as string[] | undefined)?.includes(i.id)))
+          .map((i) => ({ value: i.id, label: `${i.title} (${label(STATUSES, i.status)})` })),
+    },
     { key: 'buildId', label: 'Build en la que aparece', type: 'select', empty: 'Ninguna', options: buildOptions, sameProject: true, show: (d) => d.kind === 'issue' || !!d.buildId },
     { key: 'releaseId', label: 'Versión en la que sale', type: 'select', empty: 'Ninguna', options: releaseOptions, sameProject: true },
     { key: 'eventId', label: 'Reunión o evento del que sale', type: 'select', empty: 'Ninguno', options: eventOptions, sameProject: true, show: (d) => d.kind === 'decision' || !!d.eventId },
@@ -211,6 +223,14 @@ export const SPECS: Record<CollectionKey, FieldSpec[]> = {
     confidence,
     { key: 'detail', label: 'Detalle', type: 'textarea', wide: true },
     {
+      key: 'resolution',
+      label: 'Motivo o resolución',
+      type: 'textarea',
+      wide: true,
+      hint: 'Por qué se descarta, o cómo se resolvió.',
+      show: (d) => d.status === 'wont_do' || d.status === 'addressed' || !!d.resolution,
+    },
+    {
       key: 'linkedItemIds',
       label: 'Elementos que lo resuelven',
       type: 'multi',
@@ -255,6 +275,18 @@ export const SPECS: Record<CollectionKey, FieldSpec[]> = {
     { key: 'engineVersion', label: 'Versión del motor', type: 'text' },
     { key: 'genre', label: 'Género', type: 'text' },
     { key: 'startedAt', label: 'Empezado', type: 'date' },
+    { key: 'coverUrl', label: 'Portada o icono', type: 'url', hint: 'Enlace a una imagen. Sin ella, la tarjeta lleva la inicial y el color del proyecto.', wide: true },
+    {
+      key: 'progressMethod',
+      label: 'Cómo se mide su progreso',
+      type: 'select',
+      empty: 'Por tareas (lo normal)',
+      hint: 'Por tareas: lo hecho, ponderado por prioridad. Por hitos: los hitos alcanzados.',
+      options: () => [
+        { value: 'tasks', label: 'Por tareas ponderadas por prioridad' },
+        { value: 'milestones', label: 'Por hitos alcanzados' },
+      ],
+    },
     { key: 'platforms', label: 'Plataformas', type: 'tags', wide: true },
     { key: 'repoUrl', label: 'Repositorio', type: 'url', wide: true },
     {
@@ -423,4 +455,6 @@ export const SPECS: Record<CollectionKey, FieldSpec[]> = {
     { key: 'platform', label: 'Plataforma', type: 'select', empty: 'Sin indicar', options: fromTable(STORE_PLATFORMS) },
     confidence,
   ],
+  // El registro de cambios lo escribe la aplicación: no tiene formulario.
+  changes: [],
 }

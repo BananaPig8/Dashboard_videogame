@@ -122,11 +122,22 @@ export interface Project {
   nextGoal?: string
   startedAt?: ISODate
   color: string
+  /** Imagen de portada o icono del juego (enlace a una imagen). Sin ella, su inicial y su color. */
+  coverUrl?: string
+  /** Cómo se calcula su porcentaje de progreso (domain/secciones/proyectos.ts). Sin poner: por tareas. */
+  progressMethod?: ProgressMethod
   repoUrl?: string
   versions: ProjectVersion[]
   tags: string[]
   links: ProjectLink[]
 }
+
+/**
+ * Cómo se mide el progreso de un proyecto:
+ * - tasks: tareas, funcionalidades e incidencias hechas, ponderadas por su prioridad.
+ * - milestones: hitos alcanzados de los que tiene.
+ */
+export type ProgressMethod = 'tasks' | 'milestones'
 
 export interface WorkItem {
   id: ID
@@ -152,6 +163,8 @@ export interface WorkItem {
   confidence: Confidence
   /** El objetivo, hito o funcionalidad del que cuelga. */
   parentId?: ID
+  /** Lo que tiene que estar hecho antes (del mismo proyecto): mientras no lo esté, esto espera. */
+  dependsOnIds?: ID[]
   /** Quién lo lleva (members). */
   assigneeId?: ID
   /** En una incidencia: la build en la que aparece. */
@@ -263,6 +276,8 @@ export interface Feedback {
   impact: Priority
   /** Elementos de trabajo que lo resuelven. */
   linkedItemIds: ID[]
+  /** Por qué se descarta (wont_do) o cómo se resolvió. */
+  resolution?: string
   kind?: FeedbackKind
   /** Del evento o de la prueba de la que sale (origin event / playtest). */
   eventId?: ID
@@ -603,6 +618,35 @@ export interface Metric {
   confidence: Confidence
 }
 
+// ——— Registro de cambios ————————————————————————————————————————————————————
+
+/**
+ * Lo que se hace en la aplicación: crear, cambiar, terminar o borrar algo. Lo apunta el store
+ * al guardar (data/store.ts); el historial del código (commits y PR) va aparte, en activity.
+ */
+export type ChangeAction = 'created' | 'updated' | 'status' | 'completed' | 'deleted'
+
+export interface ChangeEntry {
+  id: ID
+  at: ISODateTime
+  action: ChangeAction
+  /** La colección de lo que cambió (o «studio», los datos del estudio). */
+  collection: string
+  entityId: ID
+  /** Su nombre o título en ese momento (sigue legible aunque luego se borre). */
+  title: string
+  /** Para filtrar: su tipo (task, issue, milestone…) si lo tiene. */
+  entityKind?: string
+  projectId?: ID
+  /** Quién lo hizo («Quién soy» en este navegador), si se sabe. */
+  memberId?: ID
+  /** Campos cambiados (updated). */
+  fields?: string[]
+  /** Cambio de estado: de qué a qué. */
+  from?: string
+  to?: string
+}
+
 export interface StudioData {
   schemaVersion: number
   studio: Studio
@@ -627,6 +671,7 @@ export interface StudioData {
   transactions: Transaction[]
   budgets: Budget[]
   metrics: Metric[]
+  changes: ChangeEntry[]
 }
 
 /**

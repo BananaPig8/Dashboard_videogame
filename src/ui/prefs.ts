@@ -9,39 +9,93 @@ import { migratePath } from './navigation'
 export type ThemePref = 'dark' | 'light' | 'system'
 export type Density = 'comfortable' | 'compact'
 
+/** Los bloques del Dashboard (sections/panel/widgets). */
 export type WidgetId =
   | 'kpis'
-  | 'attention'
-  | 'today'
+  | 'priorities'
   | 'projects'
-  | 'blocked'
   | 'agenda'
+  | 'attention'
   | 'launch'
-  | 'builds'
-  | 'publish'
   | 'feedback'
+  | 'activity'
+  | 'builds'
   | 'evolution'
   | 'decisions'
-  | 'recent'
   | 'resources'
 
-/** Orden por defecto: lo urgente primero, las cifras secundarias abajo. */
+/** Orden por defecto: las cifras y lo urgente arriba; lo que se consulta de vez en cuando, abajo. */
 export const DEFAULT_WIDGET_ORDER: WidgetId[] = [
-  'attention',
-  'today',
+  'kpis',
+  'priorities',
   'projects',
-  'blocked',
   'agenda',
+  'attention',
   'launch',
-  'builds',
-  'publish',
   'feedback',
+  'activity',
+  'builds',
   'evolution',
   'decisions',
-  'recent',
   'resources',
-  'kpis',
 ]
+
+/** Bloques de versiones anteriores y en cuál han quedado. */
+const OLD_WIDGETS: Record<string, WidgetId> = { today: 'priorities', blocked: 'priorities', publish: 'launch', recent: 'activity' }
+
+/** Ancho de un bloque: una columna o las dos. Las cifras ocupan siempre las dos. */
+export type WidgetSize = 'normal' | 'wide'
+
+export const DEFAULT_WIDGET_SIZES: Partial<Record<WidgetId, WidgetSize>> = { priorities: 'wide', projects: 'wide', evolution: 'wide' }
+
+/** Las tarjetas de indicadores del Dashboard. */
+export type KpiId =
+  | 'activeProjects'
+  | 'pending'
+  | 'completed'
+  | 'overdue'
+  | 'blocked'
+  | 'milestonesSoon'
+  | 'milestonesDone'
+  | 'eventsSoon'
+  | 'recentBuilds'
+  | 'feedbackNew'
+
+export const DEFAULT_KPI_ORDER: KpiId[] = [
+  'activeProjects',
+  'pending',
+  'completed',
+  'overdue',
+  'blocked',
+  'milestonesSoon',
+  'milestonesDone',
+  'eventsSoon',
+  'recentBuilds',
+  'feedbackNew',
+]
+
+/** Cómo quiere ver cada persona su Dashboard. */
+export interface DashboardLayout {
+  order: WidgetId[]
+  hidden: WidgetId[]
+  collapsed: WidgetId[]
+  sizes: Partial<Record<WidgetId, WidgetSize>>
+  kpis: { order: KpiId[]; hidden: KpiId[] }
+  /** El calendario resumido: lista o calendario compacto. */
+  agendaView: 'list' | 'calendar'
+}
+
+export const DEFAULT_DASHBOARD: DashboardLayout = {
+  order: DEFAULT_WIDGET_ORDER,
+  hidden: [],
+  collapsed: [],
+  sizes: DEFAULT_WIDGET_SIZES,
+  kpis: { order: DEFAULT_KPI_ORDER, hidden: [] },
+  agendaView: 'list',
+}
+
+/** La disposición de quien no ha dicho quién es (o de todo el que use este navegador). */
+export const ANYONE = '_'
 
 export interface SavedView {
   id: string
@@ -65,7 +119,8 @@ export interface Preferences {
   hiddenSections: string[]
   /** Quién soy en el equipo (para «Mis tareas»), en este navegador. */
   meId?: string
-  widgets: { order: WidgetId[]; hidden: WidgetId[]; collapsed: WidgetId[] }
+  /** La disposición del Dashboard de cada persona («Quién soy»), o la de ANYONE. */
+  dashboards: Record<string, DashboardLayout>
   savedViews: SavedView[]
   locale: Locale
   timeZone: string
@@ -84,7 +139,7 @@ export const DEFAULT_PREFERENCES: Preferences = {
   navExpanded: [],
   navFolded: [],
   hiddenSections: [],
-  widgets: { order: DEFAULT_WIDGET_ORDER, hidden: [], collapsed: [] },
+  dashboards: {},
   savedViews: [],
   locale: DEFAULT_LOCALE,
   timeZone: DEFAULT_TIME_ZONE,
@@ -98,14 +153,48 @@ export const PREFS_KEY = 'studio-hub:preferencias'
 
 const strings = (list: unknown): string[] => (Array.isArray(list) ? list.filter((x): x is string => typeof x === 'string') : [])
 
+const WIDGET_IDS = new Set<string>(DEFAULT_WIDGET_ORDER)
+const KPI_IDS = new Set<string>(DEFAULT_KPI_ORDER)
+
+/** Los bloques de una lista guardada, con los de versiones anteriores ya en su bloque de ahora. */
+function widgetIds(list: unknown): WidgetId[] {
+  if (!Array.isArray(list)) return []
+  const out = list.map((x) => (typeof x === 'string' ? (OLD_WIDGETS[x] ?? x) : x)).filter((x): x is WidgetId => typeof x === 'string' && WIDGET_IDS.has(x))
+  return [...new Set(out)]
+}
+
+/** Una disposición guardada, completada con lo que falte (bloques o cifras nuevos, al final). */
+export function sanitizeLayout(raw: unknown): DashboardLayout {
+  const l = (raw && typeof raw === 'object' ? raw : {}) as Partial<Record<keyof DashboardLayout, unknown>>
+  const order = widgetIds(l.order)
+  for (const w of DEFAULT_WIDGET_ORDER) if (!order.includes(w)) order.push(w)
+  const sizes: Partial<Record<WidgetId, WidgetSize>> = { ...DEFAULT_WIDGET_SIZES }
+  if (l.sizes && typeof l.sizes === 'object')
+    for (const [w, size] of Object.entries(l.sizes as Record<string, unknown>))
+      if (WIDGET_IDS.has(w) && (size === 'normal' || size === 'wide')) sizes[w as WidgetId] = size
+  const k = (l.kpis && typeof l.kpis === 'object' ? l.kpis : {}) as { order?: unknown; hidden?: unknown }
+  const kpiIds = (list: unknown) => (Array.isArray(list) ? [...new Set(list.filter((x): x is KpiId => typeof x === 'string' && KPI_IDS.has(x)))] : [])
+  const kpiOrder = kpiIds(k.order)
+  for (const id of DEFAULT_KPI_ORDER) if (!kpiOrder.includes(id)) kpiOrder.push(id)
+  return {
+    order,
+    hidden: widgetIds(l.hidden),
+    collapsed: widgetIds(l.collapsed),
+    sizes,
+    kpis: { order: kpiOrder, hidden: kpiIds(k.hidden) },
+    agendaView: l.agendaView === 'calendar' ? 'calendar' : 'list',
+  }
+}
+
 /** Completa lo que falte y descarta lo que no se entienda (preferencias de otra versión). */
 export function sanitizePreferences(raw: unknown): Preferences {
   const p = (raw && typeof raw === 'object' ? raw : {}) as Partial<Preferences>
   const d = DEFAULT_PREFERENCES
-  const known = new Set<WidgetId>(DEFAULT_WIDGET_ORDER)
-  const ids = (list: unknown) => (Array.isArray(list) ? (list.filter((x) => known.has(x as WidgetId)) as WidgetId[]) : [])
-  const order = ids(p.widgets?.order)
-  for (const w of DEFAULT_WIDGET_ORDER) if (!order.includes(w)) order.push(w)
+  // Las preferencias de antes guardaban una sola disposición en «widgets»: pasa a ser la de ANYONE.
+  const old = (p as { widgets?: unknown }).widgets
+  const rawDashboards = p.dashboards && typeof p.dashboards === 'object' ? (p.dashboards as Record<string, unknown>) : old ? { [ANYONE]: old } : {}
+  const dashboards: Record<string, DashboardLayout> = {}
+  for (const [who, layout] of Object.entries(rawDashboards).slice(0, 50)) if (typeof who === 'string' && who) dashboards[who] = sanitizeLayout(layout)
   return {
     theme: p.theme === 'light' || p.theme === 'system' || p.theme === 'dark' ? p.theme : d.theme,
     accent: typeof p.accent === 'string' && (p.accent in ACCENTS || /^#[0-9a-f]{6}$/i.test(p.accent)) ? p.accent : d.accent,
@@ -115,7 +204,7 @@ export function sanitizePreferences(raw: unknown): Preferences {
     navFolded: strings(p.navFolded).slice(0, 30),
     hiddenSections: strings(p.hiddenSections).slice(0, 30),
     meId: typeof p.meId === 'string' && p.meId ? p.meId : undefined,
-    widgets: { order: [...new Set(order)], hidden: ids(p.widgets?.hidden), collapsed: ids(p.widgets?.collapsed) },
+    dashboards,
     // Las vistas guardadas con rutas de la versión anterior se reescriben a las de ahora.
     savedViews: Array.isArray(p.savedViews)
       ? p.savedViews
@@ -251,4 +340,29 @@ const subscribe = (fn: () => void) => {
 
 export function usePreferences(): Preferences {
   return useSyncExternalStore(subscribe, getPreferences)
+}
+
+/** De quién es la disposición del Dashboard que se ve: la de «Quién soy», o la de cualquiera. */
+export const dashboardKey = (p: Preferences): string => p.meId ?? ANYONE
+
+/** La disposición de quien mira; si aún no tiene la suya, la de cualquiera (y si no, la de serie). */
+export function dashboardOf(p: Preferences): DashboardLayout {
+  return p.dashboards[dashboardKey(p)] ?? p.dashboards[ANYONE] ?? DEFAULT_DASHBOARD
+}
+
+export function useDashboardLayout(): DashboardLayout {
+  return dashboardOf(usePreferences())
+}
+
+/** Cambia la disposición de quien mira (la primera vez, parte de la que estaba viendo). */
+export function updateDashboardLayout(change: (l: DashboardLayout) => Partial<DashboardLayout>): void {
+  updatePreferences((p) => {
+    const current = dashboardOf(p)
+    return { dashboards: { ...p.dashboards, [dashboardKey(p)]: sanitizeLayout({ ...current, ...change(current) }) } }
+  })
+}
+
+/** Vuelve a la disposición de serie (solo la de quien mira). */
+export function resetDashboardLayout(): void {
+  updatePreferences((p) => ({ dashboards: { ...p.dashboards, [dashboardKey(p)]: DEFAULT_DASHBOARD } }))
 }

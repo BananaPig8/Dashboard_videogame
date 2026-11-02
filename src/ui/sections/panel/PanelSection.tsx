@@ -13,7 +13,8 @@ import { useScope } from '../../context'
 import { useFormat, useToday } from '../../hooks'
 import { PANEL_FOCUS } from '../../navigation'
 import type { SectionPageProps } from '../registry'
-import { CustomizePanel, FocusArea, ProjectSummaryTab, WidgetArea } from './PanelWidgets'
+import { usePanelPeriod } from './periodo'
+import { CustomizePanel, FocusArea, ProjectSummaryTab, WidgetArea } from './WidgetArea'
 import './panel.css'
 
 export default function PanelSection({ embedded }: SectionPageProps) {
@@ -26,7 +27,8 @@ export default function PanelSection({ embedded }: SectionPageProps) {
   const [customizing, setCustomizing] = useState(false)
   const ver = params.get('ver')
   const focus = ver ? PANEL_FOCUS[ver] : undefined
-  const props = { data, scope, today, year: yearOf(today), fmt }
+  const { period } = usePanelPeriod()
+  const props = { data, scope, today, year: yearOf(today), fmt, period }
   const summary = nav.section.children.find((c) => c.value === null)!
 
   const date = fmt.longDate(today)

@@ -67,12 +67,17 @@ export interface EditorRequest {
   /** Sin id: crear uno nuevo. */
   id?: ID
   defaults?: Record<string, unknown>
+  /**
+   * Al guardar algo nuevo, se llama con lo guardado justo después (p. ej. convertir un
+   * feedback en tarea: la tarea nueva se enlaza al feedback).
+   */
+  onCreated?: (entity: Record<string, unknown>) => void
 }
 
 interface UIState {
   edit: (req: EditorRequest) => void
   openItem: (id: ID) => void
-  create: (collection: CollectionKey, defaults?: Record<string, unknown>) => void
+  create: (collection: CollectionKey, defaults?: Record<string, unknown>, onCreated?: EditorRequest['onCreated']) => void
 }
 
 const UIContext = createContext<UIState | null>(null)
@@ -190,8 +195,8 @@ export function UIProvider({ children }: { children: ReactNode }) {
       edit: setRequest,
       openItem: (id) => setRequest({ collection: 'items', id }),
       // Quien solo puede ver no crea nada (abrir y consultar sí).
-      create: (collection, defaults) =>
-        store.canWrite() ? setRequest({ collection, defaults }) : toast({ message: t('feedbackMsg.readOnly'), tone: 'info' }),
+      create: (collection, defaults, onCreated) =>
+        store.canWrite() ? setRequest({ collection, defaults, onCreated }) : toast({ message: t('feedbackMsg.readOnly'), tone: 'info' }),
     }),
     [toast],
   )

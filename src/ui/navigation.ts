@@ -346,9 +346,9 @@ const SETTINGS: NavSection = section({
 
 /** Qué bloque del panel enseña cada subsección (?ver=): modo foco, sin tocar las preferencias. */
 export const PANEL_FOCUS: Record<string, WidgetId[]> = {
-  actividad: ['recent'],
+  actividad: ['activity'],
   fechas: ['agenda'],
-  prioritarias: ['today', 'blocked'],
+  prioritarias: ['priorities'],
   proyectos: ['projects'],
   alertas: ['attention'],
 }
@@ -599,18 +599,37 @@ const quick = (
   },
 })
 
+/**
+ * El botón «Crear» del Dashboard: lo de todos los días, en este orden (lo mismo que «Nuevo»,
+ * con los mismos formularios). Un bug es una incidencia; una demo, una versión de tipo demo.
+ */
+export const DASHBOARD_CREATE = ['project', 'task', 'milestone', 'bug', 'build', 'demo', 'event', 'feedback', 'document', 'note', 'decision'] as const
+
+export function dashboardCreate(hidden: readonly string[] = []): QuickCreate[] {
+  const all = quickCreate(hidden)
+  const byId = new Map(all.map((q) => [q.id, q]))
+  const bug = byId.get('issue')
+  return DASHBOARD_CREATE.map((id) => (id === 'bug' && bug ? { ...bug, id: 'bug', get label() { return tr('quick.bug') } } : byId.get(id))).filter(
+    (q): q is QuickCreate => !!q,
+  )
+}
+
 /** Lo que se puede crear desde cualquier pantalla (botón «Nuevo» y paleta). */
 export function quickCreate(hidden: readonly string[] = []): QuickCreate[] {
   return [
     quick('trabajo', 'task', 'check', 'items', { kind: 'task' }),
+    quick('trabajo', 'milestone', 'flag', 'items', { kind: 'milestone' }),
     quick('trabajo', 'decision', 'scale', 'items', { kind: 'decision', status: 'to_confirm' }),
     quick('trabajo', 'issue', 'bug', 'items', { kind: 'issue', priority: 'high' }),
     quick('trabajo', 'reminder', 'bell', 'reminders'),
+    quick('trabajo', 'note', 'sticky', 'resources', { type: 'note' }, 'documentacion'),
     quick('produccion', 'event', 'calendar', 'events'),
     quick('produccion', 'build', 'box', 'builds'),
     quick('produccion', 'release', 'rocket', 'releases'),
+    quick('produccion', 'demo', 'play', 'releases', { kind: 'demo' }),
     quick('produccion', 'playtest', 'users', 'playtests'),
     quick('produccion', 'feedback', 'message', 'feedback'),
+    quick('estudio', 'document', 'fileText', 'resources', { type: 'doc' }, 'documentacion'),
     quick('estudio', 'resource', 'book', 'resources'),
     quick('estudio', 'checklist', 'list', 'checklists'),
     quick('estudio', 'timeEntry', 'clock', 'timeEntries', undefined, 'equipo'),

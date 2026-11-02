@@ -69,7 +69,7 @@ await step('el formulario explica los errores', async () => {
 await step('se conserva al recargar', async () => {
   await page.goto(`${base}/#/`)
   await page.reload()
-  await page.getByRole('region', { name: 'Últimos avances' }).getByRole('button', { name: 'Probar Studio Hub' }).waitFor()
+  await page.getByRole('region', { name: 'Actividad reciente' }).getByRole('button', { name: 'Probar Studio Hub' }).waitFor()
 })
 
 await step('paleta de órdenes con Ctrl+K: buscar y abrir', async () => {
@@ -174,9 +174,9 @@ await step('notificaciones', async () => {
 await step('personalizar el panel: ocultar y plegar', async () => {
   await page.goto(`${base}/#/`)
   await page.getByRole('button', { name: 'Personalizar' }).click()
-  await dialog().getByRole('checkbox', { name: /Cifras/ }).uncheck()
+  await dialog().getByRole('checkbox', { name: /Indicadores/ }).uncheck()
   await dialog().getByRole('button', { name: 'Cerrar' }).first().click()
-  if (await page.getByRole('region', { name: 'Cifras' }).count()) throw new Error('Cifras sigue visible')
+  if (await page.getByRole('region', { name: 'Indicadores' }).count()) throw new Error('Indicadores sigue visible')
   await page.getByRole('region', { name: 'Evolución' }).getByRole('button', { name: 'Contraer' }).click()
   await page.reload()
   await page.getByRole('region', { name: 'Evolución' }).getByRole('button', { name: 'Desplegar' }).waitFor()

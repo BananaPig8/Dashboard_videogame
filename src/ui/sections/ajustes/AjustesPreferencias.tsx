@@ -11,8 +11,8 @@ import { Icon, type IconName } from '../../components/Icon'
 import { MePicker, useMe } from '../../components/MePicker'
 import { useFormat } from '../../hooks'
 import { allSections } from '../../navigation'
-import { ACCENTS, resolvedTheme, resolveAccent, updatePreferences, usePreferences, type Density, type ThemePref, type WidgetId } from '../../prefs'
-import { WidgetOrderList } from '../panel/PanelWidgets'
+import { ACCENTS, resolvedTheme, resolveAccent, updateDashboardLayout, updatePreferences, useDashboardLayout, usePreferences, type Density, type ThemePref } from '../../prefs'
+import { WidgetOrderList } from '../panel/WidgetArea'
 
 const DATE_FORMATS: DateFormat[] = ['short', 'numeric', 'long', 'iso']
 
@@ -264,35 +264,21 @@ function VistasGuardadas() {
 }
 
 function Panel() {
-  const prefs = usePreferences()
-  const order = prefs.widgets.order
-  const hidden = new Set(prefs.widgets.hidden)
-  const move = (id: WidgetId, delta: number) => {
-    const n = order.indexOf(id)
-    const m = n + delta
-    if (m < 0 || m >= order.length) return
-    const next = [...order]
-    ;[next[n], next[m]] = [next[m], next[n]]
-    updatePreferences((p) => ({ widgets: { ...p.widgets, order: next } }))
-  }
-  const toggle = (id: WidgetId) =>
-    updatePreferences((p) => ({
-      widgets: { ...p.widgets, hidden: p.widgets.hidden.includes(id) ? p.widgets.hidden.filter((x) => x !== id) : [...p.widgets.hidden, id] },
-    }))
+  const hidden = useDashboardLayout().hidden
   return (
     <Card
       title={t('customize.title')}
       icon="layout"
       subtitle={t('customize.intro')}
       action={
-        hidden.size > 0 && (
-          <button type="button" className="btn btn-small btn-ghost" onClick={() => updatePreferences((p) => ({ widgets: { ...p.widgets, hidden: [] } }))}>
+        hidden.length > 0 && (
+          <button type="button" className="btn btn-small btn-ghost" onClick={() => updateDashboardLayout(() => ({ hidden: [] }))}>
             {t('secciones.ajustes.preferencias.panelShowAll')}
           </button>
         )
       }
     >
-      <WidgetOrderList order={order} hidden={hidden} onMove={move} onToggle={toggle} />
+      <WidgetOrderList />
     </Card>
   )
 }
