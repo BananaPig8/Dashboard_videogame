@@ -11,6 +11,7 @@ import { Popover } from './components/Popover'
 import { useScope, useUI } from './context'
 import { useFormat, useMediaQuery, useToday } from './hooks'
 import { quickCreate } from './navigation'
+import { OPEN_SEARCH } from './search'
 import { Sidebar } from './Sidebar'
 import { NotificationsMenu } from './Notifications'
 import { updatePreferences, usePreferences } from './prefs'
@@ -82,8 +83,13 @@ export function AppShell({ children }: { children: ReactNode }) {
         }
       }
     }
+    const onSearch = (e: Event) => setPalette({ open: true, query: typeof (e as CustomEvent).detail === 'string' ? (e as CustomEvent).detail : undefined })
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    window.addEventListener(OPEN_SEARCH, onSearch)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      window.removeEventListener(OPEN_SEARCH, onSearch)
+    }
   }, [])
 
 
