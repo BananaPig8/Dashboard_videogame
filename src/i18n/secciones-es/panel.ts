@@ -22,8 +22,8 @@ export const panel = {
   // Qué enseña cada subsección (?ver=), debajo del título.
   views: {
     actividad: 'Todo lo que pasa en el estudio: los cambios hechos aquí, las fechas de los datos y el historial del código, con filtros',
-    fechas: 'Fechas límite, eventos, inscripciones, versiones, builds y recordatorios de los próximos 60 días',
-    prioritarias: 'Lo marcado para hoy, lo que vence, lo que está en marcha y lo que está parado',
+    fechas: 'Fechas límite, hitos, eventos, inscripciones, versiones y recordatorios de los próximos 60 días',
+    prioritarias: 'Lo crítico, lo vencido y lo que vence, lo bloqueado y lo que espera, los hitos en riesgo y las entregas, inscripciones y eventos de los próximos 14 días',
     proyectos: 'Cómo va cada juego: etapa, salud, cifras y actividad',
     proyectosOne: 'Cómo va este juego: etapa, salud, cifras y actividad',
     alertas: 'Qué proyecto pide atención y por qué, con todos los avisos de hoy',

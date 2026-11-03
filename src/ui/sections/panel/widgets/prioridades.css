@@ -1,0 +1,128 @@
+/* Prioridades de hoy: filas con sus etiquetas de urgencia, lo que explica cada una y las
+ * acciones (hecho y el menú). Solo variables de styles.css. */
+
+.prio-row .item-main {
+  gap: var(--space-1);
+}
+
+.prio-row .item-title {
+  overflow-wrap: anywhere;
+}
+
+.prio-flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+/* Los motivos: el bloqueo, a qué espera, quién la espera, qué falta. */
+.prio-details {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.82rem;
+  color: var(--text-2);
+}
+
+.prio-details li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.prio-details .icon {
+  flex: none;
+  color: var(--text-3);
+  transform: translateY(1px);
+}
+
+.prio-link {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 2px;
+}
+
+.prio-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex: none;
+}
+
+.prio-done:hover {
+  color: var(--success);
+}
+
+.prio-done .icon {
+  color: var(--success);
+}
+
+.prio-menu {
+  min-width: 230px;
+  max-width: calc(100vw - 2 * var(--space-4));
+}
+
+.prio-menu-label {
+  padding: var(--space-1) 10px 2px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.prio-menu .prio-menu-icon {
+  display: inline-flex;
+}
+
+.prio-menu .prio-menu-icon .icon {
+  color: inherit;
+}
+
+.prio-menu .menu-item .prio-current {
+  margin-left: auto;
+  color: var(--accent);
+}
+
+/* Cómo se ordena (en el modo foco). */
+.prio-how {
+  font-size: 0.86rem;
+  color: var(--text-2);
+}
+
+.prio-how > summary {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.prio-how p,
+.prio-how ul {
+  margin: var(--space-2) 0 0;
+}
+
+.prio-how ul {
+  padding-left: var(--space-5);
+}
+
+@media (max-width: 640px) {
+  /* En móvil las acciones no se van a una fila aparte: se quedan a la derecha del título, y
+     «Hecho» se queda en su icono (el nombre del botón sigue entero para el lector). */
+  .prio-row {
+    flex-wrap: nowrap;
+  }
+
+  .prio-done-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
