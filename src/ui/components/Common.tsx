@@ -131,18 +131,6 @@ export function Progress({ ratio, label, tone = 'success' }: { ratio: number; la
   )
 }
 
-export function PageHeader({ title, subtitle, actions }: { title: ReactNode; subtitle?: ReactNode; actions?: ReactNode }) {
-  return (
-    <div className="page-header">
-      <div>
-        <h1>{title}</h1>
-        {subtitle && <p className="page-subtitle">{subtitle}</p>}
-      </div>
-      {actions && <div className="page-actions">{actions}</div>}
-    </div>
-  )
-}
-
 /** Botón que enseña que está trabajando (y no se puede pulsar dos veces). */
 export function Button({ loading, children, className = 'btn', disabled, ...rest }: ButtonHTMLAttributes<HTMLButtonElement> & { loading?: boolean }) {
   return (

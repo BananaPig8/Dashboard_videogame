@@ -21,6 +21,9 @@ export const tareas = {
   },
   filters: {
     label: 'Filtros de las tareas',
+    // Por fecha de fin (?desde=&hasta=): a esto lleva «Tareas completadas» del Dashboard.
+    doneFrom: 'Terminadas desde',
+    doneTo: 'Terminadas hasta',
     search: 'Buscar en las tareas…',
     searchLabel: 'Buscar',
     status: 'Estado',

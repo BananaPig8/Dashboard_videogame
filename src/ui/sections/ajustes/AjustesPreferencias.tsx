@@ -12,7 +12,7 @@ import { MePicker, useMe } from '../../components/MePicker'
 import { useFormat } from '../../hooks'
 import { allSections } from '../../navigation'
 import { ACCENTS, resolvedTheme, resolveAccent, updateDashboardLayout, updatePreferences, useDashboardLayout, usePreferences, type Density, type ThemePref } from '../../prefs'
-import { WidgetOrderList } from '../panel/WidgetArea'
+import { KpiOrderList, WidgetOrderList } from '../panel/WidgetArea'
 
 const DATE_FORMATS: DateFormat[] = ['short', 'numeric', 'long', 'iso']
 
@@ -279,6 +279,8 @@ function Panel() {
       }
     >
       <WidgetOrderList />
+      <h3 className="subhead">{t('secciones.panel.cabecera.customize.kpis')}</h3>
+      <KpiOrderList />
     </Card>
   )
 }

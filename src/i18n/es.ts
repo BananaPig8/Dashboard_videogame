@@ -825,7 +825,7 @@ export const es = {
     },
   },
   widgets: {
-    kpis: { title: 'Indicadores', subtitle: 'Las cifras del estudio, con el periodo elegido' },
+    kpis: { title: 'Indicadores', subtitle: 'Las cifras de lo elegido, con el periodo de arriba' },
     priorities: { title: 'Prioridades de hoy', subtitle: 'Lo crítico, lo vencido, lo que vence y lo que impide seguir' },
     projects: { title: 'Proyectos', subtitle: 'Estado, progreso y próximo hito de cada juego' },
     agenda: { title: 'Próximas fechas', subtitle: 'Tareas, entregas, hitos, eventos y recordatorios' },

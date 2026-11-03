@@ -2,6 +2,7 @@
 // guardadas. No van con los datos del estudio (cada persona puede tener las suyas).
 import { useSyncExternalStore } from 'react'
 import { DEFAULT_TIME_ZONE, setClockTimeZone, type WeekStart } from '../domain/dates'
+import { PANEL_KPI_IDS, type PanelKpiId } from '../domain/secciones/panel-indicadores'
 import { DEFAULT_LOCALE, setLocale, type Locale } from '../i18n'
 import type { DateFormat, HourCycle } from '../i18n/format'
 import { migratePath } from './navigation'
@@ -48,31 +49,10 @@ export type WidgetSize = 'normal' | 'wide'
 
 export const DEFAULT_WIDGET_SIZES: Partial<Record<WidgetId, WidgetSize>> = { priorities: 'wide', projects: 'wide', evolution: 'wide' }
 
-/** Las tarjetas de indicadores del Dashboard. */
-export type KpiId =
-  | 'activeProjects'
-  | 'pending'
-  | 'completed'
-  | 'overdue'
-  | 'blocked'
-  | 'milestonesSoon'
-  | 'milestonesDone'
-  | 'eventsSoon'
-  | 'recentBuilds'
-  | 'feedbackNew'
+/** Las tarjetas de indicadores del Dashboard (las calcula domain/secciones/panel-indicadores.ts). */
+export type KpiId = PanelKpiId
 
-export const DEFAULT_KPI_ORDER: KpiId[] = [
-  'activeProjects',
-  'pending',
-  'completed',
-  'overdue',
-  'blocked',
-  'milestonesSoon',
-  'milestonesDone',
-  'eventsSoon',
-  'recentBuilds',
-  'feedbackNew',
-]
+export const DEFAULT_KPI_ORDER: KpiId[] = [...PANEL_KPI_IDS]
 
 /** Cómo quiere ver cada persona su Dashboard. */
 export interface DashboardLayout {

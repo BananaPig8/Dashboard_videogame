@@ -115,11 +115,11 @@ export function TareasFiltros({ vista, filtro, filtered }: Pick<TaskParams, 'vis
           {(value('estado') === 'done' || value('desde') || value('hasta')) && (
             <>
               <label>
-                <span className="muted small">{t('secciones.panel.cabecera.tareas.doneFrom')}</span>{' '}
+                <span className="muted small">{t('secciones.tareas.filters.doneFrom')}</span>{' '}
                 <input type="date" value={value('desde')} max={value('hasta') || undefined} onChange={(e) => set('desde', e.target.value)} />
               </label>
               <label>
-                <span className="muted small">{t('secciones.panel.cabecera.tareas.doneTo')}</span>{' '}
+                <span className="muted small">{t('secciones.tareas.filters.doneTo')}</span>{' '}
                 <input type="date" value={value('hasta')} min={value('desde') || undefined} onChange={(e) => set('hasta', e.target.value)} />
               </label>
             </>

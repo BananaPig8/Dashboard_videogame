@@ -36,7 +36,7 @@ export function panelGreeting(time: string): PanelGreeting {
 
 // ——— Indicadores ————————————————————————————————————————————————————————————
 
-/** Las tarjetas de indicadores (los mismos ids que `KpiId` en ui/prefs.ts). */
+/** Las tarjetas de indicadores (ui/prefs.ts guarda cuáles ve cada persona y en qué orden). */
 export type PanelKpiId =
   | 'activeProjects'
   | 'pending'

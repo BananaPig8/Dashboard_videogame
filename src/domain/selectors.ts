@@ -136,10 +136,6 @@ export function checklistProgress(c: Checklist): ChecklistProgress {
   return { checklist: c, done, total, ratio: total ? done / total : 0 }
 }
 
-export function checklistsOf(data: StudioData, scope: Scope = null): ChecklistProgress[] {
-  return data.checklists.filter(inScope(scope)).map(checklistProgress)
-}
-
 // ——— Feedback ——————————————————————————————————————————————————————————
 
 /** Feedback abierto, de más a menos impacto y de más nuevo a más viejo. */

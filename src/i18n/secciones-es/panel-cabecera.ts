@@ -114,9 +114,4 @@ export const panel_cabecera = {
     reset: 'Volver a la de serie',
     resetDone: 'Disposición de serie.',
   },
-  /** Filtro de Tareas por fecha de fin (?desde=&hasta=), al que lleva «Tareas completadas». */
-  tareas: {
-    doneFrom: 'Terminadas desde',
-    doneTo: 'Terminadas hasta',
-  },
 } as const

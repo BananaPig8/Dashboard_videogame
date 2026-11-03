@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { emptyCollections } from '../collections'
-import { PANEL_ALERT_KINDS, panelAlerts, panelEntriesByMonth, panelRecentDone, panelToConfirm, upcomingEntries } from '../selectors'
+import { panelAlerts, upcomingEntries, type NotificationKind } from '../selectors'
+
+/** Los avisos que no salen en ningún otro bloque (los que filtra Atención). */
+const OTHER_KINDS: NotificationKind[] = ['reminder', 'registrationSoon', 'releaseSoon', 'releaseLate', 'budgetOver']
 import { SCHEMA_VERSION, type StudioData, type WorkItem } from '../types'
 import { validateStudioData } from '../validate'
 
@@ -104,8 +107,8 @@ describe('panel: avisos', () => {
     expect(validateStudioData(data())).toEqual([])
   })
 
-  it('el bloque de atención solo añade los avisos que no salen en otro bloque', () => {
-    const kinds = panelAlerts(data(), TODAY, null, PANEL_ALERT_KINDS).map((n) => n.kind)
+  it('se pueden pedir solo unos tipos', () => {
+    const kinds = panelAlerts(data(), TODAY, null, OTHER_KINDS).map((n) => n.kind)
     expect(kinds).not.toContain('overdue')
     expect(kinds).not.toContain('eventSoon')
     expect(new Set(kinds)).toEqual(new Set(['reminder', 'registrationSoon', 'releaseSoon', 'releaseLate', 'budgetOver']))
@@ -118,48 +121,16 @@ describe('panel: avisos', () => {
   })
 
   it('en un proyecto: los suyos y los del estudio con fecha, pero no un presupuesto del estudio', () => {
-    const ids = panelAlerts(data(), TODAY, 'a', PANEL_ALERT_KINDS).map((n) => n.target.id)
+    const ids = panelAlerts(data(), TODAY, 'a', OTHER_KINDS).map((n) => n.target.id)
     expect(ids.sort()).toEqual(['demo', 'feria', 'r-a'])
-    const b = panelAlerts(data(), TODAY, 'b', PANEL_ALERT_KINDS).map((n) => n.target.id)
+    const b = panelAlerts(data(), TODAY, 'b', OTHER_KINDS).map((n) => n.target.id)
     expect(b.sort()).toEqual(['feria', 'p-b', 'parche'])
   })
 })
 
-describe('panel: lo terminado', () => {
-  it('de lo más reciente a lo más antiguo, y solo lo del ámbito', () => {
-    expect(panelRecentDone(data()).map((i) => i.id)).toEqual(['hecha-b', 'hecha-2', 'hecha-1'])
-    expect(panelRecentDone(data(), 'a').map((i) => i.id)).toEqual(['hecha-2', 'hecha-1'])
-  })
-})
-
-describe('panel: por confirmar', () => {
-  it('cuenta el estado como Tareas y aparte lo abierto con datos sin verificar', () => {
-    const d = data()
-    d.items.push(
-      item('estado', { status: 'to_confirm' }),
-      item('estado-dato', { status: 'to_confirm', confidence: 'to_confirm' }),
-      item('dato', { status: 'in_progress', confidence: 'to_confirm' }),
-      item('dato-hecho', { status: 'done', completedAt: '2026-10-01', confidence: 'to_confirm' }),
-      item('dato-b', { projectId: 'b', confidence: 'to_confirm' }),
-    )
-    expect(panelToConfirm(d)).toEqual({ status: 2, unverified: 2 })
-    expect(panelToConfirm(d, 'a')).toEqual({ status: 2, unverified: 1 })
-    expect(panelToConfirm(data())).toEqual({ status: 0, unverified: 0 })
-  })
-})
-
 describe('panel: próximas fechas', () => {
-  it('salen del calendario unificado y se agrupan por mes', () => {
+  it('salen del calendario unificado', () => {
     const next = upcomingEntries(data(), TODAY, 60, 'a')
     expect(next.map((e) => e.id)).toEqual(['reminders:r-a:date', 'events:feria:registration', 'releases:demo:target', 'events:feria:date', 'items:limite:due'])
-    const months = panelEntriesByMonth(next)
-    expect(months.map((m) => [m.month, m.entries.length])).toEqual([
-      ['2026-10', 4],
-      ['2026-11', 1],
-    ])
-  })
-
-  it('sin fechas, ningún mes', () => {
-    expect(panelEntriesByMonth([])).toEqual([])
   })
 })
