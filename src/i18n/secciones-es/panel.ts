@@ -21,7 +21,7 @@ export const panel = {
   backToSummary: 'Volver al resumen',
   // Qué enseña cada subsección (?ver=), debajo del título.
   views: {
-    actividad: 'Lo último que se ha terminado y los últimos cambios registrados en el código',
+    actividad: 'Todo lo que pasa en el estudio: los cambios hechos aquí, las fechas de los datos y el historial del código, con filtros',
     fechas: 'Fechas límite, eventos, inscripciones, versiones, builds y recordatorios de los próximos 60 días',
     prioritarias: 'Lo marcado para hoy, lo que vence, lo que está en marcha y lo que está parado',
     proyectos: 'Cómo va cada juego: etapa, salud, cifras y actividad',

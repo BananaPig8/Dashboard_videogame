@@ -1,0 +1,135 @@
+/* Actividad reciente: el bloque del Dashboard y el historial completo (?ver=actividad). */
+
+.act-block,
+.act-history {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.act-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.act-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--row-y) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.act-row:last-child {
+  border-bottom: 0;
+}
+
+/* El icono de la acción, sobre su tono (la acción la dice también el texto). */
+.act-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  margin-top: 1px;
+}
+
+.act-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.act-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px var(--space-2);
+  min-width: 0;
+}
+
+.act-action {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+.act-title {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.act-title .version-tag {
+  margin-left: var(--space-1);
+}
+
+.act-title-text {
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.35;
+}
+
+.act-gone {
+  font-weight: 400;
+  color: var(--text-3);
+}
+
+.act-who {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.act-count a {
+  font-weight: 600;
+}
+
+/* ——— Historial ——————————————————————————————————————————————————————————— */
+
+.act-filters select,
+.act-filters input[type='date'] {
+  max-width: 100%;
+}
+
+.act-day {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.act-day + .act-day {
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border-strong);
+}
+
+.act-day-head {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 620;
+  color: var(--text);
+}
+
+.act-more {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  padding-top: var(--space-2);
+}
+
+@media (max-width: 640px) {
+  .act-icon {
+    width: 22px;
+    height: 22px;
+  }
+  .act-action {
+    white-space: normal;
+  }
+}

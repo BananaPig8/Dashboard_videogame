@@ -1,7 +1,7 @@
 // El registro de cambios: qué se ha hecho en la aplicación, cuándo y quién. Lo escribe el
 // store al guardar (data/store.ts) con estas funciones puras. No recoge lo que viene de
 // fuera (los datos iniciales, una copia importada ni el historial de git, que va en activity).
-import type { CollectionKey } from './collections'
+import { COLLECTION_BY_KEY, type CollectionKey } from './collections'
 import type { ChangeAction, ChangeEntry, ID, ISODateTime } from './types'
 
 /** Cuántos cambios se guardan como mucho (los más antiguos se van). Unos 150 bytes cada uno. */
@@ -12,6 +12,12 @@ const MERGE_MINUTES = 10
 
 /** Lo que no se apunta: el propio registro y el historial del código (viene de git). */
 const NOT_LOGGED: readonly string[] = ['changes', 'activity']
+
+/**
+ * Lo privado (el dinero) tampoco: en la base de claude.ai solo lo leen quienes pueden editar,
+ * y el registro lo lee cualquiera, así que su título no puede ir aquí.
+ */
+const isPrivate = (k: string) => k in COLLECTION_BY_KEY && COLLECTION_BY_KEY[k as CollectionKey].private === true
 
 type Row = Record<string, unknown>
 
@@ -24,7 +30,6 @@ const DONE_STATUS: Partial<Record<CollectionKey, string>> = {
   events: 'done',
   phases: 'done',
   achievements: 'in_store',
-  transactions: 'done',
 }
 
 const titleOf = (e: Row): string => String(e.title ?? e.name ?? e.label ?? e.id ?? '')
@@ -45,7 +50,7 @@ export interface ChangeContext {
  * había `prev`, borrar si no hay `next`). null si no hay nada que apuntar.
  */
 export function changeFor(k: CollectionKey | 'studio', prev: object | undefined, next: object | undefined, ctx: ChangeContext): ChangeEntry | null {
-  if (NOT_LOGGED.includes(k) || (!prev && !next)) return null
+  if (NOT_LOGGED.includes(k) || isPrivate(k) || (!prev && !next)) return null
   const p = prev as Row | undefined
   const n = next as Row | undefined
   const e = (n ?? p)!

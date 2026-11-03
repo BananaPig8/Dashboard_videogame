@@ -20,6 +20,11 @@ describe('registro de cambios', () => {
     expect(changeFor('changes', undefined, { id: 'c' }, ctx())).toBeNull()
   })
 
+  it('no apunta lo privado (gastos, ingresos y presupuestos): el registro lo lee cualquiera', () => {
+    expect(changeFor('transactions', undefined, { id: 'm', title: 'Licencia' }, ctx())).toBeNull()
+    expect(changeFor('budgets', undefined, { id: 'b', name: 'Feria' }, ctx())).toBeNull()
+  })
+
   it('un proyecto es de sí mismo y un recordatorio se termina con «done»', () => {
     expect(changeFor('projects', undefined, { id: 'p', name: 'Juego' }, ctx())).toMatchObject({ projectId: 'p', title: 'Juego' })
     const r = { id: 'r', title: 'Llamar', date: '2026-11-02', done: false }
