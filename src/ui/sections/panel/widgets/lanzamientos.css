@@ -1,0 +1,124 @@
+/* Bloque «Lanzamientos» del Dashboard: por proyecto y por categoría, con lo pendiente debajo.
+ * Solo variables de styles.css. */
+
+.launch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.launch-project + .launch-project {
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+
+.launch-project-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  margin: 0 0 var(--space-2);
+  font-size: 0.9rem;
+}
+
+.launch-cats,
+.launch-lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.launch-cat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--row-y) 0;
+  border-bottom: 1px solid var(--border);
+  min-width: 0;
+}
+
+.launch-cat:last-child {
+  border-bottom: 0;
+}
+
+.launch-cat-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px var(--space-2);
+  min-width: 0;
+}
+
+.launch-cat-head > .icon {
+  flex: none;
+  color: var(--text-3);
+}
+
+.launch-cat-title {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.launch-cat-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: var(--text-2);
+  overflow-wrap: anywhere;
+}
+
+.launch-cat-clear {
+  color: var(--success);
+}
+
+.launch-lines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-left: 24px;
+}
+
+.launch-line {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.launch-line .progress {
+  max-width: 220px;
+}
+
+.launch-more {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 24px;
+  font-size: 0.8rem;
+}
+
+.launch-none,
+.launch-manual {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: 0;
+}
+
+.launch-none .icon,
+.launch-manual .icon {
+  flex: none;
+  align-self: center;
+}
+
+@media (max-width: 640px) {
+  .launch-lines,
+  .launch-more {
+    padding-left: 0;
+    margin-left: 0;
+  }
+}

@@ -4,6 +4,7 @@ import { FEEDBACK_STATUSES, PRIORITIES, STATUSES, TASK_KINDS } from './catalog'
 import type { CollectionKey } from './collections'
 import { addDays, daysBetween, startOfWeek, type WeekStart } from './dates'
 import { registrationsClosingSoon } from './secciones/eventos'
+import { projectLastActivity } from './secciones/proyectos'
 import { budgetUsage } from './secciones/finanzas'
 import type {
   Activity,
@@ -158,15 +159,12 @@ export function activityOf(data: StudioData, scope: Scope = null): Activity[] {
   return data.activity.filter(inScope(scope)).sort((a, b) => b.at.localeCompare(a.at))
 }
 
-export function lastActivityDate(data: StudioData, projectId: ID): ISODate | undefined {
-  let last: string | undefined
-  for (const a of data.activity) if (a.projectId === projectId && (!last || a.at > last)) last = a.at
-  for (const i of data.items) {
-    if (i.projectId !== projectId) continue
-    const d = itemDate(i)
-    if (d && (!last || d > last.slice(0, 10))) last = d
-  }
-  return last?.slice(0, 10)
+/**
+ * El último día con actividad de un proyecto: la misma que enseña su tarjeta (historial de
+ * git, registro de cambios y fechas de sus elementos; lo fechado después de hoy no cuenta).
+ */
+export function lastActivityDate(data: StudioData, projectId: ID, today: ISODate): ISODate | undefined {
+  return projectLastActivity(data, projectId, today)?.date
 }
 
 export interface Bucket {
@@ -255,7 +253,7 @@ export function projectSummary(data: StudioData, project: Project, today: ISODat
   const inReview = open.filter((i) => i.status === 'review')
   const overdue = open.filter((i) => i.dueDate && i.dueDate < today)
   const urgentOpen = open.filter((i) => i.priority === 'critical' && i.status !== 'paused')
-  const lastActivity = lastActivityDate(data, project.id)
+  const lastActivity = lastActivityDate(data, project.id, today)
   const newFeedback = data.feedback.filter((f) => f.projectId === project.id && f.status === 'new')
   const soonEvents = data.events.filter(
     (e) =>

@@ -1,9 +1,10 @@
-// Estadísticas › Progreso: lo hecho sobre el total de cada proyecto (sin lo descartado), sus
-// hitos, su etapa y su salud. Con un proyecto elegido, el detalle por tipo y los motivos.
+// Estadísticas › Progreso: el progreso de cada proyecto con su método (el mismo porcentaje que su
+// tarjeta: projectProgress), sus hitos, su etapa y su salud. Con un proyecto elegido, el detalle
+// por tipo y los motivos.
 import { Link } from 'react-router-dom'
 import { KINDS, TASK_KINDS } from '../../../domain/catalog'
 import { yearOf } from '../../../domain/dates'
-import { statsProgress, type StatsCount, type StatsProjectProgress } from '../../../domain/selectors'
+import { statsProgress, type ProjectProgress, type StatsCount, type StatsProjectProgress } from '../../../domain/selectors'
 import type { ItemKind } from '../../../domain/types'
 import { t } from '../../../i18n'
 import { useCanEdit, useStudioData } from '../../../data/store'
@@ -22,6 +23,25 @@ export function CountCell({ count, label }: { count: StatsCount; label: string }
       <span className="num nowrap">
         {t('secciones.estadisticas.common.of', { done: count.done, total: count.total })} ·{' '}
         {t('secciones.estadisticas.common.pct', { n: Math.round(count.ratio * 100) })}
+      </span>
+    </span>
+  )
+}
+
+/** El progreso de un proyecto con su método («62 % · por tareas»); sin datos suficientes, se dice. */
+export function ProgressCell({ progress, label }: { progress: ProjectProgress; label: string }) {
+  const method = t(`secciones.proyectos.progress.method.${progress.method}`)
+  if (progress.ratio === null)
+    return (
+      <span className="muted" title={t(`secciones.proyectos.progress.insufficientHint.${progress.method}`, { min: progress.minimum, n: progress.total })}>
+        {t('secciones.proyectos.progress.insufficient')} · {method}
+      </span>
+    )
+  return (
+    <span className="estadisticas-count" title={t(`secciones.proyectos.progress.methodHint.${progress.method}`)}>
+      <Progress ratio={progress.ratio} tone={progress.ratio === 1 ? 'success' : 'info'} label={`${label} (${method})`} />
+      <span className="num nowrap">
+        {t('secciones.estadisticas.common.pct', { n: Math.round(progress.ratio * 100) })} · {method}
       </span>
     </span>
   )
@@ -72,6 +92,23 @@ function ByKind({ rows }: { rows: StatsProjectProgress[] }) {
   )
 }
 
+/** La cifra de progreso de un proyecto (con un proyecto elegido): la de su tarjeta. */
+function ProgressStat({ progress }: { progress: ProjectProgress }) {
+  const method = t(`secciones.proyectos.progress.method.${progress.method}`)
+  return (
+    <Stat
+      label={`${t('secciones.proyectos.progress.title')} · ${method}`}
+      value={progress.ratio === null ? '—' : t('secciones.estadisticas.common.pct', { n: Math.round(progress.ratio * 100) })}
+      hint={
+        progress.ratio === null
+          ? t('secciones.proyectos.progress.insufficient')
+          : t(`secciones.proyectos.progress.of.${progress.method}`, { done: progress.done, total: progress.total })
+      }
+      icon="target"
+    />
+  )
+}
+
 export function EstadisticasProgreso() {
   const data = useStudioData()
   const { scope, href } = useScope()
@@ -97,15 +134,16 @@ export function EstadisticasProgreso() {
   const blocked = total((r) => r.summary.blocked)
   const overdue = total((r) => r.summary.overdue)
   const toConfirm = total((r) => r.summary.toConfirm)
-  const pct = (c: StatsCount) => (c.ratio === null ? undefined : t('secciones.estadisticas.common.pct', { n: Math.round(c.ratio * 100) }))
   const of = (c: StatsCount) => t('secciones.estadisticas.common.of', { done: c.done, total: c.total })
+  // Sin porcentaje: el de cada proyecto es su progreso (con su método), no la cuenta de todo.
   const ofTotal = (c: StatsCount) =>
-    c.ratio === null ? t('secciones.estadisticas.common.nothingYet') : t('secciones.estadisticas.common.ofTotal', { total: c.total, pct: pct(c) ?? '' })
+    c.ratio === null ? t('secciones.estadisticas.common.nothingYet') : t('secciones.proyectos.progress.countOf', { total: c.total })
   const L = (k: 'project' | 'stage' | 'health' | 'progress' | 'milestones' | 'open') => t(`secciones.estadisticas.progreso.${k}`)
 
   const tiles = (
     <div className="stats">
       {!scope && <Stat label={t('secciones.estadisticas.progreso.projects')} value={rows.length} icon="folder" />}
+      {scope && rows[0] && <ProgressStat progress={rows[0].progress} />}
       <Stat label={t('secciones.estadisticas.progreso.tasks')} value={tasks.done} hint={ofTotal(tasks)} icon="checkCircle" />
       <Stat label={t('secciones.estadisticas.progreso.milestones')} value={milestones.done} hint={ofTotal(milestones)} icon="flag" />
       <Stat label={t('secciones.estadisticas.progreso.open')} value={total((r) => r.summary.open)} icon="list" to={href('/tareas')} />
@@ -169,7 +207,7 @@ export function EstadisticasProgreso() {
   return (
     <>
       {tiles}
-      <Card title={t('secciones.estadisticas.progreso.byProjectTitle')} icon="folder" subtitle={t('secciones.estadisticas.progreso.byProjectSubtitle')}>
+      <Card title={t('secciones.estadisticas.progreso.byProjectTitle')} icon="folder" subtitle={t('secciones.proyectos.progress.statsSubtitle')}>
         <div className="table-wrap">
           <table className="table estadisticas-table">
             <caption className="visually-hidden">{t('secciones.estadisticas.progreso.caption')}</caption>
@@ -178,7 +216,7 @@ export function EstadisticasProgreso() {
                 <th scope="col">{L('project')}</th>
                 <th scope="col">{L('stage')}</th>
                 <th scope="col">{L('health')}</th>
-                <th scope="col">{L('progress')}</th>
+                <th scope="col">{t('secciones.proyectos.progress.title')}</th>
                 <th scope="col">{L('milestones')}</th>
                 <th scope="col" className="num">
                   {L('open')}
@@ -202,8 +240,8 @@ export function EstadisticasProgreso() {
                       <HealthPill level={r.summary.health.level} />
                     </span>
                   </td>
-                  <td data-label={L('progress')}>
-                    <CountCell count={r.tasks} label={`${L('progress')}: ${r.project.name}`} />
+                  <td data-label={t('secciones.proyectos.progress.title')}>
+                    <ProgressCell progress={r.progress} label={`${t('secciones.proyectos.progress.title')}: ${r.project.name}`} />
                   </td>
                   <td data-label={L('milestones')} className="nowrap">
                     {r.milestones.ratio === null ? <span className="muted">{t('secciones.estadisticas.common.nothingYet')}</span> : of(r.milestones)}

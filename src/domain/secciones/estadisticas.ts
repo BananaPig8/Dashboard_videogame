@@ -10,7 +10,7 @@ import type { Area, ID, ISODate, ItemKind, ItemStatus, Member, Metric, MetricKin
 import { isOpen, itemsOf, normalize, projectSummary, type ProjectSummary, type Scope } from '../selectors'
 import { hasCheckableSource } from '../validate'
 import { hasTag } from './etiquetas'
-import { projectsByStage } from './proyectos'
+import { projectProgress, projectsByStage, type ProjectProgress } from './proyectos'
 
 /** Semanas de las gráficas semanales (se quitan las vacías del principio). */
 export const STATS_WEEKS = 12
@@ -67,7 +67,12 @@ export function statsCount(items: WorkItem[]): StatsCount {
 
 export interface StatsProjectProgress {
   project: Project
-  /** Tareas, funcionalidades, hitos, decisiones e incidencias. */
+  /**
+   * Su porcentaje de progreso, con su método (por tareas o por hitos): el mismo que dice su
+   * tarjeta en Proyectos y en el Dashboard (projectProgress, en secciones/proyectos.ts).
+   */
+  progress: ProjectProgress
+  /** Tareas, funcionalidades, hitos, decisiones e incidencias (las cuentas, sin ponderar). */
   tasks: StatsCount
   milestones: StatsCount
   byKind: { kind: ItemKind; count: StatsCount }[]
@@ -84,6 +89,7 @@ export function statsProgress(data: StudioData, today: ISODate, scope: Scope = n
       const items = itemsOf(data, project.id).filter((i) => TASK_KINDS.includes(i.kind) && hasTag(i, tag))
       return {
         project,
+        progress: projectProgress(data, project, tag),
         tasks: statsCount(items),
         milestones: statsCount(items.filter((i) => i.kind === 'milestone')),
         byKind: TASK_KINDS.map((kind) => ({ kind, count: statsCount(items.filter((i) => i.kind === kind)) })),
