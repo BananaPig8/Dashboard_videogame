@@ -1,0 +1,53 @@
+/* Indicadores del Dashboard: cada tarjeta con su cifra (o «—»), qué cuenta, sus notas y, en lo
+ * que pasa en un periodo, la comparación con el anterior. Solo variables de styles.css. */
+
+.panel-kpis {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(176px, 1fr));
+  gap: var(--space-3);
+}
+
+.panel-kpis > li {
+  display: flex;
+  min-width: 0;
+}
+
+.panel-kpis .kpi {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Sin datos suficientes: la raya, en gris (el motivo va debajo). */
+.kpi-empty .stat-value {
+  color: var(--text-3);
+}
+
+.kpi-notes {
+  color: var(--text-2);
+}
+
+/* La comparación no lleva color: más builds o menos no es bueno ni malo por sí solo. */
+.kpi-compare {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 4px;
+  margin-top: 2px;
+  font-size: 0.72rem;
+  color: var(--text-2);
+}
+
+.kpi-compare .icon {
+  flex: none;
+  margin-top: 2px;
+}
+
+@media (max-width: 640px) {
+  .panel-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2);
+  }
+}

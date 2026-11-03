@@ -12,6 +12,7 @@ import {
   taskBoard,
   taskBoardColumns,
   taskCalendarEntries,
+  taskCompletedIn,
   taskFilterOf,
   taskItems,
   taskMonth,
@@ -132,6 +133,26 @@ describe('tareas', () => {
       expect(ids(filterTasks(d, { today: TODAY, estado: 'done' }))).toEqual(['hecha'])
       expect(ids(filterTasks(d, { today: TODAY, etiqueta: 'DEMO' }))).toEqual(['mia'])
       expect(ids(filterTasks(d, { today: TODAY, q: 'cuenta' }))).toEqual(['bloqueada'])
+    })
+
+    it('terminadas entre dos fechas (?desde=&hasta=): las dos incluidas y solo con fecha de fin', () => {
+      const d = data()
+      d.items.push(
+        item('hecha-sin-fecha', { status: 'done' }),
+        item('hecha-tarde', { status: 'done', completedAt: '2026-10-08' }),
+        item('hecha-justo', { status: 'done', completedAt: '2026-10-07' }),
+      )
+      const q = { today: TODAY, estado: 'done', desde: '2026-10-01', hasta: '2026-10-07' }
+      expect(ids(filterTasks(d, q))).toEqual(['hecha', 'hecha-justo'])
+      expect(ids(filterTasks(d, { ...q, desde: '2026-10-02' }))).toEqual(['hecha-justo'])
+      // Con una sola fecha, la otra queda abierta.
+      expect(ids(filterTasks(d, { today: TODAY, estado: 'done', desde: '2026-10-08' }))).toEqual(['hecha-tarde'])
+      expect(ids(filterTasks(d, { today: TODAY, estado: 'done', hasta: '2026-10-01' }))).toEqual(['hecha'])
+      // Sin fechas, no filtra; con fechas, lo terminado sin fecha de fin no entra.
+      expect(ids(filterTasks(d, { today: TODAY, estado: 'done' }))).toContain('hecha-sin-fecha')
+      expect(taskCompletedIn(d.items.find((i) => i.id === 'hecha-sin-fecha')!, '2026-01-01')).toBe(false)
+      // Una fecha de fin con hora cuenta por su día.
+      expect(taskCompletedIn(item('x', { completedAt: '2026-10-07T23:59' }), '2026-10-07', '2026-10-07')).toBe(true)
     })
 
     it('por persona: un miembro o nadie', () => {

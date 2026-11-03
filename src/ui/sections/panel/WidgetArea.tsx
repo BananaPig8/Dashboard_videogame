@@ -1,23 +1,28 @@
 // La cuadrícula de bloques del Dashboard, el modo foco (?ver=) y la personalización. La
-// disposición es de cada persona («Quién soy»): qué bloques, en qué orden, de qué ancho y
-// cuáles plegados (prefs.ts).
+// disposición es de cada persona («Quién soy»): qué bloques, en qué orden, de qué ancho,
+// cuáles plegados y qué indicadores (prefs.ts).
 import { yearOf } from '../../../domain/dates'
+import { PANEL_KPI_STUDIO_ONLY } from '../../../domain/selectors'
 import { t, tr } from '../../../i18n'
 import { useCanEdit, useStudioData } from '../../../data/store'
 import { Card, Empty, Modal } from '../../components/Common'
 import { Icon } from '../../components/Icon'
+import { MePicker, useMe } from '../../components/MePicker'
 import { useScope, useUI } from '../../context'
+import { useNotify } from '../../feedback'
 import { useFormat, useToday } from '../../hooks'
 import {
   resetDashboardLayout,
   updateDashboardLayout,
   useDashboardLayout,
   type DashboardLayout,
+  type KpiId,
   type WidgetId,
 } from '../../prefs'
 import { usePanelPeriod } from './periodo'
 import type { WidgetProps } from './widgets/comunes'
 import { WIDGETS, widgetTitle } from './widgets'
+import { KPI_ICON, kpiLabel } from './widgets/Kpis'
 
 /** El ancho de un bloque en esta disposición (las cifras, siempre a todo el ancho). */
 export const widgetSize = (layout: DashboardLayout, id: WidgetId) => (WIDGETS[id].fixedWide ? 'wide' : (layout.sizes[id] ?? 'normal'))
@@ -106,17 +111,34 @@ export function FocusArea({ ids, ...props }: WidgetProps & { ids: WidgetId[] }) 
   )
 }
 
+/**
+ * Personalizar: qué bloques y qué indicadores se ven, en qué orden y de qué ancho. Es la
+ * disposición de quien dice ser en «Quién soy» (o la de cualquiera, si nadie lo ha dicho).
+ * «Volver a la de serie» se puede deshacer desde el aviso.
+ */
 export function CustomizePanel({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const layout = useDashboardLayout()
+  const me = useMe()
+  const { toast } = useNotify()
+  const reset = () => {
+    const before = layout
+    resetDashboardLayout()
+    toast({
+      message: t('secciones.panel.cabecera.customize.resetDone'),
+      action: { label: t('actions.undo'), onClick: () => updateDashboardLayout(() => before) },
+    })
+  }
   return (
     <Modal
       open={open}
       side
+      className="customize-panel"
       title={t('customize.title')}
       onClose={onClose}
       footer={
         <>
-          <button type="button" className="btn btn-ghost" onClick={resetDashboardLayout}>
-            {t('actions.reset')}
+          <button type="button" className="btn btn-ghost" onClick={reset}>
+            <Icon name="history" size={16} /> {t('secciones.panel.cabecera.customize.reset')}
           </button>
           <span className="spacer" />
           <button type="button" className="btn btn-primary" onClick={onClose}>
@@ -125,9 +147,73 @@ export function CustomizePanel({ open, onClose }: { open: boolean; onClose: () =
         </>
       }
     >
-      <p className="muted">{t('customize.intro')}</p>
-      <WidgetOrderList />
+      <section className="customize-section">
+        <p className="muted">
+          {me ? t('secciones.panel.cabecera.customize.forMe', { name: me.name }) : t('secciones.panel.cabecera.customize.forAnyone')}
+        </p>
+        <MePicker compact />
+      </section>
+      <section className="customize-section" aria-labelledby="personalizar-bloques">
+        <h3 id="personalizar-bloques">{t('secciones.panel.cabecera.customize.blocks')}</h3>
+        <p className="muted">{t('secciones.panel.cabecera.customize.blocksIntro')}</p>
+        <p className="muted small customize-narrow">{t('secciones.panel.cabecera.customize.narrow')}</p>
+        <WidgetOrderList />
+      </section>
+      <section className="customize-section" aria-labelledby="personalizar-indicadores">
+        <h3 id="personalizar-indicadores">{t('secciones.panel.cabecera.customize.kpis')}</h3>
+        <p className="muted">{t('secciones.panel.cabecera.customize.kpisIntro')}</p>
+        {layout.hidden.includes('kpis') && <p className="muted small">{t('secciones.panel.cabecera.customize.kpisBlockHidden')}</p>}
+        <KpiOrderList />
+      </section>
     </Modal>
+  )
+}
+
+/** Qué indicadores se ven y en qué orden (layout.kpis). */
+export function KpiOrderList() {
+  const { kpis } = useDashboardLayout()
+  const order = kpis.order
+  const hidden = new Set(kpis.hidden)
+  const move = (id: KpiId, delta: number) => {
+    const n = order.indexOf(id)
+    const m = n + delta
+    if (m < 0 || m >= order.length) return
+    const next = [...order]
+    ;[next[n], next[m]] = [next[m], next[n]]
+    updateDashboardLayout((l) => ({ kpis: { ...l.kpis, order: next } }))
+  }
+  const toggle = (id: KpiId) =>
+    updateDashboardLayout((l) => ({ kpis: { ...l.kpis, hidden: l.kpis.hidden.includes(id) ? l.kpis.hidden.filter((x) => x !== id) : [...l.kpis.hidden, id] } }))
+  return (
+    <ul className="widget-list">
+      {order.map((id, n) => {
+        const name = kpiLabel(id)
+        return (
+          <li key={id}>
+            <Icon name={KPI_ICON[id]} size={16} />
+            <label>
+              <input type="checkbox" checked={!hidden.has(id)} onChange={() => toggle(id)} />
+              <span>
+                {name}
+                {PANEL_KPI_STUDIO_ONLY.includes(id) && <span className="muted small"> · {t('customize.onlyStudio')}</span>}
+              </span>
+            </label>
+            <button type="button" className="icon-btn small" onClick={() => move(id, -1)} disabled={n === 0} aria-label={`${t('actions.moveUp')}: ${name}`}>
+              <Icon name="arrowUp" size={14} />
+            </button>
+            <button
+              type="button"
+              className="icon-btn small"
+              onClick={() => move(id, 1)}
+              disabled={n === order.length - 1}
+              aria-label={`${t('actions.moveDown')}: ${name}`}
+            >
+              <Icon name="arrowDown" size={14} />
+            </button>
+          </li>
+        )
+      })}
+    </ul>
   )
 }
 

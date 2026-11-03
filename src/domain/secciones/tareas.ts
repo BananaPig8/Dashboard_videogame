@@ -63,6 +63,10 @@ export interface TaskQuery {
   etiqueta?: string | null
   /** Búsqueda libre (título, descripción, etiquetas, fuentes…). */
   q?: string | null
+  /** Terminadas desde este día (?desde=, incluido): solo lo que tiene fecha de fin. */
+  desde?: ISODate | null
+  /** Terminadas hasta este día (?hasta=, incluido): solo lo que tiene fecha de fin. */
+  hasta?: ISODate | null
 }
 
 function inFilter(i: WorkItem, q: TaskQuery): boolean {
@@ -82,6 +86,16 @@ function inFilter(i: WorkItem, q: TaskQuery): boolean {
 export const taskAssignedTo = (i: WorkItem, persona: string | null | undefined): boolean =>
   !persona || (persona === TASK_NOBODY ? !i.assigneeId : i.assigneeId === persona)
 
+/**
+ * ¿Se terminó entre esas fechas (las dos incluidas)? Sin ninguna, vale todo; con alguna, solo
+ * lo que tiene fecha de fin (lo terminado sin fecha no se sabe cuándo fue).
+ */
+export function taskCompletedIn(i: WorkItem, desde?: ISODate | null, hasta?: ISODate | null): boolean {
+  if (!desde && !hasta) return true
+  const end = i.completedAt?.slice(0, 10)
+  return !!end && (!desde || end >= desde) && (!hasta || end <= hasta)
+}
+
 /** Las tareas de la subsección y los filtros finos, sin ordenar. */
 export function filterTasks(data: StudioData, q: TaskQuery): WorkItem[] {
   const scope = q.scope ?? null
@@ -96,6 +110,7 @@ export function filterTasks(data: StudioData, q: TaskQuery): WorkItem[] {
       (!q.fiabilidad || i.confidence === q.fiabilidad) &&
       taskAssignedTo(i, q.persona) &&
       hasTag(i, q.etiqueta ?? null) &&
+      taskCompletedIn(i, q.desde, q.hasta) &&
       matchesQuery(i, q.q ?? ''),
   )
 }

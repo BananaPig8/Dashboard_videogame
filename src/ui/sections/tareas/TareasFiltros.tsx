@@ -111,6 +111,19 @@ export function TareasFiltros({ vista, filtro, filtered }: Pick<TaskParams, 'vis
               </option>
             ))}
           </select>
+          {/* Terminadas entre dos fechas: sale al filtrar lo hecho o si ya vienen en la URL. */}
+          {(value('estado') === 'done' || value('desde') || value('hasta')) && (
+            <>
+              <label>
+                <span className="muted small">{t('secciones.panel.cabecera.tareas.doneFrom')}</span>{' '}
+                <input type="date" value={value('desde')} max={value('hasta') || undefined} onChange={(e) => set('desde', e.target.value)} />
+              </label>
+              <label>
+                <span className="muted small">{t('secciones.panel.cabecera.tareas.doneTo')}</span>{' '}
+                <input type="date" value={value('hasta')} min={value('desde') || undefined} onChange={(e) => set('hasta', e.target.value)} />
+              </label>
+            </>
+          )}
           {filtered && (
             <button type="button" className="btn btn-small btn-ghost" onClick={clear}>
               <Icon name="close" size={14} /> {t('secciones.tareas.filters.clear')}

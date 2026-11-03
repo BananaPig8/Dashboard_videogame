@@ -1,65 +1,157 @@
-// Indicadores: las cifras del estudio o del proyecto.
-import { blockedItems, currentBuilds, feedbackToPrioritize, isActionable, itemsOf, overdueItems, panelToConfirm, projectsInGroup, todayItems, undatedEvents, upcomingEntries } from '../../../../domain/selectors'
-import { t } from '../../../../i18n'
-import { Stat } from '../../../components/Common'
+// Indicadores: las cifras del estudio o del proyecto, las que elige cada persona (Personalizar)
+// y en su orden. Cada tarjeta lleva a su sección con los filtros puestos y el ámbito.
+// Los cálculos están en domain/secciones/panel-indicadores.ts.
+import { Link } from 'react-router-dom'
+import { KPI_AHEAD_DAYS, panelKpis, previousPeriod, type PanelKpi, type PanelKpiId, type Period } from '../../../../domain/selectors'
+import { t, tr } from '../../../../i18n'
+import type { Formatter } from '../../../../i18n/format'
+import { Empty } from '../../../components/Common'
+import { Icon, type IconName } from '../../../components/Icon'
 import { useScope } from '../../../context'
-import { UPCOMING_DAYS, type WidgetProps } from './comunes'
+import { useDashboardLayout, usePreferences } from '../../../prefs'
+import { periodText } from '../PanelHeader'
+import type { WidgetProps } from './comunes'
+import './kpis.css'
 
-export function KpisBody({ data, scope, today }: WidgetProps) {
-  const { href } = useScope()
-  const items = itemsOf(data, scope)
-  const blocked = blockedItems(data, scope).length
-  const overdue = overdueItems(data, today, scope).length
-  const confirm = panelToConfirm(data, scope)
-  const next = upcomingEntries(data, today, UPCOMING_DAYS, scope).length
-  const undated = undatedEvents(data, scope).length
-  const builds = currentBuilds(data, scope).filter((b) => b.status === 'published' || b.status === 'ready').length
-  const feedback = feedbackToPrioritize(data, scope).length
-  const active = projectsInGroup(data, 'activos').length
+export const KPI_ICON: Record<PanelKpiId, IconName> = {
+  activeProjects: 'folder',
+  pending: 'list',
+  completed: 'checkCircle',
+  overdue: 'clock',
+  blocked: 'lock',
+  milestonesSoon: 'flag',
+  milestonesDone: 'trophy',
+  eventsSoon: 'ticket',
+  recentBuilds: 'box',
+  feedbackNew: 'message',
+}
+
+/** El nombre de una tarjeta (también en Personalizar). */
+export const kpiLabel = (id: PanelKpiId) => tr(`secciones.panel.cabecera.kpis.label.${id}`)
+
+/**
+ * Adónde lleva cada tarjeta (sin ámbito: lo pone `href`). Si su sección está oculta en
+ * Ajustes, a la que la sustituye o a ninguna.
+ */
+function kpiPath(id: PanelKpiId, period: Period, hidden: readonly string[]): string | undefined {
+  const dates = `desde=${period.from}&hasta=${period.to}`
+  const off = (s: string) => hidden.includes(s)
+  switch (id) {
+    case 'activeProjects':
+      return '/proyectos?estado=activos'
+    case 'pending':
+      return '/tareas'
+    case 'completed':
+      return `/tareas?estado=done&${dates}`
+    case 'overdue':
+      return '/tareas?filtro=vencidas'
+    case 'blocked':
+      return '/tareas?filtro=bloqueadas'
+    case 'milestonesSoon':
+      return off('roadmap') ? '/tareas?tipo=milestone' : '/roadmap'
+    case 'milestonesDone':
+      return `/tareas?tipo=milestone&estado=done&${dates}`
+    case 'eventsSoon':
+      return !off('eventos') ? '/eventos' : !off('calendario') ? '/calendario?tipo=eventos' : undefined
+    case 'recentBuilds':
+      return off('builds') ? undefined : '/builds'
+    case 'feedbackNew':
+      return off('feedback') ? undefined : '/feedback?estado=new'
+  }
+}
+
+/** Qué cuenta la cifra (con «de cuántos», si lo hay). */
+function kpiHint(k: PanelKpi): string {
+  const key = 'secciones.panel.cabecera.kpis.hint'
+  const of = (base: string) => tr(`${key}.${base}${k.of === 1 ? 'One' : 'Other'}`, { of: k.of ?? 0 })
+  switch (k.id) {
+    case 'activeProjects':
+    case 'overdue':
+    case 'blocked':
+    case 'feedbackNew':
+      return of(k.id)
+    case 'milestonesSoon':
+    case 'eventsSoon':
+      return tr(`${key}.${k.id}`, { days: KPI_AHEAD_DAYS })
+    default:
+      return tr(`${key}.${k.id}`)
+  }
+}
+
+/** «3 más que los 7 días anteriores» (o «ayer», o «el día anterior»). */
+function Comparison({ k, period, fmt, today }: { k: PanelKpi; period: Period; fmt: Formatter; today: string }) {
+  if (k.value === null || k.previous === undefined) return null
+  const prev =
+    period.id === 'hoy'
+      ? t('secciones.panel.cabecera.kpis.compare.yesterday')
+      : period.days === 1
+        ? t('secciones.panel.cabecera.kpis.compare.previousDay')
+        : t('secciones.panel.cabecera.kpis.compare.previousDays', { n: period.days })
+  const delta = k.value - k.previous
+  const text =
+    delta > 0
+      ? t('secciones.panel.cabecera.kpis.compare.more', { n: delta, prev })
+      : delta < 0
+        ? t('secciones.panel.cabecera.kpis.compare.less', { n: -delta, prev })
+        : t('secciones.panel.cabecera.kpis.compare.same', { prev })
   return (
-    <div className="stats">
-      {!scope && <Stat label={t('secciones.panel.kpis.activeProjects')} value={active} icon="folder" to={href('/proyectos?estado=activos')} />}
-      <Stat
-        label={t('secciones.panel.kpis.open')}
-        value={items.filter(isActionable).length}
-        hint={t('secciones.panel.kpis.openHint')}
-        icon="list"
-        to={href('/tareas')}
-      />
-      <Stat label={t('secciones.panel.kpis.today')} value={todayItems(data, today, scope).length} tone="info" icon="sun" to={href('/tareas?vista=hoy')} />
-      <Stat label={t('secciones.panel.kpis.overdue')} value={overdue} tone={overdue ? 'danger' : 'neutral'} icon="clock" to={href('/tareas?filtro=vencidas')} />
-      <Stat
-        label={t('secciones.panel.kpis.blocked')}
-        value={blocked}
-        tone={blocked ? 'danger' : 'neutral'}
-        icon="lock"
-        to={href('/tareas?filtro=bloqueadas')}
-      />
-      <Stat
-        label={t('secciones.panel.kpis.toConfirm')}
-        value={confirm.status}
-        hint={
-          confirm.unverified
-            ? t(confirm.unverified === 1 ? 'secciones.panel.kpis.unverifiedOne' : 'secciones.panel.kpis.unverifiedOther', { n: confirm.unverified })
-            : undefined
-        }
-        tone={confirm.status ? 'warning' : 'neutral'}
-        icon="question"
-        to={href('/tareas?estado=to_confirm')}
-      />
-      <Stat
-        label={t('secciones.panel.kpis.upcoming')}
-        value={next}
-        hint={
-          undated
-            ? t(undated === 1 ? 'secciones.panel.kpis.undatedOne' : 'secciones.panel.kpis.undatedOther', { n: undated })
-            : t('secciones.panel.kpis.upcomingHint')
-        }
-        icon="calendar"
-        to={href('/calendario')}
-      />
-      <Stat label={t('secciones.panel.kpis.builds')} value={builds} icon="box" to={href('/builds')} />
-      <Stat label={t('secciones.panel.kpis.feedback')} value={feedback} icon="message" to={href('/feedback?vista=priorizacion')} />
-    </div>
+    <span className="kpi-compare" title={t('secciones.panel.cabecera.kpis.compare.dates', { range: periodText(previousPeriod(period), fmt, today) })}>
+      <Icon name={delta > 0 ? 'arrowUp' : delta < 0 ? 'arrowDown' : 'minus'} size={12} />
+      {text}
+    </span>
+  )
+}
+
+function KpiTile({ k, to, period, fmt, today }: { k: PanelKpi; to?: string; period: Period; fmt: Formatter; today: string }) {
+  const none = k.value === null
+  const notes = k.notes.map((n) => tr(`secciones.panel.cabecera.kpis.note.${n.kind}${n.n === 1 ? 'One' : 'Other'}`, { n: n.n }))
+  const body = (
+    <>
+      <span className="stat-value">
+        <Icon name={KPI_ICON[k.id]} size={16} />
+        {none ? (
+          <>
+            <span aria-hidden="true">—</span>
+            <span className="visually-hidden">{t('secciones.panel.cabecera.kpis.empty.noData')}</span>
+          </>
+        ) : (
+          fmt.number(k.value!)
+        )}
+      </span>
+      <span className="stat-label">{kpiLabel(k.id)}</span>
+      <span className="stat-hint">{none ? tr(`secciones.panel.cabecera.kpis.empty.${k.empty}`) : kpiHint(k)}</span>
+      {notes.length > 0 && <span className="stat-hint kpi-notes">{notes.join(' · ')}</span>}
+      <Comparison k={k} period={period} fmt={fmt} today={today} />
+    </>
+  )
+  const className = `stat stat-${k.tone} kpi${none ? ' kpi-empty' : ''}`
+  return (
+    <li data-kpi={k.id}>
+      {to ? (
+        <Link className={className} to={to}>
+          {body}
+        </Link>
+      ) : (
+        <div className={className}>{body}</div>
+      )}
+    </li>
+  )
+}
+
+export function KpisBody({ data, scope, today, period, fmt }: WidgetProps) {
+  const { href } = useScope()
+  const { kpis: chosen } = useDashboardLayout()
+  const { hiddenSections } = usePreferences()
+  // Las ocultas no se calculan.
+  const hidden = new Set(chosen.hidden)
+  const list = panelKpis(data, { scope, today, period, ids: chosen.order.filter((id) => !hidden.has(id)) })
+  if (list.length === 0) return <Empty icon="layout">{t('secciones.panel.cabecera.kpis.none')}</Empty>
+  return (
+    <ul className="panel-kpis">
+      {list.map((k) => {
+        const path = kpiPath(k.id, period, hiddenSections)
+        return <KpiTile key={k.id} k={k} to={path ? href(path) : undefined} period={period} fmt={fmt} today={today} />
+      })}
+    </ul>
   )
 }
