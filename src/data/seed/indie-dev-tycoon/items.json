@@ -12441,7 +12441,7 @@
     "projectId": "indie-dev-tycoon",
     "kind": "task",
     "title": "Validar las traducciones con hablantes nativos",
-    "description": "Las traducciones de la demo no las ha revisado nadie que hable esos idiomas. Hay una hoja de validación (Excel, fuera del repositorio) con una pestaña por idioma: los juegos de palabras con a qué parodian, las piezas de los títulos, títulos de ejemplo y todas las frases con cómo salen en pantalla, más otra para el castellano de Latinoamérica. Con lo que devuelvan se meten las correcciones.",
+    "description": "Las traducciones de la demo no las ha revisado nadie que hable esos idiomas. Hay una hoja de validación (Excel, fuera del repositorio) con una pestaña por idioma: los juegos de palabras con a qué parodian, las piezas de los títulos, títulos de ejemplo y todas las frases con cómo salen en pantalla, más otra para el castellano de Latinoamérica. Con lo que devuelvan se meten las correcciones. El 03-11 la hoja se rehízo con las frases de la demo de Steam (72 nuevas, marcadas como «Frase nueva» en naranja: quien ya hubiera empezado solo tiene que validar esas) y con cómo salen ahora en pantalla.",
     "status": "blocked",
     "priority": "high",
     "areaId": "localization",
@@ -12457,6 +12457,13 @@
         "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/41",
         "date": "2026-10-28",
         "note": "«Hay un libro Excel para quien valide, fuera del repositorio»"
+      },
+      {
+        "type": "pr",
+        "ref": "#44",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/44",
+        "date": "2026-11-03",
+        "note": "Fusionada el 2026-11-03 sin las comprobaciones de Actions (no arranca); la comprobación completa de Godot, pasada a mano"
       }
     ],
     "confidence": "inferred"
@@ -12766,7 +12773,7 @@
     "projectId": "indie-dev-tycoon",
     "kind": "feature",
     "title": "Lo nuevo de la demo de Steam, en los seis idiomas",
-    "description": "Las 76 frases nuevas (la ayuda del mando, el teclado en pantalla, la opinión, la postal, el reto y la lista de deseos) traducidas al inglés, francés, alemán, chino, japonés y coreano; godot/idiomas/demo.json pasa a 2.172 frases, todas traducidas. El «Espacio» del teclado se llama «Barra espaciadora» para no confundirse con el tema «Espacio».",
+    "description": "Las 76 frases nuevas (la ayuda del mando, el teclado en pantalla, la opinión, la postal, el reto y la lista de deseos) traducidas al inglés, francés, alemán, chino, japonés y coreano; godot/idiomas/demo.json pasa a 2.172 frases, todas traducidas. El «Espacio» del teclado se llama «Barra espaciadora» para no confundirse con el tema «Espacio». El 03-11 se revisaron con capturas a 1280×800 en los seis idiomas (portada, reto, teclado en pantalla, tabla del reto, partida con la ayuda del mando, menú, opinión, postal y despedida): nada se sale de su sitio. El teclado en pantalla solo escribe letras latinas; para nombres en chino, japonés o coreano está el teclado de Steam.",
     "status": "done",
     "priority": "medium",
     "areaId": "localization",
@@ -12788,6 +12795,13 @@
         "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/43",
         "date": "2026-11-02",
         "note": "Fusionada el 2026-11-02 sin las comprobaciones de Actions (no arranca); la comprobación rápida de Godot, pasada a mano"
+      },
+      {
+        "type": "pr",
+        "ref": "#44",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/44",
+        "date": "2026-11-03",
+        "note": "Fusionada el 2026-11-03 sin las comprobaciones de Actions (no arranca); la comprobación completa de Godot, pasada a mano"
       }
     ],
     "confidence": "verified"
@@ -12849,5 +12863,131 @@
       }
     ],
     "confidence": "inferred"
+  },
+  {
+    "id": "idt-cierre-fallo-idiomas",
+    "projectId": "indie-dev-tycoon",
+    "kind": "issue",
+    "title": "El juego se cerraba con un fallo en cualquier idioma que no fuera el castellano",
+    "description": "Al salir con la demo en inglés, francés, alemán, chino, japonés o coreano, Godot acababa con una violación de segmento: el traductor (escrito en GDScript) se quedaba en el TranslationServer y Godot lo soltaba cuando GDScript ya se había apagado. Pasaba desde los idiomas. Ahora el traductor sale al cerrar (Idiomas.shutdown desde Game._exit_tree); comprobado sin pantalla, con pantalla, con el botón «Salir» y en modo captura.",
+    "status": "done",
+    "priority": "high",
+    "areaId": "localization",
+    "startedAt": "2026-11-02",
+    "completedAt": "2026-11-02",
+    "tags": [
+      "idiomas",
+      "demo",
+      "godot"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "f6acc25",
+        "date": "2026-11-02"
+      },
+      {
+        "type": "pr",
+        "ref": "#44",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/44",
+        "date": "2026-11-03",
+        "note": "Fusionada el 2026-11-03 sin las comprobaciones de Actions (no arranca); la comprobación completa de Godot, pasada a mano"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-idiomas-mayusculas-titulos",
+    "projectId": "indie-dev-tycoon",
+    "kind": "issue",
+    "title": "En japonés y chino, «JUEGOS» salía como el contador («本», «款游戏»)",
+    "description": "Los títulos de los campos van en mayúsculas («JUEGOS»), y al buscar su traducción «Juegos» y «juegos» daban lo mismo: ganaba la de contar («9 juegos» → «9本»). Ahora manda la palabra con mayúscula («ゲーム», «游戏»). Afectaba al resumen de la despedida y a la postal. Al revisarlo con los 14.570 textos capturados solo cambian otros tres: «TECH» → «TECHNOLOGY» en la ficha del proyecto en inglés y «JUN.» → «JUN» en dos títulos en alemán.",
+    "status": "done",
+    "priority": "medium",
+    "areaId": "localization",
+    "startedAt": "2026-11-02",
+    "completedAt": "2026-11-02",
+    "tags": [
+      "idiomas",
+      "demo",
+      "godot"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "b7194f3",
+        "date": "2026-11-02"
+      },
+      {
+        "type": "pr",
+        "ref": "#44",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/44",
+        "date": "2026-11-03",
+        "note": "Fusionada el 2026-11-03 sin las comprobaciones de Actions (no arranca); la comprobación completa de Godot, pasada a mano"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-prueba-idiomas",
+    "projectId": "indie-dev-tycoon",
+    "kind": "feature",
+    "title": "Prueba de los idiomas en la comprobación de Godot",
+    "description": "tests/idiomas.gd, dentro de tools/godot_check.sh: cada frase de la demo está traducida en los seis idiomas y con sus huecos, algunas traducciones que ya fallaron salen bien y el traductor sale de Godot al cerrar.",
+    "status": "done",
+    "priority": "medium",
+    "areaId": "tech",
+    "startedAt": "2026-11-02",
+    "completedAt": "2026-11-03",
+    "tags": [
+      "idiomas",
+      "pruebas",
+      "godot"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "b7194f3",
+        "date": "2026-11-02"
+      },
+      {
+        "type": "commit",
+        "ref": "6c5e483",
+        "date": "2026-11-03",
+        "note": "La uid de la prueba"
+      },
+      {
+        "type": "pr",
+        "ref": "#44",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/44",
+        "date": "2026-11-03",
+        "note": "Fusionada el 2026-11-03 sin las comprobaciones de Actions (no arranca); la comprobación completa de Godot, pasada a mano"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-partida-ui-atascada-2017",
+    "projectId": "indie-dev-tycoon",
+    "kind": "issue",
+    "title": "La partida larga con la interfaz se atasca desde 2017 y no cabe en la comprobación completa",
+    "description": "En tools/godot_check.sh completa, «Partida con la interfaz (1)» (el bot completo de 1984 a 2050 con la interfaz y clics al azar) se pasa de su límite de 30 minutos: desde 2017 el bot deja de sacar juegos (88 hasta 2034) y cada año tarda unas seis veces más. No lo trae la PR #44: jugada hasta 2019 con el código de antes de la PR #43 sale idéntica. Falta ver qué lo frena (si es el bot, una ventana que se queda abierta o algo del juego).",
+    "status": "backlog",
+    "priority": "medium",
+    "areaId": "tech",
+    "tags": [
+      "pruebas",
+      "godot"
+    ],
+    "sources": [
+      {
+        "type": "pr",
+        "ref": "#44",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/44",
+        "date": "2026-11-03",
+        "note": "Fusionada el 2026-11-03 sin las comprobaciones de Actions (no arranca); la comprobación completa de Godot, pasada a mano"
+      }
+    ],
+    "confidence": "verified"
   }
 ]

@@ -99,6 +99,12 @@ pendientes crear en Talo el ranking `reto_semanal` y la categoría de opiniones,
 Steamworks con la prueba en una Steam Deck de verdad; también como dos pasos nuevos de la lista
 de Steam.
 
+En la 2026-11-03.1 entra la PR #44: el cierre con fallo en cualquier idioma que no fuera el
+castellano, los títulos en mayúsculas que en japonés y chino cogían la palabra de contar, la prueba
+de los idiomas y la hoja de validación rehecha con las frases nuevas. Queda pendiente, aparte, la
+partida larga con la interfaz, que se atasca desde 2017 y no cabe en la comprobación completa (ya
+pasaba antes de la PR #43).
+
 ## Actualizar el historial
 
 ```bash

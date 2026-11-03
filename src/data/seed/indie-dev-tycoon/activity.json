@@ -2018,5 +2018,45 @@
     "ref": "#43",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/43",
     "author": "BananaPig8"
+  },
+  {
+    "id": "indie-dev-tycoon-c-f6acc25",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-11-02T16:40",
+    "type": "commit",
+    "title": "Arreglado el cierre con fallo en cualquier idioma que no sea el castellano",
+    "ref": "f6acc25",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/f6acc25ef3988c5b7c87d5dd060726c417b7ce06",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-c-b7194f3",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-11-02T16:48",
+    "type": "commit",
+    "title": "Idiomas: los títulos en mayúsculas con la palabra de título (JUEGOS → ゲーム, no 本) y prueba de los idiomas en godot_check",
+    "ref": "b7194f3",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/b7194f3de49dd229589a057821c408adb47c2f33",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-c-6c5e483",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-11-03T02:18",
+    "type": "commit",
+    "title": "La uid de la prueba de los idiomas",
+    "ref": "6c5e483",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/6c5e483d4b780b20e3e76bfd870c4fe567fcdbec",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-pr-44",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-11-03T11:43",
+    "type": "merge",
+    "title": "PR #44 fusionada: Idiomas: arreglado el cierre con fallo y los títulos en mayúsculas, y prueba de los idiomas",
+    "ref": "#44",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/44",
+    "author": "BananaPig8"
   }
 ]
