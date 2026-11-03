@@ -16,7 +16,7 @@ datos: proyectos, tareas, fechas, etiquetas y referencias entre ellos.
 
 | Grupo | Sección | Para qué |
 |---|---|---|
-| Estudio | **Panel** | El resumen del día: lo que pide atención, lo de hoy, las próximas fechas, el estado de los proyectos y las alertas. Cada bloque se puede ver solo (`?ver=`). |
+| Estudio | **Panel** (el Dashboard) | La pantalla de cada día: indicadores con el periodo elegido, prioridades de hoy (hecho, prioridad y asignar sin salir), tarjetas de proyecto con su progreso, próximas fechas en lista o calendario, lanzamientos, feedback (con «Convertir en tarea») y actividad reciente con su historial. Cada persona elige sus bloques, su orden y su ancho. |
 | | **Proyectos** | Todos los juegos por estado: activos, en planificación, en pausa, lanzados y archivados. |
 | Trabajo | **Tareas** | Plan de hoy, mis tareas, todas, tablero, lista, calendario, bloqueadas y vencidas. |
 | | **Roadmap** | Hitos, fases, objetivos con su progreso, versiones previstas y la línea temporal. |

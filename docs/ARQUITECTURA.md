@@ -109,6 +109,88 @@ las migas, las pestañas de cada sección y las de la ficha de un proyecto.
   `i18n/secciones-es/<sección>.ts` y sus cálculos en `domain/secciones/<sección>.ts`.
   Añadir una subsección es añadir una línea en el registro y la vista en la página.
 
+## El Dashboard (el Panel)
+
+La pantalla principal. Está en `ui/sections/panel/` y sus cálculos en
+`domain/secciones/panel*.ts` y `proyectos.ts`, todos funciones puras con pruebas.
+
+- **Bloques**:
+  - un fichero por bloque en `widgets/`, registrados en `widgets/index.tsx` (icono, contenido y enlace);
+  - cada uno recibe `WidgetProps`: datos, ámbito, hoy, periodo, si está a dos columnas (`wide`) y si está en el modo foco (`?ver=`).
+- **Disposición por persona** (`prefs.ts`):
+  - qué bloques, en qué orden, de qué ancho, plegados, qué indicadores y la vista del calendario;
+  - se guarda en este navegador para la persona de «Quién soy» (o para cualquiera si nadie lo ha dicho);
+  - las de antes se migran.
+- **Periodo**: va en la URL (`?periodo=hoy|7d|30d|personalizado&desde=&hasta=`). `previousPeriod()` es el de la misma duración justo antes.
+- **Cabecera**:
+  - saludo según la hora del estudio (06–14 h días, 14–21 h tardes, el resto noches), con el nombre de «Quién soy» solo si lo hay;
+  - fecha, estudio, proyecto y periodo (siempre con los días que abarca);
+  - Crear (11 tipos, los mismos formularios), nueva tarea, proyecto o nota, Calendario y buscador.
+
+**Indicadores** (`panel-indicadores.ts`):
+
+- Cada uno da su valor real, su descripción y adónde lleva, con los filtros puestos.
+- Sin datos detrás devuelve `null` y la tarjeta enseña «—» con el motivo, nunca un 0 engañoso.
+- Solo se comparan con el periodo anterior los que pasan en un periodo: tareas e hitos completados, y builds. Y solo si ya había datos de ese tipo entonces.
+- Hitos próximos y próximos eventos miran los próximos 30 días.
+
+**Prioridades** (`panel-prioridades.ts`):
+
+- Una sola fila por cosa, con todas sus etiquetas: crítica, vencida, vence en 3 días, para hoy, bloqueada, incidencia bloqueante, «bloquea a N», «espera a N» (por «Depende de») y hito en riesgo.
+- También entran las versiones de los próximos 14 días, las inscripciones que cierran, los eventos con pasos pendientes y las fichas con cambios pedidos.
+- Lo terminado o cancelado nunca sale.
+- **Orden:** puntos = impacto + plazo + urgencia + dependencias.
+  - Impacto: crítica 40, alta 30, media 20, baja 10, o según el tipo de versión, evento o ficha.
+  - Plazo: vencida 30 + días de retraso (hasta 40); de hoy a 3 días, 24 − 4 × días; de 4 a 14 días, 14 − días.
+  - Urgencia: bloqueada, hito en riesgo o cambios pedidos +15; incidencia bloqueante, para hoy o inscripción +10; +1 por paso que falte (hasta +10).
+  - Dependencias: +6 por cada cosa que la espera (hasta +30); −10 si espera a otras.
+  - Desempate por fecha y título.
+- **Hito en riesgo:** abierto con fecha límite y, o ya pasada, o en 14 días o menos con algo de lo que cuelga bloqueado o vencido, o con más de la mitad sin hacer.
+
+**Progreso de un proyecto** (`projectProgress` en `proyectos.ts`):
+
+- Sigue `project.progressMethod` y es el mismo en la tarjeta, en Proyectos y en Estadísticas.
+- **Por tareas** (por defecto):
+  - cuentan tareas, funcionalidades e incidencias, sin descartadas ni ideas;
+  - cada una pesa lo que su prioridad (crítica 4, alta 3, media 2, baja 1);
+  - progreso = peso hecho / peso total.
+- **Por hitos:** hitos hechos / hitos.
+- Con menos de 3 elementos (o ningún hito) dice **«Sin datos suficientes»**.
+- La tarjeta dice siempre el método.
+- **Próximo hito:** el primero abierto por fecha.
+- **Última actividad:** lo más reciente entre git, el registro de cambios y las fechas de los elementos. La misma la usa la salud del proyecto.
+
+**Lanzamientos** (`panel-lanzamientos.ts`):
+
+- Categorías: demos, candidatas, materiales (pasos de las listas de Steam, lanzamiento, demo y actualización, y textos en borrador), logros por implementar o verificar, revisiones de tienda, actualizaciones y DLC.
+- Todo sale de lo registrado:
+  - sin nada registrado dice «Ningún … registrado», nunca «0 pendientes»;
+  - con datos y nada pendiente, «Todo hecho (n de n)».
+
+**Actividad** (`panel-actividad.ts`):
+
+- Junta tres fuentes:
+  - el registro de cambios, con hora y persona;
+  - las fechas de los datos (alta, fin, fecha de una build, de un feedback, de un documento), con el día pero sin persona;
+  - el historial de git, con su autor.
+- Sin duplicar: el registro tapa la fecha del mismo hecho ese día.
+- El historial completo está en `?ver=actividad`, por días, con filtros de proyecto, categoría, persona y periodo en la URL.
+
+**Feedback**:
+
+- Cada cifra se cuenta con la misma consulta de Feedback a la que lleva.
+- «Convertir en tarea» abre el editor ya relleno y, al guardar, enlaza la tarea y pasa el feedback a planificado, con Deshacer.
+
+**Registro de cambios** (`domain/cambios.ts`, colección `changes`):
+
+- El store apunta cada `created`, `updated`, `status`, `completed` y `deleted`, con hora, quién («Quién soy») y qué campos.
+- Junta los cambios seguidos de lo mismo y de la misma persona (10 minutos) y guarda los 5.000 más recientes.
+- No apunta:
+  - el historial de git;
+  - lo privado (gastos, ingresos y presupuestos: el registro lo lee cualquiera en claude.ai);
+  - lo que llega de fuera (datos iniciales, copias importadas).
+- En claude.ai va en un documento por mes y persona.
+
 ## El modelo de datos (versión 2)
 
 Además de proyectos, elementos de trabajo, builds, eventos, feedback, recursos, listas
