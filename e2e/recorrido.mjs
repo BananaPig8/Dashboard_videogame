@@ -69,7 +69,7 @@ await step('el formulario explica los errores', async () => {
 await step('se conserva al recargar', async () => {
   await page.goto(`${base}/#/`)
   await page.reload()
-  await page.getByRole('region', { name: 'Actividad reciente' }).getByRole('button', { name: 'Probar Studio Hub' }).waitFor()
+  await page.getByRole('region', { name: 'Actividad reciente' }).getByRole('button', { name: 'Probar Studio Hub' }).first().waitFor()
 })
 
 await step('paleta de órdenes con Ctrl+K: buscar y abrir', async () => {
