@@ -265,6 +265,14 @@ describe('validación', () => {
 })
 
 describe('notificaciones', () => {
+  it('un evento de varios días que ya ha empezado sigue avisando hasta que acaba', () => {
+    const d = fixture()
+    const feria = { id: 'en-curso', projectId: 'a', title: 'Feria larga', type: 'fair', status: 'confirmed', date: '2026-10-15', endDate: '2026-10-20', dateConfirmed: true, tags: [], sources: [], confidence: 'verified' } as unknown as StudioData['events'][number]
+    expect(notificationsFor({ ...d, events: [feria] }, TODAY).find((n) => n.target.id === 'en-curso')).toMatchObject({ kind: 'eventSoon', date: TODAY })
+    // Ya acabado: no es «próximo», es «¿se celebró?».
+    expect(notificationsFor({ ...d, events: [{ ...feria, endDate: '2026-10-17' }] }, TODAY).find((n) => n.target.id === 'en-curso')?.kind).toBe('eventStale')
+  })
+
   it('avisa de lo vencido, lo que vence hoy, ferias cercanas, bloqueos importantes y lo que no se actualizó', () => {
     const kinds = notificationsFor(fixture(), TODAY).map((n) => `${n.kind}:${n.target.id}`)
     expect(kinds).toContain('overdue:vencida')

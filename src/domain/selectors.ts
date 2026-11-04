@@ -417,8 +417,10 @@ export function notificationsFor(data: StudioData, today: ISODate): StudioNotifi
   for (const e of data.events) {
     if (!e.date || e.status === 'cancelled' || e.status === 'done') continue
     const days = daysBetween(today, e.date)
-    if (days >= 0 && days <= 14)
-      out.push({ id: `event:${e.id}:${e.date}`, kind: 'eventSoon', tone: days <= 3 ? 'warning' : 'info', title: e.title, date: e.date, confirmed: e.dateConfirmed, projectId: e.projectId, target: { collection: 'events', id: e.id } })
+    // Un evento de varios días que ya ha empezado sigue avisando hasta que acaba (como «hoy»).
+    const ongoing = days < 0 && !!e.endDate && e.endDate >= today
+    if ((days >= 0 && days <= 14) || ongoing)
+      out.push({ id: `event:${e.id}:${e.date}`, kind: 'eventSoon', tone: days <= 3 ? 'warning' : 'info', title: e.title, date: ongoing ? today : e.date, confirmed: e.dateConfirmed, projectId: e.projectId, target: { collection: 'events', id: e.id } })
     else if ((e.endDate ?? e.date) < today && (e.status === 'planned' || e.status === 'confirmed'))
       out.push({ id: `stale:${e.id}:${e.date}`, kind: 'eventStale', tone: 'warning', title: e.title, date: e.date, confirmed: e.dateConfirmed, projectId: e.projectId, target: { collection: 'events', id: e.id } })
   }
