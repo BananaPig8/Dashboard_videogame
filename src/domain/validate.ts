@@ -466,6 +466,24 @@ export function validateEntity(k: CollectionKey, entity: Record<string, unknown>
   externalFactCheck(k, entity, err, '', true)
   verifiedNeedsSource(k, entity, err, '')
   if (k === 'projects' && data.projects.some((p) => p.slug === entity.slug && p.id !== entity.id)) errors.push(`el slug «${String(entity.slug)}» ya existe`)
+  if (k === 'items' && dependsOnItself(entity, data)) errors.push('«Depende de» hace un círculo: algo de lo que depende acaba dependiendo de esto')
   void COLLECTION_BY_KEY
   return errors
+}
+
+/** ¿Siguiendo «Depende de» desde este elemento se vuelve a él? (A espera a B y B espera a A). */
+function dependsOnItself(entity: Record<string, unknown>, data: StudioData): boolean {
+  const id = entity.id as string
+  const deps = new Map(data.items.map((i) => [i.id, i.dependsOnIds ?? []]))
+  deps.set(id, Array.isArray(entity.dependsOnIds) ? (entity.dependsOnIds as string[]) : [])
+  const seen = new Set<string>()
+  const pending = [...deps.get(id)!]
+  while (pending.length) {
+    const next = pending.pop()!
+    if (next === id) return true
+    if (seen.has(next)) continue
+    seen.add(next)
+    pending.push(...(deps.get(next) ?? []))
+  }
+  return false
 }

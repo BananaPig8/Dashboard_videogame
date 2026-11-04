@@ -248,6 +248,13 @@ describe('validación', () => {
     // Al cargar unos datos ya guardados no se rechazan por esto (se dejarían de ver enteros).
     expect(validateStudioData({ ...data, builds: [...data.builds, { ...build, sources: [] }] })).toEqual([])
   })
+  it('al guardar, «Depende de» no puede hacer un círculo', () => {
+    const data = fixture()
+    data.items = data.items.map((i) => (i.id === 'hoy' ? { ...i, dependsOnIds: ['curso'] } : i.id === 'curso' ? { ...i, dependsOnIds: ['marcada'] } : i))
+    const marcada = data.items.find((i) => i.id === 'marcada')!
+    expect(validateEntity('items', { ...marcada, dependsOnIds: ['hoy'] }, data)).toContain('«Depende de» hace un círculo: algo de lo que depende acaba dependiendo de esto')
+    expect(validateEntity('items', { ...marcada, dependsOnIds: ['vencida'] }, data)).toEqual([])
+  })
   it('al guardar, un estado de fuera «verificado» necesita un enlace si solo se anotó a mano', () => {
     const data = fixture()
     const m = { id: 'm', projectId: 'a', kind: 'units', value: 5, date: TODAY, confidence: 'verified' }

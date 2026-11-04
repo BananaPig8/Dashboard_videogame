@@ -54,3 +54,11 @@ describe('registro de cambios', () => {
     expect(list.map((c) => c.entityId)).toEqual(['t2', 't3', 't4'])
   })
 })
+
+describe('registro de cambios: lo que añade el formulario', () => {
+  it('guardar sin cambiar nada no apunta nada aunque el formulario añada campos vacíos', () => {
+    expect(changeFor('items', task, { ...task, dependsOnIds: [], description: '' }, ctx())).toBeNull()
+    const ev = { id: 'e', title: 'Feria', dateConfirmed: false }
+    expect(changeFor('events', ev, { ...ev, memberIds: [], registrationDeadlineConfirmed: false }, ctx())).toBeNull()
+  })
+})

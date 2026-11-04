@@ -37,7 +37,10 @@ const titleOf = (e: Row): string => String(e.title ?? e.name ?? e.label ?? e.id 
 /** El tipo de algo, para poder filtrar (task, issue, milestone…; el tipo de un recurso o de un evento). */
 const kindOf = (e: Row): string | undefined => (typeof e.kind === 'string' ? e.kind : typeof e.type === 'string' ? e.type : undefined)
 
-const same = (a: unknown, b: unknown) => a === b || JSON.stringify(a) === JSON.stringify(b)
+/** Vacío: sin poner, una lista vacía, un texto vacío o «no». El formulario los añade al guardar. */
+const isEmpty = (v: unknown) => v === undefined || v === null || v === '' || v === false || (Array.isArray(v) && v.length === 0)
+
+const same = (a: unknown, b: unknown) => a === b || (isEmpty(a) && isEmpty(b)) || JSON.stringify(a) === JSON.stringify(b)
 
 export interface ChangeContext {
   id: ID

@@ -283,6 +283,16 @@ describe('almacén remoto (base de datos de la página)', () => {
   })
 })
 
+describe('reconcile', () => {
+  it('en las colecciones agrupadas, el mismo contenido en otro orden no es un cambio («Deshacer» sigue valiendo)', () => {
+    const a = { id: 'c1', at: '2026-11-02T10:00', action: 'created', collection: 'items', entityId: 'x', title: 'X' }
+    const b = { id: 'c2', at: '2026-11-02T10:05', action: 'created', collection: 'items', entityId: 'y', title: 'Y' }
+    const current = { ...empty(), changes: [a, b] } as unknown as StudioData
+    const fresh = { ...empty(), changes: [structuredClone(b), structuredClone(a)] } as unknown as StudioData
+    expect(reconcile(current, fresh)).toBe(current)
+  })
+})
+
 describe('ids y agrupación', () => {
   it('los ids raros se codifican y los normales se quedan igual', () => {
     expect(docIdFor('idt-c-abc1234')).toBe('idt-c-abc1234')
