@@ -98,6 +98,12 @@ las migas, las pestañas de cada sección y las de la ficha de un proyecto.
 - **Rutas antiguas**: `migratePath()` traduce las de la versión anterior (`/hoy`,
   `/trabajo`, `/agenda`, `/decisiones`, `/historial`, sus pestañas en la ficha y
   `?estado=blocked`); la usan las redirecciones, la ficha y las vistas guardadas.
+- **Pestañas que solo tiene la ficha** (`projectOnly`): «Demo y pruebas» junta lo que en
+  el estudio está en Builds, Publicación y Feedback; «Historial» es el registro de cambios
+  del Panel (los enlaces a `/?ver=actividad` desde la ficha la abren). No salen en la
+  barra lateral; fuera de una ficha, su ruta `/ficha/…` lleva a la vista del estudio que
+  enseña lo mismo (`studio`), y al quitar el proyecto del ámbito también (`studioHref()`).
+  El orden de las pestañas es `TAB_ORDER`.
 - **Fechas**: `domain/secciones/calendario.ts` junta en una lista todas las fechas de
   todas las colecciones (fechas límite, eventos, cierres de inscripción, versiones,
   builds, recordatorios). Panel, Calendario, la ficha y los avisos leen esa misma lista.
@@ -225,8 +231,9 @@ que afirma un estado externo solo puede ir como verificado con una fuente compro
   los formularios. Una colección nueva es una entrada ahí (más su tipo, su catálogo, su
   validación y sus campos en `specs.ts`).
 - **Normalizar** (`migrate.ts`): los datos de cualquier versión se completan al cargarlos
-  (colecciones que faltan, listas vacías), sin renombrar nada; lo de un proyecto que no
-  existe se oculta y las referencias perdidas se quitan, con aviso. Es idempotente. Si
+  (colecciones que faltan, listas vacías); lo de un proyecto que no existe se oculta y las
+  referencias perdidas se quitan, con aviso. Lo único que se traduce es la etapa de antes
+  de un proyecto (`stage`), que se separa en estado y fase (`OLD_STAGES` en `catalog.ts`). Es idempotente. Si
   los datos son de una versión más nueva de la aplicación, la página se queda en solo
   lectura en vez de reescribirlos.
 - **Referencias** (`references.ts`): cada campo que apunta a otra colección dice qué pasa
@@ -235,6 +242,35 @@ que afirma un estado externo solo puede ir como verificado con una fuente compro
   suyo, salvo el dinero, que se queda sin proyecto.
 - La clave de `localStorage` es `studio-hub:v2`; si no existe se leen los datos de la
   `v1`, que quedan como copia.
+
+## Proyectos: estado, fase y lo que comparten
+
+- **Estado y fase no son lo mismo.** El *estado* (`Project.status`) dice cómo está el
+  proyecto para el estudio (Idea, Prototipo, En pausa, Lanzado, Archivado…): son los del
+  estudio (`studio.projectStatuses`, o los 14 de serie de `catalog.ts`) y cada uno
+  pertenece a un *grupo* (planificación, activos, lanzados, en pausa, archivados), que es
+  lo único que miran los cálculos. Archivado y Cancelado son fijos (`FIXED_PROJECT_STATUSES`):
+  siempre existen. La *fase* (`Project.phase`, y `Phase.stage` en el Roadmap) dice en qué
+  punto del desarrollo está: concepto, prototipo, preproducción, producción, pulido,
+  lanzamiento y mantenimiento.
+- **Cerrado** = estado del grupo «archivados»: no sale en el Dashboard ni en los avisos,
+  pero todo lo suyo se conserva.
+- **Riesgos** (`risks`, de un proyecto: probabilidad, impacto, estado, mitigación) y
+  **componentes compartidos** (`components`, del estudio: un sistema, librería o
+  herramienta que usan varios proyectos; al borrar un proyecto solo deja de usarlo).
+- **Relaciones** (`Project.relations`: comparten recursos, tecnología o un componente,
+  depende de, relacionado). Las que apuntan a un proyecto que no existe se quitan al
+  normalizar y al borrarlo.
+- **Tareas compartidas**: un elemento tiene un proyecto (`projectId`) y puede valer
+  también para otros (`alsoProjectIds`). `inProject()` en `selectors.ts` es la única
+  regla: sale en todos sus proyectos sin copiarse, y en todo el estudio una sola vez.
+- **Varios a la vez**: `store.upsertMany()` guarda varios elementos de distintas
+  colecciones en un solo cambio (un proyecto con las fases y tareas de una plantilla), y
+  cada uno queda en el registro de cambios.
+- **Nada se pierde por un descuido**: el editor pregunta antes de descartar lo escrito
+  (Esc, clic fuera, la X, «Cancelar») y avisa al recargar o cerrar la pestaña; un diálogo
+  que el navegador cierra a la fuerza (Esc dos veces en Chrome) se vuelve a abrir y pasa
+  por la misma pregunta.
 
 ## Datos iniciales y cambios del estudio
 
@@ -322,4 +358,5 @@ página se queda con lo último bueno y lo enseña en un aviso.
 - **Nuevas colecciones o campos:** su entrada en `collections.ts`, el tipo en `types.ts`,
   su catálogo, su validación en `validate.ts` y sus campos en `specs.ts`.
 - **Cambios de esquema:** `SCHEMA_VERSION` en `types.ts` y, si hace falta, el paso en
-  `migrate.ts` (que no renombra valores: añade y completa).
+  `migrate.ts` (que añade y completa; solo traduce un valor viejo cuando su significado se
+  separa en dos, como la etapa de un proyecto).
