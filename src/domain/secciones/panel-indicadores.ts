@@ -1,22 +1,10 @@
 // Cálculos del Dashboard: la cabecera (saludo) y las tarjetas de indicadores. Se reexportan
 // desde panel.ts (y este, desde selectors.ts).
 // Regla: lo que se importa de '../selectors' solo se usa dentro de funciones (hay un ciclo de import).
-import type { Tone } from '../catalog'
+import { SECTOR_EVENT_TYPES, type Tone } from '../catalog'
 import { addDays } from '../dates'
 import type { ISODate, StudioData, WorkItem } from '../types'
-import {
-  blockedItems,
-  eventoInScope,
-  inPeriod,
-  isOpen,
-  itemsOf,
-  overdueItems,
-  previousPeriod,
-  projectsInGroup,
-  taskItems,
-  type Period,
-  type Scope,
-} from '../selectors'
+import { inPeriod, isOpen, itemsOf, panelOwn, previousPeriod, projectsInGroup, taskItems, type Period, type Scope } from '../selectors'
 
 // ——— Saludo ————————————————————————————————————————————————————————————————
 
@@ -65,7 +53,7 @@ export const PANEL_KPI_IDS: readonly PanelKpiId[] = [
 /** Los que solo tienen sentido en la vista de todo el estudio. */
 export const PANEL_KPI_STUDIO_ONLY: readonly PanelKpiId[] = ['activeProjects']
 
-/** Días por delante que miran «Hitos próximos» y «Próximos eventos» (hoy incluido). */
+/** Días por delante que mira «Hitos próximos» (hoy incluido). */
 export const KPI_AHEAD_DAYS = 30
 
 /** Por qué una tarjeta no tiene cifra: se pinta «—» con el motivo, nunca un 0 que engañe. */
@@ -117,7 +105,6 @@ export interface PanelKpiQuery {
   ids: readonly PanelKpiId[]
 }
 
-const own = (scope: Scope) => (x: { projectId?: string }) => scope === null || x.projectId === scope
 const note = (kind: PanelKpiNote, n: number) => (n > 0 ? [{ kind, n }] : [])
 const empty = (id: PanelKpiId, reason: PanelKpiEmpty): PanelKpi => ({ id, value: null, empty: reason, tone: 'muted', notes: [] })
 
@@ -145,41 +132,46 @@ function doneInPeriod(id: PanelKpiId, items: WorkItem[], period: Period, none: P
   }
 }
 
-/** Una tarjeta. */
+/**
+ * Una tarjeta. En todo el estudio no cuenta lo de los proyectos cerrados (`panelOwn`); en un
+ * proyecto, lo suyo (y, en los eventos, también los del estudio).
+ */
 function kpi(data: StudioData, id: PanelKpiId, scope: Scope, today: ISODate, period: Period): PanelKpi {
   const ahead = addDays(today, KPI_AHEAD_DAYS - 1)
+  const own = panelOwn(data, scope)
+  const tasks = () => taskItems(data, scope).filter(own)
   switch (id) {
     case 'activeProjects': {
       if (data.projects.length === 0) return empty(id, 'noProjects')
       return { id, value: projectsInGroup(data, 'activos').length, tone: 'neutral', of: data.projects.length, notes: [] }
     }
     case 'pending': {
-      const tasks = taskItems(data, scope)
-      if (tasks.length === 0) return empty(id, 'noTasks')
-      return { id, value: tasks.filter(isOpen).length, tone: 'neutral', of: tasks.length, notes: [] }
+      const all = tasks()
+      if (all.length === 0) return empty(id, 'noTasks')
+      return { id, value: all.filter(isOpen).length, tone: 'neutral', of: all.length, notes: [] }
     }
     case 'completed':
-      return doneInPeriod(id, taskItems(data, scope), period, 'noTasks')
+      return doneInPeriod(id, tasks(), period, 'noTasks')
     case 'overdue': {
-      const tasks = taskItems(data, scope)
-      if (tasks.length === 0) return empty(id, 'noTasks')
-      const open = tasks.filter(isOpen)
+      const all = tasks()
+      if (all.length === 0) return empty(id, 'noTasks')
+      const open = all.filter(isOpen)
       if (open.length === 0) return empty(id, 'noOpenTasks')
-      const dated = open.filter((i) => i.dueDate).length
-      if (dated === 0) return empty(id, 'noDueDates')
-      const n = overdueItems(data, today, scope).length
-      return { id, value: n, tone: n ? 'danger' : 'neutral', of: dated, notes: [] }
+      const dated = open.filter((i) => i.dueDate)
+      if (dated.length === 0) return empty(id, 'noDueDates')
+      const n = dated.filter((i) => i.dueDate! < today).length
+      return { id, value: n, tone: n ? 'danger' : 'neutral', of: dated.length, notes: [] }
     }
     case 'blocked': {
-      const tasks = taskItems(data, scope)
-      if (tasks.length === 0) return empty(id, 'noTasks')
-      const open = tasks.filter(isOpen).length
-      if (open === 0) return empty(id, 'noOpenTasks')
-      const n = blockedItems(data, scope).length
-      return { id, value: n, tone: n ? 'danger' : 'neutral', of: open, notes: [] }
+      const all = tasks()
+      if (all.length === 0) return empty(id, 'noTasks')
+      const open = all.filter(isOpen)
+      if (open.length === 0) return empty(id, 'noOpenTasks')
+      const n = open.filter((i) => i.status === 'blocked').length
+      return { id, value: n, tone: n ? 'danger' : 'neutral', of: open.length, notes: [] }
     }
     case 'milestonesSoon': {
-      const all = itemsOf(data, scope).filter((i) => i.kind === 'milestone')
+      const all = itemsOf(data, scope).filter((i) => i.kind === 'milestone' && own(i))
       if (all.length === 0) return empty(id, 'noMilestones')
       const open = all.filter(isOpen)
       if (open.length === 0) return empty(id, 'noOpenMilestones')
@@ -196,22 +188,25 @@ function kpi(data: StudioData, id: PanelKpiId, scope: Scope, today: ISODate, per
     case 'milestonesDone':
       return doneInPeriod(
         id,
-        itemsOf(data, scope).filter((i) => i.kind === 'milestone'),
+        itemsOf(data, scope).filter((i) => i.kind === 'milestone' && own(i)),
         period,
         'noMilestones',
       )
     case 'eventsSoon': {
-      const events = data.events.filter(eventoInScope(scope))
+      // Los del sector (ferias, festivales, premios, presentaciones…), los mismos que Eventos:
+      // las reuniones, entregas y fechas límite están en el Calendario.
+      const events = data.events.filter((e) => SECTOR_EVENT_TYPES.includes(e.type) && panelOwn(data, scope, true)(e))
       if (events.length === 0) return empty(id, 'noEvents')
       const pending = events.filter((e) => e.status !== 'done' && e.status !== 'cancelled')
       const undated = note('undated', pending.filter((e) => !e.date).length)
       if (!events.some((e) => e.date && e.status !== 'cancelled')) return { ...empty(id, 'noEventDates'), notes: undated }
-      // Los que empiezan entre hoy y dentro de 30 días, y los de varios días que ya han empezado y no han acabado.
-      const soon = pending.filter((e) => e.date && e.date <= ahead && (e.endDate ?? e.date) >= today)
+      // Todo lo que está por delante (Eventos › Próximos): lo que empieza de hoy en adelante y lo
+      // de varios días que ya ha empezado y no ha acabado.
+      const soon = pending.filter((e) => e.date && (e.endDate ?? e.date) >= today)
       return { id, value: soon.length, tone: 'neutral', notes: [...note('unconfirmed', soon.filter((e) => !e.dateConfirmed).length), ...undated] }
     }
     case 'recentBuilds': {
-      const builds = data.builds.filter(own(scope))
+      const builds = data.builds.filter(own)
       if (builds.length === 0) return empty(id, 'noBuilds')
       const dated = builds.filter((b) => b.date)
       const undated = note('undated', builds.length - dated.length)
@@ -226,7 +221,7 @@ function kpi(data: StudioData, id: PanelKpiId, scope: Scope, today: ISODate, per
       }
     }
     case 'feedbackNew': {
-      const feedback = data.feedback.filter(own(scope))
+      const feedback = data.feedback.filter(own)
       if (feedback.length === 0) return empty(id, 'noFeedback')
       const n = feedback.filter((f) => f.status === 'new').length
       return { id, value: n, tone: n ? 'warning' : 'neutral', of: feedback.length, notes: [] }

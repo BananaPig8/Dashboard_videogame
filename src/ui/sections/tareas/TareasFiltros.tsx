@@ -4,7 +4,7 @@
 import { useId, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { CONFIDENCES, KINDS, PRIORITIES, STATUSES, STATUS_ORDER, TASK_KINDS } from '../../../domain/catalog'
-import { TASK_NOBODY, taskPeople } from '../../../domain/selectors'
+import { CLOSED_PARAM, CLOSED_PARAM_OFF, TASK_NOBODY, taskDueDaysOf, taskPeople } from '../../../domain/selectors'
 import type { ItemKind, Priority } from '../../../domain/types'
 import { t } from '../../../i18n'
 import { useStudioData } from '../../../data/store'
@@ -123,6 +123,17 @@ export function TareasFiltros({ vista, filtro, filtered }: Pick<TaskParams, 'vis
                 <input type="date" value={value('hasta')} min={value('desde') || undefined} onChange={(e) => set('hasta', e.target.value)} />
               </label>
             </>
+          )}
+          {/* Los que pone el Dashboard al pulsar una cifra: se dicen y se pueden quitar uno a uno. */}
+          {taskDueDaysOf(value('vence')) && (
+            <button type="button" className="btn btn-small" onClick={() => set('vence', '')} aria-label={t('secciones.tareas.filters.removeOne', { name: t('secciones.tareas.filters.dueWithin', { n: Number(value('vence')) }) })}>
+              <Icon name="clock" size={14} /> {t('secciones.tareas.filters.dueWithin', { n: Number(value('vence')) })} <Icon name="close" size={12} />
+            </button>
+          )}
+          {value(CLOSED_PARAM) === CLOSED_PARAM_OFF && (
+            <button type="button" className="btn btn-small" onClick={() => set(CLOSED_PARAM, '')} aria-label={t('secciones.tareas.filters.removeOne', { name: t('secciones.tareas.filters.noArchived') })}>
+              <Icon name="folder" size={14} /> {t('secciones.tareas.filters.noArchived')} <Icon name="close" size={12} />
+            </button>
           )}
           {filtered && (
             <button type="button" className="btn btn-small btn-ghost" onClick={clear}>

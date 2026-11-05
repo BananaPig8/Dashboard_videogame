@@ -197,12 +197,13 @@ export const COLLECTION_DEFS: CollectionDef[] = [
   }),
   def({ key: 'budgets', idPrefix: 'presupuesto', withProject: 'unset', private: true }),
   def({ key: 'metrics', idPrefix: 'metrica', withProject: 'cascade', projectRequired: true }),
-  // El registro de cambios no se borra con lo que cuenta: se queda con su título. En la base
-  // de claude.ai, un documento por mes y por persona (cada uno escribe el suyo).
+  // El registro de cambios no se borra con lo que cuenta: se queda con su título y con su
+  // proyecto aunque se borre (la actividad lo enseña «(borrado)»). En la base de claude.ai,
+  // un documento por mes y por persona (cada uno escribe el suyo).
   def({
     key: 'changes',
     idPrefix: 'cambio',
-    withProject: 'unset',
+    withProject: false,
     bucket: (c) => `${month(c.at)}~${typeof c.memberId === 'string' ? c.memberId : 'sin-nombre'}`,
     refs: [{ field: 'memberId', to: 'members', onDelete: 'unset' }],
   }),

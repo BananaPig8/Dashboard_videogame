@@ -8,6 +8,7 @@ import {
   buildGroupOf,
   buildStretches,
   buildsInChannelGroup,
+  buildsInDates,
   changelogLines,
   compareBuilds,
   issuesByBuild,
@@ -128,6 +129,27 @@ describe('subsecciones de Builds', () => {
   it('ordena por fecha y, a igual fecha, por nombre', () => {
     const list = [build('b', { date: '2026-10-01' }), build('a', { date: '2026-10-01' }), build('c')]
     expect(list.sort(compareBuilds).map((b) => b.id)).toEqual(['a', 'b', 'c'])
+  })
+})
+
+describe('builds entre dos fechas (la cifra «Builds recientes» del Dashboard)', () => {
+  it('con fecha entre las dos (incluidas); sin fecha, fuera; y sin las de los proyectos archivados si se pide', () => {
+    const d = data({
+      projects: [project('p'), { ...project('viejo'), stage: 'archived' }],
+      builds: [
+        build('antes', { date: '2026-10-28' }),
+        build('primera', { date: '2026-10-29' }),
+        build('ultima', { date: '2026-11-04' }),
+        build('despues', { date: '2026-11-05' }),
+        build('sin-fecha'),
+        build('vieja', { projectId: 'viejo', date: '2026-11-01' }),
+      ],
+    })
+    const ids = (q: Parameters<typeof buildsInDates>[2]) => buildsInDates(d, d.builds, q).map((b) => b.id)
+    expect(ids({ desde: '2026-10-29', hasta: '2026-11-04' })).toEqual(['primera', 'ultima', 'vieja'])
+    expect(ids({ desde: '2026-10-29', hasta: '2026-11-04', sinArchivados: true })).toEqual(['primera', 'ultima'])
+    expect(ids({})).toHaveLength(6)
+    expect(ids({ hasta: '2026-10-28' })).toEqual(['antes'])
   })
 })
 

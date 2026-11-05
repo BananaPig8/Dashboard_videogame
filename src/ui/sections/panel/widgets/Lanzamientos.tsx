@@ -118,25 +118,32 @@ function Line({ line, projectId }: { line: LaunchLine; projectId: ID }) {
     case 'achievements': {
       const n = line.achievements.length
       const verify = line.reason === 'verify'
+      // Lo que les falta de verdad: verificarlos, decidir si son ocultos o las dos cosas (unos una y otros otra).
+      const title = !verify
+        ? count(n, 'line.implementOne', 'line.implementOther')
+        : line.undecided === 0
+          ? count(n, 'line.verifyOne', 'line.verifyOther')
+          : line.unverified === 0
+            ? count(n, 'line.decideOne', 'line.decideOther')
+            : count(n, 'line.reviewOne', 'line.reviewOther')
+      const both = line.undecided > 0 && line.unverified > 0
       return (
         <li className="launch-line">
           <Link to={linkFor('/publicacion?vista=logros', projectId)} className="item-title">
-            {verify ? count(n, 'line.verifyOne', 'line.verifyOther') : count(n, 'line.implementOne', 'line.implementOther')}
+            {title}
           </Link>
           <div className="item-meta">
             {verify ? (
-              <>
-                {line.undecided > 0 && (
+              both && (
+                <>
                   <Pill tone="warning" icon="question">
                     {L('line.undecided', { n: line.undecided })}
                   </Pill>
-                )}
-                {line.unverified > 0 && (
                   <Pill tone="warning" icon="question">
                     {L('line.unverified', { n: line.unverified })}
                   </Pill>
-                )}
-              </>
+                </>
+              )
             ) : (
               <span className="meta-date">{L('line.implementHint')}</span>
             )}

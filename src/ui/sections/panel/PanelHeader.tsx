@@ -5,10 +5,11 @@
 import { useEffect, useId, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { nowISODateTime } from '../../../domain/dates'
-import { PERIOD_IDS, panelGreeting, projectsInGroup, type Period, type PeriodId } from '../../../domain/selectors'
+import { PERIOD_IDS, isClosedProject, panelGreeting, projectSummaries, projectsInGroup, type Period, type PeriodId } from '../../../domain/selectors'
 import { t, tr } from '../../../i18n'
 import type { Formatter } from '../../../i18n/format'
 import { useCanEdit, useStudioData } from '../../../data/store'
+import { HealthPill } from '../../components/Badges'
 import { Icon, type IconName } from '../../components/Icon'
 import { useMe } from '../../components/MePicker'
 import { Popover } from '../../components/Popover'
@@ -115,13 +116,20 @@ export function PeriodPicker() {
       </label>
       {custom && (
         <>
+          {/* Ninguna de las dos después de hoy: lo que no ha pasado no se cuenta (periodRange también lo recorta). */}
           <label className="panel-field">
             <span className="panel-field-label">{t('secciones.panel.cabecera.period.from')}</span>
             <input type="date" value={period.from} max={period.to} onChange={(e) => setPeriod('personalizado', { from: e.target.value || undefined, to: period.to })} />
           </label>
           <label className="panel-field">
             <span className="panel-field-label">{t('secciones.panel.cabecera.period.to')}</span>
-            <input type="date" value={period.to} min={period.from} onChange={(e) => setPeriod('personalizado', { from: period.from, to: e.target.value || undefined })} />
+            <input
+              type="date"
+              value={period.to}
+              min={period.from}
+              max={today}
+              onChange={(e) => setPeriod('personalizado', { from: period.from, to: e.target.value || undefined })}
+            />
           </label>
         </>
       )}
@@ -129,6 +137,38 @@ export function PeriodPicker() {
         <Icon name="calendar" size={14} />
         {periodText(period, fmt, today)}
       </span>
+    </div>
+  )
+}
+
+/**
+ * Cómo está cada juego, en una línea y arriba del todo (también en el móvil, sin bajar): su
+ * nombre, que lleva a su ficha, y su salud (la de Proyectos y «Necesita atención»), de lo que más
+ * pide atención a lo que menos. En todo el estudio, sin los proyectos archivados; con ?p=, ese.
+ */
+function GamesHealth() {
+  const data = useStudioData()
+  const today = useToday()
+  const { scope } = useScope()
+  const labelId = useId()
+  const list = projectSummaries(data, today).filter((s) => (scope ? s.project.id === scope : !isClosedProject(s.project)))
+  if (list.length === 0) return null
+  return (
+    <div className="panel-health">
+      <span className="panel-health-label" id={labelId}>
+        {t('secciones.panel.cabecera.health.label')}
+      </span>
+      <ul aria-labelledby={labelId}>
+        {list.map((s) => (
+          <li key={s.project.id}>
+            <Link to={`/proyectos/${s.project.slug}`} className="panel-health-name">
+              <span className="dot" style={{ background: s.project.color }} aria-hidden="true" />
+              {s.project.name}
+            </Link>
+            <HealthPill level={s.health.level} />
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
@@ -323,6 +363,7 @@ export function PanelHeader({ embedded, onCustomize }: { embedded?: boolean; onC
           </>
         }
       />
+      <GamesHealth />
       <div className="panel-toolbar">
         <div className="panel-filters" role="group" aria-label={t('secciones.panel.cabecera.filters')}>
           <ProjectPicker />

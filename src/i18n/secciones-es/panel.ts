@@ -76,6 +76,9 @@ export const panel = {
     previous: '(semana anterior: {n})',
     doneTotal: 'Elementos terminados en total',
     commits: 'Commits registrados',
+    empty: 'Todavía no hay historial: ni commits registrados ni elementos terminados.',
+    noCommits: 'Sin commits registrados',
+    noItems: 'Todavía no hay elementos de trabajo',
   },
   decisions: {
     log: 'Registro',

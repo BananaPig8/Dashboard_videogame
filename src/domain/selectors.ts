@@ -4,6 +4,7 @@ import { FEEDBACK_STATUSES, PRIORITIES, STATUSES, TASK_KINDS } from './catalog'
 import type { CollectionKey } from './collections'
 import { addDays, daysBetween, startOfWeek, type WeekStart } from './dates'
 import { registrationsClosingSoon } from './secciones/eventos'
+import { closedProjectIds } from './secciones/panel'
 import { projectLastActivity } from './secciones/proyectos'
 import { budgetUsage } from './secciones/finanzas'
 import type {
@@ -404,6 +405,8 @@ export interface StudioNotification {
  * ya pasó y presupuestos superados.
  */
 export function notificationsFor(data: StudioData, today: ISODate): StudioNotification[] {
+  // Un proyecto cerrado (archivado) no avisa de nada: está parado a propósito.
+  const closed = closedProjectIds(data)
   const out: StudioNotification[] = []
   for (const i of data.items) {
     if (!isOpen(i) || !isWork(i)) continue
@@ -457,7 +460,7 @@ export function notificationsFor(data: StudioData, today: ISODate): StudioNotifi
       out.push({ id: `budget:${b.id}:${u.spent}`, kind: 'budgetOver', tone: 'warning', title: b.name, confirmed: true, projectId: b.projectId, target: { collection: 'budgets', id: b.id } })
   }
   const rank = { danger: 0, warning: 1, info: 2 }
-  return out.sort((a, b) => rank[a.tone] - rank[b.tone] || (a.date ?? '9999').localeCompare(b.date ?? '9999'))
+  return out.filter((n) => !n.projectId || !closed.has(n.projectId)).sort((a, b) => rank[a.tone] - rank[b.tone] || (a.date ?? '9999').localeCompare(b.date ?? '9999'))
 }
 
 // ——— Por sección ——————————————————————————————————————————————————————————

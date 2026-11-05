@@ -8,6 +8,7 @@ import type { CalendarEntry } from './calendario'
 import {
   isOpen,
   panelAlerts,
+  panelOwn,
   registrationsClosingSoon,
   releaseLabel,
   upcomingEntries,
@@ -216,10 +217,14 @@ export function milestoneRisk(
  * - las inscripciones que cierran en 14 días (`registrationsClosingSoon`) y los eventos de los
  *   próximos 14 días con pasos sin hacer en sus listas (checklist.eventId);
  * - las fichas de tienda a las que la tienda ha pedido cambios.
- * En un proyecto, lo suyo y los eventos de todo el estudio (como en el Calendario).
+ * En un proyecto, lo suyo y los eventos de todo el estudio (como en el Calendario). En todo el
+ * estudio, nada de los proyectos cerrados (archivados: `panelOwn`).
+ *
+ * Una fila de un elemento de trabajo dice «sin confirmar» si el elemento está por confirmar (de
+ * estado o de fiabilidad), como la tarjeta del proyecto con su siguiente hito.
  */
 export function dashboardPriorities(data: StudioData, today: ISODate, scope: Scope = null): PriorityRow[] {
-  const own = (x: { projectId?: ID }) => scope === null || x.projectId === scope
+  const own = panelOwn(data, scope)
   const rows: PriorityRow[] = []
   const add = (row: Omit<PriorityRow, 'points' | 'score'>, impact: number) => {
     const points = priorityPoints(impact, row.flags, row.date ? daysBetween(today, row.date) : undefined)
@@ -263,7 +268,7 @@ export function dashboardPriorities(data: StudioData, today: ISODate, scope: Sco
         projectId: item.projectId,
         item,
         date: item.dueDate,
-        confirmed: true,
+        confirmed: item.status !== 'to_confirm' && item.confidence !== 'to_confirm',
         flags,
         waitingOn,
         blocking,
@@ -296,9 +301,9 @@ export function dashboardPriorities(data: StudioData, today: ISODate, scope: Sco
   // Eventos: la inscripción que cierra y los pasos que faltan (una fila por evento).
   const until = addDays(today, PRIORITY_HORIZON_DAYS)
   const closing = new Set(registrationsClosingSoon(data, today, PRIORITY_HORIZON_DAYS, scope).map((e) => e.id))
+  const ownEvent = panelOwn(data, scope, true)
   for (const e of data.events) {
-    if (scope !== null && e.projectId && e.projectId !== scope) continue
-    if (e.status === 'cancelled') continue
+    if (!ownEvent(e) || e.status === 'cancelled') continue
     const flags: PriorityFlag[] = []
     if (closing.has(e.id)) {
       const date = e.registrationDeadline!
@@ -351,15 +356,14 @@ export function dashboardPriorities(data: StudioData, today: ISODate, scope: Sco
   return rows.sort(comparePriorityRows)
 }
 
-/** ¿Hay algo abierto en este ámbito de lo que el bloque podría avisar? (para no decir «Nada urgente» sin datos). */
+/**
+ * ¿Hay trabajo abierto en este ámbito? (tareas, hitos, incidencias… sin lo de los proyectos
+ * cerrados). Sin él, «Nada urgente: nada crítico ni vencido» no diría nada: el bloque explica que
+ * no hay con qué decirlo. Un evento del estudio o una versión sin trabajo apuntado no bastan.
+ */
 export function priorityHasData(data: StudioData, scope: Scope = null): boolean {
-  const own = (x: { projectId?: ID }) => scope === null || x.projectId === scope
-  return (
-    data.items.some((i) => own(i) && TASK_KINDS.includes(i.kind) && isOpen(i)) ||
-    data.releases.some((r) => own(r) && r.status !== 'released' && r.status !== 'cancelled' && !r.releasedAt) ||
-    data.events.some((e) => (scope === null || !e.projectId || e.projectId === scope) && e.status !== 'cancelled' && e.status !== 'done') ||
-    data.storeListings.some(own)
-  )
+  const own = panelOwn(data, scope)
+  return data.items.some((i) => own(i) && TASK_KINDS.includes(i.kind) && isOpen(i))
 }
 
 // ——— Calendario resumido (Próximas fechas) ——————————————————————————————————
@@ -379,7 +383,9 @@ export interface AgendaEntry extends CalendarEntry {
  */
 export function panelAgenda(data: StudioData, today: ISODate, days: number, scope: Scope = null): AgendaEntry[] {
   const milestones = new Set(data.items.filter((i) => i.kind === 'milestone').map((i) => i.id))
-  return upcomingEntries(data, today, days, scope).map((e) =>
+  // Lo de los proyectos cerrados (archivados) no sale, como en el resto del Dashboard.
+  const own = panelOwn(data, scope, true)
+  return upcomingEntries(data, today, days, scope).filter(own).map((e) =>
     e.target.collection === 'items' && milestones.has(e.target.id) ? { ...e, milestone: true } : e,
   )
 }

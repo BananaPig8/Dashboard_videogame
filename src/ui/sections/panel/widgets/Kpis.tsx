@@ -2,7 +2,17 @@
 // y en su orden. Cada tarjeta lleva a su sección con los filtros puestos y el ámbito.
 // Los cálculos están en domain/secciones/panel-indicadores.ts.
 import { Link } from 'react-router-dom'
-import { KPI_AHEAD_DAYS, panelKpis, previousPeriod, type PanelKpi, type PanelKpiId, type Period } from '../../../../domain/selectors'
+import {
+  CLOSED_PARAM,
+  CLOSED_PARAM_OFF,
+  KPI_AHEAD_DAYS,
+  closedProjectIds,
+  panelKpis,
+  previousPeriod,
+  type PanelKpi,
+  type PanelKpiId,
+  type Period,
+} from '../../../../domain/selectors'
 import { t, tr } from '../../../../i18n'
 import type { Formatter } from '../../../../i18n/format'
 import { Empty } from '../../../components/Common'
@@ -30,33 +40,42 @@ export const KPI_ICON: Record<PanelKpiId, IconName> = {
 export const kpiLabel = (id: PanelKpiId) => tr(`secciones.panel.cabecera.kpis.label.${id}`)
 
 /**
- * Adónde lleva cada tarjeta (sin ámbito: lo pone `href`). Si su sección está oculta en
- * Ajustes, a la que la sustituye o a ninguna.
+ * Adónde lleva cada tarjeta (sin ámbito: lo pone `href`): una lista que da esa misma cifra, con
+ * sus filtros puestos. `noClosed`: en todo el estudio hay proyectos archivados, que las cifras
+ * no cuentan, y la lista tampoco (?archivados=no). Si su sección está oculta en Ajustes, a la que
+ * da la misma cifra o a ninguna.
  */
-function kpiPath(id: PanelKpiId, period: Period, hidden: readonly string[]): string | undefined {
+function kpiPath(id: PanelKpiId, period: Period, hidden: readonly string[], noClosed: boolean): string | undefined {
   const dates = `desde=${period.from}&hasta=${period.to}`
   const off = (s: string) => hidden.includes(s)
+  const closed = noClosed ? `${CLOSED_PARAM}=${CLOSED_PARAM_OFF}` : ''
+  const path = (base: string, ...q: string[]) => {
+    const query = [...q, closed].filter(Boolean).join('&')
+    return query ? `${base}?${query}` : base
+  }
   switch (id) {
     case 'activeProjects':
       return '/proyectos?estado=activos'
     case 'pending':
-      return '/tareas'
+      return path('/tareas')
     case 'completed':
-      return `/tareas?estado=done&${dates}`
+      return path('/tareas', 'estado=done', dates)
     case 'overdue':
-      return '/tareas?filtro=vencidas'
+      return path('/tareas', 'filtro=vencidas')
     case 'blocked':
-      return '/tareas?filtro=bloqueadas'
+      return path('/tareas', 'filtro=bloqueadas')
     case 'milestonesSoon':
-      return off('roadmap') ? '/tareas?tipo=milestone' : '/roadmap'
+      // Los hitos abiertos que vencen de hoy a dentro de 30 días (el Roadmap los enseña todos).
+      return path('/tareas', 'tipo=milestone', `vence=${KPI_AHEAD_DAYS}`)
     case 'milestonesDone':
-      return `/tareas?tipo=milestone&estado=done&${dates}`
+      return path('/tareas', 'tipo=milestone', 'estado=done', dates)
     case 'eventsSoon':
-      return !off('eventos') ? '/eventos' : !off('calendario') ? '/calendario?tipo=eventos' : undefined
+      // Eventos › Próximos (el Calendario junta también reuniones y entregas: no da la cifra).
+      return off('eventos') ? undefined : path('/eventos')
     case 'recentBuilds':
-      return off('builds') ? undefined : '/builds'
+      return off('builds') ? undefined : path('/builds', dates)
     case 'feedbackNew':
-      return off('feedback') ? undefined : '/feedback?estado=new'
+      return off('feedback') ? undefined : path('/feedback', 'estado=new')
   }
 }
 
@@ -71,7 +90,6 @@ function kpiHint(k: PanelKpi): string {
     case 'feedbackNew':
       return of(k.id)
     case 'milestonesSoon':
-    case 'eventsSoon':
       return tr(`${key}.${k.id}`, { days: KPI_AHEAD_DAYS })
     default:
       return tr(`${key}.${k.id}`)
@@ -146,12 +164,21 @@ export function KpisBody({ data, scope, today, period, fmt }: WidgetProps) {
   const hidden = new Set(chosen.hidden)
   const list = panelKpis(data, { scope, today, period, ids: chosen.order.filter((id) => !hidden.has(id)) })
   if (list.length === 0) return <Empty icon="layout">{t('secciones.panel.cabecera.kpis.none')}</Empty>
+  // En todo el estudio, lo de los proyectos archivados no cuenta (y se dice).
+  const closed = scope ? 0 : closedProjectIds(data).size
   return (
-    <ul className="panel-kpis">
-      {list.map((k) => {
-        const path = kpiPath(k.id, period, hiddenSections)
-        return <KpiTile key={k.id} k={k} to={path ? href(path) : undefined} period={period} fmt={fmt} today={today} />
-      })}
-    </ul>
+    <>
+      <ul className="panel-kpis">
+        {list.map((k) => {
+          const path = kpiPath(k.id, period, hiddenSections, closed > 0)
+          return <KpiTile key={k.id} k={k} to={path ? href(path) : undefined} period={period} fmt={fmt} today={today} />
+        })}
+      </ul>
+      {closed > 0 && (
+        <p className="muted small kpi-closed">
+          {closed === 1 ? t('secciones.panel.cabecera.kpis.noArchivedOne') : t('secciones.panel.cabecera.kpis.noArchivedOther', { n: closed })}
+        </p>
+      )}
+    </>
   )
 }

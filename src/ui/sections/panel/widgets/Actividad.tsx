@@ -16,6 +16,7 @@ import {
   timelineByDay,
   timelineCategoryCounts,
   timelineCategoryOf,
+  timelineGoneProject,
   timelinePeople,
   timelineStatusLabel,
   type Period,
@@ -120,6 +121,18 @@ function historyHref(p: Period): string {
 
 // ——— Una entrada ———————————————————————————————————————————————————————————
 
+/**
+ * Cuando el registro y la fecha del dato dicen días distintos para lo mismo (una build compilada
+ * el 31 y apuntada el 3), la entrada sale una vez, el día del registro, y lo dice.
+ */
+function dataDateText(e: TimelineEntry, fmt: Formatter, year: number): string {
+  const date = fmt.date(e.dataDate!, year)
+  if (e.verb === 'completed') return t('secciones.panel.actividad.fila.dataDate.completed', { date })
+  if (e.noun === 'build') return t('secciones.panel.actividad.fila.dataDate.build', { date })
+  if (e.noun === 'feedback') return t('secciones.panel.actividad.fila.dataDate.feedback', { date })
+  return t('secciones.panel.actividad.fila.dataDate.created', { date })
+}
+
 function TimelineRow({
   entry: e,
   data,
@@ -140,6 +153,8 @@ function TimelineRow({
   const title = entryTitle(e)
   const who = e.memberId ? data.members.find((m) => m.id === e.memberId)?.name : e.author
   const project = showProject && e.projectId ? data.projects.find((p) => p.id === e.projectId) : undefined
+  // De un proyecto que ya no existe: su nombre (el del registro) y «(borrado)», como los elementos.
+  const goneProject = showProject && e.projectId && !project ? (timelineGoneProject(data, e.projectId) ?? t('secciones.panel.actividad.fila.projectGone')) : undefined
   const fields = e.verb === 'updated' ? fieldNames(e) : []
   const when = [showDay ? fmt.date(e.date, year) : '', e.time ?? ''].filter(Boolean).join(', ')
   const from = timelineStatusLabel(e.collection, e.from)
@@ -171,6 +186,7 @@ function TimelineRow({
             </time>
           )}
           {e.verb === 'status' && from && to && <span className="meta-date">{t('secciones.panel.actividad.fila.statusChange', { from, to })}</span>}
+          {e.dataDate && <span className="meta-date">{dataDateText(e, fmt, year)}</span>}
           {fields.length > 0 && (
             <span className="meta-date">
               {fields.length > FIELDS_SHOWN
@@ -187,6 +203,12 @@ function TimelineRow({
             </span>
           )}
           {project && <ProjectChip project={project} />}
+          {goneProject && (
+            <span className="project-chip">
+              {goneProject}
+              <span className="act-gone"> {t('secciones.panel.actividad.fila.deleted')}</span>
+            </span>
+          )}
           {e.confidence && <ConfidenceTag confidence={e.confidence} compact />}
         </div>
       </div>

@@ -321,6 +321,11 @@ export const es = {
     exportUnavailable: 'Aquí no se puede guardar el fichero.',
     imported: 'Datos importados.',
     readOnly: 'Solo puedes ver estos datos.',
+    // «Deshacer» de un aviso, también con el teclado mientras se ve el aviso.
+    undoShortcut: 'Ctrl Z',
+    undoShortcutMac: '⌘ Z',
+    undoTitle: 'Deshacer ({keys}, mientras se ve el aviso)',
+    closeToast: 'Cerrar el aviso',
   },
   remote: {
     connecting: 'Conectando con la base de datos del estudio…',
@@ -366,7 +371,6 @@ export const es = {
     legendDone: 'Elementos terminados ({n})',
     weeklySummary: 'Evolución semanal: {commits} commits y {done} elementos terminados',
     weekOf: 'Semana del {date}',
-    weekPoint: 'Semana del {date}: {commits} commits, {done} terminados',
     commits: '{n} commits',
     done: '{n} terminados',
     asTable: 'Ver como tabla',
@@ -848,10 +852,6 @@ export const es = {
     title: 'Personalizar el Dashboard',
     intro: 'Elige qué bloques ver, en qué orden y de qué ancho. Se guarda para ti (tu nombre en «Quién soy») en este navegador.',
     onlyStudio: 'Solo en la vista de todo el estudio',
-    wide: 'Ancho',
-    normal: 'Normal',
-    wideLabel: 'Poner «{name}» a todo el ancho',
-    narrowLabel: 'Poner «{name}» a una columna',
   },
   settings: {
     appearance: 'Aspecto',

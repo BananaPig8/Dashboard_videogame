@@ -55,7 +55,7 @@
 .project-card-label {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-1);
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.06em;
@@ -67,7 +67,7 @@
 .project-progress {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-1);
 }
 
 .project-progress-head {
@@ -91,7 +91,7 @@
 .project-progress-none {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-1);
   font-size: 0.84rem;
   font-weight: 600;
   color: var(--text-2);

@@ -265,6 +265,13 @@ describe('validación', () => {
 })
 
 describe('notificaciones', () => {
+  it('un proyecto archivado no avisa de nada', () => {
+    const d = fixture()
+    const archived = { ...d, projects: d.projects.map((p) => (p.id === 'a' ? { ...p, stage: 'archived' as const } : p)) }
+    expect(notificationsFor(d, TODAY).some((n) => n.projectId === 'a')).toBe(true)
+    expect(notificationsFor(archived, TODAY).some((n) => n.projectId === 'a')).toBe(false)
+  })
+
   it('un evento de varios días que ya ha empezado sigue avisando hasta que acaba', () => {
     const d = fixture()
     const feria = { id: 'en-curso', projectId: 'a', title: 'Feria larga', type: 'fair', status: 'confirmed', date: '2026-10-15', endDate: '2026-10-20', dateConfirmed: true, tags: [], sources: [], confidence: 'verified' } as unknown as StudioData['events'][number]

@@ -16,6 +16,7 @@ import {
   timelineByDay,
   timelineCategoryCounts,
   timelineCategoryOf,
+  timelineGoneProject,
   timelinePeople,
   timelineStatusLabel,
   timelineVerbsOf,
@@ -85,7 +86,8 @@ function mixed(): StudioData {
       item('vieja', { createdAt: '2026-10-20', status: 'done', completedAt: '2026-10-25' }),
       // Completada en la aplicación hoy: el registro la cuenta; su completedAt de hoy, no.
       item('hoy', { status: 'done', completedAt: TODAY }),
-      // Marcada como hecha hoy, pero dice que se terminó otro día: son dos cosas.
+      // Marcada como hecha hoy, pero dice que se terminó otro día: es un solo hecho (el del
+      // registro, que dice la fecha de fin del dato).
       item('atrasada', { status: 'done', completedAt: '2026-10-30' }),
       item('hito', { kind: 'milestone', status: 'done', completedAt: '2026-10-28' }),
       item('bug', { kind: 'issue', status: 'done', completedAt: '2026-10-27' }),
@@ -139,7 +141,6 @@ describe('studioTimeline: actividad del estudio', () => {
       'codigo:fusion', // 31 oct, 19:00
       'codigo:c-anon',
       'codigo:c-sin',
-      'fecha:items:atrasada:completed', // 30 oct (otro día que el registro: se queda)
       'fecha:items:de-b:completed',
       'fecha:items:hito:completed',
       'fecha:items:bug:completed',
@@ -163,6 +164,47 @@ describe('studioTimeline: actividad del estudio', () => {
     expect(all).not.toContain('fecha:resources:tocada-hoy:dated')
     const entry = studioTimeline(mixed(), { today: TODAY }).find((e) => e.key === 'registro:k1')!
     expect(entry).toMatchObject({ date: TODAY, time: '11:15', memberId: 'ana', verb: 'completed', noun: 'task', category: 'tareas', source: 'registro' })
+  })
+
+  it('no repite lo mismo aunque el dato diga otro día: el registro lo dice en su entrada', () => {
+    const d = data({
+      // Una build compilada el 31 y apuntada hoy; un feedback recibido ayer y apuntado hoy; una
+      // tarea marcada hoy como hecha con la fecha de fin del 1.
+      builds: [{ id: 'b1', projectId: 'a', name: 'Build', version: '0.9', channel: 'demo', platforms: [], status: 'ready', date: '2026-10-31', sources: src, confidence: 'verified' }],
+      feedback: [fb('ayer', { receivedAt: '2026-11-01' })],
+      items: [item('tarde', { status: 'done', createdAt: TODAY, completedAt: '2026-11-01' })],
+      changes: [
+        change('c1', { action: 'created', collection: 'builds', entityId: 'b1', title: 'Build' }),
+        change('c2', { action: 'created', collection: 'feedback', entityId: 'ayer', title: 'ayer', at: `${TODAY}T10:05` }),
+        change('c3', { action: 'created', collection: 'items', entityId: 'tarde', title: 'tarde', at: `${TODAY}T09:00` }),
+        change('c4', { action: 'completed', collection: 'items', entityId: 'tarde', title: 'tarde', at: `${TODAY}T10:10` }),
+      ],
+    })
+    const list = studioTimeline(d, { today: TODAY })
+    const of = (id: string) => list.filter((e) => e.entityId === id).map((e) => `${e.key} ${e.verb} ${e.dataDate ?? '-'}`)
+    expect(of('b1')).toEqual(['registro:c1 created 2026-10-31'])
+    expect(of('ayer')).toEqual(['registro:c2 created 2026-11-01'])
+    // La tarea se creó hoy (la fecha coincide: no hace falta decir nada) y se terminó con otra fecha de fin.
+    expect(of('tarde')).toEqual(['registro:c4 completed 2026-11-01', 'registro:c3 created -'])
+  })
+
+  it('si se terminó dos veces, la fecha de fin la dice la última vez', () => {
+    const d = data({
+      items: [item('dos', { status: 'done', createdAt: '2026-10-01', completedAt: '2026-10-30' })],
+      changes: [
+        change('c1', { action: 'completed', entityId: 'dos', title: 'dos', at: '2026-10-20T10:00' }),
+        change('c2', { action: 'status', entityId: 'dos', title: 'dos', at: '2026-10-21T10:00', from: 'done', to: 'in_progress' }),
+        change('c3', { action: 'completed', entityId: 'dos', title: 'dos', at: `${TODAY}T10:00` }),
+      ],
+    })
+    const list = studioTimeline(d, { today: TODAY }).filter((e) => e.verb === 'completed')
+    expect(list.map((e) => `${e.key} ${e.dataDate ?? '-'}`)).toEqual(['registro:c3 2026-10-30', 'registro:c1 -'])
+  })
+
+  it('el nombre de un proyecto borrado sale del registro', () => {
+    const d = data({ changes: [change('c1', { action: 'deleted', collection: 'projects', entityId: 'viejo', title: 'Juego viejo', projectId: 'viejo' })] })
+    expect(timelineGoneProject(d, 'viejo')).toBe('Juego viejo')
+    expect(timelineGoneProject(d, 'otro')).toBeUndefined()
   })
 
   it('sin registro, las fechas de los datos dicen el día sin hora ni persona', () => {
@@ -221,7 +263,6 @@ describe('studioTimeline: actividad del estudio', () => {
       'codigo:fusion',
       'codigo:c-anon',
       'codigo:c-sin',
-      'fecha:items:atrasada:completed',
     ])
     expect(keys(mixed(), { period: { from: TODAY, to: TODAY }, category: 'tareas', person: 'leo' })).toEqual(['registro:k2'])
   })
@@ -249,7 +290,7 @@ describe('studioTimeline: actividad del estudio', () => {
 describe('Actividad: agrupar, personas, categorías y textos', () => {
   it('agrupa por día en el orden en que llega', () => {
     const days = timelineByDay(studioTimeline(mixed(), { today: TODAY }))
-    expect(days.map((d) => d.date)).toEqual([TODAY, '2026-11-01', '2026-10-31', '2026-10-30', '2026-10-29', '2026-10-28', '2026-10-27', '2026-10-26', '2026-10-25', '2026-10-23', '2026-10-22', '2026-10-21', '2026-10-20'])
+    expect(days.map((d) => d.date)).toEqual([TODAY, '2026-11-01', '2026-10-31', '2026-10-29', '2026-10-28', '2026-10-27', '2026-10-26', '2026-10-25', '2026-10-23', '2026-10-22', '2026-10-21', '2026-10-20'])
     expect(days[0].entries).toHaveLength(6)
   })
 
@@ -264,7 +305,7 @@ describe('Actividad: agrupar, personas, categorías y textos', () => {
 
   it('cuenta por categoría y lee ?cat=', () => {
     const counts = timelineCategoryCounts(studioTimeline(mixed(), { today: TODAY }))
-    expect(counts).toMatchObject({ tareas: 8, hitos: 1, bugs: 1, decisiones: 1, builds: 1, feedback: 2, documentos: 3, codigo: 4, eventos: 0 })
+    expect(counts).toMatchObject({ tareas: 7, hitos: 1, bugs: 1, decisiones: 1, builds: 1, feedback: 2, documentos: 3, codigo: 4, eventos: 0 })
     expect(timelineCategoryOf('hitos')).toBe('hitos')
     expect(timelineCategoryOf('cualquiera')).toBeNull()
     expect(timelineCategoryOf(null)).toBeNull()

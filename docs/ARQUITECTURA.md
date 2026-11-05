@@ -121,24 +121,34 @@ La pantalla principal. Está en `ui/sections/panel/` y sus cálculos en
   - qué bloques, en qué orden, de qué ancho, plegados, qué indicadores y la vista del calendario;
   - se guarda en este navegador para la persona de «Quién soy» (o para cualquiera si nadie lo ha dicho);
   - las de antes se migran.
-- **Periodo**: va en la URL (`?periodo=hoy|7d|30d|personalizado&desde=&hasta=`). `previousPeriod()` es el de la misma duración justo antes.
+- **Periodo**: va en la URL (`?periodo=hoy|7d|30d|personalizado&desde=&hasta=`). `previousPeriod()` es el de la misma duración justo antes. Nunca acaba después de hoy: los campos llevan `max` y `periodRange` recorta (dos fechas futuras quedan en hoy).
 - **Cabecera**:
   - saludo según la hora del estudio (06–14 h días, 14–21 h tardes, el resto noches), con el nombre de «Quién soy» solo si lo hay;
   - fecha, estudio, proyecto y periodo (siempre con los días que abarca);
+  - «Cómo está cada juego»: una línea con la salud de cada proyecto no archivado (con `?p=`, la de ese), de lo que más pide atención a lo que menos, para verlo sin bajar (también en el móvil);
   - Crear (11 tipos, los mismos formularios), nueva tarea, proyecto o nota, Calendario y buscador.
+- **Proyectos archivados** (`isClosedProject`, `panelOwn` en `panel.ts`): en todo el estudio, lo suyo no sale en Prioridades, en los indicadores ni en Lanzamientos (en su ficha, sí). «Proyectos activos» cuenta aparte, solo los activos. Si algún día hay proyectos cancelados, van en `PANEL_CLOSED_STAGES`.
+- **Foco**: al entrar en una vista (`?ver=`) va a su pestaña y, al volver, al enlace que llevaba a ella; tras cambiar la prioridad, a la misma fila o a la de al lado; tras convertir un feedback, a la fila siguiente. Nunca cae en la página.
 
 **Indicadores** (`panel-indicadores.ts`):
 
-- Cada uno da su valor real, su descripción y adónde lleva, con los filtros puestos.
+- Cada uno da su valor real, su descripción y adónde lleva: una lista que da esa misma cifra, con los filtros puestos.
+  - Tareas: `?filtro=`, `?estado=done&desde=&hasta=` y, para «Hitos próximos», `?tipo=milestone&vence=30`.
+  - Builds recientes: `/builds?desde=&hasta=` (fecha de la build).
+  - Próximos eventos: Eventos › Próximos (los del sector; las reuniones y entregas están en el Calendario).
+  - Feedback por revisar: `/feedback?estado=new`.
+  - En todo el estudio, si hay proyectos archivados, también `?archivados=no` (la lista lo dice y deja verlo todo).
 - Sin datos detrás devuelve `null` y la tarjeta enseña «—» con el motivo, nunca un 0 engañoso.
 - Solo se comparan con el periodo anterior los que pasan en un periodo: tareas e hitos completados, y builds. Y solo si ya había datos de ese tipo entonces.
-- Hitos próximos y próximos eventos miran los próximos 30 días.
+- Hitos próximos miran los próximos 30 días; próximos eventos, todos los del sector por delante (los de Eventos › Próximos).
+- En el móvil (≤ 640 px) van compactos: la cifra y el nombre; lo demás, para el lector de pantalla y en la lista.
 
 **Prioridades** (`panel-prioridades.ts`):
 
 - Una sola fila por cosa, con todas sus etiquetas: crítica, vencida, vence en 3 días, para hoy, bloqueada, incidencia bloqueante, «bloquea a N», «espera a N» (por «Depende de») y hito en riesgo.
 - También entran las versiones de los próximos 14 días, las inscripciones que cierran, los eventos con pasos pendientes y las fichas con cambios pedidos.
-- Lo terminado o cancelado nunca sale.
+- Lo terminado o cancelado nunca sale. Lo que está por confirmar (de estado o de fiabilidad) dice «Sin confirmar».
+- Sin trabajo abierto en el ámbito no dice «Nada urgente»: explica que no hay con qué decirlo.
 - **Orden:** puntos = impacto + plazo + urgencia + dependencias.
   - Impacto: crítica 40, alta 30, media 20, baja 10, o según el tipo de versión, evento o ficha.
   - Plazo: vencida 30 + días de retraso (hasta 40); de hoy a 3 días, 24 − 4 × días; de 4 a 14 días, 14 − días.
@@ -173,13 +183,21 @@ La pantalla principal. Está en `ui/sections/panel/` y sus cálculos en
   - el registro de cambios, con hora y persona;
   - las fechas de los datos (alta, fin, fecha de una build, de un feedback, de un documento), con el día pero sin persona;
   - el historial de git, con su autor.
-- Sin duplicar: el registro tapa la fecha del mismo hecho ese día.
+- Sin duplicar: si el registro dice que se creó o se terminó algo, la fecha del dato no lo vuelve a contar, sea el día que sea; si dice otro día (una build compilada antes de apuntarla), la entrada del registro lo dice («Build del 31 oct»). La fecha de un documento la tapa cualquier cambio de ese día.
+- Lo de un proyecto que ya no existe sale con su nombre (el del registro) y «(borrado)».
 - El historial completo está en `?ver=actividad`, por días, con filtros de proyecto, categoría, persona y periodo en la URL.
 
 **Feedback**:
 
 - Cada cifra se cuenta con la misma consulta de Feedback a la que lleva.
-- «Convertir en tarea» abre el editor ya relleno y, al guardar, enlaza la tarea y pasa el feedback a planificado, con Deshacer.
+- «Convertir en tarea» abre el editor ya relleno y, al guardar, enlaza la tarea y pasa el feedback a planificado. «Deshacer» deja todo como estaba: quita el enlace y también la tarea creada.
+
+**Avisos con «Deshacer»** (`ui/feedback.tsx`, `useUndoable`):
+
+- Duran 12 s y no se van mientras tienen el ratón encima o el foco dentro.
+- Ctrl+Z (⌘Z en Mac) deshace lo del último aviso mientras se ve, fuera de los campos de texto; el botón lo dice (`aria-keyshortcuts` y el atajo al lado).
+- Tras deshacer, el foco vuelve a donde estaba o al control de lo restaurado (`returnFocus`).
+- Con una ventana modal abierta (Personalizar, el editor) salen dentro de ella, para verse y poder pulsarse.
 
 **Registro de cambios** (`domain/cambios.ts`, colección `changes`):
 

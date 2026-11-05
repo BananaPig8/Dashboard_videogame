@@ -119,6 +119,17 @@ describe('subsecciones de Eventos', () => {
   })
 })
 
+describe('sin los proyectos archivados (?archivados=no)', () => {
+  it('deja fuera los eventos de un proyecto archivado; los del estudio y los demás, no', () => {
+    const d = data({
+      projects: [project('p'), { ...project('viejo'), stage: 'archived' }],
+      events: [ev('del-estudio'), ev('de-p', { projectId: 'p' }), ev('de-viejo', { projectId: 'viejo' })],
+    })
+    expect(sectorEvents(d, {}).map((e) => e.id)).toEqual(['del-estudio', 'de-p', 'de-viejo'])
+    expect(sectorEvents(d, { sinArchivados: true }).map((e) => e.id)).toEqual(['del-estudio', 'de-p'])
+  })
+})
+
 describe('agenda de eventos', () => {
   const list = [
     ev('pronto', { date: '2026-10-25' }),

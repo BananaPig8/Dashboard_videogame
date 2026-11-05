@@ -1,6 +1,7 @@
 // Feedback: lo que dicen los jugadores y qué se hace con ello. Cifras que llevan a Feedback con
 // su filtro y el ámbito (contadas con los mismos filtros que allí: panelFeedback), lo que pide
 // mirarse (con «Convertir en tarea») y lo descartado con su motivo.
+import { useEffect, useRef } from 'react'
 import { FEEDBACK_ORIGINS } from '../../../../domain/catalog'
 import { feedbackLinkedToTask, feedbackTaskDefaults, panelFeedback, type PanelFeedbackFigure, type PanelFeedbackFigureId } from '../../../../domain/selectors'
 import type { Feedback, SourceRef } from '../../../../domain/types'
@@ -64,6 +65,20 @@ export function FeedbackBody({ data, scope, today, year, fmt, wide }: WidgetProp
   const canEdit = useCanEdit()
   const undoable = useUndoable()
   const summary = panelFeedback(data, scope)
+  // La foto de antes del último cambio: al guardar la tarea nueva, el editor ya la ha creado, y
+  // «Deshacer» tiene que volver a antes de crearla (no solo quitar el enlace).
+  const last = useRef(store.snapshot())
+  const beforeLast = useRef(last.current)
+  useEffect(
+    () =>
+      store.subscribe(() => {
+        // Solo cuando cambian los datos (no por un aviso de estado, como «guardando»).
+        if (store.getData() === last.current.data) return
+        beforeLast.current = last.current
+        last.current = store.snapshot()
+      }),
+    [],
+  )
 
   if (summary.total === 0) {
     return (
@@ -76,9 +91,10 @@ export function FeedbackBody({ data, scope, today, year, fmt, wide }: WidgetProp
   /**
    * Convertir en tarea, en un solo flujo: el editor de una tarea nueva con lo del feedback; al
    * guardarla, el feedback queda enlazado a ella (y planificado, si estaba nuevo o revisado).
-   * Si se cancela el editor, no cambia nada.
+   * Si se cancela el editor, no cambia nada. «Deshacer» deja todo como estaba: sin la tarea y sin
+   * el enlace. Como el feedback sale de «Pide mirarse», el foco pasa a la fila de al lado.
    */
-  const convert = (f: Feedback) => {
+  const convert = (f: Feedback, neighbour: string | undefined) => {
     const origin = f.originDetail ? `${FEEDBACK_ORIGINS[f.origin]} · ${f.originDetail}` : FEEDBACK_ORIGINS[f.origin]
     const source: SourceRef = {
       type: 'manual',
@@ -91,9 +107,19 @@ export function FeedbackBody({ data, scope, today, year, fmt, wide }: WidgetProp
     create('items', feedbackTaskDefaults(f, source) as Record<string, unknown>, (task) => {
       const current = store.getData().feedback.find((x) => x.id === f.id)
       if (!current || typeof task.id !== 'string') return
-      const next = feedbackLinkedToTask(current, task.id)
-      const message = next.status !== current.status ? 'linkedPlanned' : 'linked'
-      undoable(t(`secciones.panel.actividad.feedback.${message}`, { title: current.title }), () => store.upsert('feedback', next))
+      const id = task.id
+      const next = feedbackLinkedToTask(current, id)
+      // ¿El último cambio ha sido crear esta tarea? Entonces la foto de antes es la de sin ella.
+      const before = beforeLast.current
+      const created =
+        last.current.data === store.getData() && !before.data.items.some((i) => i.id === id) && store.getData().items.some((i) => i.id === id)
+      const message = `${next.status !== current.status ? 'linkedPlanned' : 'linked'}${created ? 'Undo' : ''}` as const
+      undoable(t(`secciones.panel.actividad.feedback.${message}`, { title: current.title }), () => store.upsert('feedback', next), {
+        before: created ? before : undefined,
+        // Al deshacer, el feedback vuelve a «Pide mirarse»: el foco, a su «Convertir en tarea».
+        returnFocus: `[data-fb-row="${CSS.escape(f.id)}"] .fb-convert`,
+      })
+      focusAfterConvert(neighbour)
     })
   }
 
@@ -128,15 +154,15 @@ export function FeedbackBody({ data, scope, today, year, fmt, wide }: WidgetProp
       </div>
 
       <section className="fb-section" aria-label={t('secciones.panel.actividad.feedback.toReview')}>
-        <h3 className="subhead">
+        <h3 className="subhead fb-review-head" tabIndex={-1}>
           {t('secciones.panel.actividad.feedback.toReview')} <span className="num">({summary.toReview.length})</span>
         </h3>
         {review.length === 0 ? (
           <p className="muted small">{t('secciones.panel.actividad.feedback.toReviewNone')}</p>
         ) : (
           <ul className="item-list">
-            {review.map((f) => (
-              <li key={f.id} className="item-row fb-row">
+            {review.map((f, n) => (
+              <li key={f.id} className="item-row fb-row" data-fb-row={f.id}>
                 <div className="item-main">
                   <button type="button" className="item-title" onClick={() => edit({ collection: 'feedback', id: f.id })}>
                     {f.title}
@@ -161,8 +187,8 @@ export function FeedbackBody({ data, scope, today, year, fmt, wide }: WidgetProp
                   {canEdit && (
                     <button
                       type="button"
-                      className="btn btn-small"
-                      onClick={() => convert(f)}
+                      className="btn btn-small fb-convert"
+                      onClick={() => convert(f, (review[n + 1] ?? review[n - 1])?.id)}
                       aria-label={t('secciones.panel.actividad.feedback.convertLabel', { title: f.title })}
                     >
                       <Icon name="check" size={14} /> {t('secciones.panel.actividad.feedback.convert')}
@@ -202,6 +228,22 @@ export function FeedbackBody({ data, scope, today, year, fmt, wide }: WidgetProp
         </section>
       )}
     </div>
+  )
+}
+
+/**
+ * Tras guardar la tarea, el editor se cierra y el feedback sale de «Pide mirarse»: el foco va a
+ * la fila de al lado (su título) o, si no queda ninguna, al título de la lista. Nunca a lo alto
+ * de la página.
+ */
+function focusAfterConvert(neighbour: string | undefined) {
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() => {
+      const target =
+        (neighbour ? document.querySelector<HTMLElement>(`[data-fb-row="${CSS.escape(neighbour)}"] .item-title`) : null) ??
+        document.querySelector<HTMLElement>('.fb-review-head')
+      target?.focus()
+    }),
   )
 }
 

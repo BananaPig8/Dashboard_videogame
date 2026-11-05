@@ -84,6 +84,12 @@ export const panel_tarjetas = {
       implementHint: 'En idea o diseñados',
       verifyOne: '1 logro por verificar',
       verifyOther: '{n} logros por verificar',
+      // Verificados, pero sin decidir si son ocultos.
+      decideOne: '1 logro sin decidir si es oculto',
+      decideOther: '{n} logros sin decidir si son ocultos',
+      // Unos por verificar y otros por decidir si son ocultos (lo dicen las etiquetas).
+      reviewOne: '1 logro por revisar',
+      reviewOther: '{n} logros por revisar',
       unverified: 'sin verificar: {n}',
       undecided: 'sin decidir si son ocultos: {n}',
     },

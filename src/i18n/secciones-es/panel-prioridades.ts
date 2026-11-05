@@ -58,8 +58,10 @@ export const panel_prioridades = {
   },
   all: 'Ver todas ({n})',
   empty: 'Nada urgente hoy.',
-  emptyHint: 'Nada crítico, vencido, bloqueado ni a punto de vencer, y ninguna entrega, inscripción o evento pendiente en los próximos 14 días.',
-  noData: 'Todavía no hay nada abierto. Cuando haya tareas, hitos, entregas o eventos, aquí saldrá lo urgente.',
+  emptyHint:
+    'Ninguna tarea ni hito crítico, vencido, bloqueado o que venza en 3 días; ninguna versión que salga ni inscripción que cierre en los próximos 14 días; ningún evento de ese plazo con pasos sin hacer, y ninguna ficha de tienda con cambios pedidos.',
+  noData:
+    'Aquí no hay tareas ni hitos abiertos con los que decir qué es urgente. Cuando los haya, saldrá lo crítico, lo vencido, lo bloqueado y lo que vence pronto, junto con las versiones, inscripciones y eventos con pasos pendientes.',
   how: {
     title: 'Cómo se ordena',
     intro: 'Cada fila suma puntos y sale primero la que más tiene; a igualdad, la de fecha más próxima y después por orden alfabético.',

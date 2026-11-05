@@ -10,6 +10,7 @@ import { useSectionNav } from '../../components/SectionHeader'
 import { useScope } from '../../context'
 import { useFormat, useToday } from '../../hooks'
 import type { SectionPageProps } from '../registry'
+import { PanelFilterNotice, usePanelListFilter } from '../panel/AvisoFiltro'
 import { EventRow, EventosPage, useEventosQuery, useNewEvent } from './comunes'
 
 /** Cuántos pasados se enseñan antes de mandar al seguimiento. */
@@ -22,7 +23,10 @@ export function EventosLista({ embedded }: SectionPageProps) {
   const fmt = useFormat()
   const canEdit = useCanEdit()
   const nav = useSectionNav('eventos')
-  const { tipo, query } = useEventosQuery()
+  const { tipo, query: base } = useEventosQuery()
+  // «Próximos eventos» del Dashboard, en todo el estudio, lleva aquí sin los proyectos archivados.
+  const panelFilter = usePanelListFilter()
+  const query = { ...base, sinArchivados: panelFilter.sinArchivados }
   const newEvent = useNewEvent(tipo)
   const key = tipo ?? 'todos'
   const events = sectorEvents(data, query)
@@ -53,6 +57,7 @@ export function EventosLista({ embedded }: SectionPageProps) {
         </p>
       }
     >
+      <PanelFilterNotice filter={panelFilter} />
       {events.length === 0 ? (
         <Card>
           <Empty icon="ticket" action={canEdit && !query.tag ? { label: t('secciones.eventos.actions.new'), onClick: newEvent } : undefined}>

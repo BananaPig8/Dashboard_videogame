@@ -190,6 +190,12 @@ export interface TimelineEntry {
   url?: string
   /** Lo que sale de una fecha de los datos: cuánto nos fiamos de ese dato. */
   confidence?: Confidence
+  /**
+   * Del registro: el dato dice otro día para lo mismo (una build compilada antes de apuntarla,
+   * un feedback recibido ayer, una tarea con otra fecha de fin). No sale dos veces: la pantalla
+   * lo dice en esta entrada.
+   */
+  dataDate?: ISODate
 }
 
 export interface TimelineFilter {
@@ -250,20 +256,23 @@ export function compareTimeline(a: TimelineEntry, b: TimelineEntry): number {
   )
 }
 
-/** Lo que el registro ya cuenta de algo un día: «colección:id:día:verbo». */
-const coveredKey = (collection: string, id: ID, date: ISODate, verb: TimelineVerb) => `${collection}:${id}:${date}:${verb}`
-
 /**
- * Qué fecha de los datos queda cubierta por una entrada del registro (el registro manda: tiene
- * hora y persona). Crear cubre la fecha de creación (createdAt, la fecha de una build, la de
- * llegada de un feedback); terminar, la de fin (completedAt). En un documento, cualquier
- * cambio de ese día cubre su fecha.
+ * Qué fecha de los datos cuenta el mismo hecho que una entrada del registro (el registro manda:
+ * tiene hora y persona). Crear cubre la fecha de creación (createdAt, la fecha de una build, la
+ * de llegada de un feedback) y terminar, la de fin (completedAt), sea el día que sea: una build
+ * compilada el 31 y apuntada el 3 se creó una sola vez. En un documento, su fecha es otra cosa
+ * (de cuándo es, no cuándo se apuntó): la cubre cualquier cambio de ese mismo día.
  */
-function coveredBy(c: ChangeEntry): TimelineVerb | null {
-  if (c.collection === 'resources') return 'dated'
-  if (c.action === 'created' || c.action === 'completed') return c.action
+function coveredKey(c: ChangeEntry): string | null {
+  if (c.collection === 'resources') return dayKey(c.collection, c.entityId, c.at.slice(0, 10))
+  if (c.action === 'created' || c.action === 'completed') return factKey(c.collection, c.entityId, c.action)
   return null
 }
+
+/** «colección:id:verbo»: crear o terminar algo (una vez, el día que sea). */
+const factKey = (collection: string, id: ID, verb: TimelineVerb) => `${collection}:${id}:${verb}`
+/** «colección:id:día:dated»: la fecha de un documento ese día. */
+const dayKey = (collection: string, id: ID, date: ISODate) => `${collection}:${id}:${date}:dated`
 
 const timeOf = (at: string) => (at.length >= 16 ? at.slice(11, 16) : undefined)
 
@@ -278,9 +287,10 @@ const timeOf = (at: string) => (at.length >= 16 ? at.slice(11, 16) : undefined)
  * 3. El historial del código (`activity`): commits, PR fusionadas, versiones y notas, con su
  *    autor (la persona del equipo si se le reconoce).
  *
- * Sin repetir: si el registro ya cuenta que se creó o se terminó algo un día, no sale otra vez
- * por su fecha de ese mismo día (ver coveredBy). Con los filtros: ámbito, categoría, persona y
- * periodo; lo que sale de una fecha posterior a `today` no ha pasado todavía y no sale.
+ * Sin repetir: si el registro ya cuenta que se creó o se terminó algo, no sale otra vez por su
+ * fecha (ver coveredKey); si la fecha del dato es de otro día, la entrada del registro lo dice
+ * (`dataDate`). Con los filtros: ámbito, categoría, persona y periodo; lo que sale de una fecha
+ * posterior a `today` no ha pasado todavía y no sale.
  */
 export function studioTimeline(data: StudioData, filter: TimelineFilter = {}): TimelineEntry[] {
   const scope = filter.scope ?? null
@@ -300,12 +310,12 @@ export function studioTimeline(data: StudioData, filter: TimelineFilter = {}): T
     return set.has(id)
   }
 
-  // 1. El registro.
-  const covered = new Set<string>()
+  // 1. El registro. `covered`: los hechos que ya cuenta, con su entrada más reciente (si se enseña).
+  const covered = new Map<string, TimelineEntry | null>()
   for (const c of data.changes ?? []) {
     const date = c.at.slice(0, 10)
-    const verb = coveredBy(c)
-    if (verb) covered.add(coveredKey(c.collection, c.entityId, date, verb))
+    const key = coveredKey(c)
+    if (key && !covered.has(key)) covered.set(key, null)
     const def = c.collection in COLLECTION_BY_KEY ? COLLECTION_BY_KEY[c.collection as CollectionKey] : undefined
     if (def?.private || !own(c)) continue
     const noun = timelineNoun(c.collection, c.entityKind)
@@ -333,6 +343,10 @@ export function studioTimeline(data: StudioData, filter: TimelineFilter = {}): T
     if (c.to !== undefined) entry.to = c.to
     if (c.fields?.length) entry.fields = c.fields
     out.push(entry)
+    if (key) {
+      const prev = covered.get(key)
+      if (!prev || prev.at <= entry.at) covered.set(key, entry)
+    }
   }
 
   // 2. Las fechas de los datos (lo que el registro ya cuenta ese día, no).
@@ -345,8 +359,14 @@ export function studioTimeline(data: StudioData, filter: TimelineFilter = {}): T
     title: string,
     extra: Partial<TimelineEntry> = {},
   ) => {
-    if (!date || !own(x) || (filter.today && date > filter.today)) return
-    if (covered.has(coveredKey(collection, x.id, date, verb))) return
+    if (!date || !own(x)) return
+    const key = verb === 'dated' ? dayKey(collection, x.id, date) : factKey(collection, x.id, verb)
+    if (covered.has(key)) {
+      const reg = covered.get(key)
+      if (reg && reg.date !== date) reg.dataDate = date
+      return
+    }
+    if (filter.today && date > filter.today) return
     const entry: TimelineEntry = {
       key: `fecha:${collection}:${x.id}:${verb}`,
       source: 'fecha',
@@ -408,6 +428,16 @@ export function studioTimeline(data: StudioData, filter: TimelineFilter = {}): T
         (!period || (e.date >= period.from && e.date <= period.to)),
     )
     .sort(compareTimeline)
+}
+
+/** El nombre de un proyecto que ya no existe, según el registro (el que tenía al borrarlo). */
+export function timelineGoneProject(data: StudioData, id: ID): string | undefined {
+  const changes = data.changes ?? []
+  for (let n = changes.length - 1; n >= 0; n--) {
+    const c = changes[n]
+    if (c.collection === 'projects' && c.entityId === id && c.title && c.title !== id) return c.title
+  }
+  return undefined
 }
 
 /** La actividad agrupada por día, en el orden en que llega. */

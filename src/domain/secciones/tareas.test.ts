@@ -13,6 +13,7 @@ import {
   taskBoardColumns,
   taskCalendarEntries,
   taskCompletedIn,
+  taskDueDaysOf,
   taskFilterOf,
   taskItems,
   taskMonth,
@@ -153,6 +154,30 @@ describe('tareas', () => {
       expect(taskCompletedIn(d.items.find((i) => i.id === 'hecha-sin-fecha')!, '2026-01-01')).toBe(false)
       // Una fecha de fin con hora cuenta por su día.
       expect(taskCompletedIn(item('x', { completedAt: '2026-10-07T23:59' }), '2026-10-07', '2026-10-07')).toBe(true)
+    })
+
+    it('lo que vence en los próximos N días (?vence=): de hoy a hoy + N − 1, sin lo vencido ni lo que no tiene fecha', () => {
+      const d = data()
+      d.items = [
+        item('hito-hoy', { kind: 'milestone', dueDate: TODAY }),
+        item('hito-borde', { kind: 'milestone', dueDate: '2026-11-17' }),
+        item('hito-fuera', { kind: 'milestone', dueDate: '2026-11-18' }),
+        item('hito-vencido', { kind: 'milestone', dueDate: '2026-10-01' }),
+        item('hito-sin-fecha', { kind: 'milestone' }),
+      ]
+      expect(ids(filterTasks(d, { today: TODAY, tipo: 'milestone', vence: 30 })).sort()).toEqual(['hito-borde', 'hito-hoy'])
+      expect(taskDueDaysOf('30')).toBe(30)
+      expect(taskDueDaysOf('0')).toBeNull()
+      expect(taskDueDaysOf('abc')).toBeNull()
+      expect(taskDueDaysOf('9999')).toBeNull()
+    })
+
+    it('sin los proyectos archivados (?archivados=no, el de las cifras del Dashboard)', () => {
+      const d = data()
+      d.projects.push({ ...project('viejo'), stage: 'archived' })
+      d.items = [item('de-p'), item('de-viejo', { projectId: 'viejo' })]
+      expect(ids(filterTasks(d, { today: TODAY })).sort()).toEqual(['de-p', 'de-viejo'])
+      expect(ids(filterTasks(d, { today: TODAY, sinArchivados: true }))).toEqual(['de-p'])
     })
 
     it('por persona: un miembro o nadie', () => {

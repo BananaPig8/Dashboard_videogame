@@ -91,6 +91,14 @@ export const panel_actividad = {
     noTime: 'sin hora',
     studioData: 'Datos del estudio',
     sources: 'Fuentes',
+    projectGone: 'Un proyecto',
+    // El registro lo apuntó un día y el dato dice otro (sale una vez, con los dos).
+    dataDate: {
+      build: 'Build del {date}',
+      feedback: 'Recibido el {date}',
+      created: 'Con fecha de creación del {date}',
+      completed: 'Con fecha de fin del {date}',
+    },
   },
   // El bloque del Dashboard.
   bloque: {
@@ -172,6 +180,9 @@ export const panel_actividad = {
     sourceNoteNoDate: 'Tarea creada desde el feedback «{title}» ({origin}).',
     linked: '«{title}» queda enlazado a la tarea nueva.',
     linkedPlanned: '«{title}» queda enlazado a la tarea nueva y pasa a Planificado.',
+    // Deshacer quita la tarea creada y el enlace (todo como estaba).
+    linkedUndo: 'Tarea creada; «{title}» queda enlazado a ella. Deshacer quita las dos cosas.',
+    linkedPlannedUndo: 'Tarea creada; «{title}» queda enlazado a ella y pasa a Planificado. Deshacer quita las dos cosas.',
     discarded: 'Descartado',
     noReason: 'sin motivo apuntado',
     discardedMore: 'Ver los {n} descartados',

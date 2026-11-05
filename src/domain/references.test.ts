@@ -40,6 +40,15 @@ function data(): StudioData {
 }
 
 describe('borrar con referencias', () => {
+  it('el registro de cambios se queda con el proyecto aunque se borre (y los datos siguen siendo válidos)', () => {
+    const d = data()
+    const p = d.projects[0].id
+    const entry = { id: 'c1', at: '2026-11-02T10:00', action: 'created' as const, collection: 'items', entityId: 'x', title: 'X', projectId: p }
+    const r = removeWithReferences({ ...d, changes: [entry] }, 'projects', p)
+    expect(r.data.changes).toEqual([entry])
+    expect(validateStudioData(r.data)).toEqual([])
+  })
+
   it('los datos de prueba son válidos', () => {
     expect(validateStudioData(data())).toEqual([])
   })

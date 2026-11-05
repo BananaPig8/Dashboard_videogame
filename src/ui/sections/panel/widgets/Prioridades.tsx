@@ -9,7 +9,7 @@ import type { Priority, StudioData, WorkItem } from '../../../../domain/types'
 import { t } from '../../../../i18n'
 import type { Formatter } from '../../../../i18n/format'
 import { store, useCanEdit } from '../../../../data/store'
-import { KindIcon, Pill, PriorityTag, ProjectChip } from '../../../components/Badges'
+import { ConfidenceTag, KindIcon, Pill, PriorityTag, ProjectChip } from '../../../components/Badges'
 import { Empty } from '../../../components/Common'
 import { Icon, type IconName } from '../../../components/Icon'
 import { AssigneeTag } from '../../../components/ItemList'
@@ -149,35 +149,66 @@ function rowDates(row: PriorityRow, fmt: Formatter, year: number): string[] {
   return out
 }
 
+const rowSel = (id: string) => `[data-prio-row="${CSS.escape(id)}"]`
+
 /** Después de que una fila desaparezca (hecha), el foco pasa a la fila de al lado. */
 function focusNeighbour(from: HTMLElement | null) {
   const li = from?.closest('li.prio-row')
   const next = (li?.nextElementSibling ?? li?.previousElementSibling) as HTMLElement | null
   const id = next?.dataset.prioRow
   if (!id) return
-  requestAnimationFrame(() => document.querySelector<HTMLElement>(`[data-prio-row="${CSS.escape(id)}"] .item-title`)?.focus())
+  requestAnimationFrame(() => document.querySelector<HTMLElement>(`${rowSel(id)} .item-title`)?.focus())
+}
+
+/**
+ * Tras cambiar la prioridad o a quién se asigna, la fila puede moverse o salir de las que se
+ * enseñan (al bajar una crítica): el foco se queda en su «Más acciones» si sigue a la vista; si
+ * no, pasa al título de la fila de al lado o a «Ver todas». Nunca cae en la página.
+ */
+function keepFocus(rowId: string) {
+  const li = document.querySelector<HTMLElement>(rowSel(rowId))
+  const next = (li?.nextElementSibling ?? li?.previousElementSibling) as HTMLElement | null
+  const neighbour = next?.dataset.prioRow
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() => {
+      const a = document.activeElement
+      if (a && a !== document.body && a.isConnected) return
+      const target =
+        document.querySelector<HTMLElement>(`${rowSel(rowId)} .prio-more`) ??
+        (neighbour ? document.querySelector<HTMLElement>(`${rowSel(neighbour)} .item-title`) : null) ??
+        document.querySelector<HTMLElement>('.prio-all a') ??
+        document.querySelector<HTMLElement>('.prio-list .item-title')
+      target?.focus()
+    }),
+  )
 }
 
 /** Terminar, cambiar la prioridad, asignar o editar un elemento de trabajo, sin salir del panel. */
 function ItemActions({ item, data, today }: { item: WorkItem; data: StudioData; today: string }) {
   const { openItem } = useUI()
   const undoable = useUndoable()
+  const rowId = `items:${item.id}`
   const people = data.members.filter((m) => m.active).sort((a, b) => a.name.localeCompare(b.name, 'es'))
   const current = <span className="visually-hidden"> {t('secciones.panel.prioridades.actions.current')}</span>
   const setPriority = (priority: Priority) => {
     if (priority === item.priority) return
-    undoable(t('secciones.panel.prioridades.actions.priorityToast', { title: item.title, priority: PRIORITIES[priority].label }), () =>
-      store.patch('items', item.id, { priority }),
+    keepFocus(rowId)
+    undoable(
+      t('secciones.panel.prioridades.actions.priorityToast', { title: item.title, priority: PRIORITIES[priority].label }),
+      () => store.patch('items', item.id, { priority }),
+      { returnFocus: `${rowSel(rowId)} .prio-more` },
     )
   }
   const assign = (assigneeId: string | undefined) => {
     if (assigneeId === item.assigneeId) return
     const name = data.members.find((m) => m.id === assigneeId)?.name
+    keepFocus(rowId)
     undoable(
       name
         ? t('secciones.panel.prioridades.actions.assignedToast', { title: item.title, name })
         : t('secciones.panel.prioridades.actions.unassignedToast', { title: item.title }),
       () => store.patch('items', item.id, { assigneeId }),
+      { returnFocus: `${rowSel(rowId)} .prio-more` },
     )
   }
   return (
@@ -189,8 +220,11 @@ function ItemActions({ item, data, today }: { item: WorkItem; data: StudioData; 
         aria-label={t('secciones.panel.prioridades.actions.doneLabel', { title: item.title })}
         onClick={(e) => {
           focusNeighbour(e.currentTarget)
-          undoable(t('secciones.panel.prioridades.actions.doneToast', { title: item.title }), () =>
-            store.patch('items', item.id, { status: 'done', completedAt: today, focusDate: undefined }),
+          // Al deshacer, la fila vuelve y el foco, a su «Hecho».
+          undoable(
+            t('secciones.panel.prioridades.actions.doneToast', { title: item.title }),
+            () => store.patch('items', item.id, { status: 'done', completedAt: today, focusDate: undefined }),
+            { returnFocus: `${rowSel(rowId)} .prio-done` },
           )
         }}
       >
@@ -203,7 +237,7 @@ function ItemActions({ item, data, today }: { item: WorkItem; data: StudioData; 
         trigger={({ toggle, ...aria }) => (
           <button
             type="button"
-            className="icon-btn small"
+            className="icon-btn small prio-more"
             title={t('secciones.panel.prioridades.actions.more')}
             aria-label={t('secciones.panel.prioridades.actions.moreLabel', { title: item.title })}
             onClick={toggle}
@@ -324,11 +358,16 @@ function PriorityRowView({ row, data, today, year, fmt, showProject, canEdit }: 
               </Pill>
             )
           })}
-          {!row.confirmed && (
-            <Pill tone="warning" icon="question">
-              {t('secciones.panel.agenda.unconfirmed')}
-            </Pill>
-          )}
+          {/* Un elemento de trabajo por confirmar lo dice como en el resto de la aplicación; una
+              versión o un evento, que su fecha es la prevista. */}
+          {!row.confirmed &&
+            (row.item ? (
+              <ConfidenceTag confidence="to_confirm" />
+            ) : (
+              <Pill tone="warning" icon="question">
+                {t('secciones.panel.agenda.unconfirmed')}
+              </Pill>
+            ))}
         </div>
         {details.length > 0 && (
           <ul className="prio-details">
@@ -377,7 +416,7 @@ export function PrioritiesBody({ data, scope, today, year, fmt, focus }: WidgetP
         ))}
       </ul>
       {rows.length > shown.length && (
-        <div>
+        <div className="prio-all">
           <MoreLink to={href('/?ver=prioritarias')} label={t('secciones.panel.prioridades.all', { n: rows.length })} />
         </div>
       )}

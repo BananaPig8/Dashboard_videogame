@@ -60,7 +60,7 @@ export const panel_cabecera = {
       blockedOther: 'De {of} abiertas',
       milestonesSoon: 'Con fecha límite en los próximos {days} días',
       milestonesDone: 'Terminados en el periodo',
-      eventsSoon: 'En los próximos {days} días',
+      eventsSoon: 'Ferias, festivales y presentaciones por delante',
       recentBuilds: 'Con fecha en el periodo',
       feedbackNewOne: 'Nuevo, de 1 registrado',
       feedbackNewOther: 'Nuevo, de {of} registrados',
@@ -99,6 +99,23 @@ export const panel_cabecera = {
       dates: 'Periodo anterior: {range}',
     },
     none: 'No hay ningún indicador a la vista. Elige cuáles ver en «Personalizar».',
+    /** En todo el estudio, si hay proyectos archivados: sus cosas no cuentan. */
+    noArchivedOne: 'Las cifras (salvo «Proyectos activos») no cuentan lo del proyecto archivado.',
+    noArchivedOther: 'Las cifras (salvo «Proyectos activos») no cuentan lo de los {n} proyectos archivados.',
+  },
+  /** Lo que dice la lista a la que lleva una cifra (Builds, Eventos, Feedback). */
+  listFilter: {
+    only: 'Lo que cuenta la cifra del Dashboard: {list}.',
+    dates: 'con fecha del {from} al {to}',
+    day: 'con fecha del {date}',
+    from: 'con fecha desde el {from}',
+    to: 'con fecha hasta el {to}',
+    noArchived: 'sin los proyectos archivados',
+    clear: 'Ver todo',
+  },
+  /** La salud de cada juego, arriba del todo (sin los archivados). */
+  health: {
+    label: 'Cómo está cada juego',
   },
   customize: {
     forMe: 'Es la disposición de {name}: se guarda para esa persona en este navegador. Si en «Quién soy» eliges a otra, verás la suya.',
@@ -113,5 +130,11 @@ export const panel_cabecera = {
     showAll: 'Mostrar todos',
     reset: 'Volver a la de serie',
     resetDone: 'Disposición de serie.',
+    /** Se anuncia al subir o bajar algo en una lista. */
+    position: '{name}: puesto {n} de {total}',
+    /** El conmutador de ancho de cada bloque (pulsado: a todo el ancho, a dos columnas). */
+    wideToggle: 'Ancho',
+    wideToggleLabel: 'Ancho: {name}',
+    wideToggleTitle: 'A todo el ancho (dos columnas): {name}',
   },
 } as const

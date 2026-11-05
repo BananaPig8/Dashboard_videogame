@@ -16,7 +16,7 @@ const TODAY = '2026-10-19'
 // Últimos 7 días: del 13 al 19 de octubre; el anterior, del 6 al 12.
 const WEEK = periodRange('7d', TODAY)
 const src = [{ type: 'manual' as const, ref: 'prueba' }]
-const project = (id: string, stage: 'production' | 'idea' | 'live' = 'production') => ({
+const project = (id: string, stage: 'production' | 'idea' | 'live' | 'archived' = 'production') => ({
   id,
   slug: id,
   name: id,
@@ -106,6 +106,8 @@ function data(): StudioData {
       event('hecha', { date: '2026-10-20', status: 'done' }),
       event('sin-fecha', { status: 'idea', dateConfirmed: false }),
       event('pasada', { date: '2026-10-01', status: 'confirmed' }),
+      // Una reunión no es un evento del sector (Eventos no la enseña: está en el Calendario).
+      event('reunion', { type: 'meeting', date: '2026-10-21' }),
     ],
     builds: [
       build('hoy', { date: TODAY }),
@@ -186,6 +188,16 @@ describe('panel: indicadores', () => {
     expect(one(all(d, null, custom), 'completed')).toMatchObject({ value: 3 })
   })
 
+  it('el personalizado no acaba después de hoy (lo que no ha pasado no se cuenta)', () => {
+    expect(periodRange('personalizado', TODAY, { from: '2026-10-15', to: '2026-11-30' })).toMatchObject({ from: '2026-10-15', to: TODAY, days: 5 })
+    // Al revés y en el futuro: se ordenan y se recortan; las dos futuras, hoy.
+    expect(periodRange('personalizado', TODAY, { from: '2026-11-30', to: '2026-11-10' })).toMatchObject({ from: TODAY, to: TODAY, days: 1 })
+    expect(periodRange('personalizado', TODAY, { to: '2026-12-01' })).toMatchObject({ from: TODAY, to: TODAY, days: 1 })
+    // Una build en preparación con fecha futura no cuenta como reciente.
+    const d = { ...base(), projects: [project('a')], builds: [build('futura', { date: '2026-11-20', status: 'in_progress' }), build('pasada', { date: '2026-10-01' })] }
+    expect(one(all(d, null, periodRange('personalizado', TODAY, { from: '2026-11-10', to: '2026-11-30' })), 'recentBuilds').value).toBe(0)
+  })
+
   it('hitos próximos: abiertos con fecha límite entre hoy y dentro de 30 días', () => {
     const k = one(all(data()), 'milestonesSoon')
     // El de hoy, el del 25 y el del otro proyecto (20); ni el lejano, ni el vencido, ni el hecho.
@@ -199,16 +211,20 @@ describe('panel: indicadores', () => {
     expect(one(all(limit), 'milestonesSoon').value).toBe(1)
   })
 
-  it('próximos eventos: ni cancelados ni hechos, en 30 días, y cuántos sin fecha confirmada', () => {
+  it('próximos eventos: los del sector por delante (los de Eventos › Próximos), y cuántos sin fecha confirmada', () => {
     const k = one(all(data()), 'eventsSoon')
-    // La feria (sin confirmar), el festival y el que está en curso; ni el lejano, ni el pasado, ni el cancelado, ni el hecho.
-    expect(k.value).toBe(3)
+    // La feria (sin confirmar), el festival, el que está en curso y el lejano; ni el pasado, ni el
+    // cancelado, ni el hecho, ni la reunión.
+    expect(k.value).toBe(4)
     expect(k.notes).toEqual([
       { kind: 'unconfirmed', n: 1 },
       { kind: 'undated', n: 1 },
     ])
     // En un proyecto: los suyos y los del estudio.
-    expect(one(all(data(), 'b'), 'eventsSoon').value).toBe(2)
+    expect(one(all(data(), 'b'), 'eventsSoon').value).toBe(3)
+    // Solo con reuniones y entregas, no hay eventos que contar.
+    const meetings = { ...base(), projects: [project('a')], events: [event('reunion', { type: 'meeting', date: '2026-10-21' }), event('entrega', { type: 'deadline', date: '2026-10-22' })] }
+    expect(one(all(meetings), 'eventsSoon')).toMatchObject({ value: null, empty: 'noEvents' })
   })
 
   it('builds recientes: con fecha en el periodo, de cualquier estado; avisa de las que no tienen fecha', () => {
@@ -223,6 +239,31 @@ describe('panel: indicadores', () => {
     // Tiene abiertas, pero ninguna con fecha límite… salvo su hito: la cifra es 0 de 1, y es cierta.
     expect(one(k, 'overdue')).toMatchObject({ value: 0, of: 1, tone: 'neutral' })
     expect(one(k, 'feedbackNew').value).toBe(1)
+  })
+
+  it('en todo el estudio no cuenta lo de los proyectos archivados; en su ficha, sí', () => {
+    const d = data()
+    d.projects.push(project('archivado', 'archived'))
+    d.items.push(
+      item('vieja-critica', { projectId: 'archivado', priority: 'critical', dueDate: '2026-10-01' }),
+      item('vieja-bloqueada', { projectId: 'archivado', status: 'blocked' }),
+      item('vieja-hecha', { projectId: 'archivado', status: 'done', completedAt: TODAY }),
+      item('viejo-hito', { projectId: 'archivado', kind: 'milestone', dueDate: '2026-10-22' }),
+    )
+    d.events.push(event('vieja-feria', { projectId: 'archivado', date: '2026-10-30' }))
+    d.builds.push(build('vieja-build', { projectId: 'archivado', date: TODAY }))
+    d.feedback.push({ id: 'f4', projectId: 'archivado', title: 'Nuevo', origin: 'playtest', status: 'new', impact: 'low', linkedItemIds: [], sources: src, confidence: 'verified' })
+    const before = all(data())
+    const k = all(d)
+    for (const id of ['pending', 'completed', 'overdue', 'blocked', 'milestonesSoon', 'eventsSoon', 'recentBuilds', 'feedbackNew'] as const) {
+      expect([id, one(k, id).value]).toEqual([id, one(before, id).value])
+    }
+    // «Proyectos activos» sigue contando solo los activos (y sobre todos los proyectos).
+    expect(one(k, 'activeProjects')).toMatchObject({ value: 2, of: 5 })
+    const own = all(d, 'archivado')
+    expect(one(own, 'pending').value).toBe(3)
+    expect(one(own, 'overdue').value).toBe(1)
+    expect(one(own, 'feedbackNew').value).toBe(1)
   })
 
   it('solo calcula las pedidas, en su orden', () => {

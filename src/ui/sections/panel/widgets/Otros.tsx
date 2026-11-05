@@ -10,13 +10,30 @@ import { useUI } from '../../../context'
 import { usePreferences } from '../../../prefs'
 import { type WidgetProps } from './comunes'
 
+/** «—» con el motivo (se lee el motivo): una cifra sin datos detrás no es un 0. */
+function NoFigure({ reason }: { reason: string }) {
+  return (
+    <>
+      <span aria-hidden="true">—</span> <span className="muted small">{reason}</span>
+    </>
+  )
+}
+
+/**
+ * Evolución: commits y elementos terminados por semana. Sin historial del código ni nada
+ * terminado, no hay gráfica (sería toda a cero): se dice que todavía no hay historial. Sin
+ * commits, sus cifras son «—» con el motivo, nunca «0 (semana anterior: 0)».
+ */
 export function EvolutionBody({ data, scope, today, year }: WidgetProps) {
   const { weekStart } = usePreferences()
-  const buckets = weeklyEvolution(data, today, 8, scope, weekStart)
   const commits = activityOf(data, scope).filter((a) => a.type === 'commit')
+  const items = itemsOf(data, scope)
+  const doneTotal = items.filter((i) => i.status === 'done').length
+  if (commits.length === 0 && doneTotal === 0) return <Empty icon="activity">{t('secciones.panel.evolution.empty')}</Empty>
+  const buckets = weeklyEvolution(data, today, 8, scope, weekStart)
   const last7 = commits.filter((a) => a.at.slice(0, 10) > addDays(today, -7)).length
   const prev7 = commits.filter((a) => a.at.slice(0, 10) > addDays(today, -14) && a.at.slice(0, 10) <= addDays(today, -7)).length
-  const doneTotal = itemsOf(data, scope).filter((i) => i.status === 'done').length
+  const noCommits = t('secciones.panel.evolution.noCommits')
   return (
     <div className="evolution">
       <WeeklyChart buckets={buckets} year={year} />
@@ -24,16 +41,22 @@ export function EvolutionBody({ data, scope, today, year }: WidgetProps) {
         <div>
           <dt>{t('secciones.panel.evolution.last7')}</dt>
           <dd>
-            {last7} <span className="muted small">{t('secciones.panel.evolution.previous', { n: prev7 })}</span>
+            {commits.length === 0 ? (
+              <NoFigure reason={noCommits} />
+            ) : (
+              <>
+                {last7} <span className="muted small">{t('secciones.panel.evolution.previous', { n: prev7 })}</span>
+              </>
+            )}
           </dd>
         </div>
         <div>
           <dt>{t('secciones.panel.evolution.doneTotal')}</dt>
-          <dd>{doneTotal}</dd>
+          <dd>{items.length === 0 ? <NoFigure reason={t('secciones.panel.evolution.noItems')} /> : doneTotal}</dd>
         </div>
         <div>
           <dt>{t('secciones.panel.evolution.commits')}</dt>
-          <dd>{commits.length}</dd>
+          <dd>{commits.length === 0 ? <NoFigure reason={noCommits} /> : commits.length}</dd>
         </div>
       </dl>
     </div>

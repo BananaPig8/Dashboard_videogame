@@ -155,6 +155,14 @@ describe('subsecciones y filtros de Feedback', () => {
   })
 })
 
+describe('sin los proyectos archivados (lo pide «Feedback por revisar» del Dashboard)', () => {
+  it('deja fuera el feedback de un proyecto archivado', () => {
+    const d = data({ projects: [project('p'), { ...project('viejo'), stage: 'archived' }], feedback: [fb('de-p'), fb('de-viejo', { projectId: 'viejo' })] })
+    expect(feedbackList(d, { estado: 'new' }).map((f) => f.id).sort()).toEqual(['de-p', 'de-viejo'])
+    expect(feedbackList(d, { estado: 'new', sinArchivados: true }).map((f) => f.id)).toEqual(['de-p'])
+  })
+})
+
 describe('Bugs: feedback que es un bug ∪ incidencias, sin repetir', () => {
   const d = data({
     items: [

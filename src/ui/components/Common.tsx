@@ -27,6 +27,8 @@ export function Card({
   onToggle?: () => void
 }) {
   const bodyId = useId()
+  // El botón de plegar dice de qué bloque es («Contraer: Prioridades de hoy»), como «Subir: …».
+  const toggleLabel = (collapsed ? t('actions.expand') : t('actions.collapse')) + (typeof title === 'string' && title ? `: ${title}` : '')
   return (
     <section
       className={`card ${collapsed ? 'collapsed' : ''} ${className ?? ''}`}
@@ -48,8 +50,8 @@ export function Card({
                 className="icon-btn small"
                 aria-expanded={!collapsed}
                 aria-controls={bodyId}
-                aria-label={collapsed ? t('actions.expand') : t('actions.collapse')}
-                title={collapsed ? t('actions.expand') : t('actions.collapse')}
+                aria-label={toggleLabel}
+                title={toggleLabel}
                 onClick={onToggle}
               >
                 <Icon name={collapsed ? 'chevronDown' : 'chevronUp'} size={16} />

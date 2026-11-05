@@ -397,6 +397,51 @@ describe('Prioridades: ¿hay datos?', () => {
     expect(priorityHasData(data({ items: [item('abierta')] }), null)).toBe(true)
     expect(priorityHasData(data({ items: [item('abierta')] }), 'b')).toBe(false)
   })
+
+  it('mira el trabajo del ámbito: una reunión del estudio o una versión no bastan', () => {
+    const d = data({
+      events: [event('reunion', { type: 'meeting', date: '2026-11-06' })],
+      releases: [release('parche', { projectId: 'b', targetDate: '2026-12-20' })],
+      storeListings: [listing('ficha', { projectId: 'b' })],
+    })
+    expect(priorityHasData(d, 'b')).toBe(false)
+    expect(priorityHasData(d, null)).toBe(false)
+  })
+
+  it('en todo el estudio, el trabajo de un proyecto archivado no cuenta', () => {
+    const d = data({ projects: [project('a'), { ...project('viejo'), stage: 'archived' }], items: [item('abierta', { projectId: 'viejo' })] })
+    expect(priorityHasData(d, null)).toBe(false)
+    expect(priorityHasData(d, 'viejo')).toBe(true)
+  })
+})
+
+describe('Prioridades: proyectos archivados y lo que está por confirmar', () => {
+  it('en todo el estudio, nada de un proyecto archivado; en su ficha, sí', () => {
+    const d = data({
+      projects: [project('a'), { ...project('viejo'), stage: 'archived' }],
+      items: [item('critica-vieja', { projectId: 'viejo', priority: 'critical', dueDate: '2026-10-20' }), item('critica', { priority: 'critical' })],
+      releases: [release('parche-viejo', { projectId: 'viejo', targetDate: '2026-11-05' })],
+      events: [event('feria-vieja', { projectId: 'viejo', date: '2026-11-08', registrationStatus: 'open', registrationDeadline: '2026-11-04' })],
+      storeListings: [listing('ficha-vieja', { projectId: 'viejo', status: 'changes_requested' })],
+    })
+    expect(ids(dashboardPriorities(d, TODAY, null))).toEqual(['critica'])
+    expect(ids(dashboardPriorities(d, TODAY, 'viejo')).sort()).toEqual(['critica-vieja', 'feria-vieja', 'ficha-vieja', 'parche-viejo'])
+  })
+
+  it('un hito o una tarea por confirmar dice «sin confirmar» (como la tarjeta del proyecto)', () => {
+    const d = data({
+      items: [
+        item('hito', { kind: 'milestone', status: 'to_confirm', confidence: 'to_confirm', dueDate: '2026-11-01' }),
+        item('tarea', { confidence: 'to_confirm', priority: 'critical' }),
+        item('segura', { priority: 'critical' }),
+      ],
+    })
+    const rows = dashboardPriorities(d, TODAY)
+    expect(row(rows, 'hito')).toMatchObject({ confirmed: false })
+    expect(flags(row(rows, 'hito'))).toEqual(['overdue', 'milestoneRisk'])
+    expect(row(rows, 'tarea')?.confirmed).toBe(false)
+    expect(row(rows, 'segura')?.confirmed).toBe(true)
+  })
 })
 
 describe('Calendario resumido', () => {

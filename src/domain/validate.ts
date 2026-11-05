@@ -349,7 +349,8 @@ function checks(ctx: Ctx) {
       oneOf(w, 'action', c.action, CHANGE_ACTIONS)
       if (typeof c.collection !== 'string' || typeof c.entityId !== 'string') err(w, 'falta qué cambió (collection y entityId)')
       if (typeof c.title !== 'string') err(w, 'falta el título')
-      project(w, c.projectId, true)
+      // Puede ser de un proyecto ya borrado: el registro lo recuerda.
+      if (c.projectId !== undefined && typeof c.projectId !== 'string') err(w, 'projectId no es un id')
       ref(w, 'memberId', c.memberId, 'members')
       list(w, 'fields', c.fields, true)
     },

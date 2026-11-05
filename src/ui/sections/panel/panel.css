@@ -59,7 +59,7 @@
 
 .panel-activity-row > .icon {
   flex: none;
-  margin-top: 4px;
+  margin-top: var(--space-1);
   color: var(--text-3);
 }
 
@@ -125,6 +125,48 @@
 .panel-hello {
   color: var(--text-2);
   font-weight: 600;
+}
+
+/* Cómo está cada juego: una línea arriba del todo, con su salud (icono y texto). */
+.panel-health {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  min-width: 0;
+}
+
+.panel-health-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-3);
+}
+
+.panel-health ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  min-width: 0;
+}
+
+.panel-health li {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  min-width: 0;
+}
+
+.panel-health-name {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-weight: 600;
+  color: var(--text);
+  overflow-wrap: anywhere;
 }
 
 /* Qué se ve (proyecto y periodo) y los accesos rápidos, debajo de las subsecciones. */
@@ -285,4 +327,16 @@
   .customize-narrow {
     display: block;
   }
+}
+
+/* Subir o bajar en el primer o el último puesto: sigue enfocable (aria-disabled), no hace nada. */
+.widget-list .icon-btn[aria-disabled='true'] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* El conmutador de ancho, pulsado (a todo el ancho): con el acento, además del icono. */
+.widget-list .btn[aria-pressed='true'] {
+  border-color: var(--accent);
+  color: var(--text);
 }

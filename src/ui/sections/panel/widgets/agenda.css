@@ -26,7 +26,7 @@
 
 /* El conmutador: con texto en escritorio; en móvil, solo el icono (el texto sigue para el lector). */
 .agenda-toggle button {
-  padding: 4px 10px;
+  padding: var(--space-1) var(--space-3);
 }
 
 @media (max-width: 640px) {
@@ -182,7 +182,7 @@
 }
 
 .agenda-more {
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 600;
   color: var(--text-2);
   font-variant-numeric: tabular-nums;

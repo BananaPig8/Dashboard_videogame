@@ -24,6 +24,10 @@ export const tareas = {
     // Por fecha de fin (?desde=&hasta=): a esto lleva «Tareas completadas» del Dashboard.
     doneFrom: 'Terminadas desde',
     doneTo: 'Terminadas hasta',
+    // Los que pone el Dashboard al pulsar «Hitos próximos» (?vence=) y sus cifras de todo el estudio (?archivados=no).
+    dueWithin: 'Vencen en los próximos {n} días',
+    noArchived: 'Sin los proyectos archivados',
+    removeOne: 'Quitar el filtro «{name}»',
     search: 'Buscar en las tareas…',
     searchLabel: 'Buscar',
     status: 'Estado',
