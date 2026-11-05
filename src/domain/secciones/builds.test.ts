@@ -22,7 +22,7 @@ const project = (id: string) => ({
   name: id,
   description: '',
   platforms: [],
-  stage: 'production' as const,
+  status: 'desarrollo',
   color: '#000',
   versions: [],
   tags: [],
@@ -135,7 +135,7 @@ describe('subsecciones de Builds', () => {
 describe('builds entre dos fechas (la cifra «Builds recientes» del Dashboard)', () => {
   it('con fecha entre las dos (incluidas); sin fecha, fuera; y sin las de los proyectos archivados si se pide', () => {
     const d = data({
-      projects: [project('p'), { ...project('viejo'), stage: 'archived' }],
+      projects: [project('p'), { ...project('viejo'), status: 'archivado' }],
       builds: [
         build('antes', { date: '2026-10-28' }),
         build('primera', { date: '2026-10-29' }),

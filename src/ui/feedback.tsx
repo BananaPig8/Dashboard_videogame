@@ -40,7 +40,10 @@ export interface ConfirmOptions {
   title: string
   message?: ReactNode
   confirmLabel?: string
+  cancelLabel?: string
   danger?: boolean
+  /** El foco empieza en «Cancelar» (lo que no pierde nada), no en la acción. */
+  focusCancel?: boolean
 }
 
 interface FeedbackApi {
@@ -300,10 +303,15 @@ export function FeedbackProvider({ children }: { children: ReactNode }) {
         footer={
           <>
             <span className="spacer" />
-            <button type="button" className="btn" onClick={() => closeConfirm(false)}>
-              {t('actions.cancel')}
+            <button type="button" className="btn" onClick={() => closeConfirm(false)} autoFocus={!!confirmState?.focusCancel}>
+              {confirmState?.cancelLabel ?? t('actions.cancel')}
             </button>
-            <button type="button" className={confirmState?.danger ? 'btn btn-danger' : 'btn btn-primary'} onClick={() => closeConfirm(true)} autoFocus>
+            <button
+              type="button"
+              className={confirmState?.danger ? 'btn btn-danger' : 'btn btn-primary'}
+              onClick={() => closeConfirm(true)}
+              autoFocus={!confirmState?.focusCancel}
+            >
               {confirmState?.confirmLabel ?? t('actions.confirm')}
             </button>
           </>

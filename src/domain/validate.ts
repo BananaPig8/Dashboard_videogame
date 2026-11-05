@@ -26,7 +26,11 @@ import {
   RELEASE_STATUSES,
   RESOURCE_TYPES,
   SOURCE_TYPES,
-  STAGES,
+  PHASES,
+  RELATION_KINDS,
+  RISK_LEVELS,
+  RISK_STATUSES,
+  COMPONENT_KINDS,
   STATUSES,
   STORE_PLATFORMS,
   STORE_TEXT_KINDS,
@@ -34,10 +38,11 @@ import {
   TRANSACTION_CATEGORIES,
   TRANSACTION_KINDS,
   TRANSACTION_STATUSES,
+  PROJECT_STATUS_GROUPS,
 } from './catalog'
 import { COLLECTIONS, COLLECTION_BY_KEY, type CollectionKey } from './collections'
 import { isValidISODate, isValidISODateTime } from './dates'
-import type { SourceRef, StudioData } from './types'
+import type { SourceRef, Studio, StudioData } from './types'
 
 type Row = Record<string, unknown>
 
@@ -114,8 +119,23 @@ function checks(ctx: Ctx) {
     projects: (p, w) => {
       text(w, 'el nombre', p.name)
       if (typeof p.slug !== 'string' || !/^[a-z0-9-]+$/.test(p.slug)) err(w, `slug no válido («${String(p.slug)}»)`)
-      oneOf(w, 'stage', p.stage, STAGES)
-      date(w, 'startedAt', p.startedAt)
+      // El estado es un id de los del estudio (configurables): basta con que lo haya.
+      text(w, 'el estado', p.status)
+      oneOf(w, 'phase', p.phase, PHASES, true)
+      oneOf(w, 'priority', p.priority, PRIORITIES, true)
+      for (const f of ['createdAt', 'startedAt', 'targetReleaseDate', 'releasedAt', 'archivedAt']) date(w, f, p[f])
+      ref(w, 'ownerId', p.ownerId, 'members')
+      refs(w, 'memberIds', p.memberIds, 'members')
+      for (const f of ['subgenres', 'technologies', 'languages']) list(w, f, p[f], true)
+      if (p.relations !== undefined) {
+        if (!Array.isArray(p.relations)) err(w, 'relations no es una lista')
+        else
+          for (const r of p.relations as Row[]) {
+            if (r?.projectId === p.id) err(w, 'está relacionado consigo mismo')
+            else ref(w, 'relación', r?.projectId, 'projects')
+            oneOf(w, 'relación', r?.kind, RELATION_KINDS)
+          }
+      }
       oneOf(w, 'progressMethod', p.progressMethod, PROGRESS_METHODS, true)
       if (p.coverUrl !== undefined && typeof p.coverUrl !== 'string') err(w, 'coverUrl no es un enlace')
       if (!Array.isArray(p.platforms) || !Array.isArray(p.versions) || !Array.isArray(p.tags) || !Array.isArray(p.links))
@@ -136,6 +156,8 @@ function checks(ctx: Ctx) {
       ref(w, 'parentId', i.parentId, 'items')
       if (i.parentId !== undefined && i.parentId === i.id) err(w, 'cuelga de sí mismo')
       refs(w, 'dependsOnIds', i.dependsOnIds, 'items')
+      refs(w, 'alsoProjectIds', i.alsoProjectIds, 'projects')
+      if (Array.isArray(i.alsoProjectIds) && i.alsoProjectIds.includes(i.projectId)) err(w, 'también vale para su propio proyecto')
       if (Array.isArray(i.dependsOnIds) && i.dependsOnIds.includes(i.id)) err(w, 'depende de sí mismo')
       ref(w, 'assigneeId', i.assigneeId, 'members')
       ref(w, 'buildId', i.buildId, 'builds')
@@ -245,7 +267,7 @@ function checks(ctx: Ctx) {
     },
     phases: (p, w) => {
       project(w, p.projectId)
-      oneOf(w, 'stage', p.stage, STAGES)
+      oneOf(w, 'stage', p.stage, PHASES)
       oneOf(w, 'status', p.status, PHASE_STATUSES)
       date(w, 'startDate', p.startDate)
       date(w, 'endDate', p.endDate)
@@ -344,6 +366,26 @@ function checks(ctx: Ctx) {
       sources(w, m.sources, true)
       if (!(m.sources as unknown[] | undefined)?.length) err(w, 'una métrica necesita su fuente')
     },
+    risks: (r, w) => {
+      project(w, r.projectId)
+      text(w, 'el título', r.title)
+      oneOf(w, 'likelihood', r.likelihood, RISK_LEVELS)
+      oneOf(w, 'impact', r.impact, PRIORITIES)
+      oneOf(w, 'status', r.status, RISK_STATUSES)
+      confidence(w, r)
+      ref(w, 'ownerId', r.ownerId, 'members')
+      date(w, 'createdAt', r.createdAt)
+      date(w, 'reviewDate', r.reviewDate)
+      tags(w, r)
+      sources(w, r.sources, true)
+    },
+    components: (c, w) => {
+      text(w, 'el nombre', c.name)
+      oneOf(w, 'kind', c.kind, COMPONENT_KINDS)
+      refs(w, 'projectIds', c.projectIds, 'projects')
+      if (!Array.isArray(c.projectIds)) err(w, 'projectIds tiene que ser una lista')
+      tags(w, c)
+    },
     changes: (c, w) => {
       if (!isValidISODateTime(c.at)) err(w, `at no es AAAA-MM-DDTHH:mm («${String(c.at)}»)`)
       oneOf(w, 'action', c.action, CHANGE_ACTIONS)
@@ -415,6 +457,65 @@ function idSets(data: StudioData): Record<CollectionKey, Set<string>> {
   >
 }
 
+const TONE_IDS = ['neutral', 'info', 'success', 'warning', 'danger', 'muted', 'special']
+
+/**
+ * Los ajustes del estudio que son listas: sus estados de proyecto (con su grupo y su tono) y
+ * sus plantillas de proyecto (fases y tareas de partida, sin fechas).
+ */
+export function studioSettingsErrors(studio: Studio): string[] {
+  const out: string[] = []
+  const statuses = studio.projectStatuses
+  if (statuses !== undefined) {
+    if (!Array.isArray(statuses)) out.push('los estados de proyecto no son una lista')
+    else {
+      const seen = new Set<string>()
+      for (const st of statuses) {
+        if (!st || typeof st.id !== 'string' || !st.id.trim()) {
+          out.push('hay un estado de proyecto sin id')
+          continue
+        }
+        if (seen.has(st.id)) out.push(`el estado de proyecto «${st.id}» está repetido`)
+        seen.add(st.id)
+        if (typeof st.label !== 'string' || !st.label.trim()) out.push(`el estado de proyecto «${st.id}» no tiene nombre`)
+        if (!PROJECT_STATUS_GROUPS.includes(st.group)) out.push(`el estado de proyecto «${st.id}» tiene un grupo desconocido («${String(st.group)}»)`)
+        if (!TONE_IDS.includes(st.tone)) out.push(`el estado de proyecto «${st.id}» tiene un tono desconocido («${String(st.tone)}»)`)
+      }
+    }
+  }
+  const templates = studio.projectTemplates
+  if (templates !== undefined) {
+    if (!Array.isArray(templates)) out.push('las plantillas de proyecto no son una lista')
+    else {
+      const seen = new Set<string>()
+      for (const tp of templates) {
+        if (!tp || typeof tp.id !== 'string' || !tp.id.trim()) {
+          out.push('hay una plantilla sin id')
+          continue
+        }
+        const w = `la plantilla «${tp.name || tp.id}»`
+        if (seen.has(tp.id)) out.push(`${w} está repetida`)
+        seen.add(tp.id)
+        if (typeof tp.name !== 'string' || !tp.name.trim()) out.push(`${w} no tiene nombre`)
+        if (tp.phase !== undefined && !(tp.phase in PHASES)) out.push(`${w} empieza en una fase desconocida`)
+        if (!Array.isArray(tp.phases) || !Array.isArray(tp.items)) {
+          out.push(`${w} no tiene listas de fases y tareas`)
+          continue
+        }
+        for (const ph of tp.phases) if (!ph || !(ph.stage in PHASES)) out.push(`${w} tiene una fase desconocida`)
+        for (const it of tp.items) {
+          if (!it || typeof it.title !== 'string' || !it.title.trim()) out.push(`${w} tiene una tarea sin título`)
+          else {
+            if (!(it.kind in KINDS)) out.push(`${w}: «${it.title}» es de un tipo desconocido`)
+            if (it.priority !== undefined && !(it.priority in PRIORITIES)) out.push(`${w}: «${it.title}» tiene una prioridad desconocida`)
+          }
+        }
+      }
+    }
+  }
+  return out
+}
+
 export function validateStudioData(raw: unknown): string[] {
   const errors: string[] = []
   if (!raw || typeof raw !== 'object') return ['No es un objeto JSON.']
@@ -425,6 +526,8 @@ export function validateStudioData(raw: unknown): string[] {
   if (errors.length) return errors
 
   const err = (where: string, msg: string) => errors.push(`${where}: ${msg}`)
+
+  for (const e of studioSettingsErrors(data.studio)) err('studio', e)
 
   // ids únicos por colección
   for (const c of COLLECTIONS) {

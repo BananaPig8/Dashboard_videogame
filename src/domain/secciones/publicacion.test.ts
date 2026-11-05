@@ -27,7 +27,7 @@ const project = (id: string, over: Partial<Project> = {}): Project => ({
   name: id.toUpperCase(),
   description: '',
   platforms: [],
-  stage: 'production',
+  status: 'desarrollo',
   color: '#000',
   versions: [],
   tags: [],
@@ -88,7 +88,7 @@ function data(over: Partial<StudioData> = {}): StudioData {
     ...emptyCollections(),
     schemaVersion: SCHEMA_VERSION,
     studio: { id: 's', name: 'Estudio', createdAt: '2026-01-01' },
-    projects: [project('p'), project('q'), project('idea', { stage: 'idea' }), project('archivado', { stage: 'archived' })],
+    projects: [project('p'), project('q'), project('idea', { status: 'idea' }), project('archivado', { status: 'archivado' })],
     ...over,
   }
 }

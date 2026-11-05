@@ -4,6 +4,7 @@
 // colecciones nuevas) que documentos sueltos de la base de claude.ai escritos con
 // cualquier versión, sin reescribirlos. Solo se niega con datos de una versión más nueva
 // que esta aplicación (los abriría y los pisaría a medias).
+import { OLD_STAGES, PHASES } from './catalog'
 import { COLLECTIONS, COLLECTION_DEFS, type CollectionKey } from './collections'
 import { SCHEMA_VERSION, type StudioData } from './types'
 
@@ -28,6 +29,8 @@ const REQUIRED_LISTS: Partial<Record<CollectionKey, string[]>> = {
   members: ['areaIds'],
   builds: ['platforms', 'sources'],
   events: ['sources'],
+  risks: ['tags', 'sources'],
+  components: ['projectIds', 'tags'],
 }
 
 export function normalizeData(raw: unknown): Normalized {
@@ -49,6 +52,17 @@ export function normalizeData(raw: unknown): Normalized {
           if (row === e) row = { ...row }
           row[field] = []
         }
+      // Antes, un solo campo («stage») era a la vez fase y estado: se separan.
+      if (k === 'projects' && typeof row.status !== 'string' && typeof row.stage === 'string') {
+        const old = OLD_STAGES[row.stage] ?? { status: 'desarrollo' }
+        const { stage: _stage, ...rest } = row
+        void _stage
+        row = { ...rest, status: old.status, ...(old.phase && row.phase === undefined ? { phase: old.phase } : {}) }
+      }
+      if (k === 'phases' && typeof row.stage === 'string' && !(row.stage in PHASES)) {
+        if (row === e) row = { ...row }
+        row.stage = OLD_STAGES[row.stage as string]?.phase ?? 'production'
+      }
       if (k === 'members' && typeof row.active !== 'boolean') {
         if (row === e) row = { ...row }
         row.active = true
@@ -95,6 +109,13 @@ export function normalizeData(raw: unknown): Normalized {
       return row
     })
   }
+
+  // Relaciones con un proyecto que ya no existe: fuera.
+  out.projects = (out.projects as Row[]).map((p) => {
+    if (!p || !Array.isArray(p.relations)) return p
+    const keep = (p.relations as Row[]).filter((r) => ids.projects.has(r?.projectId) && r?.projectId !== p.id)
+    return keep.length === p.relations.length ? p : { ...p, relations: keep }
+  })
 
   // Un recordatorio que apuntaba a algo borrado se queda sin destino.
   out.reminders = (out.reminders as Row[]).map((r) => {

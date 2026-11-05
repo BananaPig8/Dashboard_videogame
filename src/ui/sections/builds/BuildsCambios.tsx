@@ -7,6 +7,7 @@ import {
   activityOf,
   buildStretches,
   changelogLines,
+  inProject,
   itemsOf,
   matchesQuery,
   normalize,
@@ -112,7 +113,7 @@ export function BuildsCambios({ embedded }: SectionPageProps) {
             title={scope ? t('secciones.builds.cambios.projectTitle') : p.name}
             builds={data.builds.filter((b) => b.projectId === p.id)}
             activity={activity.filter((a) => a.projectId === p.id)}
-            done={done.filter((i) => i.projectId === p.id)}
+            done={done.filter((i) => inProject(i, p.id))}
             filtered={filtered}
           />
         ))

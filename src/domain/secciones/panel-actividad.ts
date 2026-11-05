@@ -19,7 +19,7 @@ import {
 } from '../catalog'
 import { COLLECTION_BY_KEY, type CollectionKey } from '../collections'
 import type { ChangeEntry, Confidence, Feedback, FeedbackKind, ID, ISODate, ItemKind, SourceRef, StudioData, WorkItem } from '../types'
-import { feedbackBugs, feedbackList, feedbackQueryOf, feedbackToPrioritize, normalize, statsActivityMember, type Scope } from '../selectors'
+import { feedbackBugs, feedbackList, feedbackQueryOf, feedbackToPrioritize, inProject, normalize, statsActivityMember, type Scope } from '../selectors'
 
 // ——— Actividad del estudio ————————————————————————————————————————————————
 
@@ -294,7 +294,7 @@ const timeOf = (at: string) => (at.length >= 16 ? at.slice(11, 16) : undefined)
  */
 export function studioTimeline(data: StudioData, filter: TimelineFilter = {}): TimelineEntry[] {
   const scope = filter.scope ?? null
-  const own = (x: { projectId?: ID }) => scope === null || x.projectId === scope
+  const own = (x: { projectId?: ID; alsoProjectIds?: ID[] }) => scope === null || inProject(x, scope)
   const out: TimelineEntry[] = []
 
   // ¿Sigue existiendo? (un conjunto de ids por colección, solo de las que hacen falta)

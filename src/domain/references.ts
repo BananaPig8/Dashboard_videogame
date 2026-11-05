@@ -61,6 +61,13 @@ export function removeWithReferences(data: StudioData, k: CollectionKey, id: ID)
     gone.add(key)
     deleted.push(key)
     next[ck] = (next[ck] as Row[]).filter((e) => e.id !== cid)
+    // Las relaciones de los demás proyectos con este se quitan.
+    if (ck === 'projects')
+      next.projects = (next.projects as Row[]).map((p) =>
+        Array.isArray(p.relations) && (p.relations as Row[]).some((r) => r.projectId === cid)
+          ? { ...p, relations: (p.relations as Row[]).filter((r) => r.projectId !== cid) }
+          : p,
+      )
     // Lo que cuelga de un proyecto.
     if (ck === 'projects')
       for (const d of COLLECTION_DEFS) {

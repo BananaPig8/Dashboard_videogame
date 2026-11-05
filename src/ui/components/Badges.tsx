@@ -9,7 +9,9 @@ import {
   FEEDBACK_STATUSES,
   KINDS,
   PRIORITIES,
-  STAGES,
+  CANCELLED_STATUS,
+  PHASES,
+  projectStatusOf,
   STATUSES,
   type Tone,
 } from '../../domain/catalog'
@@ -24,8 +26,11 @@ import type {
   ItemStatus,
   Priority,
   Project,
-  ProjectStage,
+  DevPhase,
+  ProjectStatusGroup,
+  ProjectStatusId,
 } from '../../domain/types'
+import { useStudioData } from '../../data/store'
 import type { HealthLevel } from '../../domain/selectors'
 import { tr } from '../../i18n'
 import { Icon, type IconName } from './Icon'
@@ -58,24 +63,41 @@ export const StatusPill = ({ status }: { status: ItemStatus }) => (
   </Pill>
 )
 
-const STAGE_ICON: Record<ProjectStage, IconName> = {
-  idea: 'bulb',
-  concept: 'edit',
+const PHASE_ICON: Record<DevPhase, IconName> = {
+  concept: 'bulb',
   prototype: 'circleDashed',
   preproduction: 'layout',
   production: 'play',
   polish: 'star',
   release: 'rocket',
   live: 'checkCircle',
-  paused: 'pause',
-  archived: 'box',
 }
 
-export const StagePill = ({ stage }: { stage: ProjectStage }) => (
-  <Pill tone={STAGES[stage].tone} icon={STAGE_ICON[stage]}>
-    {STAGES[stage].label}
+/** La fase de desarrollo (concepto, prototipo, producción…). */
+export const PhasePill = ({ phase }: { phase: DevPhase }) => (
+  <Pill tone={PHASES[phase].tone} icon={PHASE_ICON[phase]}>
+    {PHASES[phase].label}
   </Pill>
 )
+
+const STATUS_GROUP_ICON: Record<ProjectStatusGroup, IconName> = {
+  planificacion: 'bulb',
+  activos: 'play',
+  lanzados: 'checkCircle',
+  pausa: 'pause',
+  archivados: 'box',
+}
+
+/** El estado de un proyecto, con el nombre y el tono que le ha dado el estudio. */
+export function ProjectStatusPill({ status }: { status: ProjectStatusId }) {
+  const { studio } = useStudioData()
+  const def = projectStatusOf(studio, status)
+  return (
+    <Pill tone={def.tone} icon={def.id === CANCELLED_STATUS ? 'xCircle' : STATUS_GROUP_ICON[def.group]}>
+      {def.label}
+    </Pill>
+  )
+}
 
 const PRIORITY_ICON: Record<Priority, IconName> = { critical: 'alert', high: 'arrowUp', medium: 'minus', low: 'arrowDown' }
 

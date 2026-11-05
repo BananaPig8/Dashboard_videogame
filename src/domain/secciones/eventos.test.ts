@@ -26,7 +26,7 @@ const project = (id: string) => ({
   name: id,
   description: '',
   platforms: [],
-  stage: 'production' as const,
+  status: 'desarrollo',
   color: '#000',
   versions: [],
   tags: [],
@@ -122,7 +122,7 @@ describe('subsecciones de Eventos', () => {
 describe('sin los proyectos archivados (?archivados=no)', () => {
   it('deja fuera los eventos de un proyecto archivado; los del estudio y los demás, no', () => {
     const d = data({
-      projects: [project('p'), { ...project('viejo'), stage: 'archived' }],
+      projects: [project('p'), { ...project('viejo'), status: 'archivado' }],
       events: [ev('del-estudio'), ev('de-p', { projectId: 'p' }), ev('de-viejo', { projectId: 'viejo' })],
     })
     expect(sectorEvents(d, {}).map((e) => e.id)).toEqual(['del-estudio', 'de-p', 'de-viejo'])

@@ -59,7 +59,16 @@ const month = (date: unknown) => String(date ?? '').slice(0, 7)
 
 export const COLLECTION_DEFS: CollectionDef[] = [
   def({ key: 'areas', idPrefix: 'area', withProject: false }),
-  def({ key: 'projects', idPrefix: 'proyecto', withProject: false, tagged: true }),
+  def({
+    key: 'projects',
+    idPrefix: 'proyecto',
+    withProject: false,
+    tagged: true,
+    refs: [
+      { field: 'ownerId', to: 'members', onDelete: 'unset' },
+      { field: 'memberIds', to: 'members', many: true, onDelete: 'pull' },
+    ],
+  }),
   def({
     key: 'items',
     idPrefix: 'item',
@@ -70,6 +79,7 @@ export const COLLECTION_DEFS: CollectionDef[] = [
       { field: 'areaId', to: 'areas', onDelete: 'unset' },
       { field: 'parentId', to: 'items', onDelete: 'unset' },
       { field: 'dependsOnIds', to: 'items', many: true, onDelete: 'pull' },
+      { field: 'alsoProjectIds', to: 'projects', many: true, onDelete: 'pull' },
       { field: 'assigneeId', to: 'members', onDelete: 'block' },
       { field: 'buildId', to: 'builds', onDelete: 'unset' },
       { field: 'releaseId', to: 'releases', onDelete: 'unset' },
@@ -197,6 +207,22 @@ export const COLLECTION_DEFS: CollectionDef[] = [
   }),
   def({ key: 'budgets', idPrefix: 'presupuesto', withProject: 'unset', private: true }),
   def({ key: 'metrics', idPrefix: 'metrica', withProject: 'cascade', projectRequired: true }),
+  def({
+    key: 'risks',
+    idPrefix: 'riesgo',
+    withProject: 'cascade',
+    projectRequired: true,
+    tagged: true,
+    refs: [{ field: 'ownerId', to: 'members', onDelete: 'unset' }],
+  }),
+  // Un componente compartido es del estudio: al borrar un proyecto solo deja de usarlo.
+  def({
+    key: 'components',
+    idPrefix: 'componente',
+    withProject: false,
+    tagged: true,
+    refs: [{ field: 'projectIds', to: 'projects', many: true, onDelete: 'pull' }],
+  }),
   // El registro de cambios no se borra con lo que cuenta: se queda con su título y con su
   // proyecto aunque se borre (la actividad lo enseña «(borrado)»). En la base de claude.ai,
   // un documento por mes y por persona (cada uno escribe el suyo).

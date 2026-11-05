@@ -1,13 +1,13 @@
 // Cálculos de la sección «Roadmap»: hitos, fases, objetivos, versiones previstas y la línea
 // temporal de cada proyecto. Las pantallas los piden a selectors.ts, que reexporta este fichero.
 // Regla: lo que se importa de '../selectors' solo se usa dentro de funciones (hay un ciclo de import).
-import { STAGES, STATUS_ORDER } from '../catalog'
+import { PHASE_ORDER, PHASES, STATUS_ORDER } from '../catalog'
 import type { CollectionKey } from '../collections'
-import type { Build, ID, ISODate, Phase, Project, ProjectStage, Release, StudioData, WorkItem } from '../types'
-import { byPriority, isOpen, type Scope } from '../selectors'
+import type { Build, DevPhase, ID, ISODate, Phase, Project, Release, StudioData, WorkItem } from '../types'
+import { byPriority, inProject, isOpen, type Scope } from '../selectors'
 import { hasTag } from './etiquetas'
 
-const own = (scope: Scope) => (x: { projectId?: ID }) => scope === null || x.projectId === scope
+const own = (scope: Scope) => (x: { projectId?: ID; alsoProjectIds?: ID[] }) => scope === null || inProject(x, scope)
 const statusRank = (i: WorkItem) => STATUS_ORDER.indexOf(i.status)
 /** Abiertos primero (por estado y prioridad), luego hechos y al final los descartados. */
 const byStatus = (a: WorkItem, b: WorkItem) => statusRank(a) - statusRank(b) || byPriority(a, b) || a.title.localeCompare(b.title)
@@ -82,23 +82,21 @@ export function roadmapGoals(data: StudioData, scope: Scope = null, tag: string 
 
 // ——— Fases ——————————————————————————————————————————————————————————————
 
-/** Las etapas del ciclo de vida, en orden (sin «en pausa» ni «archivado», que no son fases). */
-export const ROADMAP_LIFECYCLE: ProjectStage[] = (Object.keys(STAGES) as ProjectStage[])
-  .filter((s) => s !== 'paused' && s !== 'archived')
-  .sort((a, b) => STAGES[a].order - STAGES[b].order)
+/** Las fases de desarrollo, en orden (el estado del proyecto, en pausa o archivado, va aparte). */
+export const ROADMAP_LIFECYCLE: DevPhase[] = PHASE_ORDER
 
 /**
- * Cómo está cada etapa de un proyecto:
- * - current: es la etapa del proyecto (su ficha).
- * - done: tiene fases y todas están hechas.
+ * Cómo está cada fase de desarrollo de un proyecto:
+ * - current: es la fase del proyecto (su ficha).
+ * - done: tiene fases apuntadas y todas están hechas.
  * - planned: tiene fases previstas.
- * - past / ahead: sin fases apuntadas, antes o después de la etapa actual.
- * - unknown: sin fases y sin etapa actual con la que comparar (proyecto en pausa o archivado).
+ * - past / ahead: sin fases apuntadas, antes o después de la fase actual.
+ * - unknown: sin fases y sin fase actual con la que comparar (el proyecto no dice su fase).
  */
 export type RoadmapStageState = 'current' | 'done' | 'planned' | 'past' | 'ahead' | 'unknown'
 
 export interface RoadmapStage {
-  stage: ProjectStage
+  stage: DevPhase
   state: RoadmapStageState
   /** Las fases apuntadas de esa etapa, por fecha. */
   phases: Phase[]
@@ -119,18 +117,15 @@ export const roadmapPhaseLate = (p: Phase, today: ISODate) => p.status === 'plan
 /** Las etapas de un proyecto con sus fases apuntadas y en qué punto está cada una. */
 export function roadmapProjectPhases(data: StudioData, project: Project): RoadmapProjectPhases {
   const phases = data.phases.filter((p) => p.projectId === project.id)
-  const lifecycle = ROADMAP_LIFECYCLE.includes(project.stage)
-  const currentOrder = lifecycle ? STAGES[project.stage].order : undefined
-  // En pausa o archivado (o con fases de esas «etapas»): salen al final.
-  const extra = (['paused', 'archived'] as ProjectStage[]).filter((s) => s === project.stage || phases.some((p) => p.stage === s))
-  const stages = [...ROADMAP_LIFECYCLE, ...extra].map((stage): RoadmapStage => {
+  const currentOrder = project.phase ? PHASES[project.phase].order : undefined
+  const stages = ROADMAP_LIFECYCLE.map((stage): RoadmapStage => {
     const list = phases.filter((p) => p.stage === stage).sort((a, b) => phaseDate(a).localeCompare(phaseDate(b)))
     let state: RoadmapStageState
-    if (stage === project.stage) state = 'current'
+    if (stage === project.phase) state = 'current'
     else if (list.length && list.every((p) => p.status === 'done')) state = 'done'
     else if (list.length) state = 'planned'
-    else if (currentOrder === undefined || !ROADMAP_LIFECYCLE.includes(stage)) state = 'unknown'
-    else state = STAGES[stage].order < currentOrder ? 'past' : 'ahead'
+    else if (currentOrder === undefined) state = 'unknown'
+    else state = PHASES[stage].order < currentOrder ? 'past' : 'ahead'
     return { stage, state, phases: list }
   })
   return { project, stages, count: phases.length }
@@ -205,8 +200,8 @@ export interface RoadmapLineEntry {
   endDate?: ISODate
   /** El nombre; en una fase sin nombre propio, vacío (la pantalla pone el de la etapa). */
   title: string
-  /** En las fases, su etapa. */
-  stage?: ProjectStage
+  /** En las fases, su fase de desarrollo. */
+  stage?: DevPhase
   /** La fecha está confirmada (las previstas sin confirmar, no). */
   confirmed: boolean
   /** Hecho, publicado o celebrado. */

@@ -18,7 +18,7 @@ import type {
   StudioEvent,
   WorkItem,
 } from '../types'
-import { byPriority, closedProjectIds, feedbackToPrioritize, isOpen, normalize, type Scope } from '../selectors'
+import { byPriority, closedProjectIds, feedbackToPrioritize, inProject, isOpen, normalize, type Scope } from '../selectors'
 import { hasTag } from './etiquetas'
 
 /** Subsecciones de la faceta «tipo» (null = todo el feedback). */
@@ -171,7 +171,7 @@ const bugDate = (e: BugEntry) => (e.type === 'feedback' ? e.feedback.receivedAt 
 export function unlinkedIssues(data: StudioData, scope: Scope = null): WorkItem[] {
   const linked = new Set<ID>()
   for (const f of data.feedback) if (f.kind === 'bug' && (scope === null || f.projectId === scope)) for (const id of f.linkedItemIds) linked.add(id)
-  return data.items.filter((i) => i.kind === 'issue' && (scope === null || i.projectId === scope) && !linked.has(i.id))
+  return data.items.filter((i) => i.kind === 'issue' && (scope === null || inProject(i, scope)) && !linked.has(i.id))
 }
 
 /** ¿Entra esta incidencia con los filtros finos? (las incidencias no tienen origen ni estados de feedback). */

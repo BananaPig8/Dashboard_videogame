@@ -23,7 +23,7 @@ const project = (id: string) => ({
   name: id,
   description: '',
   platforms: [],
-  stage: 'production' as const,
+  status: 'desarrollo',
   color: '#000',
   versions: [],
   tags: [],
@@ -409,7 +409,7 @@ describe('Prioridades: ¿hay datos?', () => {
   })
 
   it('en todo el estudio, el trabajo de un proyecto archivado no cuenta', () => {
-    const d = data({ projects: [project('a'), { ...project('viejo'), stage: 'archived' }], items: [item('abierta', { projectId: 'viejo' })] })
+    const d = data({ projects: [project('a'), { ...project('viejo'), status: 'archivado' }], items: [item('abierta', { projectId: 'viejo' })] })
     expect(priorityHasData(d, null)).toBe(false)
     expect(priorityHasData(d, 'viejo')).toBe(true)
   })
@@ -418,7 +418,7 @@ describe('Prioridades: ¿hay datos?', () => {
 describe('Prioridades: proyectos archivados y lo que está por confirmar', () => {
   it('en todo el estudio, nada de un proyecto archivado; en su ficha, sí', () => {
     const d = data({
-      projects: [project('a'), { ...project('viejo'), stage: 'archived' }],
+      projects: [project('a'), { ...project('viejo'), status: 'archivado' }],
       items: [item('critica-vieja', { projectId: 'viejo', priority: 'critical', dueDate: '2026-10-20' }), item('critica', { priority: 'critical' })],
       releases: [release('parche-viejo', { projectId: 'viejo', targetDate: '2026-11-05' })],
       events: [event('feria-vieja', { projectId: 'viejo', date: '2026-11-08', registrationStatus: 'open', registrationDeadline: '2026-11-04' })],

@@ -1,7 +1,7 @@
 // Roadmap › Línea temporal: por proyecto, fases, hitos, versiones y eventos en orden, con
 // la marca de hoy entre lo pasado y lo que viene. Es una lista ordenada (se lee igual con
 // lector de pantalla); en todo el estudio, una por proyecto.
-import { STAGES, type Tone } from '../../../domain/catalog'
+import { PHASES, type Tone } from '../../../domain/catalog'
 import { yearOf } from '../../../domain/dates'
 import { roadmapLine, type RoadmapLine, type RoadmapLineEntry, type RoadmapLineKind } from '../../../domain/selectors'
 import { t } from '../../../i18n'
@@ -29,7 +29,7 @@ function LineRow({ e, past }: { e: RoadmapLineEntry; past?: boolean }) {
   const fmt = useFormat()
   const today = useToday()
   const year = yearOf(today)
-  const title = e.kind === 'phase' && !e.title && e.stage ? STAGES[e.stage].label : e.title
+  const title = e.kind === 'phase' && !e.title && e.stage ? PHASES[e.stage].label : e.title
   // Ya empezó y no ha acabado (una fase en curso, una feria de varios días).
   const ongoing = !past && !e.done && !!e.date && e.date <= today
   return (
@@ -46,7 +46,7 @@ function LineRow({ e, past }: { e: RoadmapLineEntry; past?: boolean }) {
           <Pill tone={KIND[e.kind].tone} icon={KIND[e.kind].icon}>
             {t(`secciones.roadmap.linea.kinds.${e.kind}`)}
           </Pill>
-          {e.kind === 'phase' && e.title && e.stage && <span className="meta-date">{STAGES[e.stage].label}</span>}
+          {e.kind === 'phase' && e.title && e.stage && <span className="meta-date">{PHASES[e.stage].label}</span>}
           {e.done && (
             <Pill tone="success" icon="check">
               {t('secciones.roadmap.linea.done')}

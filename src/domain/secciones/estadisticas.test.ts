@@ -19,13 +19,13 @@ import {
 // Lunes 19 de octubre de 2026.
 const TODAY = '2026-10-19'
 const src = [{ type: 'manual' as const, ref: 'prueba' }]
-const project = (id: string, stage: StudioData['projects'][number]['stage'] = 'production') => ({
+const project = (id: string, status = 'desarrollo') => ({
   id,
   slug: id,
   name: id,
   description: '',
   platforms: [],
-  stage,
+  status,
   color: '#000',
   versions: [],
   tags: [],

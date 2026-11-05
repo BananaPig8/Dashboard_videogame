@@ -27,7 +27,11 @@ import {
   RELEASE_STATUSES,
   RESOURCE_TYPES,
   SECTOR_EVENT_TYPES,
-  STAGES,
+  COMPONENT_KINDS,
+  PHASES,
+  projectStatusesOf,
+  RISK_LEVELS,
+  RISK_STATUSES,
   STATUSES,
   STATUS_ORDER,
   STORE_PLATFORMS,
@@ -81,6 +85,11 @@ const fromTable = (table: Record<string, unknown>, order?: readonly string[]) =>
 const byProject = <T extends { projectId?: string }>(list: T[], d: Draft) => list.filter((x) => !d.projectId || x.projectId === d.projectId)
 
 const projectOptions = (data: StudioData) => data.projects.map((p) => ({ value: p.id, label: p.name }))
+/** Los estados del estudio, en su orden (y el que tenga el borrador aunque ya no exista). */
+const projectStatusOptions = (data: StudioData, d: Draft) => {
+  const list = projectStatusesOf(data.studio).map((s) => ({ value: s.id, label: s.label }))
+  return typeof d.status === 'string' && !list.some((o) => o.value === d.status) ? [...list, { value: d.status, label: d.status }] : list
+}
 const areaOptions = (data: StudioData) => data.areas.map((a) => ({ value: a.id, label: a.name }))
 const memberOptions = (data: StudioData, d: Draft, key = 'assigneeId') =>
   data.members.filter((m) => m.active || m.id === d[key]).map((m) => ({ value: m.id, label: m.kind === 'external' ? `${m.name} (externo)` : m.name }))
@@ -151,6 +160,14 @@ export const SPECS: Record<CollectionKey, FieldSpec[]> = {
         byProject(data.items, d)
           .filter((i) => i.id !== d.id && i.kind !== 'goal' && (STATUSES[i.status].open || (d.dependsOnIds as string[] | undefined)?.includes(i.id)))
           .map((i) => ({ value: i.id, label: `${i.title} (${label(STATUSES, i.status)})` })),
+    },
+    {
+      key: 'alsoProjectIds',
+      label: 'También vale para',
+      type: 'multi',
+      wide: true,
+      hint: 'Otros proyectos a los que sirve (una tarea común, sin duplicarla). Ctrl o Cmd + clic para elegir varios.',
+      options: (data, d) => data.projects.filter((p) => p.id !== d.projectId).map((p) => ({ value: p.id, label: p.name })),
     },
     { key: 'buildId', label: 'Build en la que aparece', type: 'select', empty: 'Ninguna', options: buildOptions, sameProject: true, show: (d) => d.kind === 'issue' || !!d.buildId },
     { key: 'releaseId', label: 'Versión en la que sale', type: 'select', empty: 'Ninguna', options: releaseOptions, sameProject: true },
@@ -266,15 +283,39 @@ export const SPECS: Record<CollectionKey, FieldSpec[]> = {
   ],
   projects: [
     { key: 'name', label: 'Nombre', type: 'text', required: true, wide: true },
-    { key: 'stage', label: 'Etapa', type: 'select', required: true, options: fromTable(STAGES) },
+    { key: 'codename', label: 'Nombre interno o en clave', type: 'text' },
     { key: 'color', label: 'Color', type: 'color' },
-    { key: 'tagline', label: 'En una frase', type: 'text', wide: true },
-    { key: 'description', label: 'Descripción', type: 'textarea', wide: true },
+    { key: 'tagline', label: 'Descripción breve', type: 'text', hint: 'En una frase.', wide: true },
+    { key: 'description', label: 'Descripción completa', type: 'textarea', wide: true },
+    { key: 'status', label: 'Estado', type: 'select', required: true, hint: 'En qué punto de su vida está. Los estados se cambian en Ajustes › Estados.', options: projectStatusOptions },
+    { key: 'phase', label: 'Fase de desarrollo', type: 'select', empty: 'Sin decir', hint: 'No es el estado: un juego lanzado puede estar en mantenimiento.', options: fromTable(PHASES) },
+    { key: 'priority', label: 'Prioridad', type: 'select', empty: 'Sin prioridad', options: fromTable(PRIORITIES, ['critical', 'high', 'medium', 'low']) },
+    { key: 'ownerId', label: 'Responsable', type: 'select', empty: 'Sin responsable', options: (data, d) => memberOptions(data, d, 'ownerId') },
+    {
+      key: 'memberIds',
+      label: 'Miembros y colaboradores',
+      type: 'multi',
+      wide: true,
+      hint: 'Ctrl o Cmd + clic para elegir varios.',
+      options: (data, d) =>
+        data.members
+          .filter((m) => m.active || (d.memberIds as string[] | undefined)?.includes(m.id))
+          .map((m) => ({ value: m.id, label: m.kind === 'external' ? `${m.name} (externo)` : m.name })),
+    },
     { key: 'nextGoal', label: 'Objetivo inmediato', type: 'text', wide: true },
+    { key: 'genre', label: 'Género', type: 'text' },
+    { key: 'subgenres', label: 'Subgéneros', type: 'tags', hint: 'Separados por comas.' },
+    { key: 'platforms', label: 'Plataformas objetivo', type: 'tags', hint: 'Windows, Linux, macOS, Switch…', wide: true },
     { key: 'engine', label: 'Motor', type: 'text' },
     { key: 'engineVersion', label: 'Versión del motor', type: 'text' },
-    { key: 'genre', label: 'Género', type: 'text' },
+    { key: 'technologies', label: 'Tecnologías', type: 'tags', hint: 'Lenguajes, librerías, servicios…', wide: true },
+    { key: 'languages', label: 'Idiomas previstos', type: 'tags', hint: 'Español, inglés…', wide: true },
+    { key: 'audience', label: 'Público objetivo', type: 'text', wide: true },
+    { key: 'createdAt', label: 'Alta en Studio Hub', type: 'date' },
     { key: 'startedAt', label: 'Empezado', type: 'date' },
+    { key: 'targetReleaseDate', label: 'Fecha objetivo de lanzamiento', type: 'date' },
+    { key: 'targetReleaseConfirmed', label: 'Fecha objetivo confirmada', type: 'checkbox', show: (d) => !!d.targetReleaseDate },
+    { key: 'releasedAt', label: 'Lanzado el', type: 'date', hint: 'La fecha real, si ya salió.' },
     { key: 'coverUrl', label: 'Portada o icono', type: 'url', hint: 'Enlace a una imagen. Sin ella, la tarjeta lleva la inicial y el color del proyecto.', wide: true },
     {
       key: 'progressMethod',
@@ -287,8 +328,8 @@ export const SPECS: Record<CollectionKey, FieldSpec[]> = {
         { value: 'milestones', label: 'Por hitos alcanzados' },
       ],
     },
-    { key: 'platforms', label: 'Plataformas', type: 'tags', wide: true },
     { key: 'repoUrl', label: 'Repositorio', type: 'url', wide: true },
+    { key: 'workFolder', label: 'Carpeta de trabajo', type: 'text', hint: 'Una ruta del equipo o un enlace a la nube.', wide: true },
     {
       key: 'versions',
       label: 'Versiones',
@@ -302,7 +343,7 @@ export const SPECS: Record<CollectionKey, FieldSpec[]> = {
     },
     {
       key: 'links',
-      label: 'Enlaces',
+      label: 'Enlaces externos',
       type: 'list',
       wide: true,
       fields: [
@@ -310,6 +351,7 @@ export const SPECS: Record<CollectionKey, FieldSpec[]> = {
         { key: 'url', label: 'Dirección', type: 'url', required: true },
       ],
     },
+    { key: 'internalNotes', label: 'Notas internas', type: 'textarea', wide: true },
     tags,
   ],
   areas: [
@@ -339,7 +381,7 @@ export const SPECS: Record<CollectionKey, FieldSpec[]> = {
   ],
   phases: [
     project(),
-    { key: 'stage', label: 'Etapa', type: 'select', required: true, options: fromTable(STAGES) },
+    { key: 'stage', label: 'Fase de desarrollo', type: 'select', required: true, options: fromTable(PHASES) },
     { key: 'title', label: 'Nombre propio', type: 'text', hint: 'Si la fase tiene un nombre, p. ej. «Vertical slice».' },
     { key: 'status', label: 'Estado', type: 'select', required: true, options: fromTable(PHASE_STATUSES) },
     { key: 'startDate', label: 'Empieza', type: 'date' },
@@ -454,6 +496,37 @@ export const SPECS: Record<CollectionKey, FieldSpec[]> = {
     { key: 'date', label: 'Fecha del dato', type: 'date', required: true },
     { key: 'platform', label: 'Plataforma', type: 'select', empty: 'Sin indicar', options: fromTable(STORE_PLATFORMS) },
     confidence,
+  ],
+  risks: [
+    { key: 'title', label: 'Riesgo', type: 'text', required: true, hint: 'Qué puede salir mal.', wide: true },
+    project(),
+    { key: 'likelihood', label: 'Probabilidad', type: 'select', required: true, options: fromTable(RISK_LEVELS) },
+    { key: 'impact', label: 'Impacto', type: 'select', required: true, options: fromTable(PRIORITIES, ['critical', 'high', 'medium', 'low']) },
+    { key: 'status', label: 'Estado', type: 'select', required: true, options: fromTable(RISK_STATUSES) },
+    { key: 'ownerId', label: 'Quién lo vigila', type: 'select', empty: 'Nadie', options: (data, d) => memberOptions(data, d, 'ownerId') },
+    { key: 'description', label: 'Detalle', type: 'textarea', wide: true },
+    { key: 'mitigation', label: 'Qué se hace', type: 'textarea', hint: 'Para que no pase, o para que importe menos si pasa.', wide: true },
+    { key: 'reviewDate', label: 'Volver a mirarlo el', type: 'date' },
+    { key: 'createdAt', label: 'Apuntado el', type: 'date' },
+    confidence,
+    tags,
+  ],
+  components: [
+    { key: 'name', label: 'Nombre', type: 'text', required: true, hint: 'P. ej. «Sistema de inventario».', wide: true },
+    { key: 'kind', label: 'Qué es', type: 'select', required: true, options: fromTable(COMPONENT_KINDS) },
+    {
+      key: 'projectIds',
+      label: 'Proyectos que lo usan',
+      type: 'multi',
+      wide: true,
+      hint: 'Ctrl o Cmd + clic para elegir varios.',
+      options: projectOptions,
+    },
+    { key: 'description', label: 'Descripción', type: 'textarea', wide: true },
+    { key: 'repoUrl', label: 'Repositorio', type: 'url', wide: true },
+    { key: 'path', label: 'Dónde está', type: 'text', hint: 'Ruta dentro del repositorio o de la carpeta de trabajo.', wide: true },
+    { key: 'notes', label: 'Notas', type: 'textarea', wide: true },
+    tags,
   ],
   // El registro de cambios lo escribe la aplicación: no tiene formulario.
   changes: [],

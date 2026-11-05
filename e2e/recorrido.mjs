@@ -54,6 +54,26 @@ await step('marcar hecha y deshacer desde el aviso', async () => {
   await page.getByRole('button', { name: 'Marcar «Probar Studio Hub» como hecho' }).waitFor()
 })
 
+await step('cerrar el editor con cambios sin guardar pregunta antes de descartarlos', async () => {
+  await page.getByRole('button', { name: 'Probar Studio Hub' }).first().click()
+  await dialog().locator('input[name="title"]').fill('Probar Studio Hub (cambiado)')
+  await page.keyboard.press('Escape')
+  const ask = page.getByRole('dialog', { name: '¿Descartar los cambios sin guardar?' })
+  await ask.getByRole('button', { name: 'Seguir editando' }).click()
+  await ask.waitFor({ state: 'detached' })
+  if ((await dialog().locator('input[name="title"]').inputValue()) !== 'Probar Studio Hub (cambiado)') throw new Error('se perdió lo escrito')
+  // Esc dos veces seguidas tampoco lo pierde.
+  await page.keyboard.press('Escape')
+  await ask.waitFor()
+  await page.keyboard.press('Escape')
+  await ask.waitFor({ state: 'detached' })
+  await page.keyboard.press('Escape')
+  await ask.waitFor()
+  await ask.getByRole('button', { name: 'Descartar' }).click()
+  await dialog().waitFor({ state: 'detached' })
+  await page.getByRole('button', { name: 'Probar Studio Hub', exact: true }).first().waitFor()
+})
+
 await step('el formulario explica los errores', async () => {
   await page.getByRole('button', { name: 'Probar Studio Hub' }).first().click()
   await dialog().locator('input[name="title"]').fill('')
@@ -347,7 +367,7 @@ await step('recorrer las 15 secciones y todas sus subsecciones', async () => {
     tabs.push(...(await page.getByRole('menuitem').evaluateAll((as) => as.map((a) => a.getAttribute('href')))))
     await page.keyboard.press('Escape')
   }
-  if (tabs.length < 13) throw new Error(`solo ${tabs.length} pestañas en la ficha`)
+  if (tabs.length < 14) throw new Error(`solo ${tabs.length} pestañas en la ficha`)
   for (const href of tabs) {
     await page.goto(`${base}/${href}`)
     await page.locator('main h1').first().waitFor()

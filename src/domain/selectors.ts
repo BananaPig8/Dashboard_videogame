@@ -5,7 +5,7 @@ import type { CollectionKey } from './collections'
 import { addDays, daysBetween, startOfWeek, type WeekStart } from './dates'
 import { registrationsClosingSoon } from './secciones/eventos'
 import { closedProjectIds } from './secciones/panel'
-import { projectLastActivity } from './secciones/proyectos'
+import { projectGroupOf, projectLastActivity } from './secciones/proyectos'
 import { budgetUsage } from './secciones/finanzas'
 import type {
   Activity,
@@ -24,7 +24,13 @@ import type {
 /** null = todo el estudio. */
 export type Scope = ID | null
 
-const inScope = (scope: Scope) => (x: { projectId?: ID }) => scope === null || x.projectId === scope
+/**
+ * ¿Es de este proyecto? Una tarea compartida es de su proyecto y de los de `alsoProjectIds`:
+ * sale en todos, sin copiarse (y en todo el estudio, una sola vez).
+ */
+export const inProject = (x: { projectId?: ID; alsoProjectIds?: ID[] }, projectId: ID) => x.projectId === projectId || !!x.alsoProjectIds?.includes(projectId)
+
+const inScope = (scope: Scope) => (x: { projectId?: ID; alsoProjectIds?: ID[] }) => scope === null || inProject(x, scope)
 
 /** Los eventos de todo el estudio (sin proyecto) cuentan también en cada proyecto, como en el Calendario. */
 const eventInScope = (scope: Scope) => (e: { projectId?: ID }) => scope === null || !e.projectId || e.projectId === scope
@@ -293,7 +299,9 @@ export function projectSummary(data: StudioData, project: Project, today: ISODat
     score += 2
     reasons.push(plural(soonEvents.length, 'evento en las próximas dos semanas', 'eventos en las próximas dos semanas'))
   }
-  const quiet = project.stage !== 'paused' && project.stage !== 'archived' && project.stage !== 'live'
+  // Lo parado a propósito o ya lanzado no «se queda sin actividad».
+  const group = projectGroupOf(data.studio, project)
+  const quiet = group !== 'pausa' && group !== 'archivados' && group !== 'lanzados'
   if (quiet && lastActivity) {
     const idle = daysBetween(lastActivity, today)
     if (idle > 30) {
@@ -308,7 +316,7 @@ export function projectSummary(data: StudioData, project: Project, today: ISODat
   let level: HealthLevel = score >= 7 ? 'urgent' : score >= 3 ? 'attention' : 'on_track'
   // Sin nada apuntado no hay de qué deducir que va bien.
   if (level === 'on_track' && !reasons.length && !items.length && !lastActivity) level = 'no_data'
-  if (project.stage === 'paused' || project.stage === 'archived') level = 'idle'
+  if (group === 'pausa' || group === 'archivados') level = 'idle'
 
   return {
     project,
@@ -482,3 +490,7 @@ export * from './secciones/finanzas'
 export * from './secciones/estadisticas'
 export * from './secciones/ajustes'
 export * from './secciones/etiquetas'
+export * from './secciones/ficha'
+export * from './secciones/plantillas'
+export * from './secciones/proyectos-archivo'
+export * from './secciones/relaciones'

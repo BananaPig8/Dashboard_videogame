@@ -16,13 +16,13 @@ const TODAY = '2026-10-19'
 // Últimos 7 días: del 13 al 19 de octubre; el anterior, del 6 al 12.
 const WEEK = periodRange('7d', TODAY)
 const src = [{ type: 'manual' as const, ref: 'prueba' }]
-const project = (id: string, stage: 'production' | 'idea' | 'live' | 'archived' = 'production') => ({
+const project = (id: string, status = 'desarrollo') => ({
   id,
   slug: id,
   name: id,
   description: '',
   platforms: [],
-  stage,
+  status,
   color: '#000',
   versions: [],
   tags: [],
@@ -74,7 +74,7 @@ function base(): StudioData {
 function data(): StudioData {
   return {
     ...base(),
-    projects: [project('a'), project('b'), project('idea', 'idea'), project('fuera', 'live')],
+    projects: [project('a'), project('b'), project('idea', 'idea'), project('fuera', 'lanzado')],
     items: [
       item('abierta', { createdAt: '2026-09-01' }),
       item('vencida', { dueDate: '2026-10-10' }),
@@ -243,7 +243,7 @@ describe('panel: indicadores', () => {
 
   it('en todo el estudio no cuenta lo de los proyectos archivados; en su ficha, sí', () => {
     const d = data()
-    d.projects.push(project('archivado', 'archived'))
+    d.projects.push(project('archivado', 'archivado'))
     d.items.push(
       item('vieja-critica', { projectId: 'archivado', priority: 'critical', dueDate: '2026-10-01' }),
       item('vieja-bloqueada', { projectId: 'archivado', status: 'blocked' }),

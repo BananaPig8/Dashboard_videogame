@@ -1,8 +1,8 @@
 // Cálculos de la sección «panel». Las pantallas los piden a selectors.ts, que reexporta este fichero.
 // Regla: lo que se importa de '../selectors' solo se usa dentro de funciones (hay un ciclo de import).
 import { addDays, daysBetween } from '../dates'
-import type { ID, ISODate, Project, ProjectStage, StudioData } from '../types'
-import { notificationsFor, type NotificationKind, type Scope, type StudioNotification } from '../selectors'
+import type { ID, ISODate, StudioData } from '../types'
+import { inProject, isProjectClosed, notificationsFor, type NotificationKind, type Scope, type StudioNotification } from '../selectors'
 
 export * from './panel-indicadores'
 export * from './panel-prioridades'
@@ -23,18 +23,12 @@ export function panelAlerts(data: StudioData, today: ISODate, scope: Scope = nul
 // ——— Proyectos cerrados ———————————————————————————————————————————————————————
 
 /**
- * Las etapas de un proyecto que ya no se trabaja (archivado; si algún día hay «cancelado», va
- * aquí). En la vista de todo el estudio, lo de esos proyectos no sale en Prioridades, en los
- * indicadores ni en Lanzamientos (en su propia ficha, sí). «Proyectos activos» cuenta aparte
- * (solo los activos).
+ * Los ids de los proyectos cerrados: los de un estado del grupo «archivados» (archivado,
+ * cancelado o los que el estudio haya puesto ahí; `isProjectClosed`). En la vista de todo el
+ * estudio, lo de esos proyectos no sale en el Dashboard ni en la campana (en su ficha, sí).
  */
-export const PANEL_CLOSED_STAGES: readonly ProjectStage[] = ['archived']
-
-export const isClosedProject = (p: Pick<Project, 'stage'>): boolean => PANEL_CLOSED_STAGES.includes(p.stage)
-
-/** Los ids de los proyectos cerrados. */
 export function closedProjectIds(data: StudioData): Set<ID> {
-  return new Set(data.projects.filter(isClosedProject).map((p) => p.id))
+  return new Set(data.projects.filter((p) => isProjectClosed(data.studio, p)).map((p) => p.id))
 }
 
 /**
@@ -42,10 +36,11 @@ export function closedProjectIds(data: StudioData): Set<ID> {
  * menos lo de los proyectos cerrados. `withStudio`: lo que no es de ningún proyecto también vale
  * en un proyecto (eventos del estudio).
  */
-export function panelOwn(data: StudioData, scope: Scope, withStudio = false): (x: { projectId?: ID }) => boolean {
-  if (scope !== null) return (x) => x.projectId === scope || (withStudio && !x.projectId)
+export function panelOwn(data: StudioData, scope: Scope, withStudio = false): (x: { projectId?: ID; alsoProjectIds?: ID[] }) => boolean {
+  if (scope !== null) return (x) => inProject(x, scope) || (withStudio && !x.projectId)
   const closed = closedProjectIds(data)
-  return (x) => !x.projectId || !closed.has(x.projectId)
+  // Una tarea compartida sigue contando mientras alguno de sus proyectos esté abierto.
+  return (x) => !x.projectId || !closed.has(x.projectId) || !!x.alsoProjectIds?.some((id) => !closed.has(id))
 }
 
 /** Parámetro que llevan los enlaces de las cifras a una lista que deja fuera los proyectos cerrados. */

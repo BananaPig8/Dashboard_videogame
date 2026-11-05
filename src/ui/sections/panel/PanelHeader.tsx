@@ -5,7 +5,7 @@
 import { useEffect, useId, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { nowISODateTime } from '../../../domain/dates'
-import { PERIOD_IDS, isClosedProject, panelGreeting, projectSummaries, projectsInGroup, type Period, type PeriodId } from '../../../domain/selectors'
+import { PERIOD_IDS, isProjectClosed, panelGreeting, projectSummaries, projectsInGroup, type Period, type PeriodId } from '../../../domain/selectors'
 import { t, tr } from '../../../i18n'
 import type { Formatter } from '../../../i18n/format'
 import { useCanEdit, useStudioData } from '../../../data/store'
@@ -151,7 +151,7 @@ function GamesHealth() {
   const today = useToday()
   const { scope } = useScope()
   const labelId = useId()
-  const list = projectSummaries(data, today).filter((s) => (scope ? s.project.id === scope : !isClosedProject(s.project)))
+  const list = projectSummaries(data, today).filter((s) => (scope ? s.project.id === scope : !isProjectClosed(data.studio, s.project)))
   if (list.length === 0) return null
   return (
     <div className="panel-health">

@@ -8,7 +8,7 @@ import { statsProgress, type ProjectProgress, type StatsCount, type StatsProject
 import type { ItemKind } from '../../../domain/types'
 import { t } from '../../../i18n'
 import { useCanEdit, useStudioData } from '../../../data/store'
-import { HealthPill, KindTag, StagePill } from '../../components/Badges'
+import { HealthPill, KindTag, ProjectStatusPill } from '../../components/Badges'
 import { Card, Empty, Progress, Stat } from '../../components/Common'
 import { useTagFilter } from '../../components/TagFilter'
 import { useScope, useUI } from '../../context'
@@ -181,7 +181,7 @@ export function EstadisticasProgreso() {
           <ByKind rows={rows} />
           <Card title={t('secciones.estadisticas.progreso.healthTitle')} icon="activity" subtitle={t('secciones.estadisticas.progreso.healthSubtitle')}>
             <p className="estadisticas-pills">
-              <StagePill stage={r.project.stage} />
+              <ProjectStatusPill status={r.project.status} />
               <HealthPill level={health.level} />
             </p>
             {health.reasons.length ? (
@@ -233,7 +233,7 @@ export function EstadisticasProgreso() {
                     </Link>
                   </th>
                   <td data-label={L('stage')}>
-                    <StagePill stage={r.project.stage} />
+                    <ProjectStatusPill status={r.project.status} />
                   </td>
                   <td data-label={L('health')}>
                     <span title={r.summary.health.reasons.join(' · ') || undefined}>

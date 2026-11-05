@@ -103,7 +103,7 @@ const empty = (): StudioData => ({
   activity: [],
 })
 
-const project = { id: 'p', slug: 'p', name: 'P', description: '', platforms: [], stage: 'idea', color: '#000', versions: [], tags: [], links: [] }
+const project = { id: 'p', slug: 'p', name: 'P', description: '', platforms: [], status: 'idea', color: '#000', versions: [], tags: [], links: [] }
 const task = (id: string, title: string): WorkItem => ({
   id,
   projectId: 'p',

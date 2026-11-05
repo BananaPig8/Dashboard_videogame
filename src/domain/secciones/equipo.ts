@@ -6,14 +6,14 @@
 import { PRIORITIES, TASK_KINDS } from '../catalog'
 import { addDays } from '../dates'
 import type { Area, ID, ISODate, Member, MemberKind, StudioData, WorkItem } from '../types'
-import { isOpen, type Scope } from '../selectors'
+import { inProject, isOpen, type Scope } from '../selectors'
 import { hasTag } from './etiquetas'
 import { compareTasks } from './tareas'
 
 /** Semanas que mira la carga de trabajo (horas apuntadas frente a horas semanales). */
 export const TEAM_WEEKS = 4
 
-const own = (scope: Scope) => (x: { projectId?: ID }) => scope === null || x.projectId === scope
+const own = (scope: Scope) => (x: { projectId?: ID; alsoProjectIds?: ID[] }) => scope === null || inProject(x, scope)
 
 /** Del estudio antes que externos y, dentro de cada grupo, por nombre. */
 export const compareMembers = (a: Member, b: Member): number => (a.kind === b.kind ? 0 : a.kind === 'core' ? -1 : 1) || a.name.localeCompare(b.name, 'es')

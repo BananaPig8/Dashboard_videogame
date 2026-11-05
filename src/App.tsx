@@ -4,7 +4,7 @@ import { t } from './i18n'
 import { store, useStoreMeta, useStoreStatus } from './data/store'
 import { SEED_VERSION } from './data/seed'
 import { AppShell } from './ui/AppShell'
-import { allSections, migratePath, OLD_PATHS } from './ui/navigation'
+import { allSections, migratePath, OLD_PATHS, projectOnlySections, studioHref } from './ui/navigation'
 import { SECTION_PAGES } from './ui/sections/registry'
 import { UIProvider } from './ui/context'
 import { ErrorBoundary, FeedbackProvider, PageSkeleton } from './ui/feedback'
@@ -13,6 +13,12 @@ import { Icon } from './ui/components/Icon'
 // Cada sección se carga cuando se abre (sections/registry.tsx): el arranque es más rápido.
 const ProjectPage = lazy(() => import('./ui/pages/Projects').then((m) => ({ default: m.ProjectPage })))
 const EtiquetasPage = lazy(() => import('./ui/sections/etiquetas/EtiquetasPage'))
+
+/** Una pestaña que solo tiene la ficha de un proyecto, fuera de ella: a la vista del estudio que enseña lo mismo. */
+function StudioRedirect() {
+  const location = useLocation()
+  return <Navigate to={studioHref(location.pathname, location.search)} replace />
+}
 
 /** Lleva una ruta de la versión anterior a la de ahora (con su consulta). */
 function MigrateRedirect() {
@@ -125,6 +131,9 @@ function Screens() {
           <Route path="/proyectos/:slug/:tab" element={<ProjectPage />} />
           {OLD_PATHS.map((from) => (
             <Route key={from} path={from} element={<MigrateRedirect />} />
+          ))}
+          {projectOnlySections().map((s) => (
+            <Route key={s.id} path={s.to} element={<StudioRedirect />} />
           ))}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

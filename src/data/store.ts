@@ -18,6 +18,9 @@ import { LocalStorageAdapter, type Persisted, type StorageAdapter, type StoreMet
 export { COLLECTIONS, type CollectionKey }
 export type EntityOf<K extends CollectionKey> = StudioData[K][number]
 
+/** Un elemento con su colección (para upsertMany). */
+export type StoreEntry = { [K in CollectionKey]: { collection: K; entity: EntityOf<K> } }[CollectionKey]
+
 const key = (k: CollectionKey, id: ID) => `${k}:${id}`
 
 export function newId(prefix: string): ID {
@@ -223,11 +226,24 @@ export class StudioStore {
 
   /** Crea o sustituye un elemento de una colección (por id). */
   upsert<K extends CollectionKey>(k: K, entity: EntityOf<K>): void {
-    const list = this.data[k] as EntityOf<K>[]
-    const n = list.findIndex((x) => x.id === entity.id)
-    const next = n === -1 ? [...list, entity] : list.map((x, i) => (i === n ? entity : x))
-    const data = this.logged({ ...this.data, [k]: next }, k, n === -1 ? undefined : list[n], entity)
-    this.commit(data, this.markEdited(key(k, entity.id)))
+    this.upsertMany([{ collection: k, entity } as StoreEntry])
+  }
+
+  /**
+   * Crea o sustituye varios elementos de una vez (un proyecto con las fases y tareas de su
+   * plantilla): un solo guardado, y cada uno queda en el registro de cambios.
+   */
+  upsertMany(entries: readonly StoreEntry[]): void {
+    let data = this.data
+    const keys: string[] = []
+    for (const { collection: k, entity } of entries) {
+      const list = data[k] as { id: ID }[]
+      const n = list.findIndex((x) => x.id === entity.id)
+      const next = n === -1 ? [...list, entity] : list.map((x, i) => (i === n ? entity : x))
+      data = this.logged({ ...data, [k]: next }, k, n === -1 ? undefined : list[n], entity)
+      keys.push(key(k, entity.id))
+    }
+    if (keys.length) this.commit(data, this.markEdited(...keys))
   }
 
   /** Cambia algunos campos de un elemento. */

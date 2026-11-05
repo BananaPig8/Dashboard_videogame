@@ -29,7 +29,14 @@ import type {
   PhaseStatus,
   PlaytestMethod,
   Priority,
-  ProjectStage,
+  ComponentKind,
+  DevPhase,
+  ProjectRelationKind,
+  ProjectStatusDef,
+  ProjectStatusGroup,
+  ProjectStatusId,
+  RiskLevel,
+  RiskStatus,
   RegistrationStatus,
   ReleaseKind,
   ReleaseStatus,
@@ -77,18 +84,101 @@ function names<K extends string>(ns: string, keys: readonly K[]): Record<K, stri
   return out
 }
 
-export const STAGES = entries<ProjectStage, { tone: Tone; order: number }>('stage', {
-  idea: { tone: 'muted', order: 0 },
-  concept: { tone: 'muted', order: 1 },
-  prototype: { tone: 'info', order: 2 },
-  preproduction: { tone: 'info', order: 3 },
-  production: { tone: 'info', order: 4 },
-  polish: { tone: 'special', order: 5 },
-  release: { tone: 'warning', order: 6 },
-  live: { tone: 'success', order: 7 },
-  paused: { tone: 'neutral', order: 8 },
-  archived: { tone: 'muted', order: 9 },
+/** Las fases de desarrollo, en orden (la del proyecto y las del Roadmap). */
+export const PHASES = entries<DevPhase, { tone: Tone; order: number }>('phase', {
+  concept: { tone: 'muted', order: 0 },
+  prototype: { tone: 'info', order: 1 },
+  preproduction: { tone: 'info', order: 2 },
+  production: { tone: 'info', order: 3 },
+  polish: { tone: 'special', order: 4 },
+  release: { tone: 'warning', order: 5 },
+  live: { tone: 'success', order: 6 },
 })
+
+export const PHASE_ORDER = Object.keys(PHASES) as DevPhase[]
+
+// ——— Estados de proyecto (configurables) ——————————————————————————————————
+
+/** Los grupos de estados, en el orden en que salen en Proyectos. */
+export const PROJECT_STATUS_GROUPS: ProjectStatusGroup[] = ['activos', 'planificacion', 'pausa', 'lanzados', 'archivados']
+
+/**
+ * Los estados de serie. El estudio puede cambiarles el nombre y el tono, reordenarlos y
+ * añadir los suyos (Ajustes › Estados); «archivado» y «cancelado» no se pueden quitar.
+ */
+const DEFAULT_STATUS_SPEC: [ProjectStatusId, ProjectStatusGroup, Tone][] = [
+  ['idea', 'planificacion', 'muted'],
+  ['investigacion', 'planificacion', 'muted'],
+  ['planificacion', 'planificacion', 'info'],
+  ['prototipo', 'activos', 'info'],
+  ['desarrollo', 'activos', 'info'],
+  ['pruebas', 'activos', 'special'],
+  ['preparacion_demo', 'activos', 'warning'],
+  ['demo_publica', 'activos', 'success'],
+  ['preparacion_lanzamiento', 'activos', 'warning'],
+  ['lanzado', 'lanzados', 'success'],
+  ['mantenimiento', 'lanzados', 'success'],
+  ['en_pausa', 'pausa', 'neutral'],
+  ['cancelado', 'archivados', 'danger'],
+  ['archivado', 'archivados', 'muted'],
+]
+
+/** Los dos estados que no se pueden quitar: archivar y cancelar dependen de ellos. */
+export const ARCHIVED_STATUS: ProjectStatusId = 'archivado'
+export const CANCELLED_STATUS: ProjectStatusId = 'cancelado'
+export const FIXED_PROJECT_STATUSES: readonly ProjectStatusId[] = [ARCHIVED_STATUS, CANCELLED_STATUS]
+
+export function defaultProjectStatuses(): ProjectStatusDef[] {
+  return DEFAULT_STATUS_SPEC.map(([id, group, tone]) => ({ id, group, tone, label: tr(`catalog.projectStatus.${id}`) }))
+}
+
+/** Los estados del estudio: los suyos o los de serie (y nunca sin archivado ni cancelado). */
+export function projectStatusesOf(studio: { projectStatuses?: ProjectStatusDef[] }): ProjectStatusDef[] {
+  const own = studio.projectStatuses?.length ? studio.projectStatuses : defaultProjectStatuses()
+  const missing = defaultProjectStatuses().filter((d) => FIXED_PROJECT_STATUSES.includes(d.id) && !own.some((s) => s.id === d.id))
+  return [...own, ...missing]
+}
+
+/** Un estado por su id; si no está (de otra versión o borrado), uno «activo» con su id por nombre. */
+export function projectStatusOf(studio: { projectStatuses?: ProjectStatusDef[] }, id: ProjectStatusId): ProjectStatusDef {
+  return projectStatusesOf(studio).find((s) => s.id === id) ?? { id, label: id, group: 'activos', tone: 'neutral' }
+}
+
+/** El grupo de un estado (activos, en pausa, archivados…). */
+export const projectStatusGroup = (studio: { projectStatuses?: ProjectStatusDef[] }, id: ProjectStatusId): ProjectStatusGroup =>
+  projectStatusOf(studio, id).group
+
+/** Las etapas de antes (un solo campo para fase y estado) y su estado y su fase de ahora. */
+export const OLD_STAGES: Record<string, { status: ProjectStatusId; phase?: DevPhase }> = {
+  idea: { status: 'idea', phase: 'concept' },
+  concept: { status: 'investigacion', phase: 'concept' },
+  prototype: { status: 'prototipo', phase: 'prototype' },
+  preproduction: { status: 'planificacion', phase: 'preproduction' },
+  production: { status: 'desarrollo', phase: 'production' },
+  polish: { status: 'pruebas', phase: 'polish' },
+  release: { status: 'preparacion_lanzamiento', phase: 'release' },
+  live: { status: 'lanzado', phase: 'live' },
+  paused: { status: 'en_pausa' },
+  archived: { status: 'archivado' },
+}
+
+export const RISK_LEVELS = entries<RiskLevel, { tone: Tone; weight: number }>('riskLevel', {
+  low: { tone: 'neutral', weight: 1 },
+  medium: { tone: 'warning', weight: 2 },
+  high: { tone: 'danger', weight: 3 },
+})
+
+export const RISK_STATUSES = entries<RiskStatus, { tone: Tone; open: boolean }>('riskStatus', {
+  open: { tone: 'danger', open: true },
+  watching: { tone: 'warning', open: true },
+  mitigated: { tone: 'success', open: false },
+  occurred: { tone: 'danger', open: false },
+  closed: { tone: 'muted', open: false },
+})
+
+export const COMPONENT_KINDS = names<ComponentKind>('componentKind', ['system', 'library', 'tool', 'asset', 'service', 'other'])
+
+export const RELATION_KINDS = names<ProjectRelationKind>('relationKind', ['shares_resources', 'shares_tech', 'shares_component', 'depends_on', 'related'])
 
 const KIND_TONES = entries<ItemKind, { tone: Tone }>('kind', {
   task: { tone: 'neutral' },
@@ -325,15 +415,6 @@ export const RESOURCE_SECTIONS = {
 } as const satisfies Record<string, Record<string, readonly ResourceType[]>>
 
 export const CHECKLIST_TARGETS = names<ChecklistTarget>('checklistTarget', ['steam', 'demo', 'update', 'event', 'release', 'other'])
-
-/** Grupos de etapas (Proyectos › Activos, En planificación…). «release» es preparar la salida: activo, no lanzado. */
-export const STAGE_GROUPS: Record<'planificacion' | 'activos' | 'pausa' | 'lanzados' | 'archivados', ProjectStage[]> = {
-  planificacion: ['idea', 'concept'],
-  activos: ['prototype', 'preproduction', 'production', 'polish', 'release'],
-  pausa: ['paused'],
-  lanzados: ['live'],
-  archivados: ['archived'],
-}
 
 export const MEMBER_KINDS = names<MemberKind>('memberKind', ['core', 'external'])
 

@@ -5,7 +5,6 @@ import {
   type Achievement,
   type Build,
   type Checklist,
-  type ProjectStage,
   type Release,
   type StoreListing,
   type StoreText,
@@ -15,13 +14,13 @@ import { validateStudioData } from '../validate'
 import { launchPanel, launchProject, type LaunchCategory, type LaunchCategoryId, type LaunchProject } from '../selectors'
 
 const src = [{ type: 'doc' as const, ref: 'Documento de prueba', url: 'https://example.com/prueba' }]
-const project = (id: string, stage: ProjectStage = 'production') => ({
+const project = (id: string, status = 'desarrollo') => ({
   id,
   slug: id,
   name: id,
   description: '',
   platforms: [],
-  stage,
+  status,
   color: '#000000',
   versions: [],
   tags: [],
@@ -66,7 +65,7 @@ function data(over: Partial<StudioData> = {}): StudioData {
     ...emptyCollections(),
     schemaVersion: SCHEMA_VERSION,
     studio: { id: 's', name: 'Estudio', createdAt: '2026-01-01' },
-    projects: [project('p'), project('q', 'idea'), project('viejo', 'archived')],
+    projects: [project('p'), project('q', 'idea'), project('viejo', 'archivado')],
     ...over,
   }
 }

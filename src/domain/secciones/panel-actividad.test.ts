@@ -27,7 +27,7 @@ import { validateStudioData } from '../validate'
 
 const TODAY = '2026-11-02'
 const src = [{ type: 'manual' as const, ref: 'prueba' }]
-const project = (id: string) => ({ id, slug: id, name: id, description: '', platforms: [], stage: 'production' as const, color: '#000', versions: [], tags: [], links: [] })
+const project = (id: string) => ({ id, slug: id, name: id, description: '', platforms: [], status: 'desarrollo', color: '#000', versions: [], tags: [], links: [] })
 const item = (id: string, over: Partial<WorkItem> = {}): WorkItem => ({
   id,
   projectId: 'a',

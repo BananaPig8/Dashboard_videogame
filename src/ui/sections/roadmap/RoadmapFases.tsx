@@ -1,6 +1,6 @@
 // Roadmap › Fases: por proyecto, las etapas del ciclo de vida en orden (de la idea a
 // publicado) con la actual (la de la ficha del proyecto) y las fases apuntadas con sus fechas.
-import { STAGES } from '../../../domain/catalog'
+import { PHASES } from '../../../domain/catalog'
 import { yearOf } from '../../../domain/dates'
 import { roadmapPhaseLate, roadmapPhases, type RoadmapProjectPhases, type RoadmapStageState } from '../../../domain/selectors'
 import type { ISODate, Phase } from '../../../domain/types'
@@ -41,7 +41,7 @@ function PhaseRow({ phase, today }: { phase: Phase; today: ISODate }) {
   return (
     <li className="roadmap-phase">
       <button type="button" className="item-title" onClick={() => edit({ collection: 'phases', id: phase.id })}>
-        {phase.title || t('secciones.roadmap.fases.unnamed', { stage: STAGES[phase.stage].label })}
+        {phase.title || t('secciones.roadmap.fases.unnamed', { stage: PHASES[phase.stage].label })}
       </button>
       <span className="meta-date">{dates}</span>
       <span className="roadmap-phase-pills">
@@ -74,7 +74,7 @@ function ProjectPhases({ r, showName, today }: { r: RoadmapProjectPhases; showNa
         type="button"
         className="btn btn-small"
         aria-label={t('secciones.roadmap.fases.addFor', { project: project.name })}
-        onClick={() => create('phases', { projectId: project.id, stage: project.stage })}
+        onClick={() => create('phases', { projectId: project.id, stage: project.phase ?? 'concept' })}
       >
         <Icon name="plus" size={14} /> {t('secciones.roadmap.fases.add')}
       </button>
@@ -96,7 +96,7 @@ function ProjectPhases({ r, showName, today }: { r: RoadmapProjectPhases; showNa
       <ol className="roadmap-stages" aria-label={t('secciones.roadmap.fases.stagesOf', { project: project.name })}>
         {stages.map((s) => (
           <li key={s.stage} className={`roadmap-stage state-${s.state}`} aria-current={s.state === 'current' ? 'step' : undefined}>
-            <span className="roadmap-stage-name">{STAGES[s.stage].label}</span>
+            <span className="roadmap-stage-name">{PHASES[s.stage].label}</span>
             <Pill tone={STATE[s.state].tone} icon={STATE[s.state].icon}>
               {t(`secciones.roadmap.fases.states.${s.state}`)}
             </Pill>

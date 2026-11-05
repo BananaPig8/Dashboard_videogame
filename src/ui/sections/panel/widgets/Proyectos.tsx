@@ -9,7 +9,7 @@ import { Empty } from '../../../components/Common'
 import { Icon } from '../../../components/Icon'
 import { useUI } from '../../../context'
 import { ProjectCard } from '../../proyectos/ProjectCard'
-import { StageLine } from '../../proyectos/StageLine'
+import { StatusLine } from '../../proyectos/StatusLine'
 import { type WidgetProps, MoreLink } from './comunes'
 import './proyectos.css'
 
@@ -127,7 +127,7 @@ export function ProjectStateBody({ data, scope, today }: { data: StudioData; sco
           </ul>
         )}
         <h3 className="subhead">{t('secciones.proyectos.stages.title')}</h3>
-        <StageLine current={project.stage} />
+        <StatusLine current={project.status} />
       </div>
     </div>
   )

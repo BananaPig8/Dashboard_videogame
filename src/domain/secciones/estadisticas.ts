@@ -7,17 +7,17 @@
 import { METRIC_KINDS, STATUSES, STATUS_ORDER, TASK_KINDS, type MetricGroup } from '../catalog'
 import { addDays, daysBetween, startOfWeek, type WeekStart } from '../dates'
 import type { Area, ID, ISODate, ItemKind, ItemStatus, Member, Metric, MetricKind, Project, StudioData, WorkItem } from '../types'
-import { isOpen, itemsOf, normalize, projectSummary, type ProjectSummary, type Scope } from '../selectors'
+import { inProject, isOpen, itemsOf, normalize, projectSummary, type ProjectSummary, type Scope } from '../selectors'
 import { hasCheckableSource } from '../validate'
 import { hasTag } from './etiquetas'
-import { projectProgress, projectsByStage, type ProjectProgress } from './proyectos'
+import { projectProgress, projectsByStatus, type ProjectProgress } from './proyectos'
 
 /** Semanas de las gráficas semanales (se quitan las vacías del principio). */
 export const STATS_WEEKS = 12
 /** Periodo de «lo último»: las últimas cuatro semanas. */
 export const STATS_RECENT_DAYS = 28
 
-const own = (scope: Scope) => (x: { projectId?: ID }) => scope === null || x.projectId === scope
+const own = (scope: Scope) => (x: { projectId?: ID; alsoProjectIds?: ID[] }) => scope === null || inProject(x, scope)
 
 // ——— Semanas ——————————————————————————————————————————————————————————————
 
@@ -84,7 +84,7 @@ export interface StatsProjectProgress {
 export function statsProgress(data: StudioData, today: ISODate, scope: Scope = null, tag: string | null = null): StatsProjectProgress[] {
   return data.projects
     .filter((p) => scope === null || p.id === scope)
-    .sort(projectsByStage)
+    .sort(projectsByStatus(data.studio))
     .map((project) => {
       const items = itemsOf(data, project.id).filter((i) => TASK_KINDS.includes(i.kind) && hasTag(i, tag))
       return {
@@ -226,7 +226,7 @@ export function statsMilestones(data: StudioData, today: ISODate, scope: Scope =
   const dated = planned.filter((i) => i.dueDate)
   const months = done.map((i) => i.completedAt?.slice(0, 7)).filter((m): m is string => !!m)
   const first = months.length ? months.reduce((a, b) => (a < b ? a : b)) : null
-  const projects = data.projects.filter((p) => all.some((i) => i.projectId === p.id)).sort(projectsByStage)
+  const projects = data.projects.filter((p) => all.some((i) => inProject(i, p.id))).sort(projectsByStatus(data.studio))
   return {
     done,
     planned,
@@ -246,7 +246,7 @@ export function statsMilestones(data: StudioData, today: ISODate, scope: Scope =
     undated: planned.filter((i) => !i.dueDate),
     byMonth: first ? monthsBetween(first, today.slice(0, 7)).map((month) => ({ month, done: months.filter((m) => m === month).length })) : [],
     byProject: projects.map((project) => {
-      const n = (list: WorkItem[]) => list.filter((i) => i.projectId === project.id).length
+      const n = (list: WorkItem[]) => list.filter((i) => inProject(i, project.id)).length
       const lateItems = late.map((l) => l.item)
       return {
         project,

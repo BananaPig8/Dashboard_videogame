@@ -6,7 +6,7 @@
 // de Steam ni de otra tienda. Cada categoría dice cuánto hay registrado, para que la pantalla
 // distinga «no hay nada registrado» de «está todo hecho» (nunca «0 pendientes» sin datos).
 import type { Achievement, Build, Checklist, ChecklistItem, ChecklistTarget, ID, Project, Release, ReleaseKind, StoreListing, StoreText, StudioData } from '../types'
-import { BUILD_GROUPS, compareBuilds, compareReleases, isClosedProject, listingsOf, projectsByStage, type Scope } from '../selectors'
+import { BUILD_GROUPS, compareBuilds, compareReleases, isProjectClosed, listingsOf, projectsByStatus, type Scope } from '../selectors'
 
 /** Las categorías del panel, en el orden en que salen. */
 export type LaunchCategoryId = 'launches' | 'demos' | 'candidates' | 'materials' | 'achievements' | 'reviews' | 'updates' | 'dlc'
@@ -229,7 +229,7 @@ export function launchProject(data: StudioData, project: Project): LaunchProject
  */
 export function launchPanel(data: StudioData, scope: Scope = null): LaunchProject[] {
   return data.projects
-    .filter((p) => (scope === null ? !isClosedProject(p) : p.id === scope))
-    .sort(projectsByStage)
+    .filter((p) => (scope === null ? !isProjectClosed(data.studio, p) : p.id === scope))
+    .sort(projectsByStatus(data.studio))
     .map((p) => launchProject(data, p))
 }

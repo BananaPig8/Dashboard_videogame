@@ -170,14 +170,18 @@ export function Modal({
 }) {
   const ref = useRef<HTMLDialogElement>(null)
   const titleId = useId()
+  /** Lo cerramos nosotros (al desmontar), no el navegador. */
+  const closing = useRef(false)
   useEffect(() => {
     const d = ref.current
     if (!open || !d) return
+    closing.current = false
     // Quien lo abrió recupera el foco al cerrarse (el diálogo se desmonta sin close() y el
     // navegador no lo devuelve). Si ya no existe (se borró), el foco va al contenido.
     const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null
     if (!d.open) d.showModal()
     return () => {
+      closing.current = true
       if (d.open) d.close()
       if (document.activeElement && document.activeElement !== document.body) return
       if (opener?.isConnected) opener.focus({ preventScroll: true })
@@ -193,6 +197,14 @@ export function Modal({
       aria-labelledby={titleId}
       onCancel={(e) => {
         e.preventDefault()
+        onClose()
+      }}
+      onClose={() => {
+        // Chrome cierra el diálogo sin dejar cancelarlo si se pulsa Esc dos veces seguidas: se
+        // vuelve a abrir y se pide cerrar como siempre (el editor pregunta si hay cambios).
+        const d = ref.current
+        if (closing.current || !d || d.open) return
+        d.showModal()
         onClose()
       }}
       onClick={(e) => {

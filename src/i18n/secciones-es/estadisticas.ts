@@ -40,7 +40,7 @@ export const estadisticas = {
     byProjectTitle: 'Por proyecto',
     byProjectSubtitle: 'Tareas, funcionalidades, hitos, decisiones e incidencias hechas sobre el total (sin las descartadas)',
     project: 'Proyecto',
-    stage: 'Etapa',
+    stage: 'Estado',
     health: 'Salud',
     progress: 'Hecho',
     byKindTitle: 'Por tipo',

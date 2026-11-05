@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { STAGE_GROUPS, STAGES } from '../catalog'
+import { CANCELLED_STATUS, defaultProjectStatuses, projectStatusesOf } from '../catalog'
 import { emptyCollections } from '../collections'
 import {
   isProjectStageGroup,
@@ -8,20 +8,20 @@ import {
   projectLastActivity,
   projectNextMilestone,
   projectProgress,
+  projectGroupOf,
   projectsInGroup,
-  projectStageCounts,
-  stageGroupOf,
+  projectStatusCounts,
 } from '../selectors'
-import { SCHEMA_VERSION, type Activity, type ChangeEntry, type Project, type ProjectStage, type StudioData, type WorkItem } from '../types'
+import { SCHEMA_VERSION, type Activity, type ChangeEntry, type Project, type StudioData, type WorkItem } from '../types'
 import { validateStudioData } from '../validate'
 
-const project = (id: string, stage: ProjectStage, name = id, tags: string[] = []) => ({
+const project = (id: string, status: string, name = id, tags: string[] = []) => ({
   id,
   slug: id,
   name,
   description: '',
   platforms: [],
-  stage,
+  status,
   color: '#000',
   versions: [],
   tags,
@@ -34,47 +34,54 @@ function data(): StudioData {
     schemaVersion: SCHEMA_VERSION,
     studio: { id: 's', name: 'Estudio', createdAt: '2026-01-01' },
     projects: [
-      project('zeta', 'production', 'Zeta', ['godot']),
-      project('alfa', 'production', 'Alfa'),
-      project('salida', 'release'),
+      project('zeta', 'desarrollo', 'Zeta', ['godot']),
+      project('alfa', 'desarrollo', 'Alfa'),
+      project('salida', 'preparacion_lanzamiento'),
       project('idea', 'idea'),
-      project('publicado', 'live', 'publicado', ['Godot']),
-      project('parado', 'paused'),
-      project('viejo', 'archived'),
+      project('publicado', 'lanzado', 'publicado', ['Godot']),
+      project('parado', 'en_pausa'),
+      project('viejo', 'archivado'),
     ],
   }
 }
 
-describe('proyectos por grupo de etapas', () => {
+describe('proyectos por grupo de estados', () => {
   it('los datos de prueba son válidos', () => {
     expect(validateStudioData(data())).toEqual([])
   })
 
-  it('cada etapa está en un grupo y solo en uno', () => {
-    for (const stage of Object.keys(STAGES) as ProjectStage[]) {
-      const groups = PROJECT_GROUPS.filter((g) => STAGE_GROUPS[g].includes(stage))
-      expect(groups).toEqual([stageGroupOf(stage)])
-    }
+  it('los 14 estados de serie, cada uno en un grupo de los de Proyectos', () => {
+    const statuses = defaultProjectStatuses()
+    expect(statuses).toHaveLength(14)
+    for (const s of statuses) expect(PROJECT_GROUPS).toContain(s.group)
   })
 
-  it('el lanzamiento sigue activo; lanzados es solo lo publicado', () => {
-    expect(stageGroupOf('release')).toBe('activos')
-    expect(stageGroupOf('live')).toBe('lanzados')
-    expect(stageGroupOf('concept')).toBe('planificacion')
+  it('preparar el lanzamiento sigue activo; lanzados es lo publicado y en mantenimiento', () => {
+    const studio = data().studio
+    expect(projectGroupOf(studio, project('x', 'preparacion_lanzamiento'))).toBe('activos')
+    expect(projectGroupOf(studio, project('x', 'mantenimiento'))).toBe('lanzados')
+    expect(projectGroupOf(studio, project('x', 'investigacion'))).toBe('planificacion')
+    expect(projectGroupOf(studio, project('x', CANCELLED_STATUS))).toBe('archivados')
   })
 
-  it('filtra por grupo y ordena por etapa y nombre', () => {
+  it('los estados del estudio mandan, pero archivado y cancelado no se pueden quitar', () => {
+    const studio = { ...data().studio, projectStatuses: [{ id: 'jam', label: 'Game jam', group: 'activos' as const, tone: 'info' as const }] }
+    expect(projectStatusesOf(studio).map((s) => s.id)).toEqual(['jam', 'cancelado', 'archivado'])
+    expect(projectGroupOf(studio, project('x', 'jam'))).toBe('activos')
+  })
+
+  it('filtra por grupo y ordena por estado y nombre', () => {
     expect(projectsInGroup(data(), 'activos').map((p) => p.id)).toEqual(['alfa', 'zeta', 'salida'])
     expect(projectsInGroup(data(), 'lanzados').map((p) => p.id)).toEqual(['publicado'])
     expect(projectsInGroup(data(), null).map((p) => p.id)).toEqual(['idea', 'alfa', 'zeta', 'salida', 'publicado', 'parado', 'viejo'])
   })
 
-  it('cuenta los proyectos de cada grupo y de cada etapa', () => {
+  it('cuenta los proyectos de cada grupo y de cada estado', () => {
     expect(projectGroupCounts(data())).toEqual({ activos: 3, planificacion: 1, pausa: 1, lanzados: 1, archivados: 1 })
-    const stages = projectStageCounts(data())
-    expect(stages.production).toBe(2)
-    expect(stages.polish).toBe(0)
-    expect(Object.values(stages).reduce((a, b) => a + b, 0)).toBe(7)
+    const statuses = projectStatusCounts(data())
+    expect(statuses.desarrollo).toBe(2)
+    expect(statuses.pruebas).toBeUndefined()
+    expect(Object.values(statuses).reduce((a, b) => a + b, 0)).toBe(7)
   })
 
   it('con ?etiqueta=, solo los que la llevan (sin distinguir mayúsculas), en la lista y en las cifras', () => {

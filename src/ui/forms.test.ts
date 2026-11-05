@@ -80,7 +80,7 @@ describe('campos nuevos', () => {
 
   it('las listas piden sus columnas obligatorias e ignoran las filas vacías', () => {
     const pr = SPECS.projects
-    const p = { name: 'Juego', stage: 'idea' }
+    const p = { name: 'Juego', status: 'idea' }
     expect(validateDraft(pr, { ...p, links: [{ label: 'Web', url: 'web' }] }).links).toContain('Fila 1')
     expect(validateDraft(pr, { ...p, versions: [{ label: 'Demo' }] }).versions).toContain('Versión')
     expect(normalizeDraft(pr, { ...p, versions: [{ label: ' Demo ', version: '0.1', note: ' ' }, { label: '' }] }).versions).toEqual([{ label: 'Demo', version: '0.1' }])

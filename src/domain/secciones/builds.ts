@@ -3,7 +3,7 @@
 // de cada versión. Las pantallas los piden a selectors.ts, que reexporta este fichero.
 // Regla: lo que se importa de '../selectors' solo se usa dentro de funciones (hay un ciclo de import).
 import type { Activity, Build, BuildChannel, BuildStatus, Feedback, ID, ISODate, StudioData, WorkItem } from '../types'
-import { byPriority, closedProjectIds, isOpen, type Scope } from '../selectors'
+import { byPriority, closedProjectIds, inProject, isOpen, type Scope } from '../selectors'
 
 /** Subsecciones de la faceta «canal» (null = todas las builds). */
 export type BuildGroup = 'desarrollo' | 'pruebas' | 'demos' | 'publicas' | 'candidatas'
@@ -167,7 +167,7 @@ export interface BuildIssues {
  * apuntan a una build que ya no existe van con las que no dicen build.
  */
 export function issuesByBuild(data: StudioData, scope: Scope = null, keep: (x: { tags?: string[] }) => boolean = () => true): BuildIssues[] {
-  const own = (x: { projectId: ID }) => scope === null || x.projectId === scope
+  const own = (x: { projectId: ID; alsoProjectIds?: ID[] }) => scope === null || inProject(x, scope)
   const builds = new Map(data.builds.filter(own).map((b) => [b.id, b]))
   const groups = new Map<string, BuildIssues>()
   const group = (buildId: ID | undefined) => {

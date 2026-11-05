@@ -31,7 +31,7 @@ const project = (id: string) => ({
   name: id,
   description: '',
   platforms: [],
-  stage: 'production' as const,
+  status: 'desarrollo',
   color: '#000',
   versions: [],
   tags: [],
@@ -174,7 +174,7 @@ describe('tareas', () => {
 
     it('sin los proyectos archivados (?archivados=no, el de las cifras del Dashboard)', () => {
       const d = data()
-      d.projects.push({ ...project('viejo'), stage: 'archived' })
+      d.projects.push({ ...project('viejo'), status: 'archivado' })
       d.items = [item('de-p'), item('de-viejo', { projectId: 'viejo' })]
       expect(ids(filterTasks(d, { today: TODAY })).sort()).toEqual(['de-p', 'de-viejo'])
       expect(ids(filterTasks(d, { today: TODAY, sinArchivados: true }))).toEqual(['de-p'])

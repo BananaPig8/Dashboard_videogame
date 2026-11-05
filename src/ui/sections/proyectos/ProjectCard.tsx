@@ -15,7 +15,7 @@ import {
 } from '../../../domain/selectors'
 import type { Project, StudioData } from '../../../domain/types'
 import { t } from '../../../i18n'
-import { HealthPill, Pill, StagePill } from '../../components/Badges'
+import { HealthPill, PhasePill, Pill, ProjectStatusPill } from '../../components/Badges'
 import { Sparkline } from '../../components/Charts'
 import { Progress } from '../../components/Common'
 import { Icon, type IconName } from '../../components/Icon'
@@ -122,7 +122,8 @@ export function ProjectCard({ summary, data, today, showOpen = true }: { summary
       </header>
       <div className="pills">
         <HealthPill level={summary.health.level} />
-        <StagePill stage={p.stage} />
+        <ProjectStatusPill status={p.status} />
+        {p.phase && <PhasePill phase={p.phase} />}
       </div>
       {(p.nextGoal || p.tagline) && <p className="project-goal">{p.nextGoal ?? p.tagline}</p>}
       {p.versions.length > 0 && (

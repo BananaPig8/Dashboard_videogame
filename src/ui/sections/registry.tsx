@@ -25,4 +25,6 @@ export const SECTION_PAGES: Record<SectionId, LazyExoticComponent<ComponentType<
   finanzas: lazy(() => import('./finanzas/FinanzasSection')),
   estadisticas: lazy(() => import('./estadisticas/EstadisticasSection')),
   ajustes: lazy(() => import('./ajustes/AjustesSection')),
+  pruebas: lazy(() => import('./pruebas/PruebasSection')),
+  historial: lazy(() => import('./historial/HistorialSection')),
 }
