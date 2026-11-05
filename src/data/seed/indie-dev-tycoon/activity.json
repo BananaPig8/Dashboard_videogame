@@ -2058,5 +2058,25 @@
     "ref": "#44",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/44",
     "author": "BananaPig8"
+  },
+  {
+    "id": "indie-dev-tycoon-c-14e6159",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-11-04T16:47",
+    "type": "commit",
+    "title": "Bot «completo»: con una exclusiva firmada, su próximo juego va solo en esa consola",
+    "ref": "14e6159",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/14e615939d288db4c673074a3046e49622edc601",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-pr-45",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-11-04T17:07",
+    "type": "merge",
+    "title": "PR #45 fusionada: Bot «completo»: cumple las exclusivas de consola (la partida larga ya no se atasca)",
+    "ref": "#45",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/45",
+    "author": "BananaPig8"
   }
 ]

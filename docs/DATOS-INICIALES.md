@@ -105,6 +105,12 @@ de los idiomas y la hoja de validación rehecha con las frases nuevas. Queda pen
 partida larga con la interfaz, que se atasca desde 2017 y no cabe en la comprobación completa (ya
 pasaba antes de la PR #43).
 
+En la 2026-11-04.1 entra la PR #45: la partida larga con la interfaz ya no se atasca. El bot
+«completo» firmaba al azar la exclusiva de una consola nueva y luego no la cumplía, así que se pasaba
+años sin poder empezar un juego; ahora hace el siguiente solo en esa consola, y la comprobación
+completa pasa entera. También queda la decisión de no tocar la ventana de «Nuevo juego»: con la
+exclusiva firmada basta el aviso.
+
 ## Actualizar el historial
 
 ```bash
