@@ -12970,11 +12970,13 @@
     "id": "idt-partida-ui-atascada-2017",
     "projectId": "indie-dev-tycoon",
     "kind": "issue",
-    "title": "La partida larga con la interfaz se atasca desde 2017 y no cabe en la comprobación completa",
-    "description": "En tools/godot_check.sh completa, «Partida con la interfaz (1)» (el bot completo de 1984 a 2050 con la interfaz y clics al azar) se pasa de su límite de 30 minutos: desde 2017 el bot deja de sacar juegos (88 hasta 2034) y cada año tarda unas seis veces más. No lo trae la PR #44: jugada hasta 2019 con el código de antes de la PR #43 sale idéntica. Falta ver qué lo frena (si es el bot, una ventana que se queda abierta o algo del juego).",
-    "status": "backlog",
+    "title": "La partida larga con la interfaz se atascaba: el bot no cumplía las exclusivas de consola",
+    "description": "En tools/godot_check.sh completa, «Partida con la interfaz (1)» se pasaba de su límite de 30 minutos porque el bot dejaba de sacar juegos durante años. La causa: cuando sale una consola nueva, el suceso ofrece una exclusiva (dinero a cambio de que el próximo juego salga solo en ella); el bot «completo» elige al azar, a veces la firmaba y luego seguía eligiendo otras plataformas, así que el juego no le dejaba empezar ninguno hasta que la consola dejaba de fabricarse (en la partida 1, de 2018 a 2025 con Ninvento Cambio y de 2037 a 2044 con Ninvento Cambio 3). Esos días sin proyecto, además, cuestan más de calcular. El juego en sí está bien (avisa de que el próximo juego tiene que salir solo en esa consola). Desde el 04-11 el bot, con una exclusiva firmada, hace su próximo juego solo en esa consola, igual en tools/trace.js y en godot/tests/bot.gd: con la web, la partida 1 llega a 2050 con 133 juegos (antes, 98) y el mayor hueco entre dos juegos baja de unos ocho años a año y medio; con la interfaz llega a 2051 con 143 juegos en 7 minutos, y la comprobación completa pasa entera en 19.",
+    "status": "done",
     "priority": "medium",
     "areaId": "tech",
+    "startedAt": "2026-11-04",
+    "completedAt": "2026-11-04",
     "tags": [
       "pruebas",
       "godot"
@@ -12986,6 +12988,44 @@
         "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/44",
         "date": "2026-11-03",
         "note": "Fusionada el 2026-11-03 sin las comprobaciones de Actions (no arranca); la comprobación completa de Godot, pasada a mano"
+      },
+      {
+        "type": "commit",
+        "ref": "14e6159",
+        "date": "2026-11-04"
+      },
+      {
+        "type": "pr",
+        "ref": "#45",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/45",
+        "date": "2026-11-04",
+        "note": "Fusionada el 2026-11-04 sin las comprobaciones de Actions (no arranca); la comprobación completa de Godot, pasada a mano"
+      }
+    ],
+    "confidence": "verified"
+  },
+  {
+    "id": "idt-decision-exclusiva-solo-aviso",
+    "projectId": "indie-dev-tycoon",
+    "kind": "decision",
+    "title": "Con una exclusiva firmada, «Nuevo juego» solo avisa",
+    "description": "Al arreglar el bot se planteó que la ventana de «Nuevo juego» marcara sola la consola de la exclusiva. El estudio prefiere dejarlo como está: el aviso «Tu próximo juego tiene que salir solo en…» basta.",
+    "status": "done",
+    "priority": "low",
+    "areaId": "ui-ux",
+    "completedAt": "2026-11-04",
+    "decisionOutcome": "No se cambia la ventana: sigue el aviso al validar el juego.",
+    "tags": [
+      "ui",
+      "consolas"
+    ],
+    "sources": [
+      {
+        "type": "pr",
+        "ref": "#45",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/45",
+        "date": "2026-11-04",
+        "note": "Fusionada el 2026-11-04 sin las comprobaciones de Actions (no arranca); la comprobación completa de Godot, pasada a mano"
       }
     ],
     "confidence": "verified"
