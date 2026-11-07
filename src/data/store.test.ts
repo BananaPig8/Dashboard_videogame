@@ -23,7 +23,7 @@ function seed(items: WorkItem[]): () => StudioData {
     schemaVersion: SCHEMA_VERSION,
     studio: { id: 's', name: 'Estudio', createdAt: '2026-01-01' },
     areas: [],
-    projects: [{ id: 'p', slug: 'p', name: 'P', description: '', platforms: [], stage: 'idea', color: '#000', versions: [], tags: [], links: [] }],
+    projects: [{ id: 'p', slug: 'p', name: 'P', description: '', platforms: [], status: 'idea', color: '#000', versions: [], tags: [], links: [] }],
     items: structuredClone(items),
     builds: [],
     events: [],
@@ -50,6 +50,27 @@ describe('StudioStore', () => {
     const s = new StudioStore(adapter, seed([task('a', 'Uno')]), 'v1')
     expect(s.loadErrors.length).toBeGreaterThan(0)
     expect(s.getData().items).toHaveLength(1)
+  })
+
+  it('crea varios elementos de una vez: un guardado y cada uno en el registro de cambios', () => {
+    const adapter = new MemoryAdapter()
+    const s = new StudioStore(adapter, seed([]), 'v1')
+    let saves = 0
+    const save = adapter.save.bind(adapter)
+    adapter.save = (...args) => {
+      saves++
+      return save(...args)
+    }
+    s.upsertMany([
+      { collection: 'phases', entity: { id: 'f1', projectId: 'p', stage: 'concept', status: 'planned' } },
+      { collection: 'items', entity: task('t1', 'Definir la idea') },
+      { collection: 'items', entity: task('t2', 'Prototipo') },
+    ])
+    expect(saves).toBe(1)
+    expect(s.getData().items.map((i) => i.id)).toEqual(['t1', 't2'])
+    expect(s.getData().phases).toHaveLength(1)
+    expect(s.getData().changes.map((c) => `${c.collection}:${c.entityId}:${c.action}`)).toEqual(['phases:f1:created', 'items:t1:created', 'items:t2:created'])
+    expect(s.getMeta().edited).toEqual(expect.arrayContaining(['phases:f1', 'items:t1', 'items:t2']))
   })
 
   it('al borrar un proyecto se va todo lo suyo', () => {

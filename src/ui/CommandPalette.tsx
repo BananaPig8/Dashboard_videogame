@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { STATUSES } from '../domain/catalog'
-import { allTags, matchesQuery, normalize } from '../domain/selectors'
+import { allTags, inProject, matchesQuery, normalize } from '../domain/selectors'
 import { t } from '../i18n'
 import { useCanEdit, useStudioData, type CollectionKey } from '../data/store'
 import { Modal } from './components/Common'
@@ -75,7 +75,7 @@ export function CommandPalette({ open, initialQuery, onClose }: { open: boolean;
       if (match(p.name)) out.push({ id: `project-${p.id}`, group: t('palette.projects'), label: p.name, icon: 'folder', meta: p.tagline, run: go(`/proyectos/${p.slug}`) })
     for (const v of prefs.savedViews) if (match(v.name)) out.push({ id: `view-${v.id}`, group: t('palette.views'), label: v.name, icon: 'bookmark', run: go(v.path) })
     if (q) {
-      const items = data.items.filter((i) => (scope === null || i.projectId === scope) && matchesQuery(i, query)).slice(0, 12)
+      const items = data.items.filter((i) => (scope === null || inProject(i, scope)) && matchesQuery(i, query)).slice(0, 12)
       for (const i of items)
         out.push({ id: `item-${i.id}`, group: t('palette.items'), label: i.title, icon: 'list', meta: STATUSES[i.status].label, run: () => openItem(i.id) })
       out.push({

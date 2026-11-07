@@ -37,6 +37,7 @@ export const builds = {
       empty: 'No hay ninguna build candidata. Cuando una build esté lista para salir, cambia su estado a «Candidata al lanzamiento».',
     },
     emptyTag: 'Ninguna build de esta vista lleva la etiqueta.',
+    emptyDates: 'Ninguna build de esta vista tiene fecha en esos días.',
   },
   list: {
     count: { one: '{n} build', many: '{n} builds' },

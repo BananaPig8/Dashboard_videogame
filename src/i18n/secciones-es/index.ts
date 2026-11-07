@@ -14,6 +14,9 @@ import { equipo } from './equipo'
 import { finanzas } from './finanzas'
 import { estadisticas } from './estadisticas'
 import { ajustes } from './ajustes'
+import { ficha } from './ficha'
+import { plantillas } from './plantillas'
+import { relaciones } from './relaciones'
 
 export const secciones = {
   panel,
@@ -31,4 +34,7 @@ export const secciones = {
   finanzas,
   estadisticas,
   ajustes,
+  ficha,
+  plantillas,
+  relaciones,
 } as const

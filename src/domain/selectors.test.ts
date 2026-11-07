@@ -4,6 +4,7 @@ import { addDays, daysBetween, startOfWeek, zonedParts } from './dates'
 import {
   notificationsFor,
   blockedItems,
+  itemsOf,
   currentBuilds,
   decisions,
   matchesQuery,
@@ -16,6 +17,7 @@ import {
 } from './selectors'
 import type { StudioData, WorkItem } from './types'
 import { SCHEMA_VERSION } from './types'
+import { removeWithReferences } from './references'
 import { validateEntity, validateStudioData } from './validate'
 
 const TODAY = '2026-10-18'
@@ -40,8 +42,8 @@ function fixture(): StudioData {
     studio: { id: 's', name: 'Estudio', createdAt: '2026-01-01' },
     areas: [{ id: 'steam', name: 'Steam', color: '#000' }],
     projects: [
-      { id: 'a', slug: 'a', name: 'Juego A', description: '', platforms: [], stage: 'production', color: '#f00', versions: [], tags: [], links: [] },
-      { id: 'b', slug: 'b', name: 'Juego B', description: '', platforms: [], stage: 'paused', color: '#0f0', versions: [], tags: [], links: [] },
+      { id: 'a', slug: 'a', name: 'Juego A', description: '', platforms: [], status: 'desarrollo', color: '#f00', versions: [], tags: [], links: [] },
+      { id: 'b', slug: 'b', name: 'Juego B', description: '', platforms: [], status: 'en_pausa', color: '#0f0', versions: [], tags: [], links: [] },
     ],
     items: [
       item({ id: 'vencida', dueDate: '2026-10-10', priority: 'high' }),
@@ -166,7 +168,7 @@ describe('estado del proyecto', () => {
   })
   it('sin nada apuntado no sale «al día», sino «sin datos»', () => {
     const data = fixture()
-    data.projects.push({ id: 'nuevo', slug: 'nuevo', name: 'Nuevo', description: '', platforms: [], stage: 'prototype', color: '#00f', versions: [], tags: [], links: [] })
+    data.projects.push({ id: 'nuevo', slug: 'nuevo', name: 'Nuevo', description: '', platforms: [], status: 'prototipo', color: '#00f', versions: [], tags: [], links: [] })
     expect(projectSummary(data, data.projects[2], TODAY).health.level).toBe('no_data')
     data.items.push(item({ id: 'primera', projectId: 'nuevo' }))
     expect(projectSummary(data, data.projects[2], TODAY).health.level).toBe('on_track')
@@ -176,6 +178,31 @@ describe('estado del proyecto', () => {
     data.items = []
     const s = projectSummary(data, data.projects[0], '2026-11-30')
     expect(s.health.reasons.some((r) => r.startsWith('sin actividad desde hace'))).toBe(true)
+  })
+})
+
+describe('tareas compartidas', () => {
+  it('una tarea con «también para» sale en cada proyecto y una sola vez en el estudio', () => {
+    const d = fixture()
+    d.items.push(item({ id: 'comun', title: 'Sistema de inventario', alsoProjectIds: ['b'] }))
+    expect(validateStudioData(d)).toEqual([])
+    expect(itemsOf(d, 'a').map((i) => i.id)).toContain('comun')
+    expect(itemsOf(d, 'b').map((i) => i.id)).toEqual(['otro', 'comun'])
+    expect(itemsOf(d, null).filter((i) => i.id === 'comun')).toHaveLength(1)
+    expect(projectSummary(d, d.projects[1], TODAY).open).toBe(2)
+  })
+
+  it('no puede valer «también» para su propio proyecto', () => {
+    const d = fixture()
+    expect(validateEntity('items', item({ id: 'comun', alsoProjectIds: ['a'] }) as unknown as Record<string, unknown>, d).join(' ')).toContain('su propio proyecto')
+  })
+
+  it('al borrar uno de sus proyectos, la tarea sigue en el suyo', () => {
+    const d = fixture()
+    d.items.push(item({ id: 'comun', alsoProjectIds: ['b'] }))
+    const r = removeWithReferences(d, 'projects', 'b')
+    expect(r.data.items.find((i) => i.id === 'comun')?.alsoProjectIds).toEqual([])
+    expect(validateStudioData(r.data)).toEqual([])
   })
 })
 
@@ -248,6 +275,13 @@ describe('validación', () => {
     // Al cargar unos datos ya guardados no se rechazan por esto (se dejarían de ver enteros).
     expect(validateStudioData({ ...data, builds: [...data.builds, { ...build, sources: [] }] })).toEqual([])
   })
+  it('al guardar, «Depende de» no puede hacer un círculo', () => {
+    const data = fixture()
+    data.items = data.items.map((i) => (i.id === 'hoy' ? { ...i, dependsOnIds: ['curso'] } : i.id === 'curso' ? { ...i, dependsOnIds: ['marcada'] } : i))
+    const marcada = data.items.find((i) => i.id === 'marcada')!
+    expect(validateEntity('items', { ...marcada, dependsOnIds: ['hoy'] }, data)).toContain('«Depende de» hace un círculo: algo de lo que depende acaba dependiendo de esto')
+    expect(validateEntity('items', { ...marcada, dependsOnIds: ['vencida'] }, data)).toEqual([])
+  })
   it('al guardar, un estado de fuera «verificado» necesita un enlace si solo se anotó a mano', () => {
     const data = fixture()
     const m = { id: 'm', projectId: 'a', kind: 'units', value: 5, date: TODAY, confidence: 'verified' }
@@ -258,6 +292,21 @@ describe('validación', () => {
 })
 
 describe('notificaciones', () => {
+  it('un proyecto archivado no avisa de nada', () => {
+    const d = fixture()
+    const archived = { ...d, projects: d.projects.map((p) => (p.id === 'a' ? { ...p, status: 'archivado' } : p)) }
+    expect(notificationsFor(d, TODAY).some((n) => n.projectId === 'a')).toBe(true)
+    expect(notificationsFor(archived, TODAY).some((n) => n.projectId === 'a')).toBe(false)
+  })
+
+  it('un evento de varios días que ya ha empezado sigue avisando hasta que acaba', () => {
+    const d = fixture()
+    const feria = { id: 'en-curso', projectId: 'a', title: 'Feria larga', type: 'fair', status: 'confirmed', date: '2026-10-15', endDate: '2026-10-20', dateConfirmed: true, tags: [], sources: [], confidence: 'verified' } as unknown as StudioData['events'][number]
+    expect(notificationsFor({ ...d, events: [feria] }, TODAY).find((n) => n.target.id === 'en-curso')).toMatchObject({ kind: 'eventSoon', date: TODAY })
+    // Ya acabado: no es «próximo», es «¿se celebró?».
+    expect(notificationsFor({ ...d, events: [{ ...feria, endDate: '2026-10-17' }] }, TODAY).find((n) => n.target.id === 'en-curso')?.kind).toBe('eventStale')
+  })
+
   it('avisa de lo vencido, lo que vence hoy, ferias cercanas, bloqueos importantes y lo que no se actualizó', () => {
     const kinds = notificationsFor(fixture(), TODAY).map((n) => `${n.kind}:${n.target.id}`)
     expect(kinds).toContain('overdue:vencida')

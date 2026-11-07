@@ -3,7 +3,7 @@
 // de cada versión. Las pantallas los piden a selectors.ts, que reexporta este fichero.
 // Regla: lo que se importa de '../selectors' solo se usa dentro de funciones (hay un ciclo de import).
 import type { Activity, Build, BuildChannel, BuildStatus, Feedback, ID, ISODate, StudioData, WorkItem } from '../types'
-import { byPriority, isOpen, type Scope } from '../selectors'
+import { byPriority, closedProjectIds, inProject, isOpen, type Scope } from '../selectors'
 
 /** Subsecciones de la faceta «canal» (null = todas las builds). */
 export type BuildGroup = 'desarrollo' | 'pruebas' | 'demos' | 'publicas' | 'candidatas'
@@ -70,6 +70,27 @@ export function compareBuilds(a: Build, b: Build): number {
 /** Las builds de una subsección (null = todas), en el ámbito. */
 export function buildsInChannelGroup(data: StudioData, group: BuildGroup | null, scope: Scope = null): Build[] {
   return data.builds.filter((b) => (scope === null || b.projectId === scope) && inBuildGroup(b, group)).sort(compareBuilds)
+}
+
+/** Lo que pide la cifra «Builds recientes» del Dashboard: ?desde=&hasta= (fecha de la build) y ?archivados=no. */
+export interface BuildDatesQuery {
+  desde?: ISODate | null
+  hasta?: ISODate | null
+  /** Sin las de los proyectos archivados (en todo el estudio). */
+  sinArchivados?: boolean
+}
+
+/**
+ * Las builds con fecha entre esos dos días (los dos incluidos; con alguna fecha puesta, las que
+ * no tienen fecha no entran) y, si se pide, sin las de los proyectos archivados.
+ */
+export function buildsInDates(data: StudioData, builds: Build[], q: BuildDatesQuery): Build[] {
+  const closed = q.sinArchivados ? closedProjectIds(data) : null
+  return builds.filter(
+    (b) =>
+      (!closed || !closed.has(b.projectId)) &&
+      (!(q.desde || q.hasta) || (!!b.date && (!q.desde || b.date >= q.desde) && (!q.hasta || b.date <= q.hasta))),
+  )
 }
 
 /** «Qué cambia» de una build, una línea por cambio (sin viñetas ni líneas vacías). */
@@ -146,7 +167,7 @@ export interface BuildIssues {
  * apuntan a una build que ya no existe van con las que no dicen build.
  */
 export function issuesByBuild(data: StudioData, scope: Scope = null, keep: (x: { tags?: string[] }) => boolean = () => true): BuildIssues[] {
-  const own = (x: { projectId: ID }) => scope === null || x.projectId === scope
+  const own = (x: { projectId: ID; alsoProjectIds?: ID[] }) => scope === null || inProject(x, scope)
   const builds = new Map(data.builds.filter(own).map((b) => [b.id, b]))
   const groups = new Map<string, BuildIssues>()
   const group = (buildId: ID | undefined) => {

@@ -7,7 +7,7 @@ import { yearOf } from '../../domain/dates'
 import { scrollIntoStrip, useFormat, useToday } from '../hooks'
 import { projectSummary } from '../../domain/selectors'
 import { useStudioData } from '../../data/store'
-import { HealthPill, StagePill } from '../components/Badges'
+import { HealthPill, PhasePill, ProjectStatusPill } from '../components/Badges'
 import { ExternalLink } from '../components/Common'
 import { Icon } from '../components/Icon'
 import { useUI } from '../context'
@@ -65,7 +65,8 @@ export function ProjectPage() {
           </div>
           {isSummary && project.tagline && <p className="project-tagline">{project.tagline}</p>}
           <div className="pills">
-            <StagePill stage={project.stage} />
+            <ProjectStatusPill status={project.status} />
+            {project.phase && <PhasePill phase={project.phase} />}
             <HealthPill level={summary.health.level} />
             {isSummary && project.engine && (
               <span className="meta-date">

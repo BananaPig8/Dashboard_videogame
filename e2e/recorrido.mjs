@@ -54,6 +54,26 @@ await step('marcar hecha y deshacer desde el aviso', async () => {
   await page.getByRole('button', { name: 'Marcar «Probar Studio Hub» como hecho' }).waitFor()
 })
 
+await step('cerrar el editor con cambios sin guardar pregunta antes de descartarlos', async () => {
+  await page.getByRole('button', { name: 'Probar Studio Hub' }).first().click()
+  await dialog().locator('input[name="title"]').fill('Probar Studio Hub (cambiado)')
+  await page.keyboard.press('Escape')
+  const ask = page.getByRole('dialog', { name: '¿Descartar los cambios sin guardar?' })
+  await ask.getByRole('button', { name: 'Seguir editando' }).click()
+  await ask.waitFor({ state: 'detached' })
+  if ((await dialog().locator('input[name="title"]').inputValue()) !== 'Probar Studio Hub (cambiado)') throw new Error('se perdió lo escrito')
+  // Esc dos veces seguidas tampoco lo pierde.
+  await page.keyboard.press('Escape')
+  await ask.waitFor()
+  await page.keyboard.press('Escape')
+  await ask.waitFor({ state: 'detached' })
+  await page.keyboard.press('Escape')
+  await ask.waitFor()
+  await ask.getByRole('button', { name: 'Descartar' }).click()
+  await dialog().waitFor({ state: 'detached' })
+  await page.getByRole('button', { name: 'Probar Studio Hub', exact: true }).first().waitFor()
+})
+
 await step('el formulario explica los errores', async () => {
   await page.getByRole('button', { name: 'Probar Studio Hub' }).first().click()
   await dialog().locator('input[name="title"]').fill('')
@@ -69,7 +89,102 @@ await step('el formulario explica los errores', async () => {
 await step('se conserva al recargar', async () => {
   await page.goto(`${base}/#/`)
   await page.reload()
-  await page.getByRole('region', { name: 'Últimos avances' }).getByRole('button', { name: 'Probar Studio Hub' }).waitFor()
+  // Sale creada y completada: dos entradas de la misma tarea.
+  await page.getByRole('region', { name: 'Actividad reciente' }).getByRole('button', { name: 'Probar Studio Hub' }).first().waitFor()
+})
+
+// ——— Dashboard (parte 4) ———
+const region = (name) => page.getByRole('region', { name, exact: true })
+
+await step('Dashboard: cabecera con saludo, estudio, periodo y Crear con lo de cada día', async () => {
+  await page.goto(`${base}/#/`)
+  await page.getByText(/Buen(os días|as tardes|as noches)/).first().waitFor()
+  await page.getByRole('combobox', { name: 'Periodo' }).selectOption('30d')
+  await page.waitForURL(/periodo=30d/)
+  await page.getByRole('button', { name: /^Crear/ }).first().click()
+  const options = await page.getByRole('menu').getByRole('menuitem').count()
+  if (options !== 11) throw new Error(`Crear tiene ${options} opciones`)
+  await page.keyboard.press('Escape')
+})
+
+await step('Dashboard: «Tareas completadas» lleva a Tareas con las mismas', async () => {
+  await page.goto(`${base}/#/?periodo=30d`)
+  const kpi = page.locator('[data-kpi="completed"]')
+  const n = (await kpi.locator('.stat-value').innerText()).trim()
+  await kpi.click()
+  await page.waitForURL(/tareas\?.*estado=done.*desde=/)
+  const count = await page.locator('.tareas-count').innerText()
+  if (!count.includes(n)) throw new Error(`el indicador dice ${n} y Tareas «${count}»`)
+})
+
+await step('Dashboard: una prioridad se marca hecha sin salir, con Deshacer', async () => {
+  await page.goto(`${base}/#/`)
+  await page.getByRole('button', { name: 'Nueva tarea' }).first().click()
+  await dialog().locator('[name="title"]').fill('Revisar el guardado')
+  await dialog().locator('[name="priority"]').selectOption('critical')
+  await dialog().getByRole('button', { name: 'Guardar' }).click()
+  await dialog().waitFor({ state: 'detached' })
+  const done = region('Prioridades de hoy').getByRole('button', { name: 'Marcar «Revisar el guardado» como hecho' })
+  await done.click()
+  await done.waitFor({ state: 'detached' })
+  await page.getByRole('status').getByRole('button', { name: 'Deshacer' }).click()
+  await done.waitFor()
+})
+
+await step('Dashboard: próximas fechas en lista o calendario, y se recuerda', async () => {
+  await region('Próximas fechas').getByRole('button', { name: 'Calendario', exact: true }).click()
+  await page.locator('table.agenda-grid').waitFor()
+  await page.reload()
+  await page.locator('table.agenda-grid').waitFor()
+  await region('Próximas fechas').getByRole('button', { name: 'Lista', exact: true }).click()
+  await page.locator('table.agenda-grid').waitFor({ state: 'detached' })
+})
+
+await step('Dashboard: proyectos por estado, con progreso y su método', async () => {
+  await region('Proyectos').getByRole('button', { name: /En planificación/ }).click()
+  await page.waitForURL(/estado=planificacion/)
+  await region('Proyectos').getByRole('button', { name: /Activos/ }).click()
+  const card = region('Proyectos').locator('.project-card').filter({ hasText: 'Indie Dev Tycoon' })
+  const text = await card.innerText()
+  if (!/\d+\s?%/.test(text) || !text.includes('por tareas')) throw new Error(`la tarjeta no dice su progreso y método: ${text.slice(0, 200)}`)
+})
+
+await step('Dashboard: convertir un feedback en tarea lo enlaza y lo planifica', async () => {
+  await page.goto(`${base}/#/feedback`)
+  await page.getByRole('button', { name: 'Nuevo feedback' }).first().click()
+  await dialog().locator('[name="title"]').fill('Poder rebobinar el día')
+  await dialog().locator('[name="kind"]').selectOption('request')
+  await dialog().locator('[name="impact"]').selectOption('high')
+  await dialog().getByRole('button', { name: 'Guardar' }).click()
+  await dialog().waitFor({ state: 'detached' })
+  await page.goto(`${base}/#/`)
+  await region('Feedback').getByRole('button', { name: 'Convertir en tarea: Poder rebobinar el día' }).click()
+  if ((await dialog().locator('[name="kind"]').inputValue()) !== 'feature') throw new Error('no la abre como funcionalidad')
+  await dialog().getByRole('button', { name: 'Guardar' }).click()
+  await page.getByRole('status').getByText(/pasa a Planificado/).waitFor()
+  if (await region('Feedback').getByRole('button', { name: 'Convertir en tarea: Poder rebobinar el día' }).count()) throw new Error('sigue por mirar')
+})
+
+await step('Dashboard: historial de actividad con filtros en la URL', async () => {
+  await region('Actividad reciente').getByRole('link', { name: 'Historial', exact: true }).click()
+  await page.waitForURL(/ver=actividad/)
+  await page.getByLabel('Categoría').selectOption('codigo')
+  await page.waitForURL(/cat=codigo/)
+  await page.getByRole('button', { name: 'Quitar filtros' }).click()
+})
+
+await step('Dashboard: personalizar los indicadores y volver a la disposición de serie', async () => {
+  await page.goto(`${base}/#/`)
+  await page.getByRole('button', { name: 'Personalizar' }).click()
+  await dialog().getByRole('checkbox', { name: /Tareas bloqueadas/ }).uncheck()
+  await dialog().getByRole('button', { name: 'Cerrar' }).first().click()
+  if (await page.locator('[data-kpi="blocked"]').count()) throw new Error('sigue la cifra de bloqueadas')
+  await page.reload()
+  if (await page.locator('[data-kpi="blocked"]').count()) throw new Error('no se ha recordado')
+  await page.getByRole('button', { name: 'Personalizar' }).click()
+  await dialog().getByRole('button', { name: 'Volver a la de serie' }).click()
+  await dialog().getByRole('button', { name: 'Cerrar' }).first().click()
+  await page.locator('[data-kpi="blocked"]').waitFor()
 })
 
 await step('paleta de órdenes con Ctrl+K: buscar y abrir', async () => {
@@ -174,9 +289,9 @@ await step('notificaciones', async () => {
 await step('personalizar el panel: ocultar y plegar', async () => {
   await page.goto(`${base}/#/`)
   await page.getByRole('button', { name: 'Personalizar' }).click()
-  await dialog().getByRole('checkbox', { name: /Cifras/ }).uncheck()
+  await dialog().getByRole('checkbox', { name: /Indicadores/ }).uncheck()
   await dialog().getByRole('button', { name: 'Cerrar' }).first().click()
-  if (await page.getByRole('region', { name: 'Cifras' }).count()) throw new Error('Cifras sigue visible')
+  if (await page.getByRole('region', { name: 'Indicadores' }).count()) throw new Error('Indicadores sigue visible')
   await page.getByRole('region', { name: 'Evolución' }).getByRole('button', { name: 'Contraer' }).click()
   await page.reload()
   await page.getByRole('region', { name: 'Evolución' }).getByRole('button', { name: 'Desplegar' }).waitFor()
@@ -252,7 +367,7 @@ await step('recorrer las 15 secciones y todas sus subsecciones', async () => {
     tabs.push(...(await page.getByRole('menuitem').evaluateAll((as) => as.map((a) => a.getAttribute('href')))))
     await page.keyboard.press('Escape')
   }
-  if (tabs.length < 13) throw new Error(`solo ${tabs.length} pestañas en la ficha`)
+  if (tabs.length < 14) throw new Error(`solo ${tabs.length} pestañas en la ficha`)
   for (const href of tabs) {
     await page.goto(`${base}/${href}`)
     await page.locator('main h1').first().waitFor()

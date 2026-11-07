@@ -36,7 +36,7 @@ const project = (id: string) => ({
   name: id.toUpperCase(),
   description: '',
   platforms: [],
-  stage: 'production' as const,
+  status: 'desarrollo',
   color: '#000',
   versions: [],
   tags: [],

@@ -11,7 +11,7 @@ import { EditorModal } from './Editor'
 import { useNotify } from './feedback'
 import { t } from '../i18n'
 import { getPreferences } from './prefs'
-import { scopedHref, sectionOfPath } from './navigation'
+import { scopedHref, studioHref } from './navigation'
 
 // ——— Ámbito ———————————————————————————————————————————————————————————————
 
@@ -43,7 +43,7 @@ export function useScope(): ScopeInfo {
         // En la ficha: a la misma pestaña (y vista) del otro proyecto, o a esa sección en todo el estudio.
         const tab = projectMatch?.[2]
         if (target) navigate(`/proyectos/${target.slug}${tab ? `/${tab}` : ''}${location.search}`)
-        else navigate(`${sectionOfPath(location.pathname)?.to ?? '/'}${location.search}`)
+        else navigate(studioHref(location.pathname, location.search))
         return
       }
       const next = new URLSearchParams(location.search)
@@ -67,12 +67,17 @@ export interface EditorRequest {
   /** Sin id: crear uno nuevo. */
   id?: ID
   defaults?: Record<string, unknown>
+  /**
+   * Al guardar algo nuevo, se llama con lo guardado justo después (p. ej. convertir un
+   * feedback en tarea: la tarea nueva se enlaza al feedback).
+   */
+  onCreated?: (entity: Record<string, unknown>) => void
 }
 
 interface UIState {
   edit: (req: EditorRequest) => void
   openItem: (id: ID) => void
-  create: (collection: CollectionKey, defaults?: Record<string, unknown>) => void
+  create: (collection: CollectionKey, defaults?: Record<string, unknown>, onCreated?: EditorRequest['onCreated']) => void
 }
 
 const UIContext = createContext<UIState | null>(null)
@@ -110,7 +115,7 @@ export function newDefaults(collection: CollectionKey, data: StudioData, scope: 
     case 'checklists':
       return { projectId, target: 'other', items: [], tags: [] }
     case 'projects':
-      return { stage: 'idea', color: '#4f46e5', platforms: [], versions: [], tags: [], links: [], description: '', startedAt: today }
+      return { status: 'idea', color: '#4f46e5', platforms: [], versions: [], tags: [], links: [], description: '', createdAt: today }
     case 'areas':
       return { color: '#64748b' }
     case 'members':
@@ -118,7 +123,7 @@ export function newDefaults(collection: CollectionKey, data: StudioData, scope: 
     case 'timeEntries':
       return { projectId, memberId: assigneeId, date: today }
     case 'phases':
-      return { projectId, stage: data.projects.find((p) => p.id === projectId)?.stage ?? 'idea', status: 'planned' }
+      return { projectId, stage: data.projects.find((p) => p.id === projectId)?.phase ?? 'concept', status: 'planned' }
     case 'releases':
       return { projectId, kind: 'update', status: 'planned', tags: [], ...sourced('to_confirm') }
     case 'storeListings':
@@ -140,6 +145,11 @@ export function newDefaults(collection: CollectionKey, data: StudioData, scope: 
     case 'metrics':
       // Una métrica necesita su fuente de verdad (Steamworks, un informe…): no se rellena sola.
       return { projectId, kind: 'wishlists', date: today, confidence: 'to_confirm', sources: [] }
+    case 'risks':
+      // Un riesgo es una valoración del estudio: se anota como tal, con su fecha.
+      return { projectId, likelihood: 'medium', impact: 'medium', status: 'open', ownerId: assigneeId, createdAt: today, tags: [], ...sourced('verified') }
+    case 'components':
+      return { kind: 'system', projectIds: scope ? [scope] : [], tags: [] }
     default:
       return {}
   }
@@ -190,8 +200,8 @@ export function UIProvider({ children }: { children: ReactNode }) {
       edit: setRequest,
       openItem: (id) => setRequest({ collection: 'items', id }),
       // Quien solo puede ver no crea nada (abrir y consultar sí).
-      create: (collection, defaults) =>
-        store.canWrite() ? setRequest({ collection, defaults }) : toast({ message: t('feedbackMsg.readOnly'), tone: 'info' }),
+      create: (collection, defaults, onCreated) =>
+        store.canWrite() ? setRequest({ collection, defaults, onCreated }) : toast({ message: t('feedbackMsg.readOnly'), tone: 'info' }),
     }),
     [toast],
   )

@@ -2,7 +2,8 @@
 // conmutador Lista / Tablero / Calendario y el motivo de cada cosa del plan de hoy.
 import { Link, useSearchParams } from 'react-router-dom'
 import { CONFIDENCES, KINDS, PRIORITIES, type Tone } from '../../../domain/catalog'
-import { taskFilterOf, type TaskFilter, type TaskQuery, type TodayReason } from '../../../domain/selectors'
+import { isValidISODate } from '../../../domain/dates'
+import { CLOSED_PARAM, CLOSED_PARAM_OFF, taskDueDaysOf, taskFilterOf, type TaskFilter, type TaskQuery, type TodayReason } from '../../../domain/selectors'
 import type { Confidence, ItemKind, Priority } from '../../../domain/types'
 import { t } from '../../../i18n'
 import { Pill } from '../../components/Badges'
@@ -15,7 +16,9 @@ import { useToday } from '../../hooks'
 export type TaskView = 'tablero' | 'calendario' | null
 
 /** Los filtros finos de la página (parámetros propios, no subsecciones). */
-export const FINE_FILTERS = ['q', 'estado', 'tipo', 'area', 'persona', 'prioridad', 'fiabilidad'] as const
+export const FINE_FILTERS = ['q', 'estado', 'tipo', 'area', 'persona', 'prioridad', 'fiabilidad', 'desde', 'hasta', 'vence', CLOSED_PARAM] as const
+
+const dateParam = (v: string | null) => (v && isValidISODate(v) ? v : null)
 
 const oneOf = <K extends string>(table: Record<K, unknown>, v: string | null): K | null => (v && v in table ? (v as K) : null)
 
@@ -56,9 +59,17 @@ export function useTaskParams(): TaskParams {
     persona: filtro === 'mias' ? null : params.get('persona'),
     etiqueta: params.get('etiqueta'),
     q: params.get('q'),
+    // Terminadas entre dos fechas (lo pide «Tareas completadas» del Dashboard).
+    desde: dateParam(params.get('desde')),
+    hasta: dateParam(params.get('hasta')),
+    // Lo que vence en los próximos N días (lo pide «Hitos próximos» del Dashboard).
+    vence: taskDueDaysOf(params.get('vence')),
+    // Sin los proyectos archivados (las cifras del Dashboard en todo el estudio).
+    sinArchivados: !scope && params.get(CLOSED_PARAM) === CLOSED_PARAM_OFF,
   }
   const filtered =
-    !!(query.q || query.tipo || query.area || query.prioridad || query.fiabilidad || query.persona) || (!vista && !!estado && estado !== 'abiertos')
+    !!(query.q || query.tipo || query.area || query.prioridad || query.fiabilidad || query.persona || query.desde || query.hasta || query.vence || query.sinArchivados) ||
+    (!vista && !!estado && estado !== 'abiertos')
   return { vista, filtro, query, filtered }
 }
 

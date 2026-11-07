@@ -404,7 +404,7 @@
     "status": "in_progress",
     "date": "2026-10-14",
     "distribution": "Sin publicar (en main, sin compilar)",
-    "notes": "La demo con las barras de antes, la que fue la 1.3 V2 y la que irá a Steam; .exe 1.4.0.0 y Mac 1.4. En main desde el 28-10 (PR #40), pero no está en la release «descargas»: el flujo «Descargas» de la fusión no llegó a arrancar. Se compilará cuando Actions vuelva a funcionar.",
+    "notes": "La demo con las barras de antes, la que fue la 1.3 V2 y la que irá a Steam; .exe 1.4.0.0 y Mac 1.4. En main desde el 28-10 (PR #40), pero no está en la release «descargas»: el flujo «Descargas» de la fusión no llegó a arrancar. Se compilará cuando Actions vuelva a funcionar. Desde el 02-11 (PR #43) lleva también lo de la demo de Steam: lista de deseos en la portada, mando y Steam Deck, tu opinión, la postal y el reto semanal.",
     "releaseId": "idt-release-demo-1-4",
     "tags": [
       "demo",
@@ -428,6 +428,13 @@
         "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/actions/runs/40626934192",
         "date": "2026-10-28",
         "note": "Acaba en 4 s sin empezar"
+      },
+      {
+        "type": "pr",
+        "ref": "#43",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/43",
+        "date": "2026-11-02",
+        "note": "Fusionada el 2026-11-02 sin las comprobaciones de Actions (no arranca); la comprobación rápida de Godot, pasada a mano"
       }
     ],
     "confidence": "verified"

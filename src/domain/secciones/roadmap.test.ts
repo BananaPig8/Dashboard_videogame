@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { emptyCollections } from '../collections'
-import { SCHEMA_VERSION, type Phase, type Release, type StudioData, type StudioEvent, type WorkItem } from '../types'
+import { SCHEMA_VERSION, type DevPhase, type Phase, type Release, type StudioData, type StudioEvent, type WorkItem } from '../types'
 import { validateStudioData } from '../validate'
 import {
   ROADMAP_LIFECYCLE,
@@ -16,13 +16,14 @@ import {
 
 const TODAY = '2026-10-19'
 const src = [{ type: 'manual' as const, ref: 'prueba' }]
-const project = (id: string, stage: StudioData['projects'][number]['stage'] = 'production') => ({
+const project = (id: string, status = 'desarrollo', phase: DevPhase | undefined = 'production') => ({
   id,
   slug: id,
   name: id,
   description: '',
   platforms: [],
-  stage,
+  status,
+  phase,
   color: '#000',
   versions: [],
   tags: [],
@@ -68,7 +69,7 @@ function data(over: Partial<StudioData> = {}): StudioData {
     ...emptyCollections(),
     schemaVersion: SCHEMA_VERSION,
     studio: { id: 's', name: 'Estudio', createdAt: '2026-01-01' },
-    projects: [project('p'), project('q', 'paused')],
+    projects: [project('p'), { ...project('q', 'en_pausa'), phase: undefined }],
     ...over,
   }
 }
@@ -142,8 +143,8 @@ describe('roadmap: progreso y objetivos', () => {
 })
 
 describe('roadmap: fases', () => {
-  it('el ciclo de vida va de la idea a publicado, sin pausa ni archivado', () => {
-    expect(ROADMAP_LIFECYCLE).toEqual(['idea', 'concept', 'prototype', 'preproduction', 'production', 'polish', 'release', 'live'])
+  it('las fases de desarrollo van del concepto a tras el lanzamiento (el estado va aparte)', () => {
+    expect(ROADMAP_LIFECYCLE).toEqual(['concept', 'prototype', 'preproduction', 'production', 'polish', 'release', 'live'])
   })
 
   it('cada etapa dice si es la actual, está hecha, prevista, quedó atrás o está por delante', () => {
@@ -158,7 +159,6 @@ describe('roadmap: fases', () => {
     const r = roadmapProjectPhases(d, d.projects[0])
     const state = Object.fromEntries(r.stages.map((s) => [s.stage, s.state]))
     expect(state).toEqual({
-      idea: 'past',
       concept: 'past',
       prototype: 'done',
       preproduction: 'past',
@@ -171,12 +171,12 @@ describe('roadmap: fases', () => {
     expect(r.count).toBe(4)
   })
 
-  it('un proyecto en pausa no tiene etapa del ciclo actual: la pausa sale al final', () => {
+  it('un proyecto que no dice su fase: lo apuntado se ve y el resto no se sabe', () => {
     const d = data({ phases: [phase('f', { projectId: 'q', stage: 'concept', status: 'done' })] })
     const r = roadmapProjectPhases(d, d.projects[1])
-    expect(r.stages.at(-1)).toMatchObject({ stage: 'paused', state: 'current' })
+    expect(r.stages.some((s) => s.state === 'current')).toBe(false)
     expect(r.stages.find((s) => s.stage === 'concept')!.state).toBe('done')
-    expect(r.stages.find((s) => s.stage === 'idea')!.state).toBe('unknown')
+    expect(r.stages.find((s) => s.stage === 'prototype')!.state).toBe('unknown')
   })
 
   it('todo el estudio: un bloque por proyecto; con ámbito, solo el suyo', () => {

@@ -1,0 +1,231 @@
+/* Próximas fechas: la lista por días, la cuadrícula de 14 días y el conmutador de la
+ * cabecera. Solo variables de styles.css. */
+
+/* La lista: un día por fila, con lo que pasa ese día a la derecha. */
+.agenda-day-entries {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.agenda-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.agenda-entry .item-title {
+  overflow-wrap: anywhere;
+}
+
+/* El conmutador: con texto en escritorio; en móvil, solo el icono (el texto sigue para el lector). */
+.agenda-toggle button {
+  padding: var(--space-1) var(--space-3);
+}
+
+@media (max-width: 640px) {
+  .agenda-toggle button {
+    padding: 6px 9px;
+  }
+
+  .agenda-toggle-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+/* La cuadrícula de 14 días y, al lado o debajo, lo del día elegido. */
+.agenda-cal {
+  container-type: inline-size;
+}
+
+.agenda-cal-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+}
+
+/* Con sitio (a dos columnas o en el modo foco), lo del día va al lado de la cuadrícula. */
+@container (min-width: 680px) {
+  .agenda-cal-inner {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  }
+}
+
+.agenda-grid {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 3px;
+}
+
+.agenda-grid th {
+  padding: 0 0 var(--space-1);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-3);
+}
+
+.agenda-grid td {
+  padding: 0;
+  vertical-align: top;
+}
+
+.agenda-cell,
+.agenda-cell-out {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  min-height: 50px;
+  padding: var(--space-1);
+  border-radius: var(--radius-sm);
+  font: inherit;
+}
+
+.agenda-cell {
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+  transition:
+    border-color var(--dur) var(--ease),
+    background var(--dur) var(--ease);
+}
+
+.agenda-cell:hover {
+  border-color: var(--border-strong);
+}
+
+.agenda-cell[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.agenda-cell-out {
+  border: 1px dashed var(--border);
+  color: var(--text-3);
+}
+
+.agenda-cell-day {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.6em;
+  height: 1.6em;
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.agenda-cell-out .agenda-cell-day,
+.agenda-cell-out {
+  font-size: 0.78rem;
+}
+
+.agenda-cell.today .agenda-cell-day {
+  background: var(--accent);
+  color: var(--accent-text);
+  border-radius: 999px;
+}
+
+.agenda-cell-marks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1px;
+  min-width: 0;
+}
+
+.agenda-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 15px;
+  height: 15px;
+  border-radius: 4px;
+}
+
+.mark-neutral {
+  color: var(--neutral);
+}
+.mark-info {
+  color: var(--info);
+}
+.mark-success {
+  color: var(--success);
+}
+.mark-warning {
+  color: var(--warning);
+}
+.mark-danger {
+  color: var(--danger);
+}
+.mark-special {
+  color: var(--special);
+}
+.mark-muted {
+  color: var(--muted);
+}
+
+.agenda-more {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.agenda-cal-day {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.agenda-cal-day .subhead::first-letter {
+  text-transform: uppercase;
+}
+
+.agenda-cal-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+@media (max-width: 640px) {
+  .agenda-grid {
+    border-spacing: 2px;
+  }
+
+  .agenda-cell,
+  .agenda-cell-out {
+    min-height: 46px;
+    padding: 2px;
+  }
+
+  .agenda-mark {
+    width: 13px;
+    height: 13px;
+  }
+}
+
+@media (forced-colors: active) {
+  .agenda-cell[aria-pressed='true'] {
+    outline: 2px solid Highlight;
+  }
+}

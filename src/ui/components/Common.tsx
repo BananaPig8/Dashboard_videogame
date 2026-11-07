@@ -27,6 +27,8 @@ export function Card({
   onToggle?: () => void
 }) {
   const bodyId = useId()
+  // El botón de plegar dice de qué bloque es («Contraer: Prioridades de hoy»), como «Subir: …».
+  const toggleLabel = (collapsed ? t('actions.expand') : t('actions.collapse')) + (typeof title === 'string' && title ? `: ${title}` : '')
   return (
     <section
       className={`card ${collapsed ? 'collapsed' : ''} ${className ?? ''}`}
@@ -48,8 +50,8 @@ export function Card({
                 className="icon-btn small"
                 aria-expanded={!collapsed}
                 aria-controls={bodyId}
-                aria-label={collapsed ? t('actions.expand') : t('actions.collapse')}
-                title={collapsed ? t('actions.expand') : t('actions.collapse')}
+                aria-label={toggleLabel}
+                title={toggleLabel}
                 onClick={onToggle}
               >
                 <Icon name={collapsed ? 'chevronDown' : 'chevronUp'} size={16} />
@@ -131,18 +133,6 @@ export function Progress({ ratio, label, tone = 'success' }: { ratio: number; la
   )
 }
 
-export function PageHeader({ title, subtitle, actions }: { title: ReactNode; subtitle?: ReactNode; actions?: ReactNode }) {
-  return (
-    <div className="page-header">
-      <div>
-        <h1>{title}</h1>
-        {subtitle && <p className="page-subtitle">{subtitle}</p>}
-      </div>
-      {actions && <div className="page-actions">{actions}</div>}
-    </div>
-  )
-}
-
 /** Botón que enseña que está trabajando (y no se puede pulsar dos veces). */
 export function Button({ loading, children, className = 'btn', disabled, ...rest }: ButtonHTMLAttributes<HTMLButtonElement> & { loading?: boolean }) {
   return (
@@ -180,14 +170,18 @@ export function Modal({
 }) {
   const ref = useRef<HTMLDialogElement>(null)
   const titleId = useId()
+  /** Lo cerramos nosotros (al desmontar), no el navegador. */
+  const closing = useRef(false)
   useEffect(() => {
     const d = ref.current
     if (!open || !d) return
+    closing.current = false
     // Quien lo abrió recupera el foco al cerrarse (el diálogo se desmonta sin close() y el
     // navegador no lo devuelve). Si ya no existe (se borró), el foco va al contenido.
     const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null
     if (!d.open) d.showModal()
     return () => {
+      closing.current = true
       if (d.open) d.close()
       if (document.activeElement && document.activeElement !== document.body) return
       if (opener?.isConnected) opener.focus({ preventScroll: true })
@@ -203,6 +197,14 @@ export function Modal({
       aria-labelledby={titleId}
       onCancel={(e) => {
         e.preventDefault()
+        onClose()
+      }}
+      onClose={() => {
+        // Chrome cierra el diálogo sin dejar cancelarlo si se pulsa Esc dos veces seguidas: se
+        // vuelve a abrir y se pide cerrar como siempre (el editor pregunta si hay cambios).
+        const d = ref.current
+        if (closing.current || !d || d.open) return
+        d.showModal()
         onClose()
       }}
       onClick={(e) => {

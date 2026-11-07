@@ -1,6 +1,16 @@
 // Textos de la sección «Panel del estudio». Cada sección tiene su fichero para poder trabajar en
-// ellas por separado; es.ts los junta bajo `secciones.panel`.
+// ellas por separado; es.ts los junta bajo `secciones.panel`. Los bloques del Dashboard tienen
+// además los suyos (panel-*.ts), bajo `secciones.panel.<parte>`.
+import { panel_actividad } from './panel-actividad'
+import { panel_cabecera } from './panel-cabecera'
+import { panel_prioridades } from './panel-prioridades'
+import { panel_tarjetas } from './panel-tarjetas'
+
 export const panel = {
+  cabecera: panel_cabecera,
+  prioridades: panel_prioridades,
+  tarjetas: panel_tarjetas,
+  actividad: panel_actividad,
   title: 'Panel del estudio',
   subtitle: 'Lo importante de todos los juegos, de un vistazo',
   titleProject: 'Panel · {project}',
@@ -11,9 +21,9 @@ export const panel = {
   backToSummary: 'Volver al resumen',
   // Qué enseña cada subsección (?ver=), debajo del título.
   views: {
-    actividad: 'Lo último que se ha terminado y los últimos cambios registrados en el código',
-    fechas: 'Fechas límite, eventos, inscripciones, versiones, builds y recordatorios de los próximos 60 días',
-    prioritarias: 'Lo marcado para hoy, lo que vence, lo que está en marcha y lo que está parado',
+    actividad: 'Todo lo que pasa en el estudio: los cambios hechos aquí, las fechas de los datos y el historial del código, con filtros',
+    fechas: 'Fechas límite, hitos, eventos, inscripciones, versiones y recordatorios de los próximos 60 días',
+    prioritarias: 'Lo crítico, lo vencido y lo que vence, lo bloqueado y lo que espera, los hitos en riesgo y las entregas, inscripciones y eventos de los próximos 14 días',
     proyectos: 'Cómo va cada juego: etapa, salud, cifras y actividad',
     proyectosOne: 'Cómo va este juego: etapa, salud, cifras y actividad',
     alertas: 'Qué proyecto pide atención y por qué, con todos los avisos de hoy',
@@ -23,62 +33,26 @@ export const panel = {
     empty: 'Este proyecto aún no tiene descripción.',
     write: 'Escribir la descripción',
   },
-  reason: {
-    overdue: 'Vencida',
-    due: 'Vence hoy',
-    focus: 'Para hoy',
-    in_progress: 'En curso',
-    review: 'En revisión',
-  },
-  kpis: {
-    activeProjects: 'Proyectos activos',
-    open: 'Abiertas',
-    openHint: 'En marcha o por hacer',
-    today: 'Para hoy',
-    overdue: 'Vencidas',
-    blocked: 'Bloqueadas',
-    toConfirm: 'Por confirmar',
-    unverifiedOne: 'Y 1 con datos sin verificar',
-    unverifiedOther: 'Y {n} con datos sin verificar',
-    upcoming: 'Próximas fechas',
-    upcomingHint: 'En los próximos 60 días',
-    undatedOne: '1 evento sin fecha confirmada',
-    undatedOther: '{n} eventos sin fecha confirmada',
-    builds: 'Builds disponibles',
-    feedback: 'Feedback por priorizar',
-  },
   attention: {
     none: 'Ningún proyecto pide atención ahora mismo.',
     upToDate: 'Al día: {names}',
-    alerts: 'Avisos',
     alertsAll: 'Todos los avisos de hoy ({n})',
     alertsNone: 'Nada vencido, bloqueado ni a punto de llegar: no hay avisos hoy.',
   },
   today: {
     plan: 'Planificar el día',
-    empty: 'Nada marcado para hoy. Elige qué hacer en «Planificar el día».',
   },
   projects: {
     new: 'Nuevo proyecto',
     add: 'Añadir un videojuego',
     addHint: 'De la idea a la publicación, con el mismo panel.',
-    none: 'Aún no hay proyectos en el estudio.',
-    archivedOne: 'Ver el proyecto archivado',
-    archivedOther: 'Ver los {n} proyectos archivados',
     all: 'Todos los proyectos',
     stateTitle: 'Estado del proyecto',
     stateSubtitle: 'Su etapa, su salud y lo que tiene abierto',
     whyTitle: 'Por qué está así',
     whyNone: 'Nada pide atención en este proyecto ahora mismo.',
   },
-  blocked: {
-    all: 'Ver bloqueadas',
-    none: 'Nada bloqueado.',
-    paused: 'Aparcado a propósito ({n})',
-    pausedHint: '— en pausa hasta que se cumpla una condición',
-  },
   agenda: {
-    calendar: 'Calendario',
     empty: 'No hay fechas en los próximos 60 días.',
     add: 'Añadir una fecha',
     more: 'Ver {n} más en el calendario',
@@ -89,12 +63,6 @@ export const panel = {
   },
   launch: {
     link: 'Publicación',
-    steam: 'Steam ({n})',
-    steamNone: 'Nada pendiente para Steam.',
-    events: 'Ferias, eventos y comunidad ({n})',
-    eventsNone: 'Nada pendiente para ferias.',
-    release: 'Demos y versiones ({n})',
-    releaseNone: 'Nada pendiente en demos y versiones.',
   },
   builds: {
     all: 'Todas',
@@ -102,46 +70,21 @@ export const panel = {
     add: 'Registrar una build',
     open: 'Abrir {name}',
   },
-  publish: {
-    steps: 'Ver pasos',
-    empty: 'Sin listas de publicación.',
-    add: 'Crear una lista',
-    next: 'Siguiente: {label}',
-  },
-  feedback: {
-    all: 'Todo',
-    empty: 'Aún no hay feedback registrado.',
-    allDoneOne: 'Todo el feedback registrado está atendido (1 resuelto).',
-    allDoneOther: 'Todo el feedback registrado está atendido ({n} resueltos).',
-    add: 'Registrar feedback',
-    addressedOne: '1 ya resuelto.',
-    addressedOther: '{n} ya resueltos.',
-  },
   evolution: {
     stats: 'Estadísticas',
     last7: 'Commits en los últimos 7 días',
     previous: '(semana anterior: {n})',
     doneTotal: 'Elementos terminados en total',
     commits: 'Commits registrados',
+    empty: 'Todavía no hay historial: ni commits registrados ni elementos terminados.',
+    noCommits: 'Sin commits registrados',
+    noItems: 'Todavía no hay elementos de trabajo',
   },
   decisions: {
     log: 'Registro',
     open: 'Por decidir ({n})',
     taken: 'Últimas tomadas',
     none: 'Sin decisiones registradas.',
-  },
-  recent: {
-    history: 'Historial',
-    none: 'Aún no hay nada terminado.',
-    done: 'Lo último terminado',
-    code: 'Últimos cambios en el código',
-    codeNone: 'No hay commits ni PR registrados.',
-    activity: {
-      commit: 'Commit',
-      merge: 'Fusión',
-      release: 'Publicación',
-      note: 'Nota',
-    },
   },
   resources: {
     all: 'Todos',

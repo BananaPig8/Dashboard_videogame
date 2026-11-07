@@ -1,0 +1,181 @@
+/* La tarjeta de un proyecto (la base, .project-card, está en styles.css): portada, progreso,
+ * próximo hito, trabajo y última actividad. Solo variables de styles.css. */
+
+.project-card .project-card-head {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.project-card-title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.project-card-title h3 {
+  margin: 0;
+  font-size: inherit;
+  overflow-wrap: anywhere;
+}
+
+.project-card-facts {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-2);
+  overflow-wrap: anywhere;
+}
+
+/* Portada: tamaño fijo (no salta al cargar); sin imagen, la inicial sobre el color del proyecto. */
+.project-cover {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+}
+
+.project-cover-initial {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* Mezclado con la superficie: el texto del tema contrasta con cualquier color de proyecto. */
+  background: color-mix(in srgb, var(--project-color, var(--accent)) 30%, var(--surface));
+  border-color: color-mix(in srgb, var(--project-color, var(--accent)) 60%, var(--border));
+  color: var(--text);
+  font-size: 1.35rem;
+  font-weight: 680;
+  line-height: 1;
+}
+
+.project-card-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+/* Progreso. */
+.project-progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.project-progress-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2px var(--space-2);
+}
+
+.project-progress-head strong {
+  font-size: 1.05rem;
+}
+
+.project-progress-method {
+  font-weight: 500;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.project-progress-none {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-2);
+}
+
+.project-progress-detail {
+  margin: 0;
+  font-size: 0.76rem;
+  color: var(--text-3);
+}
+
+/* Próximo hito. */
+.project-milestone {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+}
+
+.project-milestone .item-title {
+  overflow-wrap: anywhere;
+}
+
+/* Trabajo: cifras y bloqueo. */
+.project-work {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.project-card .project-counts {
+  flex: 1 1 180px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.project-blocked {
+  display: inline-flex;
+  border-radius: 999px;
+}
+
+.project-blocked:hover {
+  text-decoration: none;
+}
+
+.project-blocked:hover .pill {
+  text-decoration: underline;
+}
+
+/* Última actividad. */
+.project-card-activity {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  color: var(--text-2);
+}
+
+.project-card-activity .icon {
+  vertical-align: -1px;
+}
+
+.project-card-last {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 0.76rem;
+  color: var(--text-3);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.project-card footer .sparkline {
+  flex: none;
+}
+
+.project-card-open {
+  align-self: flex-start;
+}
+
+@media (max-width: 640px) {
+  .project-card footer {
+    flex-wrap: wrap;
+  }
+}

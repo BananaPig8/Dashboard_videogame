@@ -4,7 +4,8 @@
 // Regla: lo que se importa de '../selectors' solo se usa dentro de funciones (hay un ciclo de import).
 import { STATUSES, STATUS_ORDER, TASK_KINDS } from '../catalog'
 import type { Confidence, ID, ISODate, ItemKind, ItemStatus, Member, Priority, Studio, StudioData, WorkItem } from '../types'
-import { byPriority, isActionable, isOpen, itemDate, itemsOf, matchesQuery, todayItems, type Scope, type TodayEntry } from '../selectors'
+import { addDays } from '../dates'
+import { byPriority, closedProjectIds, isActionable, isOpen, itemDate, itemsOf, matchesQuery, todayItems, type Scope, type TodayEntry } from '../selectors'
 import { calendarEntries, type CalendarEntry } from './calendario'
 import { hasTag } from './etiquetas'
 
@@ -63,6 +64,30 @@ export interface TaskQuery {
   etiqueta?: string | null
   /** Búsqueda libre (título, descripción, etiquetas, fuentes…). */
   q?: string | null
+  /** Terminadas desde este día (?desde=, incluido): solo lo que tiene fecha de fin. */
+  desde?: ISODate | null
+  /** Terminadas hasta este día (?hasta=, incluido): solo lo que tiene fecha de fin. */
+  hasta?: ISODate | null
+  /** Con la fecha límite de hoy a dentro de estos días, hoy incluido (?vence=30: «Hitos próximos» del Dashboard). */
+  vence?: number | null
+  /** Sin lo de los proyectos archivados (?archivados=no: así cuentan las cifras del Dashboard en todo el estudio). */
+  sinArchivados?: boolean
+}
+
+/** Lo más que se puede pedir en ?vence= (un año). */
+export const TASK_DUE_MAX_DAYS = 366
+
+/** El valor de ?vence= si es un número de días válido (de 1 a un año); si no, null. */
+export function taskDueDaysOf(value: string | null): number | null {
+  if (!value || !/^\d{1,3}$/.test(value)) return null
+  const n = Number(value)
+  return n >= 1 && n <= TASK_DUE_MAX_DAYS ? n : null
+}
+
+/** ¿Vence de hoy a dentro de `days` días (hoy incluido)? Sin días, vale todo; sin fecha límite, no. */
+export function taskDueWithin(i: WorkItem, today: ISODate, days?: number | null): boolean {
+  if (!days) return true
+  return !!i.dueDate && i.dueDate >= today && i.dueDate <= addDays(today, days - 1)
 }
 
 function inFilter(i: WorkItem, q: TaskQuery): boolean {
@@ -82,20 +107,34 @@ function inFilter(i: WorkItem, q: TaskQuery): boolean {
 export const taskAssignedTo = (i: WorkItem, persona: string | null | undefined): boolean =>
   !persona || (persona === TASK_NOBODY ? !i.assigneeId : i.assigneeId === persona)
 
+/**
+ * ¿Se terminó entre esas fechas (las dos incluidas)? Sin ninguna, vale todo; con alguna, solo
+ * lo que tiene fecha de fin (lo terminado sin fecha no se sabe cuándo fue).
+ */
+export function taskCompletedIn(i: WorkItem, desde?: ISODate | null, hasta?: ISODate | null): boolean {
+  if (!desde && !hasta) return true
+  const end = i.completedAt?.slice(0, 10)
+  return !!end && (!desde || end >= desde) && (!hasta || end <= hasta)
+}
+
 /** Las tareas de la subsección y los filtros finos, sin ordenar. */
 export function filterTasks(data: StudioData, q: TaskQuery): WorkItem[] {
   const scope = q.scope ?? null
   const base = q.tipo ? itemsOf(data, scope).filter((i) => i.kind === q.tipo) : taskItems(data, scope)
   const estado = q.estado || 'abiertos'
+  const closed = q.sinArchivados ? closedProjectIds(data) : null
   return base.filter(
     (i) =>
       inFilter(i, q) &&
+      (!closed || !closed.has(i.projectId)) &&
+      taskDueWithin(i, q.today, q.vence) &&
       (estado === 'todos' || (estado === 'abiertos' ? isOpen(i) : i.status === estado)) &&
       (!q.area || i.areaId === q.area) &&
       (!q.prioridad || i.priority === q.prioridad) &&
       (!q.fiabilidad || i.confidence === q.fiabilidad) &&
       taskAssignedTo(i, q.persona) &&
       hasTag(i, q.etiqueta ?? null) &&
+      taskCompletedIn(i, q.desde, q.hasta) &&
       matchesQuery(i, q.q ?? ''),
   )
 }

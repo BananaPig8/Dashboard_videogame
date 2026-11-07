@@ -27,6 +27,8 @@ export type SectionId =
   | 'finanzas'
   | 'estadisticas'
   | 'ajustes'
+  | 'pruebas'
+  | 'historial'
 
 export interface NavChild {
   id: string
@@ -54,6 +56,16 @@ export interface NavSection {
   children: NavChild[]
   /** Se puede ocultar desde Ajustes (Panel, Proyectos, Tareas y Ajustes no). */
   optional?: boolean
+  /**
+   * Solo es una pestaña de la ficha de un proyecto (no sale en la barra lateral). Su `to`
+   * (/ficha/…) solo sirve para hacer los enlaces de sus subsecciones; fuera de una ficha,
+   * redirige a `studio`: la vista del estudio que enseña lo mismo (y adonde se va al quitar
+   * el proyecto del ámbito).
+   */
+  projectOnly?: boolean
+  studio?: string
+  /** En la ficha, los enlaces a `studio` abren esta pestaña (Historial = Panel › Actividad). */
+  opensFromStudio?: boolean
 }
 
 export interface NavGroup {
@@ -120,6 +132,9 @@ const TREE: NavGroup[] = [
         ['pausa', 'estado', 'pausa'],
         ['lanzados', 'estado', 'lanzados'],
         ['archivados', 'estado', 'archivados'],
+        ['plantillas', 'vista', 'plantillas', 'solo'],
+        ['componentes', 'vista', 'componentes', 'solo'],
+        ['relaciones', 'vista', 'relaciones', 'solo'],
       ],
     }),
   ]),
@@ -313,7 +328,6 @@ const TREE: NavGroup[] = [
       id: 'estadisticas',
       icon: 'chart',
       to: '/estadisticas',
-      tab: 'estadisticas',
       optional: true,
       children: [
         ['progreso', 'vista', null],
@@ -344,11 +358,60 @@ const SETTINGS: NavSection = section({
   ],
 })
 
+/**
+ * Pestañas que solo tiene la ficha de un proyecto: juntan lo que en el estudio está en varias
+ * secciones (las demos y las sesiones de prueba; el registro de cambios del Panel).
+ */
+const PROJECT_ONLY: NavSection[] = [
+  section({
+    id: 'pruebas',
+    icon: 'play',
+    to: '/ficha/pruebas',
+    studio: '/builds?canal=demos',
+    tab: 'pruebas',
+    projectOnly: true,
+    children: [
+      ['resumen', 'vista', null],
+      ['demos', 'vista', 'demos'],
+      ['sesiones', 'vista', 'sesiones'],
+      ['feedback', 'vista', 'feedback'],
+    ],
+  }),
+  section({
+    id: 'historial',
+    icon: 'history',
+    to: '/ficha/historial',
+    studio: '/?ver=actividad',
+    opensFromStudio: true,
+    tab: 'historial',
+    projectOnly: true,
+    children: [],
+  }),
+]
+
+/** El orden de las pestañas de la ficha de un proyecto. */
+const TAB_ORDER: SectionId[] = [
+  'panel',
+  'tareas',
+  'roadmap',
+  'calendario',
+  'builds',
+  'pruebas',
+  'publicacion',
+  'feedback',
+  'eventos',
+  'documentacion',
+  'recursos',
+  'equipo',
+  'finanzas',
+  'historial',
+]
+
 /** Qué bloque del panel enseña cada subsección (?ver=): modo foco, sin tocar las preferencias. */
 export const PANEL_FOCUS: Record<string, WidgetId[]> = {
-  actividad: ['recent'],
+  actividad: ['activity'],
   fechas: ['agenda'],
-  prioritarias: ['today', 'blocked'],
+  prioritarias: ['priorities'],
   proyectos: ['projects'],
   alertas: ['attention'],
 }
@@ -367,18 +430,23 @@ export function settingsSection(): NavSection {
   return SETTINGS
 }
 
-/** Todas las secciones, en orden (Ajustes al final). */
+/** Todas las secciones de la barra lateral, en orden (Ajustes al final). */
 export function allSections(): NavSection[] {
   return [...TREE.flatMap((g) => g.sections), SETTINGS]
 }
 
-export function sectionById(id: SectionId): NavSection {
-  return allSections().find((s) => s.id === id)!
+/** Las pestañas que solo tiene la ficha de un proyecto. */
+export function projectOnlySections(): NavSection[] {
+  return PROJECT_ONLY
 }
 
-/** Las secciones que tienen pestaña en la ficha de un proyecto, en orden (sin las ocultas). */
+export function sectionById(id: SectionId): NavSection {
+  return [...allSections(), ...PROJECT_ONLY].find((s) => s.id === id)!
+}
+
+/** Las pestañas de la ficha de un proyecto, en orden (sin las secciones ocultas). */
 export function projectTabs(hidden: readonly string[] = []): NavSection[] {
-  return allSections().filter((s) => s.tab && !isHidden(s, hidden))
+  return TAB_ORDER.map(sectionById).filter((s) => s.tab && !isHidden(s, hidden))
 }
 
 // ——— Dónde estoy ————————————————————————————————————————————————————————————
@@ -412,7 +480,7 @@ export function sectionOfPath(pathname: string): NavSection | undefined {
     return projectTabs().find((s) => s.tab === tab)
   }
   if (pathname === '/') return allSections()[0]
-  return allSections().find((s) => s.to !== '/' && (pathname === s.to || pathname.startsWith(`${s.to}/`)))
+  return [...allSections(), ...PROJECT_ONLY].find((s) => s.to !== '/' && (pathname === s.to || pathname.startsWith(`${s.to}/`)))
 }
 
 /** Las facetas de una sección que no tienen subsección «por defecto»: se quitan al volver a la raíz. */
@@ -477,6 +545,12 @@ export function scopedHref(to: string, here: Here): string {
   }
   const s = sectionOfPath(path)
   if (here.projectSlug && !path.startsWith('/proyectos')) {
+    const only = PROJECT_ONLY.find((x) => x.opensFromStudio && x.studio && covers(x.studio, path, params))
+    if (only) {
+      for (const k of split(only.studio!).params.keys()) params.delete(k)
+      params.delete('p')
+      return join(`/proyectos/${here.projectSlug}/${only.tab}`, params)
+    }
     if (s?.tab) {
       params.delete('p')
       return join(s.tab === 'resumen' ? `/proyectos/${here.projectSlug}` : `/proyectos/${here.projectSlug}/${s.tab}`, params)
@@ -484,6 +558,25 @@ export function scopedHref(to: string, here: Here): string {
     return join(path, params)
   }
   if (here.scope && s && s.id !== 'proyectos' && s.id !== 'ajustes' && !path.startsWith('/proyectos/')) params.set('p', here.scope)
+  return join(path, params)
+}
+
+/** ¿La ruta `path?params` es la vista `view` (misma ruta y con todos sus parámetros)? */
+function covers(view: string, path: string, params: URLSearchParams): boolean {
+  const v = split(view)
+  return v.path === path && [...v.params].every(([k, val]) => params.get(k) === val)
+}
+
+/**
+ * Al quitar el proyecto del ámbito estando en su ficha: la misma vista en todo el estudio
+ * (una pestaña que solo tiene la ficha, a la vista del estudio que enseña lo mismo).
+ */
+export function studioHref(pathname: string, search: string): string {
+  const s = sectionOfPath(pathname)
+  const { path, params } = split(s?.studio ?? s?.to ?? '/')
+  // Las facetas propias de una pestaña que solo tiene la ficha no significan nada en el estudio.
+  const own = new Set(s?.projectOnly ? s.children.map((c) => c.facet) : [])
+  for (const [k, v] of new URLSearchParams(search)) if (!params.has(k) && !own.has(k)) params.set(k, v)
   return join(path, params)
 }
 
@@ -534,7 +627,6 @@ const OLD_TABS: Record<string, string> = {
   trabajo: 'tareas',
   agenda: 'calendario',
   decisiones: 'documentacion?tipo=decisiones',
-  historial: 'builds?vista=cambios',
 }
 
 /** Valores antiguos de Tareas (?estado=blocked del panel) → las subsecciones de ahora. */
@@ -599,24 +691,45 @@ const quick = (
   },
 })
 
+/**
+ * El botón «Crear» del Dashboard: lo de todos los días, en este orden (lo mismo que «Nuevo»,
+ * con los mismos formularios). Un bug es una incidencia; una demo, una versión de tipo demo.
+ */
+export const DASHBOARD_CREATE = ['project', 'task', 'milestone', 'bug', 'build', 'demo', 'event', 'feedback', 'document', 'note', 'decision'] as const
+
+export function dashboardCreate(hidden: readonly string[] = []): QuickCreate[] {
+  const all = quickCreate(hidden)
+  const byId = new Map(all.map((q) => [q.id, q]))
+  const bug = byId.get('issue')
+  return DASHBOARD_CREATE.map((id) => (id === 'bug' && bug ? { ...bug, id: 'bug', get label() { return tr('quick.bug') } } : byId.get(id))).filter(
+    (q): q is QuickCreate => !!q,
+  )
+}
+
 /** Lo que se puede crear desde cualquier pantalla (botón «Nuevo» y paleta). */
 export function quickCreate(hidden: readonly string[] = []): QuickCreate[] {
   return [
     quick('trabajo', 'task', 'check', 'items', { kind: 'task' }),
+    quick('trabajo', 'milestone', 'flag', 'items', { kind: 'milestone' }),
     quick('trabajo', 'decision', 'scale', 'items', { kind: 'decision', status: 'to_confirm' }),
     quick('trabajo', 'issue', 'bug', 'items', { kind: 'issue', priority: 'high' }),
     quick('trabajo', 'reminder', 'bell', 'reminders'),
-    quick('produccion', 'event', 'calendar', 'events'),
-    quick('produccion', 'build', 'box', 'builds'),
-    quick('produccion', 'release', 'rocket', 'releases'),
-    quick('produccion', 'playtest', 'users', 'playtests'),
-    quick('produccion', 'feedback', 'message', 'feedback'),
+    quick('trabajo', 'note', 'sticky', 'resources', { type: 'note' }, 'documentacion'),
+    quick('produccion', 'event', 'calendar', 'events', undefined, 'eventos'),
+    quick('produccion', 'build', 'box', 'builds', undefined, 'builds'),
+    quick('produccion', 'release', 'rocket', 'releases', undefined, 'publicacion'),
+    quick('produccion', 'demo', 'play', 'releases', { kind: 'demo' }, 'publicacion'),
+    quick('produccion', 'playtest', 'users', 'playtests', undefined, 'feedback'),
+    quick('produccion', 'feedback', 'message', 'feedback', undefined, 'feedback'),
+    quick('estudio', 'document', 'fileText', 'resources', { type: 'doc' }, 'documentacion'),
     quick('estudio', 'resource', 'book', 'resources'),
     quick('estudio', 'checklist', 'list', 'checklists'),
     quick('estudio', 'timeEntry', 'clock', 'timeEntries', undefined, 'equipo'),
     quick('estudio', 'member', 'users', 'members', undefined, 'equipo'),
     quick('estudio', 'transaction', 'wallet', 'transactions', undefined, 'finanzas'),
     quick('estudio', 'metric', 'chart', 'metrics', undefined, 'estadisticas'),
+    quick('estudio', 'risk', 'alert', 'risks'),
+    quick('estudio', 'component', 'layers', 'components'),
     quick('estudio', 'project', 'folder', 'projects'),
   ].filter((q) => !q.section || !hidden.includes(q.section))
 }

@@ -1,7 +1,7 @@
 // Ajustes › Perfil del estudio: nombre, lema y moneda (ISO 4217). Cambiar la moneda no
 // convierte los importes, y se avisa antes. Al lado, lo que lleva el estudio.
 import { useMemo, useState } from 'react'
-import { allTags, currencyOptions, isCurrencyCode, studioAmountCounts } from '../../../domain/selectors'
+import { allTags, currencyOptions, isCurrencyCode, isProjectClosed, studioAmountCounts } from '../../../domain/selectors'
 import { intlLocale, t } from '../../../i18n'
 import { store, useCanEdit, useStudioData } from '../../../data/store'
 import { Card, Field, Stat } from '../../components/Common'
@@ -43,7 +43,7 @@ export function AjustesEstudio() {
   const amounts = studioAmountCounts(data)
   const amountList = countsText({ transactions: amounts.transactions, budgets: amounts.budgets })
   const tags = allTags(data).length
-  const activeProjects = data.projects.filter((p) => p.stage !== 'archived').length
+  const activeProjects = data.projects.filter((p) => !isProjectClosed(data.studio, p)).length
   const activeMembers = data.members.filter((m) => m.active).length
 
   const save = async () => {

@@ -27,7 +27,7 @@ const project = (id: string) => ({
   name: id,
   description: '',
   platforms: [],
-  stage: 'production' as const,
+  status: 'desarrollo',
   color: '#000',
   versions: [],
   tags: [],
@@ -152,6 +152,14 @@ describe('subsecciones y filtros de Feedback', () => {
   it('cuenta cuántos hay de cada clase', () => {
     expect(feedbackKindCounts(d)).toEqual({ comment: 2, bug: 2, request: 1, none: 1 })
     expect(feedbackKindCounts(d, 'q')).toEqual({ comment: 1, bug: 0, request: 0, none: 0 })
+  })
+})
+
+describe('sin los proyectos archivados (lo pide «Feedback por revisar» del Dashboard)', () => {
+  it('deja fuera el feedback de un proyecto archivado', () => {
+    const d = data({ projects: [project('p'), { ...project('viejo'), status: 'archivado' }], feedback: [fb('de-p'), fb('de-viejo', { projectId: 'viejo' })] })
+    expect(feedbackList(d, { estado: 'new' }).map((f) => f.id).sort()).toEqual(['de-p', 'de-viejo'])
+    expect(feedbackList(d, { estado: 'new', sinArchivados: true }).map((f) => f.id)).toEqual(['de-p'])
   })
 })
 

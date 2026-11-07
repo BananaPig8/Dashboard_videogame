@@ -7,7 +7,7 @@ import { CALENDAR_SECTION_KINDS, type CalendarKind } from '../catalog'
 import type { CollectionKey } from '../collections'
 import { addDays, DEFAULT_TIME_ZONE, isValidTimeZone, yearOf } from '../dates'
 import type { ClockTime, Confidence, ID, ISODate, StudioData, StudioEvent } from '../types'
-import { buildLabel, isOpen, type Scope } from '../selectors'
+import { buildLabel, inProject, isOpen, type Scope } from '../selectors'
 import { hasTag } from './etiquetas'
 
 export interface CalendarEntry {
@@ -52,7 +52,7 @@ const inScope = (scope: Scope) => (x: { projectId?: ID }) => scope === null || !
 /** Todas las fechas, sin filtrar por días (ordenadas por fecha y hora). */
 export function allCalendarEntries(data: StudioData, scope: Scope = null): CalendarEntry[] {
   const out: CalendarEntry[] = []
-  const own = (x: { projectId?: ID }) => scope === null || x.projectId === scope
+  const own = (x: { projectId?: ID; alsoProjectIds?: ID[] }) => scope === null || inProject(x, scope)
   for (const i of data.items.filter(own))
     if (i.dueDate)
       out.push({
@@ -217,7 +217,7 @@ export interface CalendarUndated {
  */
 export function calendarUndated(data: StudioData, scope: Scope = null, kinds?: readonly CalendarKind[]): CalendarUndated[] {
   const out: CalendarUndated[] = []
-  const own = (x: { projectId?: ID }) => scope === null || x.projectId === scope
+  const own = (x: { projectId?: ID; alsoProjectIds?: ID[] }) => scope === null || inProject(x, scope)
   for (const e of data.events.filter(inScope(scope))) {
     if (e.status === 'cancelled' || e.status === 'done') continue
     const target = { collection: 'events' as const, id: e.id }

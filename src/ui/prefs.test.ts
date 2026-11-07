@@ -1,12 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { ACCENTS, contrast, DEFAULT_PREFERENCES, DEFAULT_WIDGET_ORDER, resolveAccent, sanitizePreferences } from './prefs'
+import { ACCENTS, ANYONE, contrast, dashboardOf, DEFAULT_DASHBOARD, DEFAULT_PREFERENCES, DEFAULT_WIDGET_ORDER, resolveAccent, sanitizePreferences } from './prefs'
 
 describe('preferencias', () => {
   it('por defecto: tema oscuro, Madrid, español y todos los widgets', () => {
     expect(DEFAULT_PREFERENCES.theme).toBe('dark')
     expect(DEFAULT_PREFERENCES.timeZone).toBe('Europe/Madrid')
     expect(DEFAULT_PREFERENCES.locale).toBe('es')
-    expect(sanitizePreferences({}).widgets.order).toEqual(DEFAULT_WIDGET_ORDER)
+    expect(dashboardOf(sanitizePreferences({}))).toEqual(DEFAULT_DASHBOARD)
+    expect(DEFAULT_DASHBOARD.order).toEqual(DEFAULT_WIDGET_ORDER)
   })
 
   it('arregla preferencias raras o de otra versión sin romper', () => {
@@ -21,11 +22,31 @@ describe('preferencias', () => {
     expect(p.theme).toBe('dark')
     expect(p.accent).toBe('violet')
     expect(p.density).toBe('compact')
-    expect(p.widgets.order[0]).toBe('today')
-    expect(new Set(p.widgets.order).size).toBe(DEFAULT_WIDGET_ORDER.length)
-    expect(p.widgets.hidden).toEqual(['kpis'])
+    // La disposición de antes («widgets») pasa a ser la de cualquiera, con los bloques de ahora:
+    // «Hoy» y «Bloqueado» están en «Prioridades».
+    const layout = p.dashboards[ANYONE]
+    expect(layout.order[0]).toBe('priorities')
+    expect(new Set(layout.order).size).toBe(DEFAULT_WIDGET_ORDER.length)
+    expect(layout.hidden).toEqual(['kpis'])
     expect(p.savedViews.map((v) => v.id)).toEqual(['a'])
     expect(p.weekStart).toBe(1)
+  })
+
+  it('cada persona tiene su disposición del Dashboard; sin la suya, ve la de cualquiera', () => {
+    const p = sanitizePreferences({
+      meId: 'ana',
+      dashboards: {
+        [ANYONE]: { hidden: ['builds'] },
+        luis: { hidden: ['feedback'], sizes: { agenda: 'wide', kpis: 'enorme' }, kpis: { hidden: ['overdue', 'no-existe'] }, agendaView: 'calendar' },
+      },
+    })
+    expect(dashboardOf(p).hidden).toEqual(['builds'])
+    const luis = dashboardOf({ ...p, meId: 'luis' })
+    expect(luis.hidden).toEqual(['feedback'])
+    expect(luis.sizes.agenda).toBe('wide')
+    expect(luis.kpis.hidden).toEqual(['overdue'])
+    expect(luis.kpis.order).toHaveLength(DEFAULT_DASHBOARD.kpis.order.length)
+    expect(luis.agendaView).toBe('calendar')
   })
 
   it('los acentos se leen bien sobre su fondo (AA para texto)', () => {

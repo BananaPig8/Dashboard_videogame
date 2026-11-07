@@ -5,7 +5,7 @@
 import { EVENT_SECTION_TYPES, SECTOR_EVENT_TYPES } from '../catalog'
 import { addDays } from '../dates'
 import type { Build, Cents, EventType, Feedback, ID, ISODate, Playtest, RegistrationStatus, Resource, StudioData, StudioEvent, Transaction } from '../types'
-import { checklistProgress, type ChecklistProgress, type Scope } from '../selectors'
+import { checklistProgress, closedProjectIds, type ChecklistProgress, type Scope } from '../selectors'
 import { hasTag } from './etiquetas'
 
 /** Cuántos días antes avisan de una inscripción que cierra la barra, la campana y Eventos. */
@@ -54,12 +54,17 @@ export interface EventoQuery {
   scope?: Scope
   tipo?: EventoTipo | null
   tag?: string | null
+  /** Sin los de los proyectos archivados (?archivados=no: así cuenta «Próximos eventos» del Dashboard). */
+  sinArchivados?: boolean
 }
 
 /** Los eventos del sector de una subsección, en el ámbito y con la etiqueta (sin ordenar). */
 export function sectorEvents(data: StudioData, q: EventoQuery = {}): StudioEvent[] {
   const types = eventoTypes(q.tipo ?? null)
-  return data.events.filter((e) => types.includes(e.type) && eventoInScope(q.scope ?? null)(e) && hasTag(e, q.tag ?? null))
+  const closed = q.sinArchivados ? closedProjectIds(data) : null
+  return data.events.filter(
+    (e) => types.includes(e.type) && eventoInScope(q.scope ?? null)(e) && hasTag(e, q.tag ?? null) && (!closed || !e.projectId || !closed.has(e.projectId)),
+  )
 }
 
 /** El último día del evento (o su único día). */

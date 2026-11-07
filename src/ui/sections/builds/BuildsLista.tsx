@@ -1,7 +1,7 @@
 // Las builds de una subsección (?canal=), en una tabla por proyecto: qué versión es, en qué
 // canal y estado está, dónde se descarga y para qué versión o evento es.
 import { useSearchParams } from 'react-router-dom'
-import { buildGroupDefaults, buildGroupOf, buildsInChannelGroup, hasTag, releaseLabel } from '../../../domain/selectors'
+import { buildGroupDefaults, buildGroupOf, buildsInChannelGroup, buildsInDates, hasTag, releaseLabel } from '../../../domain/selectors'
 import type { Build, Project, StudioData } from '../../../domain/types'
 import { useCanEdit, useStudioData } from '../../../data/store'
 import { t } from '../../../i18n'
@@ -14,6 +14,7 @@ import { useScope, useUI } from '../../context'
 import { useFormat, useToday } from '../../hooks'
 import { yearOf } from '../../../domain/dates'
 import type { SectionPageProps } from '../registry'
+import { PanelFilterNotice, usePanelListFilter } from '../panel/AvisoFiltro'
 
 /** «Nada» para una celda: se ve una raya y se lee el texto. */
 export function NoValue({ label }: { label: string }) {
@@ -37,8 +38,10 @@ export function BuildsLista({ embedded }: SectionPageProps) {
   const [params] = useSearchParams()
   const group = buildGroupOf(params.get('canal'))
   const tag = useTagFilter()
+  // «Builds recientes» del Dashboard lleva aquí con sus fechas (?desde=&hasta=) y, en todo el estudio, sin los archivados.
+  const dated = usePanelListFilter(true)
   const all = buildsInChannelGroup(data, group, scope)
-  const builds = all.filter((b) => hasTag(b, tag))
+  const builds = buildsInDates(data, all, dated).filter((b) => hasTag(b, tag))
   const key = group ?? 'todas'
   const projects = scope ? data.projects.filter((p) => p.id === scope) : data.projects.filter((p) => builds.some((b) => b.projectId === p.id))
   const newBuild = () => create('builds', buildGroupDefaults(group))
@@ -58,11 +61,16 @@ export function BuildsLista({ embedded }: SectionPageProps) {
         subtitle={project ? t('secciones.builds.subtitleIn', { project: project.name }) : undefined}
       />
       <TagFilterNotice />
+      <PanelFilterNotice filter={dated} />
       <p className="builds-intro">{t(`secciones.builds.groups.${key}.intro`)}</p>
       {builds.length === 0 ? (
         <Card>
-          <Empty icon="box" action={canEdit && !tag ? { label: t('secciones.builds.actions.new'), onClick: newBuild } : undefined}>
-            {tag && all.length ? t('secciones.builds.groups.emptyTag') : t(`secciones.builds.groups.${key}.empty`)}
+          <Empty icon="box" action={canEdit && !tag && !dated.active ? { label: t('secciones.builds.actions.new'), onClick: newBuild } : undefined}>
+            {dated.active && all.length
+              ? t('secciones.builds.groups.emptyDates')
+              : tag && all.length
+                ? t('secciones.builds.groups.emptyTag')
+                : t(`secciones.builds.groups.${key}.empty`)}
           </Empty>
         </Card>
       ) : (

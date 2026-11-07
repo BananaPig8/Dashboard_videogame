@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CONFIDENCES, SOURCE_TYPES } from '../domain/catalog'
 import { todayISO } from '../domain/dates'
@@ -71,6 +71,35 @@ export function EditorModal({ request, onClose }: { request: EditorRequest; onCl
   ) as Row
   const [sources, setSources] = useState<SourceRef[]>(() => (initial.sources as SourceRef[]) ?? [])
   const [problems, setProblems] = useState<string[]>([])
+  // Lo escrito y sin guardar no se pierde por cerrar sin querer (Esc, fuera del panel, la X,
+  // «Cancelar») ni por recargar o cerrar la pestaña.
+  const [formDirty, setFormDirty] = useState(false)
+  const onDirtyChange = useCallback((d: boolean) => setFormDirty(d), [])
+  const sourcesDirty = JSON.stringify(sources) !== JSON.stringify((initial.sources as SourceRef[]) ?? [])
+  const unsaved = canEdit && (formDirty || ('sources' in initial && sourcesDirty))
+  useEffect(() => {
+    if (!unsaved) return
+    const warn = (e: BeforeUnloadEvent) => {
+      e.preventDefault()
+      e.returnValue = ''
+    }
+    window.addEventListener('beforeunload', warn)
+    return () => window.removeEventListener('beforeunload', warn)
+  }, [unsaved])
+  const close = async () => {
+    if (unsaved) {
+      const ok = await confirm({
+        title: t('editor.discardTitle'),
+        message: t('editor.discardBody'),
+        confirmLabel: t('editor.discard'),
+        cancelLabel: t('editor.keepEditing'),
+        danger: true,
+        focusCancel: true,
+      })
+      if (!ok) return
+    }
+    onClose()
+  }
   const formId = `form-${k}`
   const name = displayName(existing)
   const title = existing ? (name ? `${tr(`editor.titles.${k}.edit`)}: ${name}` : tr(`editor.titles.${k}.edit`)) : tr(`editor.titles.${k}.new`)
@@ -92,6 +121,7 @@ export function EditorModal({ request, onClose }: { request: EditorRequest; onCl
     setProblems(found)
     if (found.length) return
     store.upsert(k, entity as never)
+    if (!existing) request.onCreated?.(entity)
     onClose()
     toast(existing ? t('feedbackMsg.saved') : t('feedbackMsg.created'))
     if (k === 'projects' && !existing) navigate(`/proyectos/${String(entity.slug)}`)
@@ -137,7 +167,7 @@ export function EditorModal({ request, onClose }: { request: EditorRequest; onCl
       side
       wide
       title={title}
-      onClose={onClose}
+      onClose={close}
       footer={
         !canEdit ? (
           <>
@@ -155,7 +185,7 @@ export function EditorModal({ request, onClose }: { request: EditorRequest; onCl
               </button>
             )}
             <span className="spacer" />
-            <button type="button" className="btn" onClick={onClose}>
+            <button type="button" className="btn" onClick={close}>
               {t('actions.cancel')}
             </button>
             <button type="submit" form={formId} className="btn btn-primary">
@@ -177,7 +207,7 @@ export function EditorModal({ request, onClose }: { request: EditorRequest; onCl
         </div>
       )}
       <fieldset className="readonly-fieldset" disabled={!canEdit}>
-        <EntityForm spec={spec} initial={initial} data={data} onSubmit={submit} formId={formId} />
+        <EntityForm spec={spec} initial={initial} data={data} onSubmit={submit} formId={formId} onDirtyChange={onDirtyChange} />
         {'sources' in initial && <SourcesEditor sources={sources} onChange={setSources} projectRepo={project} />}
       </fieldset>
     </Modal>

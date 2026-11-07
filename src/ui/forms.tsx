@@ -1,6 +1,6 @@
 // Formularios de edición: los campos de cada colección se describen en specs.ts y un único
 // componente los pinta, los valida y los convierte antes de guardar.
-import { useMemo, useRef, useState, type CSSProperties, type FormEvent } from 'react'
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent } from 'react'
 import { todayISO } from '../domain/dates'
 import type { StudioData } from '../domain/types'
 import { parseAmount } from '../i18n/format'
@@ -187,14 +187,20 @@ export function EntityForm({
   data,
   onSubmit,
   formId,
+  onDirtyChange,
 }: {
   spec: FieldSpec[]
   initial: Draft
   data: StudioData
   onSubmit: (draft: Draft) => void
   formId: string
+  /** Avisa cuando el borrador deja de ser (o vuelve a ser) lo que había al abrir. */
+  onDirtyChange?: (dirty: boolean) => void
 }) {
   const [draft, setDraft] = useState<Draft>(() => toEditable(spec, initial))
+  const [opened] = useState(() => JSON.stringify(toEditable(spec, initial)))
+  const dirty = JSON.stringify(draft) !== opened
+  useEffect(() => onDirtyChange?.(dirty), [dirty, onDirtyChange])
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [tried, setTried] = useState(false)
   const formRef = useRef<HTMLFormElement>(null)

@@ -13,18 +13,19 @@ import {
   statsTasks,
   statsTime,
   statsWeekStarts,
+  projectProgress,
 } from '../selectors'
 
 // Lunes 19 de octubre de 2026.
 const TODAY = '2026-10-19'
 const src = [{ type: 'manual' as const, ref: 'prueba' }]
-const project = (id: string, stage: StudioData['projects'][number]['stage'] = 'production') => ({
+const project = (id: string, status = 'desarrollo') => ({
   id,
   slug: id,
   name: id,
   description: '',
   platforms: [],
-  stage,
+  status,
   color: '#000',
   versions: [],
   tags: [],
@@ -110,6 +111,31 @@ describe('estadísticas: progreso', () => {
     expect(p.summary.open).toBe(2)
     expect(statsProgress(d, TODAY, 'q').map((r) => r.project.id)).toEqual(['q'])
     expect(statsProgress(d, TODAY, null, 'demo').find((r) => r.project.id === 'p')!.tasks.ratio).toBeNull()
+  })
+
+  it('el porcentaje de cada proyecto es el de su tarjeta (projectProgress), con su método', () => {
+    const d = data({
+      projects: [project('p'), { ...project('q'), progressMethod: 'milestones' as const }],
+      items: [
+        done('critica', '2026-10-10', { priority: 'critical' }),
+        item('baja', { priority: 'low' }),
+        item('media'),
+        item('idea', { status: 'idea' }),
+        done('m', '2026-10-01', { kind: 'milestone', projectId: 'q' }),
+        item('m2', { kind: 'milestone', projectId: 'q' }),
+        item('t', { projectId: 'q' }),
+      ],
+    })
+    const rows = statsProgress(d, TODAY)
+    for (const r of rows) expect(r.progress).toEqual(projectProgress(d, r.project))
+    const p = rows.find((r) => r.project.id === 'p')!
+    // Por tareas, ponderado: 4 de 4 + 1 + 2 (la idea no cuenta); sin ponderar serían 1 de 4.
+    expect(p.progress).toMatchObject({ method: 'tasks', done: 1, total: 3 })
+    expect(p.progress.ratio).toBeCloseTo(4 / 7)
+    expect(p.tasks).toMatchObject({ done: 1, total: 4 })
+    expect(rows.find((r) => r.project.id === 'q')!.progress).toMatchObject({ method: 'milestones', done: 1, total: 2, ratio: 0.5 })
+    // Con etiqueta, el progreso también se calcula solo con lo que la lleva.
+    expect(statsProgress(d, TODAY, null, 'nada').find((r) => r.project.id === 'p')!.progress.ratio).toBeNull()
   })
 })
 

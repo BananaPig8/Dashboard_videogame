@@ -5,7 +5,7 @@ import { blockedBy, referencesTo, removeWithReferences } from './references'
 import { SCHEMA_VERSION, type StudioData, type WorkItem } from './types'
 import { validateStudioData } from './validate'
 
-const project = (id: string) => ({ id, slug: id, name: id, description: '', platforms: [], stage: 'production' as const, color: '#000', versions: [], tags: [], links: [] })
+const project = (id: string) => ({ id, slug: id, name: id, description: '', platforms: [], status: 'desarrollo', color: '#000', versions: [], tags: [], links: [] })
 const item = (id: string, over: Partial<WorkItem> = {}): WorkItem => ({
   id,
   projectId: 'p',
@@ -40,6 +40,15 @@ function data(): StudioData {
 }
 
 describe('borrar con referencias', () => {
+  it('el registro de cambios se queda con el proyecto aunque se borre (y los datos siguen siendo válidos)', () => {
+    const d = data()
+    const p = d.projects[0].id
+    const entry = { id: 'c1', at: '2026-11-02T10:00', action: 'created' as const, collection: 'items', entityId: 'x', title: 'X', projectId: p }
+    const r = removeWithReferences({ ...d, changes: [entry] }, 'projects', p)
+    expect(r.data.changes).toEqual([entry])
+    expect(validateStudioData(r.data)).toEqual([])
+  })
+
   it('los datos de prueba son válidos', () => {
     expect(validateStudioData(data())).toEqual([])
   })
@@ -90,6 +99,32 @@ describe('borrar con referencias', () => {
 })
 
 describe('normalizar datos', () => {
+  it('la etapa de antes se separa en estado y fase, y las fases viejas quedan en una de ahora', () => {
+    const raw = {
+      ...data(),
+      projects: [
+        ...data().projects,
+        { ...project('a'), status: undefined, stage: 'polish' },
+        { ...project('b'), status: undefined, stage: 'paused' },
+        { ...project('c'), status: undefined, stage: 'archived' },
+      ],
+      phases: [{ id: 'f', projectId: 'a', stage: 'idea', status: 'done' }],
+    }
+    const n = normalizeData(raw).data!
+    expect(n.projects.slice(2).map((p) => [p.status, p.phase, 'stage' in p])).toEqual([
+      ['pruebas', 'polish', false],
+      ['en_pausa', undefined, false],
+      ['archivado', undefined, false],
+    ])
+    expect(n.phases[0].stage).toBe('concept')
+    expect(validateStudioData(n)).toEqual([])
+  })
+
+  it('las relaciones con un proyecto que ya no existe se quitan', () => {
+    const raw = { ...data(), projects: [{ ...project('a'), relations: [{ projectId: 'nadie', kind: 'related' }, { projectId: 'a', kind: 'related' }] }] }
+    expect(normalizeData(raw).data!.projects[0].relations).toEqual([])
+  })
+
   it('lee datos de la versión 1 sin las colecciones nuevas', () => {
     const v1 = { schemaVersion: 1, studio: { id: 's', name: 'E', createdAt: '2026-01-01' }, areas: [], projects: [project('p')], items: [item('a')], builds: [], events: [], feedback: [], resources: [], checklists: [], activity: [] }
     const n = normalizeData(v1)
@@ -126,6 +161,20 @@ describe('normalizar datos', () => {
 })
 
 describe('validar lo nuevo', () => {
+  it('los estados de proyecto y las plantillas del estudio se comprueban al cargar', () => {
+    const d = data()
+    d.studio.projectStatuses = [
+      { id: 'idea', label: 'Idea', group: 'planificacion', tone: 'muted' },
+      { id: 'idea', label: '', group: 'nada' as never, tone: 'rosa' as never },
+    ]
+    d.studio.projectTemplates = [{ id: 'jam', name: 'Game jam', phases: [{ stage: 'otra' as never }], items: [{ kind: 'task', title: '' }] }]
+    const errors = validateStudioData(d).join(' | ')
+    for (const e of ['repetido', 'no tiene nombre', 'grupo desconocido', 'tono desconocido', 'fase desconocida', 'tarea sin título']) expect(errors).toContain(e)
+    d.studio.projectStatuses = [{ id: 'idea', label: 'Idea', group: 'planificacion', tone: 'muted' }]
+    d.studio.projectTemplates = [{ id: 'jam', name: 'Game jam', phase: 'prototype', phases: [{ stage: 'prototype' }], items: [{ kind: 'task', title: 'Elegir el tema' }] }]
+    expect(validateStudioData(d)).toEqual([])
+  })
+
   it('un estado externo «verificado» necesita una fuente comprobable', () => {
     const d = data()
     d.metrics.push({ id: 'm', projectId: 'p', kind: 'wishlists', value: 10, date: '2026-10-01', sources: src, confidence: 'verified' })

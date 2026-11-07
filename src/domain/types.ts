@@ -15,17 +15,37 @@ export type ClockTime = string
 export type Cents = number
 
 /** Etapa del ciclo de vida de un proyecto, de la idea al mantenimiento. */
-export type ProjectStage =
-  | 'idea'
-  | 'concept'
-  | 'prototype'
-  | 'preproduction'
-  | 'production'
-  | 'polish'
-  | 'release'
-  | 'live'
-  | 'paused'
-  | 'archived'
+/**
+ * La fase de desarrollo: en qué punto del trabajo está el juego (y en qué fase del Roadmap va
+ * cada fase concreta). No es el estado: un juego lanzado («live») puede estar en
+ * mantenimiento, y uno en producción, preparando una demo.
+ */
+export type DevPhase = 'concept' | 'prototype' | 'preproduction' | 'production' | 'polish' | 'release' | 'live'
+
+/**
+ * El estado de un proyecto: un id de los estados del estudio (`Studio.projectStatuses`, o los
+ * de serie de `catalog.ts`). Cada estado pertenece a un grupo, que es lo que entienden el
+ * resto de pantallas (activos, en pausa, archivados…).
+ */
+export type ProjectStatusId = string
+
+export type ProjectStatusGroup = 'planificacion' | 'activos' | 'lanzados' | 'pausa' | 'archivados'
+
+export interface ProjectStatusDef {
+  id: ProjectStatusId
+  label: string
+  group: ProjectStatusGroup
+  tone: 'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'special' | 'muted'
+}
+
+/** Cómo se relaciona un proyecto con otro. */
+export type ProjectRelationKind = 'shares_resources' | 'shares_tech' | 'shares_component' | 'depends_on' | 'related'
+
+export interface ProjectRelation {
+  projectId: ID
+  kind: ProjectRelationKind
+  note?: string
+}
 
 /**
  * Qué es cada elemento de trabajo:
@@ -88,6 +108,10 @@ export interface Studio {
   createdAt: ISODate
   /** Moneda de todos los importes (ISO 4217). Por defecto, EUR. */
   currency?: string
+  /** Los estados de proyecto del estudio, en orden. Sin poner, los de serie (catalog.ts). */
+  projectStatuses?: ProjectStatusDef[]
+  /** Plantillas de proyecto propias del estudio (además de las de serie). */
+  projectTemplates?: ProjectTemplate[]
   /** Nombres propios del estudio para los estados de las tareas. */
   statusLabels?: Partial<Record<ItemStatus, string>>
   /** Columnas del tablero, en orden (las que no estén, ocultas). Por defecto, todas. */
@@ -111,22 +135,67 @@ export interface Project {
   /** Para la URL: /proyectos/<slug>. */
   slug: string
   name: string
+  /** Nombre interno o en clave. */
+  codename?: string
+  /** Descripción breve, en una frase. */
   tagline?: string
+  /** Descripción completa (puede estar vacía). */
   description: string
   engine?: string
   engineVersion?: string
   genre?: string
+  subgenres?: string[]
+  /** Plataformas objetivo. */
   platforms: string[]
-  stage: ProjectStage
+  technologies?: string[]
+  /** Idiomas previstos. */
+  languages?: string[]
+  /** Público objetivo. */
+  audience?: string
+  /** Quién es responsable del proyecto (members). */
+  ownerId?: ID
+  /** Miembros y colaboradores (members). */
+  memberIds?: ID[]
+  status: ProjectStatusId
+  /** La fase de desarrollo (no es el estado). */
+  phase?: DevPhase
+  priority?: Priority
   /** Objetivo inmediato del proyecto, en una frase. */
   nextGoal?: string
+  /** Cuándo se dio de alta en Studio Hub. */
+  createdAt?: ISODate
   startedAt?: ISODate
+  /** Fecha objetivo de lanzamiento. Sin confirmar, se dice. */
+  targetReleaseDate?: ISODate
+  targetReleaseConfirmed?: boolean
+  /** Fecha real de lanzamiento, si ya salió. */
+  releasedAt?: ISODate
+  /** Al archivarlo: el estado que tenía, para volver a él al restaurarlo. */
+  archivedFrom?: ProjectStatusId
+  archivedAt?: ISODate
+  /** Carpeta de trabajo (ruta en el equipo o en la nube). */
+  workFolder?: string
+  /** Notas internas del estudio. */
+  internalNotes?: string
+  /** Proyectos con los que comparte recursos, tecnología, componentes o dependencias. */
+  relations?: ProjectRelation[]
   color: string
+  /** Imagen de portada o icono del juego (enlace a una imagen). Sin ella, su inicial y su color. */
+  coverUrl?: string
+  /** Cómo se calcula su porcentaje de progreso (domain/secciones/proyectos.ts). Sin poner: por tareas. */
+  progressMethod?: ProgressMethod
   repoUrl?: string
   versions: ProjectVersion[]
   tags: string[]
   links: ProjectLink[]
 }
+
+/**
+ * Cómo se mide el progreso de un proyecto:
+ * - tasks: tareas, funcionalidades e incidencias hechas, ponderadas por su prioridad.
+ * - milestones: hitos alcanzados de los que tiene.
+ */
+export type ProgressMethod = 'tasks' | 'milestones'
 
 export interface WorkItem {
   id: ID
@@ -152,6 +221,10 @@ export interface WorkItem {
   confidence: Confidence
   /** El objetivo, hito o funcionalidad del que cuelga. */
   parentId?: ID
+  /** Lo que tiene que estar hecho antes (del mismo proyecto): mientras no lo esté, esto espera. */
+  dependsOnIds?: ID[]
+  /** Otros proyectos a los que también vale (una tarea común, sin duplicarla). */
+  alsoProjectIds?: ID[]
   /** Quién lo lleva (members). */
   assigneeId?: ID
   /** En una incidencia: la build en la que aparece. */
@@ -263,6 +336,8 @@ export interface Feedback {
   impact: Priority
   /** Elementos de trabajo que lo resuelven. */
   linkedItemIds: ID[]
+  /** Por qué se descarta (wont_do) o cómo se resolvió. */
+  resolution?: string
   kind?: FeedbackKind
   /** Del evento o de la prueba de la que sale (origin event / playtest). */
   eventId?: ID
@@ -404,7 +479,7 @@ export type PhaseStatus = 'planned' | 'done'
 export interface Phase {
   id: ID
   projectId: ID
-  stage: ProjectStage
+  stage: DevPhase
   title?: string
   startDate?: ISODate
   endDate?: ISODate
@@ -603,6 +678,88 @@ export interface Metric {
   confidence: Confidence
 }
 
+// ——— Riesgos, componentes y plantillas ———————————————————————————————————————
+
+export type RiskLevel = 'low' | 'medium' | 'high'
+export type RiskStatus = 'open' | 'watching' | 'mitigated' | 'occurred' | 'closed'
+
+/** Un riesgo conocido de un proyecto: qué puede salir mal, cuánto importa y qué se hace. */
+export interface Risk {
+  id: ID
+  projectId: ID
+  title: string
+  description?: string
+  likelihood: RiskLevel
+  impact: Priority
+  status: RiskStatus
+  /** Qué se hace para que no pase o para que importe menos. */
+  mitigation?: string
+  ownerId?: ID
+  createdAt?: ISODate
+  /** Cuándo volver a mirarlo. */
+  reviewDate?: ISODate
+  tags: string[]
+  sources: SourceRef[]
+  confidence: Confidence
+}
+
+export type ComponentKind = 'system' | 'library' | 'tool' | 'asset' | 'service' | 'other'
+
+/** Algo que comparten varios proyectos: un sistema de inventario, una librería, una herramienta… */
+export interface SharedComponent {
+  id: ID
+  name: string
+  kind: ComponentKind
+  description?: string
+  /** Los proyectos que lo usan. */
+  projectIds: ID[]
+  repoUrl?: string
+  /** Dónde está dentro del repositorio o de la carpeta de trabajo. */
+  path?: string
+  notes?: string
+  tags: string[]
+}
+
+/** Una plantilla de proyecto: fases y tareas de partida, sin fechas ni compromisos. */
+export interface ProjectTemplate {
+  id: ID
+  name: string
+  description?: string
+  status?: ProjectStatusId
+  phase?: DevPhase
+  phases: { stage: DevPhase; title?: string }[]
+  items: { kind: ItemKind; title: string; priority?: Priority; description?: string }[]
+}
+
+// ——— Registro de cambios ————————————————————————————————————————————————————
+
+/**
+ * Lo que se hace en la aplicación: crear, cambiar, terminar o borrar algo. Lo apunta el store
+ * al guardar (data/store.ts); el historial del código (commits y PR) va aparte, en activity.
+ */
+export type ChangeAction = 'created' | 'updated' | 'status' | 'completed' | 'deleted'
+
+export interface ChangeEntry {
+  id: ID
+  at: ISODateTime
+  action: ChangeAction
+  /** La colección de lo que cambió (o «studio», los datos del estudio). */
+  collection: string
+  entityId: ID
+  /** Su nombre o título en ese momento (sigue legible aunque luego se borre). */
+  title: string
+  /** Para filtrar: su tipo (task, issue, milestone…) si lo tiene. */
+  entityKind?: string
+  projectId?: ID
+  /** Quién lo hizo («Quién soy» en este navegador), si se sabe. */
+  memberId?: ID
+  /** Campos cambiados (updated). */
+  fields?: string[]
+  /** Cambio de estado: de qué a qué. */
+  from?: string
+  to?: string
+}
+
 export interface StudioData {
   schemaVersion: number
   studio: Studio
@@ -627,6 +784,9 @@ export interface StudioData {
   transactions: Transaction[]
   budgets: Budget[]
   metrics: Metric[]
+  risks: Risk[]
+  components: SharedComponent[]
+  changes: ChangeEntry[]
 }
 
 /**

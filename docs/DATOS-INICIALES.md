@@ -92,6 +92,30 @@ ya no existe; se deduce de la fecha de caducidad, no se ha vuelto a comprobar. A
 `items.json` que lo cita, sino la de la mayoría de los que lo citan. Si empatan, gana la del
 más concreto. Así, las traducciones cuentan como Idiomas y no como Lanzamientos.
 
+En la 2026-11-02.1 entra la PR #43, solo de la demo de Steam: el botón de la lista de deseos
+en la portada, el mando y la Steam Deck, tu opinión (a Talo), la postal del estudio y el reto
+semanal, con sus decisiones (solo en la demo de Steam; el mando maneja un cursor). Quedan
+pendientes crear en Talo el ranking `reto_semanal` y la categoría de opiniones, y el mando en
+Steamworks con la prueba en una Steam Deck de verdad; también como dos pasos nuevos de la lista
+de Steam.
+
+En la 2026-11-03.1 entra la PR #44: el cierre con fallo en cualquier idioma que no fuera el
+castellano, los títulos en mayúsculas que en japonés y chino cogían la palabra de contar, la prueba
+de los idiomas y la hoja de validación rehecha con las frases nuevas. Queda pendiente, aparte, la
+partida larga con la interfaz, que se atasca desde 2017 y no cabe en la comprobación completa (ya
+pasaba antes de la PR #43).
+
+En la 2026-11-04.1 entra la PR #45: la partida larga con la interfaz ya no se atasca. El bot
+«completo» firmaba al azar la exclusiva de una consola nueva y luego no la cumplía, así que se pasaba
+años sin poder empezar un juego; ahora hace el siguiente solo en esa consola, y la comprobación
+completa pasa entera. También queda la decisión de no tocar la ventana de «Nuevo juego»: con la
+exclusiva firmada basta el aviso.
+
+En la 2026-11-07.1 entra la PR #46: la Demo Valladolid apunta en el ordenador del stand dónde clica
+la gente (en qué pantalla y en qué, también en nada o en botones apagados) y hasta dónde llega (el
+tutorial, los juegos y cómo acaba cada partida), sin mandar nada fuera ni guardar los nombres, y
+`tools/analitica.py` del juego saca el informe con el mapa de los clics sobre cada pantalla.
+
 ## Actualizar el historial
 
 ```bash

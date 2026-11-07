@@ -34,6 +34,10 @@ de la idea a la publicación y el mantenimiento. No es una web corporativa ni un
   usan los tonos de `domain/catalog.ts` y siempre llevan icono y texto (nunca solo color).
   Confirmaciones con `useNotify().confirm`, nunca `window.confirm`. Textos nuevos de la
   interfaz, en `src/i18n/es.ts` (los de una sección, en su fichero de `secciones-es/`).
+- **Dashboard:** un bloque por fichero en `src/ui/sections/panel/widgets/` (registro en
+  `widgets/index.tsx`) y sus cálculos en `src/domain/secciones/panel-*.ts`. Si no hay datos,
+  «—» o «Sin datos suficientes», nunca un 0 que parezca medido. El registro de cambios
+  (`changes`) lo escribe el store solo: no se apunta a mano.
 - **Comprobación en el navegador:** `e2e/recorrido.mjs` (ver README).
 
 Documentación: `README.md`, `docs/ARQUITECTURA.md`, `docs/DISENO.md`, `docs/DATOS-INICIALES.md`.

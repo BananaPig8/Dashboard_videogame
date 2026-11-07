@@ -3,7 +3,8 @@
 // navigation.ts: añadir una sección allí la pone aquí, en la paleta y en las migas.
 import { useMemo } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { STAGES, type Tone } from '../domain/catalog'
+import { projectStatusOf, type Tone } from '../domain/catalog'
+import { inProject, isProjectClosed } from '../domain/selectors'
 import { blockedItems, isOpen, overdueItems, registrationsClosingSoon } from '../domain/selectors'
 import type { StudioData } from '../domain/types'
 import { t, tr } from '../i18n'
@@ -50,10 +51,10 @@ export function Sidebar({ collapsed, hiddenOnMobile, onClose }: { collapsed: boo
   const { create } = useUI()
   const { scope, project } = useScope()
   const location = useLocation()
-  const inProject = location.pathname.startsWith('/proyectos/')
-  const where = { projectSlug: inProject ? project?.slug : undefined, scope }
+  const onProjectPage = location.pathname.startsWith('/proyectos/')
+  const where = { projectSlug: onProjectPage ? project?.slug : undefined, scope }
   // En el resumen de un proyecto se marca el juego (en «Juegos»), no el Panel del estudio.
-  const current = inProject && location.pathname.split('/').filter(Boolean).length === 2 ? undefined : sectionOfPath(location.pathname)
+  const current = onProjectPage && location.pathname.split('/').filter(Boolean).length === 2 ? undefined : sectionOfPath(location.pathname)
   const badges = useMemo(() => navBadges(data, today, scope), [data, today, scope])
   const groups = navGroups(prefs.hiddenSections)
   const currentPath = normalizePath(location.pathname + location.search)
@@ -156,17 +157,17 @@ export function Sidebar({ collapsed, hiddenOnMobile, onClose }: { collapsed: boo
             )}
           </h2>
           {data.projects
-            .filter((p) => p.stage !== 'archived')
+            .filter((p) => !isProjectClosed(data.studio, p))
             .map((p) => {
-              const open = data.items.filter((i) => i.projectId === p.id && isOpen(i)).length
-              const active = project?.id === p.id && inProject
+              const open = data.items.filter((i) => inProject(i, p.id) && isOpen(i)).length
+              const active = project?.id === p.id && onProjectPage
               return (
                 <Link
                   key={p.id}
                   to={`/proyectos/${p.slug}`}
                   className={active ? 'nav-link active' : 'nav-link'}
                   aria-current={active && location.pathname === `/proyectos/${p.slug}` ? 'page' : undefined}
-                  title={collapsed ? p.name : STAGES[p.stage].label}
+                  title={collapsed ? p.name : projectStatusOf(data.studio, p.status).label}
                   aria-label={collapsed ? p.name : undefined}
                 >
                   <span className="dot" style={{ background: p.color }} aria-hidden="true" />

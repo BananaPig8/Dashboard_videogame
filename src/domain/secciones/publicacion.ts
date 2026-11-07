@@ -3,7 +3,7 @@
 // mano: nada de esto sale de Steamworks ni de ninguna tienda.
 // Las pantallas los piden a selectors.ts, que reexporta este fichero.
 // Regla: lo que se importa de '../selectors' solo se usa dentro de funciones (hay un ciclo de import).
-import { STAGE_GROUPS } from '../catalog'
+
 import type {
   Achievement,
   AchievementStatus,
@@ -25,9 +25,9 @@ import type {
   StudioData,
   WorkItem,
 } from '../types'
-import { type Scope } from '../selectors'
+import { inProject, projectGroupOf, type Scope } from '../selectors'
 
-const own = (scope: Scope) => (x: { projectId?: ID }) => scope === null || x.projectId === scope
+const own = (scope: Scope) => (x: { projectId?: ID; alsoProjectIds?: ID[] }) => scope === null || inProject(x, scope)
 
 // ——— Fichas de tienda ——————————————————————————————————————————————————————
 
@@ -75,13 +75,14 @@ export interface SteamGaps {
  * con un proyecto elegido, ese proyecto.
  */
 export function steamGaps(data: StudioData, scope: Scope = null): SteamGaps[] {
-  const active = new Set<string>([...STAGE_GROUPS.activos, ...STAGE_GROUPS.lanzados])
+
   const out: SteamGaps[] = []
   for (const project of data.projects) {
     if (scope !== null && project.id !== scope) continue
     const listings = data.storeListings.filter((l) => l.projectId === project.id && l.platform === 'steam')
     const steamLists = data.checklists.some((c) => c.projectId === project.id && c.target === 'steam')
-    if (scope === null && !active.has(project.stage) && !listings.length && !steamLists) continue
+    const group = projectGroupOf(data.studio, project)
+    if (scope === null && group !== 'activos' && group !== 'lanzados' && !listings.length && !steamLists) continue
     const ids = new Set(listings.map((l) => l.id))
     const texts = data.storeTexts.filter((t) => ids.has(t.listingId))
     const missing: SteamGap[] = []

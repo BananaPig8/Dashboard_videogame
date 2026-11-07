@@ -128,8 +128,11 @@ cuando pulsarla no cambiaría lo que se ve. El registro está en `src/ui/navigat
 En **Ajustes** (se guarda en este navegador, aparte de los datos del estudio):
 
 - Tema oscuro, claro o el del sistema; color de acento; densidad.
-- **Panel**: qué bloques se ven y en qué orden (también desde «Personalizar» en el propio
-  panel). Cada bloque se puede plegar desde su cabecera.
+- **Dashboard** (también desde «Personalizar» en el propio panel), de cada persona de «Quién
+  soy»: qué bloques se ven, en qué orden y de qué ancho (una o dos columnas; en pantallas
+  estrechas todo va a una), qué indicadores y en qué orden, y si «Próximas fechas» va en lista
+  o en calendario. Cada bloque se pliega desde su cabecera. «Volver a la de serie» lo deshace
+  todo (con «Deshacer»).
 - **Vistas guardadas**: en Tareas o Historial, filtra y pulsa «Guardar vista»; sale en la
   barra lateral y en la paleta. Se renombran y borran en Ajustes. Las guardadas con las
   rutas de la versión anterior (`/trabajo`, `/agenda`…) se reescriben solas a las nuevas.

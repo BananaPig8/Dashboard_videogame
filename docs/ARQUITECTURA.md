@@ -98,6 +98,12 @@ las migas, las pestañas de cada sección y las de la ficha de un proyecto.
 - **Rutas antiguas**: `migratePath()` traduce las de la versión anterior (`/hoy`,
   `/trabajo`, `/agenda`, `/decisiones`, `/historial`, sus pestañas en la ficha y
   `?estado=blocked`); la usan las redirecciones, la ficha y las vistas guardadas.
+- **Pestañas que solo tiene la ficha** (`projectOnly`): «Demo y pruebas» junta lo que en
+  el estudio está en Builds, Publicación y Feedback; «Historial» es el registro de cambios
+  del Panel (los enlaces a `/?ver=actividad` desde la ficha la abren). No salen en la
+  barra lateral; fuera de una ficha, su ruta `/ficha/…` lleva a la vista del estudio que
+  enseña lo mismo (`studio`), y al quitar el proyecto del ámbito también (`studioHref()`).
+  El orden de las pestañas es `TAB_ORDER`.
 - **Fechas**: `domain/secciones/calendario.ts` junta en una lista todas las fechas de
   todas las colecciones (fechas límite, eventos, cierres de inscripción, versiones,
   builds, recordatorios). Panel, Calendario, la ficha y los avisos leen esa misma lista.
@@ -108,6 +114,106 @@ las migas, las pestañas de cada sección y las de la ficha de un proyecto.
   `ui/sections/<sección>/` registrada en `sections/registry.tsx`, sus textos en
   `i18n/secciones-es/<sección>.ts` y sus cálculos en `domain/secciones/<sección>.ts`.
   Añadir una subsección es añadir una línea en el registro y la vista en la página.
+
+## El Dashboard (el Panel)
+
+La pantalla principal. Está en `ui/sections/panel/` y sus cálculos en
+`domain/secciones/panel*.ts` y `proyectos.ts`, todos funciones puras con pruebas.
+
+- **Bloques**:
+  - un fichero por bloque en `widgets/`, registrados en `widgets/index.tsx` (icono, contenido y enlace);
+  - cada uno recibe `WidgetProps`: datos, ámbito, hoy, periodo, si está a dos columnas (`wide`) y si está en el modo foco (`?ver=`).
+- **Disposición por persona** (`prefs.ts`):
+  - qué bloques, en qué orden, de qué ancho, plegados, qué indicadores y la vista del calendario;
+  - se guarda en este navegador para la persona de «Quién soy» (o para cualquiera si nadie lo ha dicho);
+  - las de antes se migran.
+- **Periodo**: va en la URL (`?periodo=hoy|7d|30d|personalizado&desde=&hasta=`). `previousPeriod()` es el de la misma duración justo antes. Nunca acaba después de hoy: los campos llevan `max` y `periodRange` recorta (dos fechas futuras quedan en hoy).
+- **Cabecera**:
+  - saludo según la hora del estudio (06–14 h días, 14–21 h tardes, el resto noches), con el nombre de «Quién soy» solo si lo hay;
+  - fecha, estudio, proyecto y periodo (siempre con los días que abarca);
+  - «Cómo está cada juego»: una línea con la salud de cada proyecto no archivado (con `?p=`, la de ese), de lo que más pide atención a lo que menos, para verlo sin bajar (también en el móvil);
+  - Crear (11 tipos, los mismos formularios), nueva tarea, proyecto o nota, Calendario y buscador.
+- **Proyectos archivados** (`isClosedProject`, `panelOwn` en `panel.ts`): en todo el estudio, lo suyo no sale en Prioridades, en los indicadores ni en Lanzamientos (en su ficha, sí). «Proyectos activos» cuenta aparte, solo los activos. Si algún día hay proyectos cancelados, van en `PANEL_CLOSED_STAGES`.
+- **Foco**: al entrar en una vista (`?ver=`) va a su pestaña y, al volver, al enlace que llevaba a ella; tras cambiar la prioridad, a la misma fila o a la de al lado; tras convertir un feedback, a la fila siguiente. Nunca cae en la página.
+
+**Indicadores** (`panel-indicadores.ts`):
+
+- Cada uno da su valor real, su descripción y adónde lleva: una lista que da esa misma cifra, con los filtros puestos.
+  - Tareas: `?filtro=`, `?estado=done&desde=&hasta=` y, para «Hitos próximos», `?tipo=milestone&vence=30`.
+  - Builds recientes: `/builds?desde=&hasta=` (fecha de la build).
+  - Próximos eventos: Eventos › Próximos (los del sector; las reuniones y entregas están en el Calendario).
+  - Feedback por revisar: `/feedback?estado=new`.
+  - En todo el estudio, si hay proyectos archivados, también `?archivados=no` (la lista lo dice y deja verlo todo).
+- Sin datos detrás devuelve `null` y la tarjeta enseña «—» con el motivo, nunca un 0 engañoso.
+- Solo se comparan con el periodo anterior los que pasan en un periodo: tareas e hitos completados, y builds. Y solo si ya había datos de ese tipo entonces.
+- Hitos próximos miran los próximos 30 días; próximos eventos, todos los del sector por delante (los de Eventos › Próximos).
+- En el móvil (≤ 640 px) van compactos: la cifra y el nombre; lo demás, para el lector de pantalla y en la lista.
+
+**Prioridades** (`panel-prioridades.ts`):
+
+- Una sola fila por cosa, con todas sus etiquetas: crítica, vencida, vence en 3 días, para hoy, bloqueada, incidencia bloqueante, «bloquea a N», «espera a N» (por «Depende de») y hito en riesgo.
+- También entran las versiones de los próximos 14 días, las inscripciones que cierran, los eventos con pasos pendientes y las fichas con cambios pedidos.
+- Lo terminado o cancelado nunca sale. Lo que está por confirmar (de estado o de fiabilidad) dice «Sin confirmar».
+- Sin trabajo abierto en el ámbito no dice «Nada urgente»: explica que no hay con qué decirlo.
+- **Orden:** puntos = impacto + plazo + urgencia + dependencias.
+  - Impacto: crítica 40, alta 30, media 20, baja 10, o según el tipo de versión, evento o ficha.
+  - Plazo: vencida 30 + días de retraso (hasta 40); de hoy a 3 días, 24 − 4 × días; de 4 a 14 días, 14 − días.
+  - Urgencia: bloqueada, hito en riesgo o cambios pedidos +15; incidencia bloqueante, para hoy o inscripción +10; +1 por paso que falte (hasta +10).
+  - Dependencias: +6 por cada cosa que la espera (hasta +30); −10 si espera a otras.
+  - Desempate por fecha y título.
+- **Hito en riesgo:** abierto con fecha límite y, o ya pasada, o en 14 días o menos con algo de lo que cuelga bloqueado o vencido, o con más de la mitad sin hacer.
+
+**Progreso de un proyecto** (`projectProgress` en `proyectos.ts`):
+
+- Sigue `project.progressMethod` y es el mismo en la tarjeta, en Proyectos y en Estadísticas.
+- **Por tareas** (por defecto):
+  - cuentan tareas, funcionalidades e incidencias, sin descartadas ni ideas;
+  - cada una pesa lo que su prioridad (crítica 4, alta 3, media 2, baja 1);
+  - progreso = peso hecho / peso total.
+- **Por hitos:** hitos hechos / hitos.
+- Con menos de 3 elementos (o ningún hito) dice **«Sin datos suficientes»**.
+- La tarjeta dice siempre el método.
+- **Próximo hito:** el primero abierto por fecha.
+- **Última actividad:** lo más reciente entre git, el registro de cambios y las fechas de los elementos. La misma la usa la salud del proyecto.
+
+**Lanzamientos** (`panel-lanzamientos.ts`):
+
+- Categorías: demos, candidatas, materiales (pasos de las listas de Steam, lanzamiento, demo y actualización, y textos en borrador), logros por implementar o verificar, revisiones de tienda, actualizaciones y DLC.
+- Todo sale de lo registrado:
+  - sin nada registrado dice «Ningún … registrado», nunca «0 pendientes»;
+  - con datos y nada pendiente, «Todo hecho (n de n)».
+
+**Actividad** (`panel-actividad.ts`):
+
+- Junta tres fuentes:
+  - el registro de cambios, con hora y persona;
+  - las fechas de los datos (alta, fin, fecha de una build, de un feedback, de un documento), con el día pero sin persona;
+  - el historial de git, con su autor.
+- Sin duplicar: si el registro dice que se creó o se terminó algo, la fecha del dato no lo vuelve a contar, sea el día que sea; si dice otro día (una build compilada antes de apuntarla), la entrada del registro lo dice («Build del 31 oct»). La fecha de un documento la tapa cualquier cambio de ese día.
+- Lo de un proyecto que ya no existe sale con su nombre (el del registro) y «(borrado)».
+- El historial completo está en `?ver=actividad`, por días, con filtros de proyecto, categoría, persona y periodo en la URL.
+
+**Feedback**:
+
+- Cada cifra se cuenta con la misma consulta de Feedback a la que lleva.
+- «Convertir en tarea» abre el editor ya relleno y, al guardar, enlaza la tarea y pasa el feedback a planificado. «Deshacer» deja todo como estaba: quita el enlace y también la tarea creada.
+
+**Avisos con «Deshacer»** (`ui/feedback.tsx`, `useUndoable`):
+
+- Duran 12 s y no se van mientras tienen el ratón encima o el foco dentro.
+- Ctrl+Z (⌘Z en Mac) deshace lo del último aviso mientras se ve, fuera de los campos de texto; el botón lo dice (`aria-keyshortcuts` y el atajo al lado).
+- Tras deshacer, el foco vuelve a donde estaba o al control de lo restaurado (`returnFocus`).
+- Con una ventana modal abierta (Personalizar, el editor) salen dentro de ella, para verse y poder pulsarse.
+
+**Registro de cambios** (`domain/cambios.ts`, colección `changes`):
+
+- El store apunta cada `created`, `updated`, `status`, `completed` y `deleted`, con hora, quién («Quién soy») y qué campos.
+- Junta los cambios seguidos de lo mismo y de la misma persona (10 minutos) y guarda los 5.000 más recientes.
+- No apunta:
+  - el historial de git;
+  - lo privado (gastos, ingresos y presupuestos: el registro lo lee cualquiera en claude.ai);
+  - lo que llega de fuera (datos iniciales, copias importadas).
+- En claude.ai va en un documento por mes y persona.
 
 ## El modelo de datos (versión 2)
 
@@ -125,8 +231,9 @@ que afirma un estado externo solo puede ir como verificado con una fuente compro
   los formularios. Una colección nueva es una entrada ahí (más su tipo, su catálogo, su
   validación y sus campos en `specs.ts`).
 - **Normalizar** (`migrate.ts`): los datos de cualquier versión se completan al cargarlos
-  (colecciones que faltan, listas vacías), sin renombrar nada; lo de un proyecto que no
-  existe se oculta y las referencias perdidas se quitan, con aviso. Es idempotente. Si
+  (colecciones que faltan, listas vacías); lo de un proyecto que no existe se oculta y las
+  referencias perdidas se quitan, con aviso. Lo único que se traduce es la etapa de antes
+  de un proyecto (`stage`), que se separa en estado y fase (`OLD_STAGES` en `catalog.ts`). Es idempotente. Si
   los datos son de una versión más nueva de la aplicación, la página se queda en solo
   lectura en vez de reescribirlos.
 - **Referencias** (`references.ts`): cada campo que apunta a otra colección dice qué pasa
@@ -135,6 +242,35 @@ que afirma un estado externo solo puede ir como verificado con una fuente compro
   suyo, salvo el dinero, que se queda sin proyecto.
 - La clave de `localStorage` es `studio-hub:v2`; si no existe se leen los datos de la
   `v1`, que quedan como copia.
+
+## Proyectos: estado, fase y lo que comparten
+
+- **Estado y fase no son lo mismo.** El *estado* (`Project.status`) dice cómo está el
+  proyecto para el estudio (Idea, Prototipo, En pausa, Lanzado, Archivado…): son los del
+  estudio (`studio.projectStatuses`, o los 14 de serie de `catalog.ts`) y cada uno
+  pertenece a un *grupo* (planificación, activos, lanzados, en pausa, archivados), que es
+  lo único que miran los cálculos. Archivado y Cancelado son fijos (`FIXED_PROJECT_STATUSES`):
+  siempre existen. La *fase* (`Project.phase`, y `Phase.stage` en el Roadmap) dice en qué
+  punto del desarrollo está: concepto, prototipo, preproducción, producción, pulido,
+  lanzamiento y mantenimiento.
+- **Cerrado** = estado del grupo «archivados»: no sale en el Dashboard ni en los avisos,
+  pero todo lo suyo se conserva.
+- **Riesgos** (`risks`, de un proyecto: probabilidad, impacto, estado, mitigación) y
+  **componentes compartidos** (`components`, del estudio: un sistema, librería o
+  herramienta que usan varios proyectos; al borrar un proyecto solo deja de usarlo).
+- **Relaciones** (`Project.relations`: comparten recursos, tecnología o un componente,
+  depende de, relacionado). Las que apuntan a un proyecto que no existe se quitan al
+  normalizar y al borrarlo.
+- **Tareas compartidas**: un elemento tiene un proyecto (`projectId`) y puede valer
+  también para otros (`alsoProjectIds`). `inProject()` en `selectors.ts` es la única
+  regla: sale en todos sus proyectos sin copiarse, y en todo el estudio una sola vez.
+- **Varios a la vez**: `store.upsertMany()` guarda varios elementos de distintas
+  colecciones en un solo cambio (un proyecto con las fases y tareas de una plantilla), y
+  cada uno queda en el registro de cambios.
+- **Nada se pierde por un descuido**: el editor pregunta antes de descartar lo escrito
+  (Esc, clic fuera, la X, «Cancelar») y avisa al recargar o cerrar la pestaña; un diálogo
+  que el navegador cierra a la fuerza (Esc dos veces en Chrome) se vuelve a abrir y pasa
+  por la misma pregunta.
 
 ## Datos iniciales y cambios del estudio
 
@@ -222,4 +358,5 @@ página se queda con lo último bueno y lo enseña en un aviso.
 - **Nuevas colecciones o campos:** su entrada en `collections.ts`, el tipo en `types.ts`,
   su catálogo, su validación en `validate.ts` y sus campos en `specs.ts`.
 - **Cambios de esquema:** `SCHEMA_VERSION` en `types.ts` y, si hace falta, el paso en
-  `migrate.ts` (que no renombra valores: añade y completa).
+  `migrate.ts` (que añade y completa; solo traduce un valor viejo cuando su significado se
+  separa en dos, como la etapa de un proyecto).

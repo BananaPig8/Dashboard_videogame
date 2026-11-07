@@ -1948,5 +1948,155 @@
     "ref": "#42",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/42",
     "author": "BananaPig8"
+  },
+  {
+    "id": "indie-dev-tycoon-c-465f449",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-29T12:00",
+    "type": "commit",
+    "title": "Demo de Steam: botón de lista de deseos en la portada",
+    "ref": "465f449",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/465f449901d9942139f2d733589f8113ed55a7ae",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-c-9316b95",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-29T12:17",
+    "type": "commit",
+    "title": "Demo de Steam: mando y Steam Deck (cursor, cruceta, teclado en pantalla y ayuda de botones)",
+    "ref": "9316b95",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/9316b95146c2830c0c65f229f880f240a15e99ad",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-c-74bf06b",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-29T17:06",
+    "type": "commit",
+    "title": "Mando: desplegables, salto a lo primero de cada ventana, pantalla completa en la Steam Deck y prueba en godot_check",
+    "ref": "74bf06b",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/74bf06ba78a6a3314236ecf31234d603991a2db0",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-c-0247bd0",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-29T17:17",
+    "type": "commit",
+    "title": "Demo de Steam: tu opinión (Talo), postal del estudio y reto semanal con tres intentos",
+    "ref": "0247bd0",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/0247bd0e425be0bb3eb78c0f47175b46160233b9",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-c-56d0140",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-10-29T17:29",
+    "type": "commit",
+    "title": "Demo de Steam: traducciones de lo nuevo (seis idiomas), README y ajustes de textos",
+    "ref": "56d0140",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/56d0140dcb60f32c3a09141182da4243b336ee76",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-c-67c809c",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-11-02T03:35",
+    "type": "commit",
+    "title": "Prueba de la demo de Steam: empieza sin el reto de antes en las preferencias y las deja como estaban",
+    "ref": "67c809c",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/67c809cc80fb464c9f7f8d07e175f15df3300f59",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-pr-43",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-11-02T03:51",
+    "type": "merge",
+    "title": "PR #43 fusionada: Demo de Steam: lista de deseos, mando y Steam Deck, tu opinión, postal y reto semanal",
+    "ref": "#43",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/43",
+    "author": "BananaPig8"
+  },
+  {
+    "id": "indie-dev-tycoon-c-f6acc25",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-11-02T16:40",
+    "type": "commit",
+    "title": "Arreglado el cierre con fallo en cualquier idioma que no sea el castellano",
+    "ref": "f6acc25",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/f6acc25ef3988c5b7c87d5dd060726c417b7ce06",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-c-b7194f3",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-11-02T16:48",
+    "type": "commit",
+    "title": "Idiomas: los títulos en mayúsculas con la palabra de título (JUEGOS → ゲーム, no 本) y prueba de los idiomas en godot_check",
+    "ref": "b7194f3",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/b7194f3de49dd229589a057821c408adb47c2f33",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-c-6c5e483",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-11-03T02:18",
+    "type": "commit",
+    "title": "La uid de la prueba de los idiomas",
+    "ref": "6c5e483",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/6c5e483d4b780b20e3e76bfd870c4fe567fcdbec",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-pr-44",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-11-03T11:43",
+    "type": "merge",
+    "title": "PR #44 fusionada: Idiomas: arreglado el cierre con fallo y los títulos en mayúsculas, y prueba de los idiomas",
+    "ref": "#44",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/44",
+    "author": "BananaPig8"
+  },
+  {
+    "id": "indie-dev-tycoon-c-14e6159",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-11-04T16:47",
+    "type": "commit",
+    "title": "Bot «completo»: con una exclusiva firmada, su próximo juego va solo en esa consola",
+    "ref": "14e6159",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/14e615939d288db4c673074a3046e49622edc601",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-pr-45",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-11-04T17:07",
+    "type": "merge",
+    "title": "PR #45 fusionada: Bot «completo»: cumple las exclusivas de consola (la partida larga ya no se atasca)",
+    "ref": "#45",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/45",
+    "author": "BananaPig8"
+  },
+  {
+    "id": "indie-dev-tycoon-c-7a031d6",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-11-07T06:42",
+    "type": "commit",
+    "title": "Demo Valladolid: el stand apunta dónde clica la gente y hasta dónde llega",
+    "ref": "7a031d6",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/7a031d6144c89fb9079b34d58735b2ba36868d6d",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-pr-46",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-11-07T06:43",
+    "type": "merge",
+    "title": "PR #46 fusionada: Demo Valladolid: el stand apunta dónde clica la gente y hasta dónde llega",
+    "ref": "#46",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/46",
+    "author": "BananaPig8"
   }
 ]

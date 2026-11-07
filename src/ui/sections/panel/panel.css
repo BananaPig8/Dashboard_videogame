@@ -59,7 +59,7 @@
 
 .panel-activity-row > .icon {
   flex: none;
-  margin-top: 4px;
+  margin-top: var(--space-1);
   color: var(--text-3);
 }
 
@@ -117,4 +117,226 @@
   .widget-grid .build-row {
     flex-wrap: wrap;
   }
+}
+
+/* ——— Cabecera del Dashboard (PanelHeader) ——————————————————————————————— */
+
+/* Saludo, fecha y estudio, debajo del título. */
+.panel-hello {
+  color: var(--text-2);
+  font-weight: 600;
+}
+
+/* Cómo está cada juego: una línea arriba del todo, con su salud (icono y texto). */
+.panel-health {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  min-width: 0;
+}
+
+.panel-health-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-3);
+}
+
+.panel-health ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  min-width: 0;
+}
+
+.panel-health li {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  min-width: 0;
+}
+
+.panel-health-name {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-weight: 600;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+/* Qué se ve (proyecto y periodo) y los accesos rápidos, debajo de las subsecciones. */
+.panel-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.panel-filters,
+.panel-period {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-2) var(--space-3);
+  min-width: 0;
+}
+
+.panel-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.panel-field-label {
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--text-3);
+}
+
+.panel-field select {
+  max-width: 260px;
+}
+
+.panel-range {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  font-size: 0.86rem;
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.panel-range .icon {
+  color: var(--text-3);
+}
+
+.panel-shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-left: auto;
+}
+
+/* El menú «Más» con los accesos rápidos solo sale en móvil. */
+.panel-shortcuts-more {
+  display: none;
+}
+
+/* En la ficha de un proyecto, el periodo va junto a «Personalizar», debajo de las
+ * subsecciones (así ninguna se queda escondida al final de la tira). */
+.section-head.embedded:has(.panel-period) .section-tabs {
+  flex: 1 1 100%;
+}
+
+.section-head.embedded .panel-period {
+  align-items: center;
+}
+
+@media (min-width: 641px) {
+  .section-head.embedded .panel-field {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-2);
+  }
+}
+
+@media (max-width: 640px) {
+  .panel-toolbar {
+    align-items: stretch;
+  }
+
+  .panel-filters {
+    flex: 1 1 100%;
+  }
+
+  .panel-filters > .panel-field,
+  .panel-period {
+    flex: 1 1 100%;
+  }
+
+  .panel-period > .panel-field {
+    flex: 1 1 130px;
+  }
+
+  .panel-field select {
+    max-width: none;
+  }
+
+  .panel-shortcuts {
+    display: none;
+  }
+
+  .panel-shortcuts-more {
+    display: block;
+  }
+
+  /* «Personalizar», «Más» y «Crear» en una fila, sin apretarse. */
+  .section-head .page-actions .btn {
+    white-space: nowrap;
+  }
+
+  /* El menú «Más» queda hacia la mitad de la fila: se abre hacia la derecha. */
+  .panel-shortcuts-more .menu {
+    right: auto;
+    left: 0;
+  }
+
+  .section-head.embedded .panel-period,
+  .section-head.embedded .embedded-actions {
+    flex: 1 1 100%;
+  }
+}
+
+/* ——— Personalizar ——————————————————————————————————————————————————————— */
+
+.customize-section + .customize-section {
+  margin-top: var(--space-5);
+}
+
+.customize-section h3 {
+  margin: 0 0 var(--space-1);
+  font-size: 0.92rem;
+}
+
+.customize-section > p {
+  margin: 0 0 var(--space-2);
+}
+
+.customize-narrow {
+  display: none;
+}
+
+.customize-panel .widget-list li {
+  flex-wrap: wrap;
+}
+
+.customize-panel .widget-list label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 960px) {
+  .customize-narrow {
+    display: block;
+  }
+}
+
+/* Subir o bajar en el primer o el último puesto: sigue enfocable (aria-disabled), no hace nada. */
+.widget-list .icon-btn[aria-disabled='true'] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* El conmutador de ancho, pulsado (a todo el ancho): con el acento, además del icono. */
+.widget-list .btn[aria-pressed='true'] {
+  border-color: var(--accent);
+  color: var(--text);
 }

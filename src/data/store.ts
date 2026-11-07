@@ -1,6 +1,7 @@
 // El estado de Studio Hub: un único objeto StudioData inmutable. Cada cambio crea uno
 // nuevo, se guarda y avisa a las pantallas (useSyncExternalStore).
 import { useSyncExternalStore } from 'react'
+import { appendChange, changeFor } from '../domain/cambios'
 import { COLLECTIONS, type CollectionKey } from '../domain/collections'
 import { nowISODateTime } from '../domain/dates'
 import { normalizeData } from '../domain/migrate'
@@ -16,6 +17,9 @@ import { LocalStorageAdapter, type Persisted, type StorageAdapter, type StoreMet
 // Las colecciones salen del registro (domain/collections.ts).
 export { COLLECTIONS, type CollectionKey }
 export type EntityOf<K extends CollectionKey> = StudioData[K][number]
+
+/** Un elemento con su colección (para upsertMany). */
+export type StoreEntry = { [K in CollectionKey]: { collection: K; entity: EntityOf<K> } }[CollectionKey]
 
 const key = (k: CollectionKey, id: ID) => `${k}:${id}`
 
@@ -201,6 +205,19 @@ export class StudioStore {
     for (const fn of this.listeners) fn()
   }
 
+  /** Quién está usando la aplicación («Quién soy»), para el registro de cambios. */
+  private actor?: ID
+
+  setActor(memberId: ID | undefined): void {
+    this.actor = memberId
+  }
+
+  /** Apunta en el registro (domain/cambios.ts) el cambio de `prev` a `next` de una colección. */
+  private logged(data: StudioData, k: CollectionKey | 'studio', prev: object | undefined, next: object | undefined): StudioData {
+    const entry = changeFor(k, prev, next, { id: newId('cambio'), at: nowISODateTime(), memberId: this.actor })
+    return entry ? { ...data, changes: appendChange(data.changes ?? [], entry) } : data
+  }
+
   private markEdited(...keys: string[]): StoreMeta {
     const edited = new Set(this.meta.edited)
     for (const k of keys) edited.add(k)
@@ -209,10 +226,24 @@ export class StudioStore {
 
   /** Crea o sustituye un elemento de una colección (por id). */
   upsert<K extends CollectionKey>(k: K, entity: EntityOf<K>): void {
-    const list = this.data[k] as EntityOf<K>[]
-    const n = list.findIndex((x) => x.id === entity.id)
-    const next = n === -1 ? [...list, entity] : list.map((x, i) => (i === n ? entity : x))
-    this.commit({ ...this.data, [k]: next }, this.markEdited(key(k, entity.id)))
+    this.upsertMany([{ collection: k, entity } as StoreEntry])
+  }
+
+  /**
+   * Crea o sustituye varios elementos de una vez (un proyecto con las fases y tareas de su
+   * plantilla): un solo guardado, y cada uno queda en el registro de cambios.
+   */
+  upsertMany(entries: readonly StoreEntry[]): void {
+    let data = this.data
+    const keys: string[] = []
+    for (const { collection: k, entity } of entries) {
+      const list = data[k] as { id: ID }[]
+      const n = list.findIndex((x) => x.id === entity.id)
+      const next = n === -1 ? [...list, entity] : list.map((x, i) => (i === n ? entity : x))
+      data = this.logged({ ...data, [k]: next }, k, n === -1 ? undefined : list[n], entity)
+      keys.push(key(k, entity.id))
+    }
+    if (keys.length) this.commit(data, this.markEdited(...keys))
   }
 
   /** Cambia algunos campos de un elemento. */
@@ -231,7 +262,8 @@ export class StudioStore {
     if (!r.deleted.length) return false
     const deleted = new Set(this.meta.deleted)
     for (const d of r.deleted) deleted.add(d)
-    this.commit(r.data, { ...this.meta, deleted: [...deleted] })
+    const gone = (this.data[k] as { id: ID }[]).find((x) => x.id === id)
+    this.commit(this.logged(r.data, k, gone, undefined), { ...this.meta, deleted: [...deleted] })
     return true
   }
 
@@ -248,7 +280,8 @@ export class StudioStore {
   }
 
   updateStudio(changes: Partial<Studio>): void {
-    this.commit({ ...this.data, studio: { ...this.data.studio, ...changes } }, this.markEdited('studio'))
+    const studio = { ...this.data.studio, ...changes }
+    this.commit(this.logged({ ...this.data, studio }, 'studio', this.data.studio, studio), this.markEdited('studio'))
   }
 
   /** Sustituye todos los datos (importar). Devuelve los problemas si no son válidos. */

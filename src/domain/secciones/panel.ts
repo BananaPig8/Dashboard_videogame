@@ -1,15 +1,13 @@
 // Cálculos de la sección «panel». Las pantallas los piden a selectors.ts, que reexporta este fichero.
 // Regla: lo que se importa de '../selectors' solo se usa dentro de funciones (hay un ciclo de import).
-import type { ISODate, StudioData, WorkItem } from '../types'
-import type { CalendarEntry } from './calendario'
-import { isOpen, itemsOf, notificationsFor, type NotificationKind, type Scope, type StudioNotification } from '../selectors'
+import { addDays, daysBetween } from '../dates'
+import type { ID, ISODate, StudioData } from '../types'
+import { inProject, isProjectClosed, notificationsFor, type NotificationKind, type Scope, type StudioNotification } from '../selectors'
 
-/**
- * Los avisos que el bloque «Necesita atención» añade a la salud de cada proyecto: los que
- * no salen ya en otro bloque del panel (lo vencido y lo bloqueado están en Hoy y en
- * Bloqueado; los eventos, en Próximas fechas).
- */
-export const PANEL_ALERT_KINDS: readonly NotificationKind[] = ['reminder', 'registrationSoon', 'releaseSoon', 'releaseLate', 'budgetOver']
+export * from './panel-indicadores'
+export * from './panel-prioridades'
+export * from './panel-lanzamientos'
+export * from './panel-actividad'
 
 /**
  * Los avisos de hoy en un ámbito (los mismos que la campana). En un proyecto salen los suyos
@@ -22,34 +20,74 @@ export function panelAlerts(data: StudioData, today: ISODate, scope: Scope = nul
   )
 }
 
+// ——— Proyectos cerrados ———————————————————————————————————————————————————————
+
 /**
- * La cifra «Por confirmar»: lo que está en ese estado, como lo cuenta la tarjeta de cada
- * proyecto y lo lista Tareas (?estado=to_confirm). `unverified` es lo abierto en otro estado
- * con algún dato sin verificar (fiabilidad «por confirmar»), que se dice aparte.
+ * Los ids de los proyectos cerrados: los de un estado del grupo «archivados» (archivado,
+ * cancelado o los que el estudio haya puesto ahí; `isProjectClosed`). En la vista de todo el
+ * estudio, lo de esos proyectos no sale en el Dashboard ni en la campana (en su ficha, sí).
  */
-export function panelToConfirm(data: StudioData, scope: Scope = null): { status: number; unverified: number } {
-  const items = itemsOf(data, scope)
-  return {
-    status: items.filter((i) => i.status === 'to_confirm').length,
-    unverified: items.filter((i) => isOpen(i) && i.status !== 'to_confirm' && i.confidence === 'to_confirm').length,
-  }
+export function closedProjectIds(data: StudioData): Set<ID> {
+  return new Set(data.projects.filter((p) => isProjectClosed(data.studio, p)).map((p) => p.id))
 }
 
-/** Lo terminado, de lo más reciente a lo más antiguo (solo lo que tiene fecha de fin). */
-export function panelRecentDone(data: StudioData, scope: Scope = null): WorkItem[] {
-  return itemsOf(data, scope)
-    .filter((i) => i.status === 'done' && !!i.completedAt)
-    .sort((a, b) => b.completedAt!.localeCompare(a.completedAt!) || a.title.localeCompare(b.title, 'es'))
+/**
+ * ¿Cuenta esto en el Dashboard de este ámbito? En un proyecto, lo suyo; en todo el estudio, todo
+ * menos lo de los proyectos cerrados. `withStudio`: lo que no es de ningún proyecto también vale
+ * en un proyecto (eventos del estudio).
+ */
+export function panelOwn(data: StudioData, scope: Scope, withStudio = false): (x: { projectId?: ID; alsoProjectIds?: ID[] }) => boolean {
+  if (scope !== null) return (x) => inProject(x, scope) || (withStudio && !x.projectId)
+  const closed = closedProjectIds(data)
+  // Una tarea compartida sigue contando mientras alguno de sus proyectos esté abierto.
+  return (x) => !x.projectId || !closed.has(x.projectId) || !!x.alsoProjectIds?.some((id) => !closed.has(id))
 }
 
-/** Las fechas agrupadas por mes («2026-10»), en el orden en que llegan. */
-export function panelEntriesByMonth(entries: CalendarEntry[]): { month: string; entries: CalendarEntry[] }[] {
-  const groups: { month: string; entries: CalendarEntry[] }[] = []
-  for (const e of entries) {
-    const month = e.date.slice(0, 7)
-    const last = groups[groups.length - 1]
-    if (last?.month === month) last.entries.push(e)
-    else groups.push({ month, entries: [e] })
-  }
-  return groups
+/** Parámetro que llevan los enlaces de las cifras a una lista que deja fuera los proyectos cerrados. */
+export const CLOSED_PARAM = 'archivados'
+export const CLOSED_PARAM_OFF = 'no'
+
+// ——— Periodo del Dashboard ——————————————————————————————————————————————————
+
+/** hoy, los últimos 7 o 30 días (hoy incluido) o unas fechas a elegir. */
+export type PeriodId = 'hoy' | '7d' | '30d' | 'personalizado'
+
+export const PERIOD_IDS: readonly PeriodId[] = ['hoy', '7d', '30d', 'personalizado']
+
+export const DEFAULT_PERIOD: PeriodId = '7d'
+
+/** Un periodo cerrado, de `from` a `to` (los dos días incluidos). */
+export interface Period {
+  id: PeriodId
+  from: ISODate
+  to: ISODate
+  /** Cuántos días abarca. */
+  days: number
 }
+
+/**
+ * El periodo elegido. Los fijos acaban hoy; el personalizado usa sus fechas (si faltan o
+ * están al revés, se ordenan; si no hay ninguna, son los últimos 7 días). Nunca acaba después
+ * de hoy: lo que no ha pasado no se cuenta (si las dos fechas son futuras, queda en hoy).
+ */
+export function periodRange(id: PeriodId, today: ISODate, custom?: { from?: ISODate; to?: ISODate }): Period {
+  if (id === 'personalizado' && (custom?.from || custom?.to)) {
+    const a = custom.from ?? custom.to!
+    const b = custom.to ?? custom.from!
+    const [first, last] = a <= b ? [a, b] : [b, a]
+    const to = last > today ? today : last
+    const from = first > to ? to : first
+    return { id, from, to, days: daysBetween(from, to) + 1 }
+  }
+  const days = id === 'hoy' ? 1 : id === '30d' ? 30 : 7
+  return { id: id === 'personalizado' ? '7d' : id, from: addDays(today, -(days - 1)), to: today, days }
+}
+
+/** El periodo de la misma duración justo antes (para comparar). */
+export function previousPeriod(p: Period): Period {
+  const to = addDays(p.from, -1)
+  return { id: p.id, from: addDays(to, -(p.days - 1)), to, days: p.days }
+}
+
+/** ¿Cae esta fecha (o el día de esta fecha y hora) dentro del periodo? */
+export const inPeriod = (p: Period, date: string | undefined): boolean => !!date && date.slice(0, 10) >= p.from && date.slice(0, 10) <= p.to

@@ -4,6 +4,8 @@ import { FEEDBACK_STATUSES, PRIORITIES, STATUSES, TASK_KINDS } from './catalog'
 import type { CollectionKey } from './collections'
 import { addDays, daysBetween, startOfWeek, type WeekStart } from './dates'
 import { registrationsClosingSoon } from './secciones/eventos'
+import { closedProjectIds } from './secciones/panel'
+import { projectGroupOf, projectLastActivity } from './secciones/proyectos'
 import { budgetUsage } from './secciones/finanzas'
 import type {
   Activity,
@@ -22,7 +24,13 @@ import type {
 /** null = todo el estudio. */
 export type Scope = ID | null
 
-const inScope = (scope: Scope) => (x: { projectId?: ID }) => scope === null || x.projectId === scope
+/**
+ * ¿Es de este proyecto? Una tarea compartida es de su proyecto y de los de `alsoProjectIds`:
+ * sale en todos, sin copiarse (y en todo el estudio, una sola vez).
+ */
+export const inProject = (x: { projectId?: ID; alsoProjectIds?: ID[] }, projectId: ID) => x.projectId === projectId || !!x.alsoProjectIds?.includes(projectId)
+
+const inScope = (scope: Scope) => (x: { projectId?: ID; alsoProjectIds?: ID[] }) => scope === null || inProject(x, scope)
 
 /** Los eventos de todo el estudio (sin proyecto) cuentan también en cada proyecto, como en el Calendario. */
 const eventInScope = (scope: Scope) => (e: { projectId?: ID }) => scope === null || !e.projectId || e.projectId === scope
@@ -135,10 +143,6 @@ export function checklistProgress(c: Checklist): ChecklistProgress {
   return { checklist: c, done, total, ratio: total ? done / total : 0 }
 }
 
-export function checklistsOf(data: StudioData, scope: Scope = null): ChecklistProgress[] {
-  return data.checklists.filter(inScope(scope)).map(checklistProgress)
-}
-
 // ——— Feedback ——————————————————————————————————————————————————————————
 
 /** Feedback abierto, de más a menos impacto y de más nuevo a más viejo. */
@@ -158,15 +162,12 @@ export function activityOf(data: StudioData, scope: Scope = null): Activity[] {
   return data.activity.filter(inScope(scope)).sort((a, b) => b.at.localeCompare(a.at))
 }
 
-export function lastActivityDate(data: StudioData, projectId: ID): ISODate | undefined {
-  let last: string | undefined
-  for (const a of data.activity) if (a.projectId === projectId && (!last || a.at > last)) last = a.at
-  for (const i of data.items) {
-    if (i.projectId !== projectId) continue
-    const d = itemDate(i)
-    if (d && (!last || d > last.slice(0, 10))) last = d
-  }
-  return last?.slice(0, 10)
+/**
+ * El último día con actividad de un proyecto: la misma que enseña su tarjeta (historial de
+ * git, registro de cambios y fechas de sus elementos; lo fechado después de hoy no cuenta).
+ */
+export function lastActivityDate(data: StudioData, projectId: ID, today: ISODate): ISODate | undefined {
+  return projectLastActivity(data, projectId, today)?.date
 }
 
 export interface Bucket {
@@ -255,7 +256,7 @@ export function projectSummary(data: StudioData, project: Project, today: ISODat
   const inReview = open.filter((i) => i.status === 'review')
   const overdue = open.filter((i) => i.dueDate && i.dueDate < today)
   const urgentOpen = open.filter((i) => i.priority === 'critical' && i.status !== 'paused')
-  const lastActivity = lastActivityDate(data, project.id)
+  const lastActivity = lastActivityDate(data, project.id, today)
   const newFeedback = data.feedback.filter((f) => f.projectId === project.id && f.status === 'new')
   const soonEvents = data.events.filter(
     (e) =>
@@ -298,7 +299,9 @@ export function projectSummary(data: StudioData, project: Project, today: ISODat
     score += 2
     reasons.push(plural(soonEvents.length, 'evento en las próximas dos semanas', 'eventos en las próximas dos semanas'))
   }
-  const quiet = project.stage !== 'paused' && project.stage !== 'archived' && project.stage !== 'live'
+  // Lo parado a propósito o ya lanzado no «se queda sin actividad».
+  const group = projectGroupOf(data.studio, project)
+  const quiet = group !== 'pausa' && group !== 'archivados' && group !== 'lanzados'
   if (quiet && lastActivity) {
     const idle = daysBetween(lastActivity, today)
     if (idle > 30) {
@@ -313,7 +316,7 @@ export function projectSummary(data: StudioData, project: Project, today: ISODat
   let level: HealthLevel = score >= 7 ? 'urgent' : score >= 3 ? 'attention' : 'on_track'
   // Sin nada apuntado no hay de qué deducir que va bien.
   if (level === 'on_track' && !reasons.length && !items.length && !lastActivity) level = 'no_data'
-  if (project.stage === 'paused' || project.stage === 'archived') level = 'idle'
+  if (group === 'pausa' || group === 'archivados') level = 'idle'
 
   return {
     project,
@@ -410,6 +413,8 @@ export interface StudioNotification {
  * ya pasó y presupuestos superados.
  */
 export function notificationsFor(data: StudioData, today: ISODate): StudioNotification[] {
+  // Un proyecto cerrado (archivado) no avisa de nada: está parado a propósito.
+  const closed = closedProjectIds(data)
   const out: StudioNotification[] = []
   for (const i of data.items) {
     if (!isOpen(i) || !isWork(i)) continue
@@ -423,8 +428,10 @@ export function notificationsFor(data: StudioData, today: ISODate): StudioNotifi
   for (const e of data.events) {
     if (!e.date || e.status === 'cancelled' || e.status === 'done') continue
     const days = daysBetween(today, e.date)
-    if (days >= 0 && days <= 14)
-      out.push({ id: `event:${e.id}:${e.date}`, kind: 'eventSoon', tone: days <= 3 ? 'warning' : 'info', title: e.title, date: e.date, confirmed: e.dateConfirmed, projectId: e.projectId, target: { collection: 'events', id: e.id } })
+    // Un evento de varios días que ya ha empezado sigue avisando hasta que acaba (como «hoy»).
+    const ongoing = days < 0 && !!e.endDate && e.endDate >= today
+    if ((days >= 0 && days <= 14) || ongoing)
+      out.push({ id: `event:${e.id}:${e.date}`, kind: 'eventSoon', tone: days <= 3 ? 'warning' : 'info', title: e.title, date: ongoing ? today : e.date, confirmed: e.dateConfirmed, projectId: e.projectId, target: { collection: 'events', id: e.id } })
     else if ((e.endDate ?? e.date) < today && (e.status === 'planned' || e.status === 'confirmed'))
       out.push({ id: `stale:${e.id}:${e.date}`, kind: 'eventStale', tone: 'warning', title: e.title, date: e.date, confirmed: e.dateConfirmed, projectId: e.projectId, target: { collection: 'events', id: e.id } })
   }
@@ -461,7 +468,7 @@ export function notificationsFor(data: StudioData, today: ISODate): StudioNotifi
       out.push({ id: `budget:${b.id}:${u.spent}`, kind: 'budgetOver', tone: 'warning', title: b.name, confirmed: true, projectId: b.projectId, target: { collection: 'budgets', id: b.id } })
   }
   const rank = { danger: 0, warning: 1, info: 2 }
-  return out.sort((a, b) => rank[a.tone] - rank[b.tone] || (a.date ?? '9999').localeCompare(b.date ?? '9999'))
+  return out.filter((n) => !n.projectId || !closed.has(n.projectId)).sort((a, b) => rank[a.tone] - rank[b.tone] || (a.date ?? '9999').localeCompare(b.date ?? '9999'))
 }
 
 // ——— Por sección ——————————————————————————————————————————————————————————
@@ -483,3 +490,7 @@ export * from './secciones/finanzas'
 export * from './secciones/estadisticas'
 export * from './secciones/ajustes'
 export * from './secciones/etiquetas'
+export * from './secciones/ficha'
+export * from './secciones/plantillas'
+export * from './secciones/proyectos-archivo'
+export * from './secciones/relaciones'

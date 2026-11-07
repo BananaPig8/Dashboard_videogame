@@ -1,0 +1,97 @@
+// Textos del Dashboard: tarjetas. Van en `secciones.panel.tarjetas` (los junta panel.ts).
+// Los de la tarjeta de un proyecto y su progreso son de Proyectos (secciones-es/proyectos.ts).
+export const panel_tarjetas = {
+  proyectos: {
+    filter: 'Qué proyectos ver',
+    all: 'Todos',
+    noneAll: 'Aún no hay proyectos en el estudio.',
+    more: 'Ver en Proyectos',
+  },
+  lanzamientos: {
+    manual: 'Sale de lo registrado en Studio Hub: versiones, builds, listas de pasos, fichas y textos de tienda y logros. Nada viene de Steam ni de otra tienda.',
+    nothingAtAll: 'Todavía no hay nada de publicación registrado: ni versiones, ni builds, ni listas de pasos, ni fichas de tienda, ni logros.',
+    addChecklist: 'Crear una lista de pasos',
+    projectPendingOne: '1 pendiente',
+    projectPendingOther: '{n} pendientes',
+    projectClear: 'Nada pendiente',
+    withoutData: 'Sin nada de publicación registrado: {names}.',
+    noneGroup: 'Nada registrado todavía en: {names}.',
+    pendingOne: '1 pendiente',
+    pendingOther: '{n} pendientes',
+    more: 'y {n} más',
+    projectLabel: 'Lo que falta para publicar {name}',
+    // Cada categoría: su nombre, qué dice sin nada registrado y qué dice con todo hecho.
+    categories: {
+      launches: {
+        title: 'Lanzamiento',
+        short: 'el lanzamiento',
+        none: 'Ningún lanzamiento registrado.',
+        clear: 'Ningún lanzamiento pendiente ({done} de {total} publicados).',
+      },
+      demos: {
+        title: 'Demos pendientes',
+        short: 'demos',
+        none: 'Ninguna demo registrada.',
+        clear: 'Ninguna demo pendiente ({done} de {total} hechas).',
+      },
+      candidates: {
+        title: 'Builds candidatas',
+        short: 'builds',
+        none: 'Ninguna build registrada.',
+        clear: 'Ninguna build candidata ahora mismo (builds registradas: {total}).',
+      },
+      materials: {
+        title: 'Materiales de publicación',
+        short: 'pasos y textos de tienda',
+        none: 'Ningún paso de publicación ni texto de tienda registrado.',
+        clear: 'Todo hecho ({done} de {total}).',
+      },
+      achievements: {
+        title: 'Logros',
+        short: 'logros',
+        none: 'Ningún logro registrado.',
+        clear: 'Todo hecho ({done} de {total}).',
+      },
+      reviews: {
+        title: 'Revisiones de tienda',
+        short: 'fichas de tienda',
+        none: 'Ninguna ficha de tienda registrada.',
+        clear: 'Ninguna ficha en revisión ni con cambios pedidos (fichas registradas: {total}).',
+      },
+      updates: {
+        title: 'Actualizaciones previstas',
+        short: 'actualizaciones',
+        none: 'Ninguna actualización ni parche registrado.',
+        clear: 'Nada previsto ni en marcha (registradas: {total}).',
+      },
+      dlc: {
+        title: 'DLC y contenido adicional',
+        short: 'DLC',
+        none: 'Ningún DLC ni expansión registrado.',
+        clear: 'Nada en planificación (registrados: {total}).',
+      },
+    },
+    line: {
+      buildIn: 'Build en preparación: {name}',
+      stepsOne: '1 paso sin hacer ({done} de {total})',
+      stepsOther: '{n} pasos sin hacer ({done} de {total})',
+      nextStep: 'Siguiente: {label}',
+      textsOne: '{listing}: 1 texto en borrador',
+      textsOther: '{listing}: {n} textos en borrador',
+      textsOrphan: 'Textos sin ficha de tienda',
+      implementOne: '1 logro por implementar',
+      implementOther: '{n} logros por implementar',
+      implementHint: 'En idea o diseñados',
+      verifyOne: '1 logro por verificar',
+      verifyOther: '{n} logros por verificar',
+      // Verificados, pero sin decidir si son ocultos.
+      decideOne: '1 logro sin decidir si es oculto',
+      decideOther: '{n} logros sin decidir si son ocultos',
+      // Unos por verificar y otros por decidir si son ocultos (lo dicen las etiquetas).
+      reviewOne: '1 logro por revisar',
+      reviewOther: '{n} logros por revisar',
+      unverified: 'sin verificar: {n}',
+      undecided: 'sin decidir si son ocultos: {n}',
+    },
+  },
+} as const

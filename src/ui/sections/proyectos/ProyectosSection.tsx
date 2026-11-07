@@ -1,15 +1,16 @@
 // Proyectos: todos los videojuegos del estudio, por estado (?estado=, los grupos de etapas de
 // catalog.ts). Cada uno con su tarjeta (etapa, salud, cifras, actividad) y, abajo, la línea
-// de etapas con cuántos hay en cada una.
-import type { ReactNode } from 'react'
+// de etapas con cuántos hay en cada una. Las vistas aparte (?vista=) tienen su fichero:
+// plantillas, componentes compartidos y relaciones entre proyectos.
+import { lazy, Suspense, type ReactNode } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { STAGE_GROUPS } from '../../../domain/catalog'
 import {
   isProjectStageGroup,
   PROJECT_GROUPS,
   projectGroupCounts,
   projectsInGroup,
-  projectStageCounts,
+  projectGroupOf,
+  projectStatusCounts,
   projectSummary,
   type ProjectStageGroup,
 } from '../../../domain/selectors'
@@ -22,19 +23,41 @@ import { SectionHeader, useSectionNav } from '../../components/SectionHeader'
 import { TagFilterNotice, useTagFilter } from '../../components/TagFilter'
 import { useUI } from '../../context'
 import { useToday } from '../../hooks'
+import { PageSkeleton } from '../../feedback'
 import type { SectionPageProps } from '../registry'
 import { ProjectCard } from './ProjectCard'
-import { StageLine } from './StageLine'
+import { StatusLine } from './StatusLine'
 import './proyectos.css'
 
-/** Con qué etapa empieza un proyecto nuevo creado desde un grupo (pausa y archivo no se crean así). */
-const NEW_IN_GROUP: Partial<Record<ProjectStageGroup, Project['stage']>> = {
+/** Con qué estado empieza un proyecto nuevo creado desde un grupo (pausa y archivo no se crean así). */
+const NEW_IN_GROUP: Partial<Record<ProjectStageGroup, Project['status']>> = {
   planificacion: 'idea',
-  activos: 'prototype',
-  lanzados: 'live',
+  activos: 'prototipo',
+  lanzados: 'lanzado',
 }
 
-export default function ProyectosSection({ embedded }: SectionPageProps) {
+/** Las vistas aparte de Proyectos (?vista=): cada una pinta su cabecera. */
+const VISTAS = {
+  plantillas: lazy(() => import('./plantillas/ProyectosPlantillas')),
+  componentes: lazy(() => import('./relaciones/ProyectosComponentes')),
+  relaciones: lazy(() => import('./relaciones/ProyectosRelaciones')),
+}
+
+const isVista = (v: string | null): v is keyof typeof VISTAS => !!v && v in VISTAS
+
+export default function ProyectosSection(props: SectionPageProps) {
+  const [params] = useSearchParams()
+  const vista = params.get('vista')
+  if (!isVista(vista)) return <ProyectosLista {...props} />
+  const Vista = VISTAS[vista]
+  return (
+    <Suspense fallback={<PageSkeleton />}>
+      <Vista {...props} />
+    </Suspense>
+  )
+}
+
+function ProyectosLista({ embedded }: SectionPageProps) {
   const data = useStudioData()
   const today = useToday()
   const { create } = useUI()
@@ -48,7 +71,7 @@ export default function ProyectosSection({ embedded }: SectionPageProps) {
   const projects = projectsInGroup(data, group, tag)
   const childOf = (g: ProjectStageGroup) => nav.section.children.find((c) => c.value === g)!
   const groupHref = (g: ProjectStageGroup) => nav.href(childOf(g))
-  const newProject = (stage?: Project['stage']) => create('projects', stage ? { stage } : undefined)
+  const newProject = (status?: Project['status']) => create('projects', status ? { status } : undefined)
 
   const card = (p: Project) => <ProjectCard key={p.id} summary={projectSummary(data, p, today)} data={data} today={today} />
 
@@ -97,8 +120,8 @@ export default function ProyectosSection({ embedded }: SectionPageProps) {
         <Empty icon="tag">{t('secciones.proyectos.noneWithTag')}</Empty>
       ) : (
         // Todos: por grupos, en el orden de las subsecciones; los grupos vacíos no ocupan sitio (están en las cifras de arriba).
-        PROJECT_GROUPS.filter((g) => projects.some((p) => STAGE_GROUPS[g].includes(p.stage))).map((g) => {
-          const inGroup = projects.filter((p) => STAGE_GROUPS[g].includes(p.stage))
+        PROJECT_GROUPS.filter((g) => projects.some((p) => projectGroupOf(data.studio, p) === g)).map((g) => {
+          const inGroup = projects.filter((p) => projectGroupOf(data.studio, p) === g)
           return (
             <Card
               key={g}
@@ -118,7 +141,7 @@ export default function ProyectosSection({ embedded }: SectionPageProps) {
       )}
 
       <Card title={t('secciones.proyectos.stages.title')} subtitle={t('secciones.proyectos.stages.subtitle')} icon="flag">
-        <StageLine counts={projectStageCounts(data)} activeGroup={group} groupHref={groupHref} />
+        <StatusLine counts={projectStatusCounts(data)} activeGroup={group} groupHref={groupHref} />
       </Card>
     </div>
   )

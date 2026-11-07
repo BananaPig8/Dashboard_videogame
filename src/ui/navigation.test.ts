@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { activeChildren, allSections, childHref, migratePath, projectTabs, scopedHref, sectionById, sectionOfPath } from './navigation'
+import { activeChildren, allSections, childHref, migratePath, projectOnlySections, projectTabs, scopedHref, sectionById, sectionOfPath, studioHref } from './navigation'
 
 const ids = (list: { id: string }[]) => list.map((c) => c.id)
 const tareas = sectionById('tareas')
@@ -20,6 +20,37 @@ describe('registro de navegación', () => {
   it('las secciones que se pueden ocultar no salen como pestañas del proyecto', () => {
     expect(ids(projectTabs(['finanzas']))).not.toContain('finanzas')
     expect(ids(projectTabs(['tareas']))).toContain('tareas')
+  })
+
+  it('las pestañas de la ficha, en su orden (con «Demo y pruebas» e «Historial», sin Estadísticas)', () => {
+    expect(projectTabs().map((s) => s.tab)).toEqual([
+      'resumen',
+      'tareas',
+      'roadmap',
+      'calendario',
+      'builds',
+      'pruebas',
+      'publicacion',
+      'feedback',
+      'eventos',
+      'documentacion',
+      'recursos',
+      'equipo',
+      'finanzas',
+      'historial',
+    ])
+    // Las que solo tiene la ficha no salen en la barra lateral.
+    for (const s of projectOnlySections()) expect(ids(allSections())).not.toContain(s.id)
+  })
+
+  it('las pestañas que solo tiene la ficha: sus subsecciones llevan a ella y, fuera, a la vista del estudio', () => {
+    const pruebas = sectionById('pruebas')
+    expect(childHref(pruebas, child('pruebas', 'sesiones'), { projectSlug: 'idt' }, '')).toBe('/proyectos/idt/pruebas?vista=sesiones')
+    expect(childHref(pruebas, child('pruebas', 'demos'), { projectSlug: 'idt' })).toBe('/proyectos/idt/pruebas?vista=demos')
+    expect(studioHref('/proyectos/idt/pruebas', '?vista=demos&q=feria')).toBe('/builds?canal=demos&q=feria')
+    expect(studioHref('/proyectos/idt/historial', '')).toBe('/?ver=actividad')
+    expect(studioHref('/proyectos/idt/tareas', '?vista=tablero')).toBe('/tareas?vista=tablero')
+    expect(studioHref('/ficha/historial', '?tipo=x')).toBe('/?ver=actividad&tipo=x')
   })
 })
 
@@ -72,6 +103,8 @@ describe('enlaces con ámbito', () => {
   it('en la ficha lleva a la pestaña del proyecto', () => {
     expect(scopedHref('/tareas?filtro=bloqueadas', { projectSlug: 'idt' })).toBe('/proyectos/idt/tareas?filtro=bloqueadas')
     expect(scopedHref('/?ver=fechas', { projectSlug: 'idt' })).toBe('/proyectos/idt?ver=fechas')
+    // La actividad del Panel es, en la ficha, la pestaña Historial.
+    expect(scopedHref('/?ver=actividad&quien=ana', { projectSlug: 'idt' })).toBe('/proyectos/idt/historial?quien=ana')
     // Ajustes no tiene pestaña: se queda en el estudio.
     expect(scopedHref('/ajustes', { projectSlug: 'idt' })).toBe('/ajustes')
   })
@@ -94,7 +127,8 @@ describe('rutas antiguas', () => {
     expect(migratePath('/trabajo?estado=blocked&p=idt')).toBe('/tareas?p=idt&filtro=bloqueadas')
     expect(migratePath('/decisiones?p=idt')).toBe('/documentacion?tipo=decisiones&p=idt')
     expect(migratePath('/proyectos/idt/trabajo?vista=tablero')).toBe('/proyectos/idt/tareas?vista=tablero')
-    expect(migratePath('/proyectos/idt/historial')).toBe('/proyectos/idt/builds?vista=cambios')
+    // «Historial» vuelve a ser una pestaña: el registro de cambios del proyecto.
+    expect(migratePath('/proyectos/idt/historial')).toBe('/proyectos/idt/historial')
   })
 
   it('no toca las rutas de ahora', () => {

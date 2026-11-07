@@ -81,7 +81,7 @@ export function SectionHeader({
     if (refocusTab && document.activeElement === document.body) nav.querySelector<HTMLElement>(`[data-sub="${refocusTab}"]`)?.focus()
     refocusTab = null
   }, [location.pathname, location.search])
-  const tabs = (
+  const tabs = section.children.length > 0 && (
     <nav ref={strip} className="section-tabs" aria-label={t('section.subsections', { name: section.label })}>
       <ul>
         {section.children.map((c) => {

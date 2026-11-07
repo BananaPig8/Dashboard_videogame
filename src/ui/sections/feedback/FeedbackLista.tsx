@@ -24,6 +24,7 @@ import { TagLinks } from '../../components/TagFilter'
 import { useScope, useUI } from '../../context'
 import { useFormat, useToday } from '../../hooks'
 import type { SectionPageProps } from '../registry'
+import { PanelFilterNotice, usePanelListFilter } from '../panel/AvisoFiltro'
 import { FEEDBACK_STATUS_ICON, FeedbackFiltros, FeedbackPage, FeedbackRow, ImpactTag, useFeedbackQuery } from './comunes'
 
 export function FeedbackLista({ embedded }: SectionPageProps) {
@@ -31,7 +32,10 @@ export function FeedbackLista({ embedded }: SectionPageProps) {
   const { scope } = useScope()
   const { create } = useUI()
   const canEdit = useCanEdit()
-  const { tipo, query } = useFeedbackQuery()
+  const { tipo, query: fine } = useFeedbackQuery()
+  // «Feedback por revisar» del Dashboard, en todo el estudio, lleva aquí sin los proyectos archivados.
+  const panelFilter = usePanelListFilter()
+  const query = { ...fine, sinArchivados: panelFilter.sinArchivados }
   const key = tipo ?? 'todo'
   const showProject = scope === null
   const newFeedback = () => create('feedback', feedbackTipoDefaults(tipo))
@@ -94,6 +98,7 @@ export function FeedbackLista({ embedded }: SectionPageProps) {
   return (
     <FeedbackPage embedded={embedded} tipo={tipo} intro={<p>{t(`secciones.feedback.tipos.${key}.intro`)}</p>}>
       <FeedbackFiltros query={query} />
+      <PanelFilterNotice filter={panelFilter} />
       {body}
     </FeedbackPage>
   )

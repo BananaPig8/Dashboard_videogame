@@ -88,23 +88,15 @@ export function WeeklyChart({ buckets, year }: { buckets: Bucket[]; year: number
                     {formatDate(b.start, year)}
                   </text>
                 )}
-                <rect
-                  x={cx - band / 2}
-                  y={pad.t}
-                  width={band}
-                  height={innerH}
-                  fill="transparent"
-                  onMouseEnter={() => setHover(k)}
-                  onFocus={() => setHover(k)}
-                  tabIndex={0}
-                  aria-label={t('charts.weekPoint', { date: formatDate(b.start, year), commits: b.commits, done: b.completed })}
-                />
+                {/* Solo para el ratón: dentro de una imagen (role=img) no puede haber nada enfocable. Con
+                    el teclado y el lector de pantalla, los mismos datos están en «Ver como tabla». */}
+                <rect x={cx - band / 2} y={pad.t} width={band} height={innerH} fill="transparent" onMouseEnter={() => setHover(k)} />
               </g>
             )
           })}
         </svg>
         {hover !== null && (
-          <div className="chart-tooltip" style={{ left: `${((pad.l + band * hover + band / 2) / W) * 100}%` }} role="status">
+          <div className="chart-tooltip" style={{ left: `${((pad.l + band * hover + band / 2) / W) * 100}%` }} aria-hidden="true">
             <strong>{t('charts.weekOf', { date: formatDate(buckets[hover].start, year) })}</strong>
             <span>
               <i className="swatch series-1-bg" /> {t('charts.commits', { n: buckets[hover].commits })}

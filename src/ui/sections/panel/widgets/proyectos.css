@@ -1,0 +1,53 @@
+/* Bloque «Proyectos» del Dashboard: el filtro de estado (las tarjetas, en ProjectCard.css).
+ * Solo variables de styles.css. */
+
+.panel-project-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.panel-project-filter button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-2);
+  font-size: 0.84rem;
+  cursor: pointer;
+  transition:
+    background var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+
+.panel-project-filter button:hover {
+  color: var(--text);
+  border-color: var(--text-3);
+}
+
+.panel-project-filter button[aria-pressed='true'] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.panel-project-filter-n {
+  font-size: 0.76rem;
+  color: var(--text-3);
+}
+
+.panel-project-filter button[aria-pressed='true'] .panel-project-filter-n {
+  color: var(--text-2);
+}
+
+/* Grupo vacío: la explicación sigue al icono aunque sea larga. */
+.panel-project-empty .empty > span {
+  flex: 1 1 16rem;
+  min-width: 0;
+}

@@ -64,10 +64,13 @@ export function reconcile(current: StudioData, fresh: StudioData): StudioData {
     const old = current[k] as { id: string }[]
     const byId = new Map(old.map((e) => [e.id, e]))
     let unchanged = old.length === (fresh[k] as unknown[]).length
+    // En las agrupadas (actividad, registro de cambios) el orden de los documentos no dice
+    // nada: si están los mismos, sin cambios, se queda el orden de aquí.
+    const ordered = !BUCKETED.has(k)
     const list = (fresh[k] as { id: string }[]).map((e, n) => {
       const was = byId.get(e.id)
       const keep = was && (was === e || asJson(was) === asJson(e)) ? was : e
-      if (keep !== old[n]) unchanged = false
+      if (ordered ? keep !== old[n] : keep !== was) unchanged = false
       return keep
     })
     next[k] = unchanged ? old : list
@@ -308,6 +311,8 @@ export class RemoteAdapter implements StorageAdapter {
         const entries = docs
           .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
           .flatMap(([, body]) => this.entity(body, (b) => (Array.isArray(b.entries) ? (b.entries as unknown[]) : [])))
+        // El registro de cambios, en el orden en que pasó (como en este navegador), no por documentos.
+        if (k === 'changes') (entries as { at: string; id: string }[]).sort((a, b) => (a.at < b.at ? -1 : a.at > b.at ? 1 : a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
         ;(data as unknown as Record<string, unknown>)[k] = entries
       } else {
         const order = (b: Body) => (typeof b[ORDER_FIELD] === 'number' ? (b[ORDER_FIELD] as number) : Number.MAX_SAFE_INTEGER)

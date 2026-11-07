@@ -76,6 +76,8 @@ const PATHS = {
   megaphone: 'M3 10v4h4l8 5V5l-8 5zm4 4 1.5 6H11l-1-5.5M18.5 9a4 4 0 0 1 0 6',
   sticky: 'M5 4h14v10l-6 6H5zm8 16v-6h6',
   copy: 'M9 9h11v11H9zM5 15H4V4h11v1',
+  maximize: 'M8 3H3v5M21 8V3h-5M16 21h5v-5M3 16v5h5',
+  minimize: 'M8 3v5H3M21 8h-5V3M16 21v-5h5M3 16h5v5',
 } as const
 
 export type IconName = keyof typeof PATHS

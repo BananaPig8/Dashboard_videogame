@@ -18,7 +18,7 @@ import type {
   StudioEvent,
   WorkItem,
 } from '../types'
-import { byPriority, feedbackToPrioritize, isOpen, normalize, type Scope } from '../selectors'
+import { byPriority, closedProjectIds, feedbackToPrioritize, inProject, isOpen, normalize, type Scope } from '../selectors'
 import { hasTag } from './etiquetas'
 
 /** Subsecciones de la faceta «tipo» (null = todo el feedback). */
@@ -65,6 +65,8 @@ export interface FeedbackQuery {
   evento?: ID | null
   /** Las pruebas de ese evento (las rellena feedbackQueryOf si se le pasan los datos). */
   eventoTests?: ID[]
+  /** Sin lo de los proyectos archivados (?archivados=no: así cuenta «Feedback por revisar» del Dashboard). */
+  sinArchivados?: boolean
 }
 
 /** Los filtros finos leídos de la URL; lo que no se entiende se ignora. */
@@ -131,7 +133,8 @@ export function compareFeedback(a: Feedback, b: Feedback): number {
 
 /** El feedback que entra con estos filtros, ordenado (ver compareFeedback). */
 export function feedbackList(data: StudioData, q: FeedbackQuery): Feedback[] {
-  return data.feedback.filter((f) => feedbackMatches(f, q)).sort(compareFeedback)
+  const closed = q.sinArchivados ? closedProjectIds(data) : null
+  return data.feedback.filter((f) => feedbackMatches(f, q) && (!closed || !closed.has(f.projectId))).sort(compareFeedback)
 }
 
 export interface FeedbackStatusGroup {
@@ -168,7 +171,7 @@ const bugDate = (e: BugEntry) => (e.type === 'feedback' ? e.feedback.receivedAt 
 export function unlinkedIssues(data: StudioData, scope: Scope = null): WorkItem[] {
   const linked = new Set<ID>()
   for (const f of data.feedback) if (f.kind === 'bug' && (scope === null || f.projectId === scope)) for (const id of f.linkedItemIds) linked.add(id)
-  return data.items.filter((i) => i.kind === 'issue' && (scope === null || i.projectId === scope) && !linked.has(i.id))
+  return data.items.filter((i) => i.kind === 'issue' && (scope === null || inProject(i, scope)) && !linked.has(i.id))
 }
 
 /** ¿Entra esta incidencia con los filtros finos? (las incidencias no tienen origen ni estados de feedback). */
@@ -188,10 +191,12 @@ export function issueMatches(i: WorkItem, q: FeedbackQuery): boolean {
  */
 export function feedbackBugs(data: StudioData, q: FeedbackQuery): BugEntry[] {
   const fq = { ...q, tipo: 'bugs' as const }
+  const closed = q.sinArchivados ? closedProjectIds(data) : null
+  const open = (x: { projectId: ID }) => !closed || !closed.has(x.projectId)
   const out: BugEntry[] = [
-    ...data.feedback.filter((f) => feedbackMatches(f, fq)).map((feedback) => ({ type: 'feedback' as const, feedback })),
+    ...data.feedback.filter((f) => feedbackMatches(f, fq) && open(f)).map((feedback) => ({ type: 'feedback' as const, feedback })),
     ...unlinkedIssues(data, q.scope ?? null)
-      .filter((i) => issueMatches(i, q))
+      .filter((i) => issueMatches(i, q) && open(i))
       .map((item) => ({ type: 'item' as const, item })),
   ]
   return out.sort(
