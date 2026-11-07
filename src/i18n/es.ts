@@ -250,6 +250,7 @@ export const es = {
   },
   section: {
     subsections: 'Subsecciones de {name}',
+    inPreparation: 'Esta vista se está preparando: llegará en la próxima actualización.',
   },
   topbar: {
     scope: 'Ámbito',
