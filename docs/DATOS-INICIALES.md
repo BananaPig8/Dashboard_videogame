@@ -111,6 +111,11 @@ años sin poder empezar un juego; ahora hace el siguiente solo en esa consola, y
 completa pasa entera. También queda la decisión de no tocar la ventana de «Nuevo juego»: con la
 exclusiva firmada basta el aviso.
 
+En la 2026-11-07.1 entra la PR #46: la Demo Valladolid apunta en el ordenador del stand dónde clica
+la gente (en qué pantalla y en qué, también en nada o en botones apagados) y hasta dónde llega (el
+tutorial, los juegos y cómo acaba cada partida), sin mandar nada fuera ni guardar los nombres, y
+`tools/analitica.py` del juego saca el informe con el mapa de los clics sobre cada pantalla.
+
 ## Actualizar el historial
 
 ```bash

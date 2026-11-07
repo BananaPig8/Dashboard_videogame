@@ -2078,5 +2078,25 @@
     "ref": "#45",
     "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/45",
     "author": "BananaPig8"
+  },
+  {
+    "id": "indie-dev-tycoon-c-7a031d6",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-11-07T06:42",
+    "type": "commit",
+    "title": "Demo Valladolid: el stand apunta dónde clica la gente y hasta dónde llega",
+    "ref": "7a031d6",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/commit/7a031d6144c89fb9079b34d58735b2ba36868d6d",
+    "author": "Claude"
+  },
+  {
+    "id": "indie-dev-tycoon-pr-46",
+    "projectId": "indie-dev-tycoon",
+    "at": "2026-11-07T06:43",
+    "type": "merge",
+    "title": "PR #46 fusionada: Demo Valladolid: el stand apunta dónde clica la gente y hasta dónde llega",
+    "ref": "#46",
+    "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/46",
+    "author": "BananaPig8"
   }
 ]

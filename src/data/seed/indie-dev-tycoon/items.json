@@ -13029,5 +13029,38 @@
       }
     ],
     "confidence": "verified"
+  },
+  {
+    "id": "idt-analitica-stand",
+    "projectId": "indie-dev-tycoon",
+    "kind": "feature",
+    "title": "Analítica del stand: dónde clica la gente y hasta dónde llega",
+    "description": "En la Demo Valladolid con el modo stand, el juego apunta en ese ordenador (sin mandar nada fuera) cada clic (en qué pantalla, en qué botón, en nada, fuera de la ventana o en un botón apagado, dónde y con qué), las teclas sueltas, las pantallas y cuánto rato, y cada partida: con tutorial o sin él, sus pasos, los juegos con su nota, el año y cómo acaba (en la despedida, se fue y volvió sola a la portada, empezó otra o se cerró el juego). La primera vez que sale cada pantalla hace una captura. No guarda nada de lo que se escribe ni los nombres, y las capturas solo se hacen con los nombres de siempre. Después de la feria, tools/analitica.py saca un informe en HTML: cómo acaban las partidas, hasta qué juego llegan, en qué paso del tutorial se quedan, dónde se van, el rato en cada pantalla y, de cada una, en qué se clica (también en nada, en botones apagados y los clics repetidos) con el mapa de los clics sobre su captura.",
+    "status": "done",
+    "priority": "medium",
+    "areaId": "demo",
+    "startedAt": "2026-11-07",
+    "completedAt": "2026-11-07",
+    "tags": [
+      "feria",
+      "stand",
+      "analitica",
+      "godot"
+    ],
+    "sources": [
+      {
+        "type": "commit",
+        "ref": "7a031d6",
+        "date": "2026-11-07"
+      },
+      {
+        "type": "pr",
+        "ref": "#46",
+        "url": "https://github.com/BananaPig8/Indie-Dev-Tycoon/pull/46",
+        "date": "2026-11-07",
+        "note": "Fusionada el 2026-11-07 sin las comprobaciones de Actions (no arranca); la comprobación rápida de Godot, pasada a mano"
+      }
+    ],
+    "confidence": "verified"
   }
 ]
